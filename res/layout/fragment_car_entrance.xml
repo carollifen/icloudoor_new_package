@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp" >
+
+        <TextView
+            android:id="@+id/c_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:gravity="center_vertical"
+            android:text="手机号码"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/id_carentrance_phonenum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/c_txt"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="#999999"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/id_show_phonenum"
+            android:layout_width="50dp"
+            android:layout_height="68dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp" >
+
+            <ImageView
+                android:id="@+id/iv_showphonenum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_dateselect" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
+
+    <ListView
+        android:id="@+id/phonenumlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp" >
+
+        <TextView
+            android:id="@+id/cp_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:gravity="center_vertical"
+            android:text="车牌号码"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/id_carentrance_carnum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/cp_txt"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="#999999"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/id_showcarnum"
+            android:layout_width="50dp"
+            android:layout_height="68dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp" >
+
+            <ImageView
+                android:id="@+id/iv_showcarnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_dateselect" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
+
+    <ListView
+        android:id="@+id/carnumlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

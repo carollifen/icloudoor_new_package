@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="69dp"
+    android:background="#0065a1" >
+
+    <RelativeLayout
+        android:id="@+id/channel_switch"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/bar" />
+
+        <ImageView
+            android:id="@+id/Iv_choose_car"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/btn_car" />
+
+        <ImageView
+            android:id="@+id/Iv_choose_man"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/btn_ren" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/Tv_choose_car"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="39dp"
+        android:text="车    道"
+        android:textColor="#010101"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/Tv_choose_man"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="291dp"
+        android:layout_marginTop="39dp"
+        android:text="行人道"
+        android:textColor="#999999"
+        android:textSize="16sp" />
+"
+
+</RelativeLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     android:background="#f8f8f8"
+     android:orientation="vertical">
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="44dp"
+        layout="@layout/title_bar_set_detail_set_sign" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="47dp"
+     
+         >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+             android:textColor="#333333"
+            android:textSize="15sp"
+            android:text="手势密码"
+            
+           />
+		
+        <ImageView
+            android:id="@+id/btn_sign_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/btn_no" />
+
+       
+    </RelativeLayout>
+     <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dddddd" />
+</LinearLayout>

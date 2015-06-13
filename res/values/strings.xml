@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">云门</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="searching_key">正在为您搜索~</string>
+    <string name="input_right_phone_num">请输入正确的手机号码</string>
+    <string name="diff_pwd">两次输入的密码不一致，请重新输入</string>
+    <string name="wrong_old_pwd">旧密码不正确，请重新输入</string>
+    <string name="login_fail">用户名不存在或者密码不正确，请重新输入</string>
+    <string name="send_too_many_a_day">发送短信数量超出限制(10条/天)</string>
+    <string name="send_too_frequently">发送短信过于频繁</string>
+    <string name="input_wrong_certi_code">验证码错误</string>
+    <string name="certi_code_overdue">验证码已失效，请重新获取</string>
+    <string name="phone_num_have_been_registerred">该手机号已被注册</string>
+    <string name="weak_pwd">请填写6-20位新密码</string>
+    <string name="not_login">用户未登录，请重新登录</string>
+    <string name="unknown_err">未知错误，请重试</string>
+    <string name="have_no_key_authorised">该用户未授权任何门锁信息</string>
+    <string name="downloading_key_list">正在加载钥匙列表</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="ble_not_supported">该设备不支持低功耗蓝牙</string>
+    <string name="bt_not_supported">该设备不支持蓝牙</string>
+    <string name="bt_enabled">蓝牙已开启</string>
+    <string name="door_open">开门</string>
+    <string name="centigrade">&#176;C</string>
+    <string name="title_activity_set_personal_info">SetPersonalInfo</string>
+    <string name="title_activity_personal_info_detail">PersonalInfoDetail</string>
+    <string name="login_ing">正在登录...</string>
+    <string name="title_activity_set_gesture">SetGestureActivity</string>
+    <string name="sign_set_success">手势密码设置成功</string>
+    <string name="sign_input_again">请再绘制一次手势密码</string>
+    <string name="title_activity_verify_gesture">VerifyGestureActivity</string>
+    <string name="sign_verify_success">手势密码正确</string>
+    <string name="sign_verify_fail">手势密码输入错误，请重新输入</string>
+    <string name="wrong_params">参数错误</string>
+    <string name="plz_input_name">请输入姓名</string>
+    <string name="plz_input_nickname">请输入昵称</string>
+    <string name="plz_input_id">请输入身份证号码</string>
+    <string name="plz_input_birthday">请输入生日信息</string>
+    <string name="title_activity_show_personal_info">ShowPersonalInfo</string>
+    <string name="dot">&#183;</string>
+    <string name="title_activity_modify_personal_info">ModifyPersonalInfo</string>
+    <string name="title_activity_take_picture">TakePictureActivity</string>
+    <string name="title_activity_test_web_view">TestWebViewActivity</string>
+    <string name="open_door_success">开门成功</string>
+    <string name="open_door_fail">开门失败，请靠近重新连接</string>
+    <string name="low_android_version">系统版本过低，无法使用云门</string>
+    <string name="reset_the_gesture_pwd">请重设手势密码</string>
+    <string name="login_pwd">登陆密码</string>
+    <string name="get_certi_code_again">重新验证</string>
+    <string name="have_send">已发验证</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="wrong_pwd">密码输入有误</string>
+    <string name="week">周</string>
+    <string name="sunday">日</string>
+    <string name="monday">一</string>
+    <string name="tuesday">二</string>
+    <string name="wednesday">三</string>
+    <string name="thursday">四</string>
+    <string name="friday">五</string>
+    <string name="saturday">六</string>
+    <string name="no_network">无网络连接，请检查网络</string>
+    <string name="can_shake_to_open_door">摇一摇也可开门</string>
+    <string name="scanning">正在搜索中...</string>
+    <string name="door_openning">稍等，正在开门...</string>
+    <string name="title_activity_contact_wuye">ContactWuyeActivity</string>
+    <string name="can_not_use_open_door">该设备不支持开门功能</string>
+    <string name="dialog_error_title">下载出错</string>
+    <string name="dialog_downfailed_msg">版本下载失败</string>
+    <string name="dialog_downfailed_btnnext">重试</string>
+    <string name="dialog_update_title">版本更新</string>
+    <string name="dialog_update_msg">新版本</string>
+    <string name="dialog_update_msg2">可以下载</string>
+    <string name="dialog_update_btnupdate">开始下载</string>
+    <string name="dialog_downloading_msg">正在下载新版本</string>
+    <string name="dialog_update_btnnext">取消下载</string>
+    <string name="title_activity_notice">NoticeActivity</string>
+    <string name="title_activity_report_to_repair">ReportToRepairActivity</string>
+    <string name="title_activity_complain">ComplainActivity</string>
+    <string name="title_activity_commend">CommendActivity</string>
+    <string name="title_activity_query">QueryActivity</string>
+    <string name="title_activity_bill">BillActivity</string>
+    <string name="title_activity_pay">PayActivity</string>
+    <string name="draw_gesture_again">再次绘制手势密码</string>
+    <string name="draw_diff_gesture">与上次绘制不一样，请重新绘制</string>
+    <string name="at_least_four_points">最少连接四个点，请重新输入</string>
+    <string name="draw_gesture">请绘制手势密码</string>
+    <string name="input_gesture">请输入解锁图案</string>
+    <string name="wrong_gesture">密码错了，还可输入</string>
+    <string name="times">次</string>
+    <string name="no_more_try_input_pwd">解锁次数已达上限，请验证登录密码</string>
+    <string name="uploading_image">正在上传头像</string>
+    <string name="title_activity_show_personal_info_not_certi">ShowPersonalInfoNotCerti</string>
+    <string name="certi">已认证</string>
+    <string name="not_certi">未认证</string>
+    <string name="title_activity_modify_personal_info_not_certi">ModifyPersonalInfoNotCerti</string>
+    <string name="plz_upload_image">请上传头像</string>
+    <string name="title_activity_weather_detail">WeatherDetail</string>
+    <string name="key_has_lend">车钥匙已借出</string>
+    <string name="user_not_regis">该用户尚未注册云门</string>
+    <string name="car_already_lend">该车正在借出中</string>
+    <string name="cannot_auth_to_self">您不能授权给自己</string>
+    <string name="lend_count_too_more">用户发送次数超限(一天5次)</string>
+    <string name="borrow_count_too_more">用户接收次数超限(一天5次)</string>
+    <string name="already_have_the_temp_key">该用户已拥有该临时钥匙</string>
+    <string name="car_not_lend">该车未在借用状态</string>
+    <string name="can_only_have_one_car_key_in_one_district">同一用户在同个小区只能拥有一个车钥匙</string>
+    <string name="select_district_first">请先选择小区地址</string>
+    <string name="sorry_you_are_in_the_zone">你已进入此小区</string>
+    <string name="sorry_you_are_out_the_zone">你已不在此小区内</string>
+    <string name="nick_name_already">该昵称已被使用</string>
+    <string name="not_enough_params">请补全资料后再提交</string>
+    <string name="regi_success">注册成功</string>
+    <string name="forget_success">重置密码成功</string>
+    <string name="weather_not_available">更新中</string>
+    <string name="input_wrong">请输入数字或大小写字母</string>
+    <string name="error_phonenumb_over">请输入正确的电话号码</string>
+    <string name="sms_content_to_compare">【非攻科技】</string>
+    <string name="plz_choose_district">请选择小区</string>
+    <string name="error_in_send_sms">发送短信异常</string>
+    <string name="auth_successful">钥匙发送成功</string>
+
+    <drawable name="clr_normal">#ffffff</drawable>
+    <drawable name="clr_pressed">#eeeeee</drawable>
+    <drawable name="text_enable">#333333</drawable>
+    <drawable name="text_pressed">#ffffff</drawable>
+
+    <string name="umeng_fb_contact_info_hint">QQ, 电话等我们能联系您的联系方式</string>
+    <string name="umeng_fb_back">返回</string>
+    <string name="umeng_fb_title">用户反馈</string>
+    <string name="umeng_fb_write_contact_title">填写联系信息</string>
+    <string name="umeng_fb_change_contact_title">更改联系信息</string>
+    <string name="umeng_fb_contact_info">联系方式</string>
+    <string name="umeng_fb_send">发送</string>
+    <string name="umeng_fb_reply_content_default">你好， 我是产品经理，欢迎您反馈使用产品的感受和建议。</string>
+    <string name="umeng_fb_notification_ticker_text">有新的回复</string>
+    <string name="umeng_fb_notification_content_formatter_single_msg">新回复: %s</string>
+    <string name="umeng_fb_notification_content_formatter_multiple_msg">收到来自开发者的 %d 条回复。</string>
+    <string name="umeng_fb_feedback">意见反馈</string>
+    <string name="umeng_fb_contact_save">保存</string>
+    <string name="umeng_fb_time_right_now">刚刚</string>
+    <string name="umeng_fb_time_minutes_ago">%d分钟前</string>
+    <string name="umeng_fb_time_this_year_format">MM/dd HH:mm:ss</string>
+    <string name="umeng_fb_time_pre_year_format">yy/MM/dd HH:mm:ss</string>
+    <string name="umeng_fb_contact_qq">QQ</string>
+    <string name="umeng_fb_contact_email">邮箱</string>
+    <string name="umeng_fb_contact_phone">手机</string>
+    <string name="umeng_fb_contact_other">其他</string>
+    <string name="umeng_fb_send_fail">发送失败</string>
+    <string name="umeng_fb_sending">正在发送&#8230;</string>
+    <string name="umeng_fb_contact_key_qq">qq</string>
+    <string name="umeng_fb_contact_key_email">email</string>
+    <string name="umeng_fb_contact_key_phone">phone</string>
+    <string name="umeng_fb_contact_key_other">plain</string>
+    <!-- 5.0.1 -->
+    <string name="umeng_fb_press_speech">按住说话</string>
+    <string name="umeng_fb_release_send">松开发送</string>
+    <string name="umeng_fb_release_cancel">松开手指,取消发送</string>
+    <string name="umeng_fb_slide_up_cancel">向上滑动,取消发送</string>
+    <string name="umeng_fb_record_time_short">录音时间太短</string>
+    <string name="umeng_fb_count_down">限时倒数</string>
+    <string name="umeng_fb_record_fail">录音失败</string>
+    <string name="umeng_fb_no_record_permission">没有录音权限</string>
+    <string name="umeng_fb_please_select_picture">请选择图片</string>
+
+    <string-array name="umeng_fb_contact_type_array">
+        <item>@string/umeng_fb_contact_email</item>
+        <item>@string/umeng_fb_contact_qq</item>
+        <item>@string/umeng_fb_contact_phone</item>
+        <item>@string/umeng_fb_contact_other</item>
+    </string-array>
+    <string-array name="umeng_fb_contact_key_array">
+        <item>@string/umeng_fb_contact_key_email</item>
+        <item>@string/umeng_fb_contact_key_qq</item>
+        <item>@string/umeng_fb_contact_key_phone</item>
+        <item>@string/umeng_fb_contact_key_other</item>
+    </string-array>
+    <string-array name="umeng_fb_tabs_title">
+        <item>用户反馈</item>
+        <item>常见问题</item>
+    </string-array>
+
+    <string name="title_activity_xie_yi">XieYiActivity</string>
+    <string name="user_not_exist">用户名不存在</string>
+    <string name="network_error">网络异常</string>
+    <string name="have_already_daka">已签到</string>
+    <string name="title_activity_no_one">NoOneActivity</string>
+    <string name="title_activity_no_two">NoTwoActivity</string>
+    <string name="title_activity_no_three">NoThreeActivity</string>
+    <string name="title_activity_no_other">NoOtherActivity</string>
+    <string name="title_activity_late">LateActivity</string>
+    <string name="title_activity_offwork">OffworkActivity</string>
+    <string name="daka_success">签到成功</string>
+
+</resources>

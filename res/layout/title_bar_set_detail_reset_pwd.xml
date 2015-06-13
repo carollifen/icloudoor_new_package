@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:background="#0065a1" >
+
+    <LinearLayout
+        android:id="@+id/btn_back_reset_pwd"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">"
+
+		<View
+		    android:layout_width="16dp"
+		    android:layout_height="match_parent" 
+		    />
+
+		<TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="取消"
+            android:textColor="#ffffff"
+        	android:textSize="15sp"
+        	android:gravity="center_vertical" />
+		
+		<View
+		    android:layout_width="16dp"
+		    android:layout_height="match_parent" 
+		    />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:text="重设密码"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+    
+    <LinearLayout
+        android:id="@+id/reset_pwd_done"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true" 
+        android:orientation="horizontal"
+        >
+		
+        <View
+		    android:layout_width="16dp"
+		    android:layout_height="match_parent" 
+		    />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="保存"
+            android:textColor="#30ff00"
+        	android:textSize="15sp"
+        	android:gravity="center_vertical" />
+        
+        <View
+		    android:layout_width="16dp"
+		    android:layout_height="match_parent" 
+		    />
+        
+    </LinearLayout>
+
+</RelativeLayout>

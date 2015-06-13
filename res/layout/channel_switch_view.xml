@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sv_container"
+    android:layout_width="164dip"
+    android:layout_height="40dip"
+    android:background="@drawable/huadong_bg_big" >
+
+    <RelativeLayout
+        android:id="@+id/switch_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+        
+        <ImageView
+            android:layout_width="80dip"
+            android:layout_height="40dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0.5dip"
+            android:layout_marginRight="0.5dip"
+            android:background="@drawable/huadong_bg_small" />
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/huadong_arrow" />
+        
+    </RelativeLayout>
+
+</RelativeLayout>
