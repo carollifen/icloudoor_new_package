@@ -151,7 +151,7 @@ public class CloudDoorMainActivity extends FragmentActivity {
 
 		private volatile boolean mStopThread = false;
 		public volatile boolean mKeyFindState = false;
-		private final long mScanningProidShort = 3000;
+		private final long mScanningProidShort = 2000;
 		private final long mScanningProidLong = 6000;
 
 		public void stopThread() {
