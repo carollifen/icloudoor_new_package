@@ -198,5 +198,8 @@
     <string name="title_activity_late">LateActivity</string>
     <string name="title_activity_offwork">OffworkActivity</string>
     <string name="daka_success">签到成功</string>
+    <string name="daka_first_string">今天我击败了</string>
+    <string name="daka_first_second">的同事</string>
+    <string name="what_i_rank">今天我排名第几?</string>
 
 </resources>

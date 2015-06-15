@@ -2,9 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/no_other_pic"
     >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        >
+        
+        <ImageView
+            android:id="@+id/bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/no_other_pic" />
+        
+    </RelativeLayout>
+    
 	<RelativeLayout
         android:id="@+id/dismiss"
         android:layout_width="66dp"

@@ -605,7 +605,7 @@ public class ShowPersonalInfo extends Activity {
 		if (str != null) {
 			StringBuilder sb = new StringBuilder(str);
 
-			for (int i = 6; i < 18; i++) {
+			for (int i = 6; i < sb.length(); i++) {
 				sb.setCharAt(i, '*');
 			}
 			str = sb.toString();

@@ -446,8 +446,14 @@ public class CloudDoorMainActivity extends FragmentActivity {
 				org.apache.http.HttpResponse httpResponse = httpClient
 						.execute(httpGet);
 
+				BitmapFactory.Options opts=new BitmapFactory.Options();
+				opts.inTempStorage = new byte[100 * 1024];
+				opts.inPreferredConfig = Bitmap.Config.RGB_565;
+				opts.inPurgeable = true;
+				opts.inSampleSize = 4;
+				
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
-						.getContent());
+						.getContent(), null, opts);
 			} catch (Exception e) {
 				mHandler.obtainMessage(2).sendToTarget();
 				return;

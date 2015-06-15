@@ -213,7 +213,7 @@ public class SetPersonalInfo extends Activity {
 
 		if (ID.length() > 0) {
 			StringBuilder sb = new StringBuilder(ID);
-			for (int i = 6; i < 18; i++) {
+			for (int i = 6; i < sb.length(); i++) {
 				sb.setCharAt(i, '*');
 			}
 			personalID.setText(sb.toString());

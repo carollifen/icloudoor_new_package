@@ -26,6 +26,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -271,5 +272,15 @@ public class DakaDialog extends Activity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& KeyEvent.KEYCODE_BACK == keyCode) {
+			setResult(2);
+			finish();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

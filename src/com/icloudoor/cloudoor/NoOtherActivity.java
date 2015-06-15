@@ -1,8 +1,11 @@
 package com.icloudoor.cloudoor;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.bean.StatusCode;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
@@ -18,7 +21,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,9 +39,14 @@ public class NoOtherActivity extends Activity {
 	private RelativeLayout shareLayout;
 	private RelativeLayout dismiss;
 	
+	private ImageView bgImage;
+	private Bitmap bgBitmap1, bgBitmap2;
+	
 	private String beatRatio;
 	
-	private Bitmap bitmapWithText;
+	private Bitmap shareBitmap1, shareBitmap2;
+	
+	private SnsPostListener mSnsPostListener;
 	
 	String appID = "wxcddf37d2f770581b";
 	String appSecret = "01d7ab875773e1282059d5b47b792e2b";
@@ -59,6 +69,13 @@ public class NoOtherActivity extends Activity {
 		dismiss = (RelativeLayout) findViewById(R.id.dismiss);
 		shareLayout = (RelativeLayout) findViewById(R.id.share_layout);
 		
+		bgImage = (ImageView) findViewById(R.id.bg);
+		
+		bgBitmap1 = drawTextToBitmap(this, R.drawable.no_other_empty_pic, getString(R.string.daka_first_string) + beatRatio + getString(R.string.daka_first_second));
+		bgBitmap2 = drawTextToBitmap2(this, bgBitmap1, getString(R.string.what_i_rank));
+		
+		bgImage.setImageBitmap(bgBitmap2);
+		
 		dismiss.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -68,10 +85,25 @@ public class NoOtherActivity extends Activity {
 			}
 			
 		});
-		
-		//TODO
-		bitmapWithText = drawTextToBitmap(this, R.raw.no_other_share_pic, "今天我击败了" + beatRatio + "的同事!");
 	
+		mSnsPostListener = new SnsPostListener() {
+
+			@Override
+			public void onComplete(SHARE_MEDIA arg0, int arg1, SocializeEntity arg2) {
+				if(arg1 == 200){
+					setResult(0);
+					finish();
+				}
+			}
+
+			@Override
+			public void onStart() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
+
 		// 添加微信平台
 		wxHandler = new UMWXHandler(NoOtherActivity.this, appID, appSecret);
 		wxHandler.addToSocialSDK();
@@ -80,8 +112,14 @@ public class NoOtherActivity extends Activity {
 		wxCircleHandler.setToCircle(true);
 		wxCircleHandler.addToSocialSDK();
 
+		shareBitmap1 = drawTextToBitmap(this, R.drawable.no_other_share_empty_pic, getString(R.string.daka_first_string) + beatRatio + getString(R.string.daka_first_second));
+		shareBitmap2 = drawTextToBitmap2(this, shareBitmap1, getString(R.string.what_i_rank));
+		
 		mController = UMServiceFactory.getUMSocialService("com.umeng.share");
-		mController.setShareMedia(new UMImage(NoOtherActivity.this, BitmapFactory.decodeStream(getResources().openRawResource(R.raw.no_other_share_pic))));
+		
+		mController.registerListener(mSnsPostListener);
+		
+		mController.setShareMedia(new UMImage(NoOtherActivity.this, shareBitmap2));
 		mController.getConfig().removePlatform(SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);		
 		
 		shareLayout.setOnClickListener(new OnClickListener(){
@@ -109,6 +147,15 @@ public class NoOtherActivity extends Activity {
 	public Bitmap drawTextToBitmap(Context gContext, int gResId, String gText) {
 		Resources resources = gContext.getResources();
 		float scale = resources.getDisplayMetrics().density;
+		
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenHeight = dm.heightPixels;
+		int screenWidth = dm.widthPixels;
+		
+		float ratioWidth = (float)screenWidth / 480;
+		float ratioHeight = (float)screenHeight / 800;
+		
 		Bitmap bitmap = BitmapFactory.decodeResource(resources, gResId);
 
 		android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
@@ -124,9 +171,56 @@ public class NoOtherActivity extends Activity {
 		// new antialised Paint
 		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		// text color - #3D3D3D
-		paint.setColor(Color.parseColor("#FF1493"));
+		paint.setColor(Color.parseColor("#fff7d9"));
 		// text size in pixels
-		paint.setTextSize(72);
+		float RATIO = Math.min(ratioWidth, ratioHeight);
+		paint.setTextSize(36*RATIO);
+		// text shadow
+		paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
+
+		// draw text to the Canvas center
+		Rect bounds = new Rect();
+		paint.getTextBounds(gText, 0, gText.length(), bounds);
+		int x = (bitmap.getWidth() - bounds.width()) / 2;
+		int y = (bitmap.getHeight() + bounds.height()) / 2;
+
+		canvas.drawText(gText, x, screenHeight * 7 / 10 + 20, paint);
+
+		return bitmap;
+	}
+	
+	public Bitmap drawTextToBitmap2(Context gContext, Bitmap bitmap, String gText) {
+		Resources resources = gContext.getResources();
+		float scale = resources.getDisplayMetrics().density;
+		
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenHeight = dm.heightPixels;
+		int screenWidth = dm.widthPixels;
+		
+		float ratioWidth = (float)screenWidth / 480;
+		float ratioHeight = (float)screenHeight / 800;
+		
+
+		android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
+		// set default bitmap config if none
+		if (bitmapConfig == null) {
+			bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+		}
+		// resource bitmaps are imutable,
+		// so we need to convert it to mutable one
+		bitmap = bitmap.copy(bitmapConfig, true);
+
+		Canvas canvas = new Canvas(bitmap);
+		// new antialised Paint
+		Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		// text color - #3D3D3D
+		paint.setColor(Color.parseColor("#fff7d9"));
+		// text size in pixels
+		
+		float RATIO = Math.min(ratioWidth, ratioHeight); 
+		
+		paint.setTextSize(36*RATIO);
 		// text shadow
 		paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
 
@@ -136,8 +230,18 @@ public class NoOtherActivity extends Activity {
 		int x = (bitmap.getWidth() - bounds.width()) / 2;
 		int y = (bitmap.getHeight() + bounds.height()) / 5;
 
-		canvas.drawText(gText, x, 100, paint);
+		canvas.drawText(gText, x, screenHeight * 8 / 10, paint);
 
 		return bitmap;
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& KeyEvent.KEYCODE_BACK == keyCode) {
+			setResult(0);
+			finish();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
