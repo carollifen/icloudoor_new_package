@@ -16,10 +16,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -56,6 +60,8 @@ public class RegisterComplete extends Activity implements TextWatcher {
 	private RelativeLayout pwdLayout;
 	private RelativeLayout pwdAgainLayout;
 	private RelativeLayout regiCompleteLayout;
+	
+	private boolean networkStatus;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +70,8 @@ public class RegisterComplete extends Activity implements TextWatcher {
 		setContentView(R.layout.register_complete);
 
 		setupUI(findViewById(R.id.main));
+		
+		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		
 		mQueue = Volley.newRequestQueue(this);
 
@@ -123,80 +131,90 @@ public class RegisterComplete extends Activity implements TextWatcher {
 
 			@Override
 			public void onClick(View v) {
-				try {
-					registerURL = new URL(HOST + "/user/manage/createUser.do"
-							+ "?sid=" + sid);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
+				
+				if(networkStatus){
+					try {
+						registerURL = new URL(HOST + "/user/manage/createUser.do"
+								+ "?sid=" + sid);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
 
-				inputPwd = ETInputPwd.getText().toString();
-				confirmPwd = ETConfirmPwd.getText().toString();
-				if (inputPwd.equals(confirmPwd)) {
-					MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-							Method.POST, registerURL.toString(), null,
-							new Response.Listener<JSONObject>() {
+					inputPwd = ETInputPwd.getText().toString();
+					confirmPwd = ETConfirmPwd.getText().toString();
+					if (inputPwd.equals(confirmPwd)) {
+						MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+								Method.POST, registerURL.toString(), null,
+								new Response.Listener<JSONObject>() {
 
-								@Override
-								public void onResponse(JSONObject response) {
-								
-									try {
-										statusCode = response.getInt("code");
-									} catch (JSONException e1) {
-										e1.printStackTrace();
-									}
-
-									if (statusCode == 1) {
+									@Override
+									public void onResponse(JSONObject response) {
+									
 										try {
-											if (response.getString("sid") != null) {
-												sid = response.getString("sid");
-												saveSid(sid);
-											}
-										} catch (JSONException e) {
-											e.printStackTrace();
+											statusCode = response.getInt("code");
+										} catch (JSONException e1) {
+											e1.printStackTrace();
 										}
-										Toast.makeText(getApplicationContext(), R.string.regi_success, Toast.LENGTH_SHORT).show();
-										
-										SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-										Editor editor = personalInfo.edit();
-										editor.putInt("SETINFO", 0);
-										editor.commit();
 
-										setResult(RESULT_OK);
-										finish();
-									} else if (statusCode == -40) {
-										Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred, Toast.LENGTH_SHORT).show();
-									} else if (statusCode == -41) {
-										Toast.makeText(getApplicationContext(), R.string.weak_pwd, Toast.LENGTH_SHORT).show();
-									} else if(statusCode == -99) {
-										Toast.makeText(getApplicationContext(),
-												R.string.unknown_err, Toast.LENGTH_SHORT)
-												.show();
+										if (statusCode == 1) {
+											try {
+												if (response.getString("sid") != null) {
+													sid = response.getString("sid");
+													saveSid(sid);
+												}
+											} catch (JSONException e) {
+												e.printStackTrace();
+											}
+											Toast.makeText(getApplicationContext(), R.string.regi_success, Toast.LENGTH_SHORT).show();
+											
+											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+											Editor editor = personalInfo.edit();
+											editor.putInt("SETINFO", 0);
+											editor.commit();
+
+											setResult(RESULT_OK);
+											finish();
+										} else if (statusCode == -40) {
+											Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred, Toast.LENGTH_SHORT).show();
+										} else if (statusCode == -41) {
+											Toast.makeText(getApplicationContext(), R.string.weak_pwd, Toast.LENGTH_SHORT).show();
+										} else if(statusCode == -99) {
+											Toast.makeText(getApplicationContext(),
+													R.string.unknown_err, Toast.LENGTH_SHORT)
+													.show();
+										}
 									}
-								}
-							}, new Response.ErrorListener() {
+								}, new Response.ErrorListener() {
 
-								@Override
-								public void onErrorResponse(VolleyError error) {
-									Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-								}
-							}) {
-						@Override
-						protected Map<String, String> getParams()
-								throws AuthFailureError {
-							Map<String, String> map = new HashMap<String, String>();
-							map.put("password", confirmPwd);
-							return map;
-						}
-					};
-					mQueue.add(mJsonRequest);
+									@Override
+									public void onErrorResponse(VolleyError error) {
+										Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+									}
+								}) {
+							@Override
+							protected Map<String, String> getParams()
+									throws AuthFailureError {
+								Map<String, String> map = new HashMap<String, String>();
+								map.put("password", confirmPwd);
+								return map;
+							}
+						};
+						mQueue.add(mJsonRequest);
+					} else {
+						Toast.makeText(v.getContext(), R.string.diff_pwd,
+								Toast.LENGTH_SHORT).show();
+					}
 				} else {
-					Toast.makeText(v.getContext(), R.string.diff_pwd,
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(RegisterComplete.this, R.string.no_network_available, Toast.LENGTH_SHORT).show();
 				}
 			}
 
 		});
+	}
+	
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(mConnectionStatusReceiver);
 	}
 
 	public void saveSid(String sid) {
@@ -266,6 +284,24 @@ public class RegisterComplete extends Activity implements TextWatcher {
 			regiCompleteLayout.setBackgroundResource(R.drawable.shape_regi_complete_disable);
 		}
 	}
+	
+	public BroadcastReceiver mConnectionStatusReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO: This method is called when the BroadcastReceiver is
+			// receiving
+			// an Intent broadcast.
+
+			ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if (networkInfo != null) {
+				networkStatus = true;
+			} else {
+				networkStatus = false;
+			}
+		}
+	};
 	
 	public static void hideSoftKeyboard(Activity activity) {
 		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);

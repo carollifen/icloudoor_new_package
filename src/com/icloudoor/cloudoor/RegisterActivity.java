@@ -18,13 +18,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -87,6 +91,8 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	private boolean checkXieyi = false;
 	
 	private boolean isBackKey;
+	
+	private boolean networkStatus;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +101,8 @@ public class RegisterActivity extends Activity implements TextWatcher {
 		setContentView(R.layout.register);
 		
 		setupUI(findViewById(R.id.main));
+		
+		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		
 		Log.e(TAG, "oncreate");
 
@@ -194,69 +202,73 @@ public class RegisterActivity extends Activity implements TextWatcher {
 
 			@Override
 			public void onClick(View v) {
+				
+				if(networkStatus){
+					if (ETInputPhoneNum.getText().toString().length() > 11){
+	                    Toast.makeText(getApplicationContext(), R.string.error_phonenumb_over, Toast.LENGTH_SHORT).show();
+	                }else {
+	                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+	                    if (imm.isActive()) {
+	                        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+	                    }
+	                    counter.start();
+	                    try {
+	                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid);
+	                    } catch (MalformedURLException e) {
+	                        e.printStackTrace();
+	                    }
 
-                if (ETInputPhoneNum.getText().toString().length() > 11){
-                    Toast.makeText(getApplicationContext(), R.string.error_phonenumb_over, Toast.LENGTH_SHORT).show();
-                }else {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm.isActive()) {
-                        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
-                    }
-                    counter.start();
-                    try {
-                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+	                    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+	                            Method.POST, requestCertiCodeURL.toString(), null,
+	                            new Response.Listener<JSONObject>() {
 
-                    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-                            Method.POST, requestCertiCodeURL.toString(), null,
-                            new Response.Listener<JSONObject>() {
+	                                @Override
+	                                public void onResponse(JSONObject response) {
+	                                    try {
+	                                        if (response.getString("sid") != null)
+	                                            sid = response.getString("sid");
+	                                        RequestCertiStatusCode = response.getInt("code");
+	                                    } catch (JSONException e) {
+	                                        e.printStackTrace();
+	                                    }
 
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        if (response.getString("sid") != null)
-                                            sid = response.getString("sid");
-                                        RequestCertiStatusCode = response.getInt("code");
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+	                                    Log.e("TEST", "response:" + response.toString());
 
-                                    Log.e("TEST", "response:" + response.toString());
+	                                    if (RequestCertiStatusCode == -20) {
+	                                        Toast.makeText(getApplicationContext(),
+	                                                R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
+	                                                .show();
+	                                    } else if (RequestCertiStatusCode == -21) {
+	                                        Toast.makeText(getApplicationContext(),
+	                                                R.string.send_too_frequently, Toast.LENGTH_SHORT)
+	                                                .show();
+	                                    } else if(RequestCertiStatusCode == -99) {
+	    									Toast.makeText(getApplicationContext(),
+	    											R.string.unknown_err, Toast.LENGTH_SHORT)
+	    											.show();
+	    								}
+	                                }
 
-                                    if (RequestCertiStatusCode == -20) {
-                                        Toast.makeText(getApplicationContext(),
-                                                R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
-                                                .show();
-                                    } else if (RequestCertiStatusCode == -21) {
-                                        Toast.makeText(getApplicationContext(),
-                                                R.string.send_too_frequently, Toast.LENGTH_SHORT)
-                                                .show();
-                                    } else if(RequestCertiStatusCode == -99) {
-    									Toast.makeText(getApplicationContext(),
-    											R.string.unknown_err, Toast.LENGTH_SHORT)
-    											.show();
-    								}
-                                }
+	                            }, new Response.ErrorListener() {
 
-                            }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-    							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams()
-                                throws AuthFailureError {
-                            Map<String, String> map = new HashMap<String, String>();
-                            map.put("mobile", ETInputPhoneNum.getText().toString());
-                            return map;
-                        }
-                    };
-                    mQueue.add(mJsonRequest);
-                }
+	                        @Override
+	                        public void onErrorResponse(VolleyError error) {
+	    							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+	                        }
+	                    }) {
+	                        @Override
+	                        protected Map<String, String> getParams()
+	                                throws AuthFailureError {
+	                            Map<String, String> map = new HashMap<String, String>();
+	                            map.put("mobile", ETInputPhoneNum.getText().toString());
+	                            return map;
+	                        }
+	                    };
+	                    mQueue.add(mJsonRequest);
+	                }
+				} else {
+					Toast.makeText(RegisterActivity.this, R.string.no_network_available, Toast.LENGTH_SHORT).show();
+				}
 			}
 
 		});
@@ -265,72 +277,76 @@ public class RegisterActivity extends Activity implements TextWatcher {
 			@Override
 			public void onClick(View v) {
 				
-				try {
-					verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid);
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-						Method.POST, verifyCertiCodeURL.toString(), null,
-						new Response.Listener<JSONObject>() {
+				if(networkStatus){
+					try {
+						verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+					MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+							Method.POST, verifyCertiCodeURL.toString(), null,
+							new Response.Listener<JSONObject>() {
 
-							@Override
-							public void onResponse(JSONObject response) {
-								try {
-									ConfirmCertiStatusCode = response.getInt("code");
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-
-								if (ConfirmCertiStatusCode == 1) {
+								@Override
+								public void onResponse(JSONObject response) {
 									try {
-										if (response.getString("sid") != null) {
-											sid = response.getString("sid");
-											saveSid(sid);
-										}
+										ConfirmCertiStatusCode = response.getInt("code");
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
-									Intent intent = new Intent();
-									intent.setClass(getApplicationContext(), RegisterComplete.class);
-									startActivityForResult(intent, 0);
-								} else if (ConfirmCertiStatusCode == -30) {
-									Toast.makeText(getApplicationContext(),
-											R.string.input_wrong_certi_code, Toast.LENGTH_SHORT)
-											.show();
-								} else if (ConfirmCertiStatusCode == -31) {
-									Toast.makeText(getApplicationContext(), R.string.certi_code_overdue,
-											Toast.LENGTH_SHORT).show();
-								} else if(ConfirmCertiStatusCode == -40) {
-									Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred,
-											Toast.LENGTH_LONG).show();
-									SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
-						          	Editor editor = RegiPhone.edit();
-						          	editor.putString("PHONE", ETInputPhoneNum.getText().toString());
-						          	editor.commit();
-									finish();
-								} else if(ConfirmCertiStatusCode == -99){
-									Toast.makeText(getApplicationContext(), R.string.error_in_send_sms,
-											Toast.LENGTH_SHORT).show();
-								}
-							}
-						}, new Response.ErrorListener() {
 
-							@Override
-							public void onErrorResponse(VolleyError error) {
-								Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-							}
-						}) {
-					@Override
-					protected Map<String, String> getParams()
-							throws AuthFailureError {
-						Map<String, String> map = new HashMap<String, String>();
-						map.put("verifyCode", ETInputCertiCode.getText()
-								.toString());
-						return map;
-					}
-				};
-				mQueue.add(mJsonRequest);
+									if (ConfirmCertiStatusCode == 1) {
+										try {
+											if (response.getString("sid") != null) {
+												sid = response.getString("sid");
+												saveSid(sid);
+											}
+										} catch (JSONException e) {
+											e.printStackTrace();
+										}
+										Intent intent = new Intent();
+										intent.setClass(getApplicationContext(), RegisterComplete.class);
+										startActivityForResult(intent, 0);
+									} else if (ConfirmCertiStatusCode == -30) {
+										Toast.makeText(getApplicationContext(),
+												R.string.input_wrong_certi_code, Toast.LENGTH_SHORT)
+												.show();
+									} else if (ConfirmCertiStatusCode == -31) {
+										Toast.makeText(getApplicationContext(), R.string.certi_code_overdue,
+												Toast.LENGTH_SHORT).show();
+									} else if(ConfirmCertiStatusCode == -40) {
+										Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred,
+												Toast.LENGTH_LONG).show();
+										SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
+							          	Editor editor = RegiPhone.edit();
+							          	editor.putString("PHONE", ETInputPhoneNum.getText().toString());
+							          	editor.commit();
+										finish();
+									} else if(ConfirmCertiStatusCode == -99){
+										Toast.makeText(getApplicationContext(), R.string.error_in_send_sms,
+												Toast.LENGTH_SHORT).show();
+									}
+								}
+							}, new Response.ErrorListener() {
+
+								@Override
+								public void onErrorResponse(VolleyError error) {
+									Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+								}
+							}) {
+						@Override
+						protected Map<String, String> getParams()
+								throws AuthFailureError {
+							Map<String, String> map = new HashMap<String, String>();
+							map.put("verifyCode", ETInputCertiCode.getText()
+									.toString());
+							return map;
+						}
+					};
+					mQueue.add(mJsonRequest);
+				} else {
+					Toast.makeText(RegisterActivity.this, R.string.no_network_available, Toast.LENGTH_SHORT).show();
+				}
 			}
 
 		});
@@ -548,7 +564,26 @@ public class RegisterActivity extends Activity implements TextWatcher {
         super.onDestroy();
         Log.e(TAG, "ondestroy");
         this.getContentResolver().unregisterContentObserver(content);
+        unregisterReceiver(mConnectionStatusReceiver);
     }
+    
+    public BroadcastReceiver mConnectionStatusReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO: This method is called when the BroadcastReceiver is
+			// receiving
+			// an Intent broadcast.
+
+			ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if (networkInfo != null) {
+				networkStatus = true;
+			} else {
+				networkStatus = false;
+			}
+		}
+	};	
     
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
