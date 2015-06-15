@@ -19,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -85,6 +86,12 @@ public class SettingFragment extends Fragment {
 			+ "/Cloudoor/CacheImage/";
 	private String imageName = "myImage.jpg";
 	
+	private MyDataBaseHelper mKeyDBHelper;
+	private SQLiteDatabase mKeyDB;
+	private final String DATABASE_NAME = "KeyDB.db";
+	private final String TABLE_NAME = "KeyInfoTable";
+	private final String CAR_TABLE_NAME = "CarKeyTable";
+	private final String ZONE_TABLE_NAME = "ZoneTable";
 	
 	public SettingFragment() {
 		// Required empty public constructor
@@ -100,6 +107,9 @@ public class SettingFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.set_page, container, false);
 
+		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
+		
 		back_from_user= (RelativeLayout) view.findViewById(R.id.back_from_user);
 		back_from_user.setOnClickListener(new OnClickListener() {
 			
@@ -320,6 +330,16 @@ public class SettingFragment extends Fragment {
                                         intent3.setClass(getActivity(), Login.class);
                                         startActivity(intent3);
                                         }
+                                        
+                                        
+                                        String sql = "DELETE FROM " + TABLE_NAME +";";
+                                        mKeyDB.execSQL(sql);
+                                        
+                                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+                                        mKeyDB.execSQL(sq2);
+                                        
+                                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+                                        mKeyDB.execSQL(sq3);                                        
                                                                   
                                         CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
                                         mainActivity.finish();
