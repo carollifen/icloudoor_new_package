@@ -2,6 +2,7 @@ package com.icloudoor.cloudoor;
 
 import java.util.Calendar;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -129,7 +130,7 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 		            date_show.setTextColor(0xff333333);
 		        }  
 		    };  
-		    new DatePickerDialog(getActivity(),onDateSetListener, mYear	, mMonth	, mDay).show();
+		    new DatePickerDialog(getActivity(),AlertDialog.THEME_HOLO_LIGHT,onDateSetListener, mYear	, mMonth	, mDay).show();
 			
 		    //TODO
 			if(date_show.length() > 0){

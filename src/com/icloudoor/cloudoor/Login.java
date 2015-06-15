@@ -65,7 +65,7 @@ public class Login extends Activity implements TextWatcher {
 
 	private String phoneNum, password;
 
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST;
 
 	private int loginStatusCode;
 

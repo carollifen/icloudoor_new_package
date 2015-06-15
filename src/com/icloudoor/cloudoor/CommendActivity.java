@@ -30,7 +30,7 @@ public class CommendActivity extends Activity {
 	private int TYPE_GOOD=1;
 	
 	private WebSettings webSetting;
-	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
+	private String url = UrlUtils.HOST + "/user/prop/zone/cp/page.do";
 	private Broadcast mFinishActivityBroadcast;
 	
 	boolean isDebug = DEBUG.isDebug;

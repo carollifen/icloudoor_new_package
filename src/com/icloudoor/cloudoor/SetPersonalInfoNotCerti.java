@@ -140,7 +140,7 @@ public class SetPersonalInfoNotCerti extends Activity {
 	
 	private RequestQueue mQueue;
 	private URL setInfoURL;
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST;
 	private String sid;
 	private int statusCode;
 	

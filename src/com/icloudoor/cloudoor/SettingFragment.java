@@ -65,7 +65,7 @@ public class SettingFragment extends Fragment {
 	private MyOnClickListener myClickListener;
 
 	private RequestQueue mQueue;
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST;
 	private URL logOutURL;
 	private String sid = null;
 	private int statusCode;

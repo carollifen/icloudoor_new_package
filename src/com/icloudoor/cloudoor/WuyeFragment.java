@@ -72,7 +72,7 @@ public class WuyeFragment extends Fragment {
 
 	private URL unReadURL;
 	private RequestQueue mQueue;
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST;
 	private String sid;
 
 	// for test
@@ -215,7 +215,7 @@ public class WuyeFragment extends Fragment {
 
 		try {
 			bannerURL = new URL(
-					"http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/getBannerRotate.do"
+					UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do"
 							+ "?sid=" + sid);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

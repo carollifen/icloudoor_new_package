@@ -152,7 +152,7 @@ public class KeyFragmentNoBLE extends Fragment {
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
 	
-	private String lhlHOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String lhlHOST = UrlUtils.HOST;
 	private URL lhlURL;
 	private int lhlCode;
 	private String sid;

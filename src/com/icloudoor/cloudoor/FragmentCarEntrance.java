@@ -35,8 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.umeng.common.message.Log;
 
 public class FragmentCarEntrance extends Fragment {
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web"
-			+ "/user/api/getFamilyUserAndCars.do";
+	private String HOST = UrlUtils.HOST + "/user/api/getFamilyUserAndCars.do";
 	private String sid = null;
 
 	private ImageView IVshowPhoneNum;

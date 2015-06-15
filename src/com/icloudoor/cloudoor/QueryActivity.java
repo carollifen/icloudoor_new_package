@@ -30,9 +30,9 @@ public class QueryActivity extends Activity {
 
 	private WebView surveyWebView;
 	private String sid;
-	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/survey/page.do";
+	private String url = UrlUtils.HOST + "/user/prop/zone/survey/page.do";
 
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST;
 	private String phonenum;
 
 	private WebSettings webSetting;

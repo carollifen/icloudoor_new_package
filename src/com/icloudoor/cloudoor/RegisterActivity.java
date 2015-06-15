@@ -76,7 +76,7 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	private int ConfirmCertiStatusCode;
 	private String sid = null;
 
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST;
 	
 	// for new ui
 	private RelativeLayout phoneLayout;

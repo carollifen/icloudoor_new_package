@@ -147,7 +147,7 @@ public class KeyFragment extends Fragment {
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
 	
-	private String lhlHOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String lhlHOST = UrlUtils.HOST;
 	private URL lhlURL;
 	private int lhlCode;
 	private String sid;
@@ -439,7 +439,7 @@ public class KeyFragment extends Fragment {
 
 		try {
 			downLoadKeyURL = new URL(
-					"http://test.zone.icloudoor.com/icloudoor-web/user/door/download2.do"
+					UrlUtils.HOST + "/user/door/download2.do"
 							+ "?sid=" + sid);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

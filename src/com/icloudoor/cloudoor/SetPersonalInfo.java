@@ -152,7 +152,7 @@ public class SetPersonalInfo extends Activity {
 
 	private RequestQueue mQueue;
 	private URL setInfoURL;
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST;
 	private String sid;
 	private int statusCode;
 
@@ -545,6 +545,8 @@ public class SetPersonalInfo extends Activity {
 			}
 		});
 	}
+	
+	File cameraFile;
 
 	private OnClickListener itemsOnClick = new OnClickListener() {
 
@@ -553,19 +555,33 @@ public class SetPersonalInfo extends Activity {
 			switch (v.getId()) {
 			case R.id.btn_take_photo:
 //				startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
-				Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-				String filename = timeStampFormat.format(new Date());
-				ContentValues values = new ContentValues();
-				values.put(Media.TITLE, filename);
-
-				photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-				intent1.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-
-				startActivityForResult(intent1, 1);
+//				Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//				SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+//				String filename = timeStampFormat.format(new Date());
+//				ContentValues values = new ContentValues();
+//				values.put(Media.TITLE, filename);
+//
+//				photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//
+//				intent1.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+//
+//				startActivityForResult(intent1, 1);
+				
+				if (!isExitsSdcard()) {
+					Toast.makeText(getApplicationContext(), "SD¿¨²»¿ÉÓÃ", 0).show();
+					return;
+				}
+				cameraFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/cloudoor", 
+						+ System.currentTimeMillis() + ".jpg");
+				cameraFile.getParentFile().mkdirs();
+				startActivityForResult(
+						new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),
+						1);
+				
+				
 				break;
 			case R.id.btn_pick_photo:
+				
 				Intent intent = new Intent();
 				intent.setAction(Intent.ACTION_PICK);
 				intent.setType("image/*");
@@ -579,6 +595,48 @@ public class SetPersonalInfo extends Activity {
 		}
 
 	};
+	
+	
+	public  boolean isExitsSdcard() {
+		if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+			return true;
+		else
+			return false;
+	}
+	
+	
+	
+	private String getpicturePath(Uri selectedImage) {
+		// String[] filePathColumn = { MediaStore.Images.Media.DATA };
+		Cursor cursor = getContentResolver().query(selectedImage, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int columnIndex = cursor.getColumnIndex("_data");
+			String picturePath = cursor.getString(columnIndex);
+			cursor.close();
+			cursor = null;
+
+			if (picturePath == null || picturePath.equals("null")) {
+				Toast toast = Toast.makeText(this, "»ñÈ¡Í¼Æ¬Ê§°Ü", Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				return null;
+			}
+			return picturePath;
+			
+		} else {
+			
+			File file = new File(selectedImage.getPath());
+			if (!file.exists()) {
+				Toast toast = Toast.makeText(this, "Í¼Æ¬²»´æÔÚ", Toast.LENGTH_SHORT);
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.show();
+				return null;
+			}
+			return file.getAbsolutePath();
+		}
+
+	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -707,7 +765,8 @@ public class SetPersonalInfo extends Activity {
 			opts.inPreferredConfig = Bitmap.Config.RGB_565;
 			opts.inPurgeable = true;
 			opts.inSampleSize = 4;
-			Bitmap bm = BitmapFactory.decodeFile(getRealPathFromURI(uri), opts);
+//			Bitmap bm = BitmapFactory.decodeFile(getRealPathFromURI(uri), opts);
+			Bitmap bm = BitmapFactory.decodeFile(cameraFile.getAbsolutePath(), opts);
 			
 			if(bm.getWidth() < bm.getHeight()){
 				bm = zoomImage(bm, 400, 400);
@@ -741,7 +800,8 @@ public class SetPersonalInfo extends Activity {
 					HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
 
 					File file = null;
-					file = new File(getRealPathFromURI(uri));
+//					file = new File(getRealPathFromURI(uri));
+					file = new File(cameraFile.getAbsolutePath());
 					Part[] parts = null;
 					FilePart filePart = null;
 					try {

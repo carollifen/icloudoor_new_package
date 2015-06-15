@@ -47,7 +47,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	private String oldPwd, newPwd, confirmPwd;
 
 	private int statusCode;
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST;
 	private String sid = null;
 	
 	boolean isDebug = DEBUG.isDebug;
@@ -90,8 +90,7 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 			@Override
 			public void onClick(View v) {
 				try {
-					resetPwdURL = new URL(HOST
-							+ "/user/manage/changePassword.do" + "?sid=" + sid);
+					resetPwdURL = new URL(HOST + "/user/manage/changePassword.do" + "?sid=" + sid);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}

@@ -28,7 +28,7 @@ public class ComplainActivity extends Activity {
 	private int TYPE_BAD = 2;
 
 	private WebSettings webSetting;
-	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
+	private String url = UrlUtils.HOST + "/user/prop/zone/cp/page.do";
 
 	private Broadcast mFinishActivityBroadcast;
 	

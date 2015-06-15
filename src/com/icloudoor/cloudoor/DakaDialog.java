@@ -45,7 +45,7 @@ public class DakaDialog extends Activity {
 	private TextView gowork;
 	private TextView offwork;
 	
-	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/api/sign.do";
+	private String url = UrlUtils.HOST + "/user/api/sign.do";
 	private URL requestURL;
 	private RequestQueue mQueue;
 	private String sid;

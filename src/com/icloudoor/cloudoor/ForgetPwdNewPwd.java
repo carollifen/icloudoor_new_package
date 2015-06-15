@@ -36,7 +36,7 @@ public class ForgetPwdNewPwd extends Activity {
 	private String newPwd, confirmPwd;
 
 	private int statusCode;
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
+	private String HOST = UrlUtils.HOST + "";
 	private String sid = null;
 
 	@Override

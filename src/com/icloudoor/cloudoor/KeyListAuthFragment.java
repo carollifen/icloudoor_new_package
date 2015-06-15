@@ -61,12 +61,11 @@ import android.widget.Toast;
 @SuppressLint("ResourceAsColor")
 public class KeyListAuthFragment extends Fragment {
 
-	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web"
-			+ "/user/api/getMyAddress.do";
+	private String HOST = UrlUtils.HOST + "/user/api/getMyAddress.do";
 
-	private String postKerUrl = "http://test.zone.icloudoor.com/icloudoor-web/user/api/authTempCar.do";
+	private String postKerUrl = UrlUtils.HOST + "/user/api/authTempCar.do";
 
-	private String postNomalKeyUrl = "http://test.zone.icloudoor.com/icloudoor-web/user/api/authTempNormal.do";
+	private String postNomalKeyUrl = UrlUtils.HOST + "/user/api/authTempNormal.do";
 	private String sid = null;
 
 	private SharedPreferences dateAndPhoneShare;
