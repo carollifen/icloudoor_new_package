@@ -25,6 +25,9 @@ public class BillActivity extends Activity {
 	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/payment/bill.do";
 	private WebSettings webSetting;
 	private Broadcast mFinishActivityBroadcast;
+	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

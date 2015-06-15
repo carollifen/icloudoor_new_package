@@ -16,6 +16,8 @@ public class LauncherActivity extends Activity {
 	private int isLogin = 0;
 	private int useSign = 0;
 
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

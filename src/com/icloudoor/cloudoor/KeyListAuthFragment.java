@@ -122,6 +122,8 @@ public class KeyListAuthFragment extends Fragment {
 	private ArrayList<Map<String, String>> Zonekeylist;
 	private ArrayList<Map<String, String>> tempkeylist;
 
+	boolean isDebug = DEBUG.isDebug;
+	
 	public KeyListAuthFragment() {
 		// Required empty public constructor
 	}

@@ -31,6 +31,8 @@ public class ComplainActivity extends Activity {
 	private String url = "http://test.zone.icloudoor.com/icloudoor-web/user/prop/zone/cp/page.do";
 
 	private Broadcast mFinishActivityBroadcast;
+	
+	boolean isDebug = DEBUG.isDebug;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

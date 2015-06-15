@@ -28,6 +28,8 @@ public class PayActivity extends Activity {
 	private WebSettings webSetting;
 	private Broadcast mFinishActivityBroadcast;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

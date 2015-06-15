@@ -27,6 +27,8 @@ public class ConfirmGestureActivity extends Activity implements OnClickListener 
 	private RelativeLayout mback;
 	
 	private Broadcast mFinishActivityBroadcast;
+	
+	boolean isDebug = DEBUG.isDebug;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

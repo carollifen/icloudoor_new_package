@@ -94,6 +94,8 @@ public class KeyListListFragment extends Fragment {
 
 	private SharedPreferences carNumAndPhoneNumShare;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	public KeyListListFragment() {
 		// Required empty public constructor
 	}

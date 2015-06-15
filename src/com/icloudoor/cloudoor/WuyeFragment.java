@@ -78,6 +78,8 @@ public class WuyeFragment extends Fragment {
 	// for test
 	private URL bannerURL;
 
+	boolean isDebug = DEBUG.isDebug;
+	
 	public WuyeFragment() {
 
 	}

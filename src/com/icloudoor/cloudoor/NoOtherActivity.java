@@ -54,6 +54,8 @@ public class NoOtherActivity extends Activity {
 	UMWXHandler wxHandler;
 	UMWXHandler wxCircleHandler;
 	UMSocialService mController;
+	
+	boolean isDebug = DEBUG.isDebug;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

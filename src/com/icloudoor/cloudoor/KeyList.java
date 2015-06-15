@@ -127,6 +127,8 @@ public class KeyList extends FragmentActivity{
 	
 	private Broadcast mFinishActivityBroadcast;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

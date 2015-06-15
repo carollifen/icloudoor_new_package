@@ -101,6 +101,7 @@ public class SettingFragment extends Fragment {
 	
 	private FeedbackAgent agent;
 	
+	boolean isDebug = DEBUG.isDebug;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

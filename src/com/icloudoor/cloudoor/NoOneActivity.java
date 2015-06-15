@@ -11,11 +11,14 @@ import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListene
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
+import com.umeng.socialize.weixin.media.CircleShareContent;
+import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Config;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -38,11 +41,15 @@ public class NoOneActivity extends Activity {
 	UMWXHandler wxCircleHandler;
 	UMSocialService mController;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		setContentView(R.layout.activity_no_one);
+		
+		
 		
 		dismiss = (RelativeLayout) findViewById(R.id.dismiss);
 		shareLayout = (RelativeLayout) findViewById(R.id.share_layout);
@@ -87,6 +94,25 @@ public class NoOneActivity extends Activity {
 		
 		mController.registerListener(mSnsPostListener);
 		
+		
+//		CircleShareContent circleMedia = new CircleShareContent();
+//		circleMedia.setShareContent("这是个测试");
+//		circleMedia.setTitle("这是个测试");
+//		circleMedia.setTargetUrl("http://www.icloudoor.com");
+//		circleMedia.setShareImage(new UMImage(NoOneActivity.this, BitmapFactory.decodeStream(getResources().openRawResource(
+//						R.raw.no1_share_pic))));
+
+//		WeiXinShareContent weixinContent = new WeiXinShareContent();
+//		weixinContent.setShareContent("这是个测试");
+//		weixinContent.setTitle("这是个测试");
+//		weixinContent.setTargetUrl("http://www.icloudoor.com");
+//		weixinContent.setShareImage(new UMImage(NoOneActivity.this, BitmapFactory.decodeStream(getResources().openRawResource(
+//				R.raw.no1_share_pic))));
+		
+		
+//		mController.setShareMedia(circleMedia);
+//		mController.setShareMedia(weixinContent);
+//		
 		mController.setShareMedia(new UMImage(NoOneActivity.this, BitmapFactory.decodeStream(getResources().openRawResource(
 						R.raw.no1_share_pic))));
 		mController.getConfig().removePlatform(SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);

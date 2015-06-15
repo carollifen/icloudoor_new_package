@@ -101,6 +101,8 @@ public class ShowPersonalInfo extends Activity {
 	
 	private  String formatID;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

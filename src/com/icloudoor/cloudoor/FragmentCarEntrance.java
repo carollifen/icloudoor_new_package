@@ -75,6 +75,8 @@ public class FragmentCarEntrance extends Fragment {
 	boolean havePhone;
 	boolean haveCarNum;
 
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

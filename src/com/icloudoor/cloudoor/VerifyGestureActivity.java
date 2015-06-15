@@ -54,6 +54,9 @@ public class VerifyGestureActivity extends Activity {
  	private TextView textTip;
  	
  	private RelativeLayout mback;
+ 	
+ 	boolean isDebug = DEBUG.isDebug;
+ 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

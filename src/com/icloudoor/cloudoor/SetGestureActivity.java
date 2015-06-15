@@ -33,6 +33,8 @@ public class SetGestureActivity extends Activity implements OnClickListener {
 	
 	private TextView textTip;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

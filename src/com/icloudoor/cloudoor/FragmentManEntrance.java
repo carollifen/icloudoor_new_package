@@ -46,6 +46,8 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 	SharedPreferences submitStatus;
 	Editor editor;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

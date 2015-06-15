@@ -59,6 +59,8 @@ public class WuyeWidgeFragment extends Fragment {
 			+ "/Cloudoor/CachePic";
 	private String imageName = "myCachePic1.jpg";
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	public WuyeWidgeFragment() {
 		// Required empty public constructor
 	}

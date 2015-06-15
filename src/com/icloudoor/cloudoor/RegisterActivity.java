@@ -93,6 +93,8 @@ public class RegisterActivity extends Activity implements TextWatcher {
 	private boolean isBackKey;
 	
 	private boolean networkStatus;
+	
+	boolean isDebug = DEBUG.isDebug;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

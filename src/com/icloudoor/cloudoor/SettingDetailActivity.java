@@ -32,6 +32,8 @@ public class SettingDetailActivity extends Activity {
 	
 	private int canShake, haveSound, canDisturb, switchToCar;
 	private MyBtnOnClickListener mMyBtnOnClickListener;
+	
+	boolean isDebug = DEBUG.isDebug;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -58,6 +58,8 @@ public class DakaDialog extends Activity {
 	private boolean isLate;
 	private String beatRatio;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -179,6 +179,8 @@ public class KeyFragmentNoBLE extends Fragment {
     private ImageView circle;
     private ImageView radar;
 
+    boolean isDebug = DEBUG.isDebug;
+    
 	public KeyFragmentNoBLE() {
 		// Required empty public constructor
 	}

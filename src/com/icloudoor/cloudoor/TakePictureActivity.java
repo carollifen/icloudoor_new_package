@@ -26,6 +26,8 @@ public class TakePictureActivity extends Activity implements CamOpenOverCallback
 	
 	private RelativeLayout btnCancel, btnConfirm;
 		
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

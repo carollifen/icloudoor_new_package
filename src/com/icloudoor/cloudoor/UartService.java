@@ -27,6 +27,8 @@ public class UartService extends Service {
 
 	private final static String TAG = UartService.class.getSimpleName();
 
+	boolean isDebug = DEBUG.isDebug;
+	
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;

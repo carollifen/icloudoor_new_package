@@ -212,6 +212,8 @@ public class KeyFragment extends Fragment {
 
 	public CloudDoorMainActivity activity;
 
+	boolean isDebug = DEBUG.isDebug;
+	
 	public KeyFragment() {
 		// Required empty public constructor
 	}

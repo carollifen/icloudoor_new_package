@@ -50,6 +50,8 @@ public class ResetPwdActivity extends Activity implements TextWatcher {
 	private String HOST = "http://test.zone.icloudoor.com/icloudoor-web";
 	private String sid = null;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

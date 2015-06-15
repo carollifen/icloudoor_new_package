@@ -38,6 +38,8 @@ public class ContactWuyeActivity extends Activity {
 	
 	private String phonenum;
 	private Broadcast mFinishActivityBroadcast;
+	
+	boolean isDebug = DEBUG.isDebug;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

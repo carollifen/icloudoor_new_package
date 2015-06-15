@@ -94,6 +94,8 @@ public class ForgetPwdActivity extends Activity implements TextWatcher {
 	
 	private boolean networkStatus;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

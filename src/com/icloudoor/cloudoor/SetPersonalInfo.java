@@ -172,6 +172,8 @@ public class SetPersonalInfo extends Activity {
 	
 	private ProgressBar upLoadBar;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

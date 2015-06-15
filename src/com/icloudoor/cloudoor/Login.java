@@ -88,6 +88,8 @@ public class Login extends Activity implements TextWatcher {
 	private RelativeLayout pwdLayout;
 	private RelativeLayout loginLayout;
 
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -244,7 +246,9 @@ public class Login extends Activity implements TextWatcher {
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
-									Log.e("TEST", response.toString());
+									
+									if(isDebug)
+										Log.e("TEST", response.toString());
 
                                     pbLoginBar.setVisibility(View.INVISIBLE);
 									if (loginStatusCode == 1) {

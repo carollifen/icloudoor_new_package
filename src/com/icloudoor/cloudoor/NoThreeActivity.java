@@ -37,6 +37,8 @@ public class NoThreeActivity extends Activity {
 	UMWXHandler wxCircleHandler;
 	UMSocialService mController;
 	
+	boolean isDebug = DEBUG.isDebug;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
