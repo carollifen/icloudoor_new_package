@@ -22,6 +22,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -80,8 +82,16 @@ public class Login extends Activity implements TextWatcher {
 	private String birth = null;
 	private int sex = 0, provinceId = 0, cityId = 0, districtId = 0;
 	private String portraitUrl, userId;
+	private String province = null;
+	private String city = null;
+	private String district = null;
 	private int userStatus;
 	private boolean isHasPropServ;
+	
+	private MyAreaDBHelper mAreaDBHelper;
+	private SQLiteDatabase mAreaDB;
+	private final String DATABASE_NAME = "area.db";
+	private final String TABLE_NAME = "tb_core_area";
 	
 	// for new ui
 	private RelativeLayout phoneLayout;
@@ -100,6 +110,9 @@ public class Login extends Activity implements TextWatcher {
 		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		
 		setupUI(findViewById(R.id.main));
+		
+		mAreaDBHelper = new MyAreaDBHelper(Login.this, DATABASE_NAME, null, 1);
+		mAreaDB = mAreaDBHelper.getWritableDatabase();	
 		
 		mQueue = Volley.newRequestQueue(this);
 
@@ -295,6 +308,34 @@ public class Login extends Activity implements TextWatcher {
 											editor.putBoolean("isHasPropServ", isHasPropServ);
 											editor.commit();
 											
+											if(provinceId != 0)
+												province = getProvinceName(provinceId);
+											
+											if (cityId != 0) 
+												city = getCityName(cityId);
+
+											if (districtId != 0) 
+												district = getDistrictName(districtId);
+											
+											SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
+											Editor editor1 = saveProfile.edit();
+											editor1.putString("NAME", name);
+											editor1.putString("NICKNAME", nickname);
+											editor1.putString("ID", id);
+											editor1.putString("PROVINCE", province);
+											editor1.putString("CITY", city);
+											editor1.putString("DISTRICT", district);
+											editor1.putInt("PROVINCEID", provinceId);
+											editor1.putInt("CITYID", cityId);
+											editor1.putInt("DISTRICTID", districtId);
+											editor1.putInt("SEX", sex);
+											if(birth.length() > 0){
+												editor1.putString("YEAR", birth.substring(0, 4));
+												editor1.putString("MONTH", birth.substring(5, 7));
+												editor1.putString("DAY", birth.substring(8));
+											}
+											editor1.putBoolean("isHasPropServ", isHasPropServ);
+											editor1.commit();
 											//
 											Intent intent = new Intent();
 
@@ -519,5 +560,62 @@ public class Login extends Activity implements TextWatcher {
 				setupUI(innerView);
 			}
 		}
+	}
+	
+	public String getProvinceName(int provinceId) {
+		String provinceName = null;
+		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorP.moveToFirst()) {
+			int provinceIndex = mCursorP.getColumnIndex("province_short_name");
+			int provinceIdIndex = mCursorP.getColumnIndex("province_id");
+			do{
+				int tempPID = mCursorP.getInt(provinceIdIndex);
+			    String tempPName = mCursorP.getString(provinceIndex);
+				if(tempPID == provinceId){
+					provinceName = tempPName;
+					break;
+				}		
+			}while(mCursorP.moveToNext());		
+		}
+		mCursorP.close();
+		return provinceName;
+	}
+	
+	public String getCityName(int cityId) {
+		String cityName = null;
+		Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorC.moveToFirst()) {
+			int cityIndex = mCursorC.getColumnIndex("city_short_name");
+			int cityIdIndex = mCursorC.getColumnIndex("city_id");
+			do{
+				int tempCID = mCursorC.getInt(cityIdIndex);
+			    String tempCName = mCursorC.getString(cityIndex);
+				if(tempCID == cityId){
+					cityName = tempCName;
+					break;
+				}		
+			}while(mCursorC.moveToNext());		
+		}
+		mCursorC.close();
+		return cityName;
+	}
+	
+	public String getDistrictName(int districtId) {
+		String districtName = null;
+		Cursor mCursorD = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorD.moveToFirst()) {
+			int districtIndex = mCursorD.getColumnIndex("district_short_name");
+			int districtIdIndex = mCursorD.getColumnIndex("district_id");
+			do{
+				int tempDID = mCursorD.getInt(districtIdIndex);
+			    String tempDName = mCursorD.getString(districtIndex);
+				if(tempDID == districtId){
+					districtName = tempDName;
+					break;
+				}		
+			}while(mCursorD.moveToNext());		
+		}
+		mCursorD.close();
+		return districtName;
 	}
 }
