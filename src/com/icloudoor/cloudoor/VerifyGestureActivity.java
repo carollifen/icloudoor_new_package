@@ -64,7 +64,7 @@ public class VerifyGestureActivity extends Activity {
 		setContentView(R.layout.activity_verify_gesture);
 		
 		IntentFilter intentFilter = new IntentFilter();
-	    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+	    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 	    mFinishActivityBroadcast = new Broadcast();
 	    registerReceiver(mFinishActivityBroadcast, intentFilter);
 
@@ -94,7 +94,7 @@ public class VerifyGestureActivity extends Activity {
 								mEditor.putBoolean("FIRSTLOGIN", true).commit();
 
 								Intent intent = new Intent();
-								intent.setAction("com.icloudoor.clouddoor.ACTION_FINISH");
+								intent.setAction("com.icloudoor.cloudoor.ACTION_FINISH");
 								sendBroadcast(intent);
 
 								Intent cloudIntent = new Intent(
@@ -199,7 +199,7 @@ public class VerifyGestureActivity extends Activity {
 		                                        intent3.setClass(VerifyGestureActivity.this, Login.class);
 		                                        startActivity(intent3);
 		                                        Intent broadcastIntent = new Intent();
-		                                        broadcastIntent.setAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		                                        broadcastIntent.setAction("com.icloudoor.cloudoor.ACTION_FINISH");
 		                                        sendBroadcast(broadcastIntent);
 		                                        VerifyGestureActivity.this.finish();      }                             
 		                                     

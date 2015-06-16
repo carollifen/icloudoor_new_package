@@ -70,7 +70,7 @@ public class LauncherActivity extends Activity {
     }
     
 	private boolean CheckFirstRun() {
-    	SharedPreferences setting = getSharedPreferences("com.icloudoor.clouddoor", 0);
+    	SharedPreferences setting = getSharedPreferences("com.icloudoor.cloudoor", 0);
     	boolean user_first = setting.getBoolean("FIRST",true);
     	if(user_first) {
     		setting.edit().putBoolean("FIRST", false).commit();

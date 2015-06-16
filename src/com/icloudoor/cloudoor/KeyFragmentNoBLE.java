@@ -81,7 +81,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-//import com.icloudoor.clouddoor.ShakeEventManager.ShakeListener;
+//import com.icloudoor.cloudoor.ShakeEventManager.ShakeListener;
 import com.icloudoor.cloudoor.ShakeEventManager;
 import com.icloudoor.cloudoor.UartService;
 import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;

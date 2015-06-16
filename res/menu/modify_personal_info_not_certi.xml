@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.icloudoor.clouddoor.ModifyPersonalInfoNotCerti" >
+    tools:context="com.icloudoor.cloudoor.ModifyPersonalInfoNotCerti" >
 
     <item
         android:id="@+id/action_settings"

@@ -42,7 +42,7 @@ public class SettingDetailActivity extends Activity {
 		setContentView(R.layout.set_detail);
 		mFinishActivityBroadcast=	new Broadcast();
 		 IntentFilter intentFilter = new IntentFilter();
-		    intentFilter.addAction("com.icloudoor.clouddoor.ACTION_FINISH");
+		    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 		    registerReceiver(mFinishActivityBroadcast, intentFilter);
 		    //** snip **//
 		
