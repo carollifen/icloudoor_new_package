@@ -1610,15 +1610,17 @@ public class KeyFragment extends Fragment {
 								Log.e(TAG, "year: " + String.valueOf(year));
 								Log.e(TAG, "month: " + String.valueOf(month));
 								Log.e(TAG, "day: " + String.valueOf(day));
-												
-								SharedPreferences userConfig = getActivity().getSharedPreferences("Config", 0);
-								Editor editor = userConfig.edit();
-								editor.putInt("TIMES", reloadTimes);
-								editor.putInt("DAYS", reloadDays);
-								editor.putInt("YEAR", year);
-								editor.putInt("MONTH", month);
-								editor.putInt("DAY", day);
-								editor.commit();
+								
+								if(getActivity() != null){
+									SharedPreferences userConfig = getActivity().getSharedPreferences("Config", 0);
+									Editor editor = userConfig.edit();
+									editor.putInt("TIMES", reloadTimes);
+									editor.putInt("DAYS", reloadDays);
+									editor.putInt("YEAR", year);
+									editor.putInt("MONTH", month);
+									editor.putInt("DAY", day);
+									editor.commit();
+								}
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();
