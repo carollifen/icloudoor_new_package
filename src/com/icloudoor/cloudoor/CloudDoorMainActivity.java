@@ -189,9 +189,23 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		agent = new FeedbackAgent(this);
 		agent.sync();
 		
+		PushAgent.getInstance(this).onAppStart();
+		
 		// for Umeng Push Service
 		mPushAgent = PushAgent.getInstance(getApplicationContext());
 		mPushAgent.enable();
+		
+		// remove tags before add
+		new Thread(){
+			public void run(){
+				try {
+					mPushAgent.getTagManager().reset();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+		}.start();
 		
 		mFinishActivityBroadcast=	new Broadcast();
 		 IntentFilter intentFilter = new IntentFilter();
