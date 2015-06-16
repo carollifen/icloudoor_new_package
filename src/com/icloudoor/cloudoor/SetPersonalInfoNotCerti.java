@@ -35,6 +35,7 @@ import com.icloudoor.cloudoor.Entities.MultipartEntity;
 import com.icloudoor.cloudoor.Entities.Part;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
@@ -411,7 +412,7 @@ public class SetPersonalInfoNotCerti extends Activity {
 					}
 					
 				};
-				new DatePickerDialog(SetPersonalInfoNotCerti.this, onDateSetListener, mYear, mMonth, mDay).show();
+				new DatePickerDialog(SetPersonalInfoNotCerti.this,AlertDialog.THEME_HOLO_LIGHT, onDateSetListener, mYear, mMonth, mDay).show();
 			}
 			
 		});		

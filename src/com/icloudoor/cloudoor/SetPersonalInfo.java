@@ -441,7 +441,7 @@ public class SetPersonalInfo extends Activity {
 					}
 					
 				};
-				new DatePickerDialog(SetPersonalInfo.this, onDateSetListener, mYear, mMonth, mDay).show();
+				new DatePickerDialog(SetPersonalInfo.this,AlertDialog.THEME_HOLO_LIGHT, onDateSetListener, mYear, mMonth, mDay).show();
 			}
 			
 		});
