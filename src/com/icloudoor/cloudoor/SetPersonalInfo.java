@@ -35,6 +35,7 @@ import com.icloudoor.cloudoor.Entities.MultipartEntity;
 import com.icloudoor.cloudoor.Entities.Part;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;

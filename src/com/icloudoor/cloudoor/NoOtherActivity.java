@@ -157,7 +157,7 @@ public class NoOtherActivity extends Activity {
 		
 		float ratioWidth = (float)screenWidth / 480;
 		float ratioHeight = (float)screenHeight / 800;
-		
+
 		Bitmap bitmap = BitmapFactory.decodeResource(resources, gResId);
 
 		android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
@@ -186,7 +186,11 @@ public class NoOtherActivity extends Activity {
 		int x = (bitmap.getWidth() - bounds.width()) / 2;
 		int y = (bitmap.getHeight() + bounds.height()) / 2;
 
-		canvas.drawText(gText, x, screenHeight * 7 / 10 + 20, paint);
+		if(screenHeight <= 870){
+			canvas.drawText(gText, x, screenHeight * 8 / 10, paint);
+		} else {
+			canvas.drawText(gText, x, screenHeight * 7 / 10, paint);
+		}
 
 		return bitmap;
 	}
@@ -232,7 +236,11 @@ public class NoOtherActivity extends Activity {
 		int x = (bitmap.getWidth() - bounds.width()) / 2;
 		int y = (bitmap.getHeight() + bounds.height()) / 5;
 
-		canvas.drawText(gText, x, screenHeight * 8 / 10, paint);
+		if(screenHeight <= 870){
+			canvas.drawText(gText, x, screenHeight * 8 / 10 + 40, paint);
+		} else {
+			canvas.drawText(gText, x, screenHeight * 8 / 10 - 40, paint);
+		}
 
 		return bitmap;
 	}
