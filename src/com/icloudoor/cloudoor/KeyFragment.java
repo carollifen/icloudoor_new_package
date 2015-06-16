@@ -62,6 +62,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -214,6 +215,11 @@ public class KeyFragment extends Fragment {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	//
+	private int reloadTimes;
+	private int reloadDays;
+	private String firstOpenDay;
+	
 	public KeyFragment() {
 		// Required empty public constructor
 	}
@@ -362,35 +368,57 @@ public class KeyFragment extends Fragment {
 		            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 				}else {
 					 if (mOpenDoorState == 0) {
-		                    mOpenDoorState = 1; // doing opendoor
-		                    Log.i("test", "doOpenDoor");
-		                    
-		                    if(haveSound == 1){
-		                    	playOpenDoorSound();
-		                    }
+						 //TODO
+						 	SharedPreferences userConfig = getActivity().getSharedPreferences("Config", 0);
+						 	Editor editor = userConfig.edit();
+						 	reloadTimes = userConfig.getInt("TIMES", 0);
+						 	if(reloadTimes > 0 && checkWithin7DaysOrNot()){
+						 		mOpenDoorState = 1; // doing opendoor
+			                    Log.i("test", "doOpenDoor");
+			                    
+			                    if(haveSound == 1){
+			                    	playOpenDoorSound();
+			                    }
 
-		                    doOpenDoor(mBtStateOpen); //ONLY FOR TEST
+			                    doOpenDoor(mBtStateOpen); //ONLY FOR TEST
+			                    
+			                    Log.e(TAG, "reloadTimes before open: " + String.valueOf(reloadTimes));			                    
+			                    reloadTimes--;
+			                    Log.e(TAG, "reloadTimes after open: " + String.valueOf(reloadTimes));	
+			                    editor.putInt("TIMES", reloadTimes);
+			                    editor.commit();
+						 	} else {
+						 		if(getActivity() != null){
+						 			Toast.makeText(getActivity(), R.string.plz_login_again, Toast.LENGTH_SHORT).show();
+						 			
+						 			SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+                                    Editor editor1 = loginStatus.edit();
+                                    editor1.putInt("LOGIN", 0);
+                                    editor1.commit();
+                                    
+                                    String sql = "DELETE FROM " + TABLE_NAME +";";
+                                    mKeyDB.execSQL(sql);
+                                    
+                                    String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+                                    mKeyDB.execSQL(sq2);
+                                    
+                                    String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+                                    mKeyDB.execSQL(sq3);
+                                    
+                                    Intent intent = new Intent();
+                                    intent.setClass(getActivity(), Login.class);
+                                    startActivity(intent);
+                                    
+                                    CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
+                                    mainActivity.finish();
+						 		}
+						 	}
 		                }
 				}   
 			}
 			
 		});
-		BtnOpenDoor.setOnTouchListener(new OnTouchListener() {
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						break;
-					case MotionEvent.ACTION_UP:
-						break;
-				}
-				return false;
-			}
-
-		});
-		
 		doorName = (StrokeTextView) view.findViewById(R.id.door_name);
         doorNameFlag = (ImageView) view.findViewById(R.id.door_name_flag);
 		scanStatus = (TextView) view.findViewById(R.id.scan_status);
@@ -428,6 +456,95 @@ public class KeyFragment extends Fragment {
 			}
 		});
 		return view;
+	}
+	
+	public boolean checkWithin7DaysOrNot(){
+		boolean isWithin = false;
+		int previousYear;
+		int previousMonth;
+		int previousDay;
+		int nowYear;
+		int nowMonth;
+		int nowDay;
+		
+		SharedPreferences userConfig = getActivity().getSharedPreferences("Config", 0);
+		previousYear = userConfig.getInt("YEAR", 0);
+		previousMonth = userConfig.getInt("MONTH", 0);
+		previousDay = userConfig.getInt("DAY", 0);
+		if(previousYear == 0 || previousMonth == 0 || previousDay == 0){
+			isWithin = false;
+		} else {
+			Time now = new Time();
+			now.setToNow();
+			nowYear = now.year;
+			nowMonth = now.month + 1;
+			nowDay = now.monthDay;
+			
+			Log.e(TAG, "nowYear: " + String.valueOf(nowYear));
+			Log.e(TAG, "nowMonth: " + String.valueOf(nowMonth));
+			Log.e(TAG, "nowDay: " + String.valueOf(nowDay));
+			
+			// check start
+			if(nowYear == previousYear && nowMonth == previousMonth && nowDay == previousDay){  // in the same day, same month, same year
+				isWithin = true;
+			} else if(nowYear == previousYear && nowMonth == previousMonth){  // in the same month, same year
+				if(nowDay - previousDay <= 6)
+					isWithin = true;
+				else 
+					isWithin = false;
+			} else if(nowYear == previousYear){ // in the same year
+				if(nowMonth - previousMonth > 1)
+					isWithin = false;
+				else{
+					if(isSmallMonth(nowMonth) || (nowMonth == 2)){
+						if(31 - previousDay + nowDay <= 6)
+							isWithin = true;
+						else 
+							isWithin = false;
+					} else if(isBigMonth(nowMonth)){
+						if(nowMonth == 3){
+							if(isLeapYear(previousMonth)){
+								if(29 - previousDay + nowDay <= 6)
+									isWithin = true;
+								else 
+									isWithin = false;
+							}else{
+								if(28 - previousDay + nowDay <= 6)
+									isWithin = true;
+								else 
+									isWithin = false;
+							}
+						} else if(nowMonth == 8){
+							if(31 - previousDay + nowDay <= 6)
+								isWithin = true;
+							else 
+								isWithin = false;
+						} else{
+							if(30 - previousDay + nowDay <= 6)
+								isWithin = true;
+							else 
+								isWithin = false;
+						}
+					}
+				}
+			} else {  // in diff year
+				if(nowYear - previousYear > 1)
+					isWithin = false;
+				else{
+					if(previousMonth < 12)
+						isWithin = false;
+					else if(nowMonth > 1)
+						isWithin = false;
+					else {
+						if(31 - previousDay + nowDay <= 6)
+							isWithin = true;
+						else 
+							isWithin = false;
+					}
+				}
+			}
+		}		
+		return isWithin;
 	}
 	
 	public void checkForNewKey() {
@@ -1351,6 +1468,8 @@ public class KeyFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
+		getUserConfig();
+		
 		Log.e("TEST", "keyFragment onResume()");
         mOpenDoorState = 0;
 //		checkBlueToothState();
@@ -1429,6 +1548,73 @@ public class KeyFragment extends Fragment {
 		}
 	}
 
+	// TODO
+	// getUserConfig
+	public void getUserConfig(){
+		URL getConfigUrl = null;
+		
+		sid = loadSid();
+		
+		try {
+			getConfigUrl = new URL(UrlUtils.HOST + "/user/config/default.do" + "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST, getConfigUrl.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						
+						try {
+							if(response.getInt("code") == 1){
+								
+								if(response.getString("sid") != null)
+									saveSid(sid);
+								
+								JSONObject data = response.getJSONObject("data");
+								reloadTimes = data.getInt("reloadTimes");
+								reloadDays = data.getInt("reloadDays");
+								
+								Log.e(TAG, "reloadTimes: " + String.valueOf(reloadTimes));
+								Log.e(TAG, "reloadDays: " + String.valueOf(reloadDays));
+
+								Time t = new Time();
+								t.setToNow();
+								int year = t.year;
+								int month = t.month + 1;
+								int day = t.monthDay;
+								
+								Log.e(TAG, "year: " + String.valueOf(year));
+								Log.e(TAG, "month: " + String.valueOf(month));
+								Log.e(TAG, "day: " + String.valueOf(day));
+												
+								SharedPreferences userConfig = getActivity().getSharedPreferences("Config", 0);
+								Editor editor = userConfig.edit();
+								editor.putInt("TIMES", reloadTimes);
+								editor.putInt("DAYS", reloadDays);
+								editor.putInt("YEAR", year);
+								editor.putInt("MONTH", month);
+								editor.putInt("DAY", day);
+								editor.commit();
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+							Log.e(TAG, error.toString());
+					}
+				});
+		mQueue.add(mJsonRequest);
+	}
+	
+	
 //    public  class MyThread extends Thread {
 //
 //        private volatile boolean mStopThread = false;
