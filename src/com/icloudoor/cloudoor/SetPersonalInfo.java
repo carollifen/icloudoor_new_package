@@ -1053,7 +1053,23 @@ public class SetPersonalInfo extends Activity {
 			BirthDay = saveProfile.getString("YEAR", "") + "-" + saveProfile.getString("MONTH", "") + "-" + saveProfile.getString("DAY", "");				
 		}
 		
-		Sex = saveProfile.getInt("SEX", 1);
+		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PROFILE.xml");
+		if (f.exists()) {
+			Log.e("TAG", "SharedPreferences Name_of_your_preference : exist");
+			if(saveProfile.contains("SEX")){
+				Log.e("TAG", "SharedPreferences Name_of_your_preference contains sex");
+				Sex = saveProfile.getInt("SEX", 1);
+				Log.e("TAG", "Sex: " + String.valueOf(Sex));
+			} else {
+				Log.e("TAG", "SharedPreferences Name_of_your_preference NOT contains sex");
+				Sex = 2;
+				Log.e("TAG", "Sex: " + String.valueOf(Sex));
+			}
+		} else {
+			Sex = 2;
+			Log.e("TAG", "Setup default preferences");
+		}
+		
 		if(Sex == 1){
 			sexMan.setImageResource(R.drawable.select);
 			sexWoman.setImageResource(R.drawable.not_select);

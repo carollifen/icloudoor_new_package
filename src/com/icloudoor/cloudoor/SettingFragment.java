@@ -43,6 +43,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.fb.model.UserInfo;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
+import com.umeng.socialize.weixin.media.CircleShareContent;
+import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 public class SettingFragment extends Fragment {
 	private String TAG = this.getClass().getSimpleName();
@@ -92,17 +101,24 @@ public class SettingFragment extends Fragment {
 	private final String TABLE_NAME = "KeyInfoTable";
 	private final String CAR_TABLE_NAME = "CarKeyTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
-	
+
+	String appID = "wxcddf37d2f770581b";
+	String appSecret = "01d7ab875773e1282059d5b47b792e2b";
+	UMWXHandler wxHandler;
+	UMWXHandler wxCircleHandler;
+	UMSocialService mController;
+	private SnsPostListener mSnsPostListener;
+
 	public SettingFragment() {
 		// Required empty public constructor
 	}
 
 	private RelativeLayout back_from_user;
-	
+
 	private FeedbackAgent agent;
-	
+
 	boolean isDebug = DEBUG.isDebug;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -110,10 +126,11 @@ public class SettingFragment extends Fragment {
 
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
-		
-		back_from_user= (RelativeLayout) view.findViewById(R.id.back_from_user);
+		share();
+		back_from_user = (RelativeLayout) view
+				.findViewById(R.id.back_from_user);
 		back_from_user.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -274,16 +291,18 @@ public class SettingFragment extends Fragment {
 				break;
 			case R.id.btn_share:
 //                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Welcome using Cloudoor.");
-                    sendIntent.setType("text/plain");
-                    startActivity(Intent.createChooser(sendIntent, "Shared"));
+//                    Intent sendIntent = new Intent();
+//                    sendIntent.setAction(Intent.ACTION_SEND);
+//                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Welcome using Cloudoor.");
+//                    sendIntent.setType("text/plain");
+//                    startActivity(Intent.createChooser(sendIntent, "Shared"));
 //                }else {
 //                    if (getActivity() != null) {
 //                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
 //                    }
 //                }
+				
+				mController.openShare(getActivity(), false);
 				break;
 			case R.id.btn_update:
                 if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
@@ -398,16 +417,81 @@ public class SettingFragment extends Fragment {
         super.onDetach();
     }
 
-    UpdateManager.UpdateCallback appUpdateCb = new UpdateManager.UpdateCallback() {
-        @Override
-        public void checkUpdateCompleted(Boolean hasUpdate, CharSequence updateInfo) {
-            if (hasUpdate) {
-                DialogHelper.Confirm(getActivity(),
-                        getText(R.string.dialog_update_title),
-                        getText(R.string.dialog_update_msg).toString() + updateInfo +  getText(R.string.dialog_update_msg2).toString(),
-                        getText(R.string.dialog_update_btnupdate),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+	public void share() {
+
+		// Ìí¼ÓÎ¢ÐÅÆ½Ì¨
+		wxHandler = new UMWXHandler(getActivity(), appID, appSecret);
+		wxHandler.addToSocialSDK();
+		// Ìí¼ÓÎ¢ÐÅÅóÓÑÈ¦
+		wxCircleHandler = new UMWXHandler(getActivity(), appID, appSecret);
+		wxCircleHandler.setToCircle(true);
+		wxCircleHandler.addToSocialSDK();
+
+		
+		mSnsPostListener = new SnsPostListener() {
+
+			@Override
+			public void onComplete(SHARE_MEDIA arg0, int arg1, SocializeEntity arg2) {
+				if(arg1 == 200){
+					System.out.println("share Success");
+				}
+			}
+
+			@Override
+			public void onStart() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
+		
+		mController = UMServiceFactory.getUMSocialService("com.umeng.share");
+		mController.registerListener(mSnsPostListener);
+		
+		CircleShareContent circleMedia = new CircleShareContent();
+		circleMedia.setShareContent(getActivity().getResources().getString(
+				R.string.shareContent));
+		// ÉèÖÃÅóÓÑÈ¦title
+		circleMedia.setTitle(getActivity().getResources().getString(R.string.shareTitle));
+		circleMedia.setShareImage(new UMImage(getActivity(),
+				R.drawable.logo_deep144));
+		circleMedia.setTargetUrl("http://m.70c.com/w/SZQQSC");
+		
+		mController.setShareMedia(circleMedia);
+		
+		
+		WeiXinShareContent weiXinleMedia = new WeiXinShareContent();
+		
+		weiXinleMedia.setShareContent(getActivity().getResources().getString(
+				R.string.shareContent));
+		// ÉèÖÃÅóÓÑÈ¦title
+		weiXinleMedia.setTitle(getActivity().getResources().getString(R.string.shareTitle));
+		weiXinleMedia.setShareImage(new UMImage(getActivity(),
+				R.drawable.logo_deep144));
+		weiXinleMedia.setTargetUrl("http://m.70c.com/w/SZQQSC");
+		mController.setShareMedia(weiXinleMedia);
+		
+		mController.getConfig().removePlatform(SHARE_MEDIA.SINA,
+				SHARE_MEDIA.TENCENT);
+
+	}
+
+	UpdateManager.UpdateCallback appUpdateCb = new UpdateManager.UpdateCallback() {
+		@Override
+		public void checkUpdateCompleted(Boolean hasUpdate,
+				CharSequence updateInfo) {
+			if (hasUpdate) {
+				DialogHelper.Confirm(
+						getActivity(),
+						getText(R.string.dialog_update_title),
+						getText(R.string.dialog_update_msg).toString()
+								+ updateInfo
+								+ getText(R.string.dialog_update_msg2)
+										.toString(),
+						getText(R.string.dialog_update_btnupdate),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
 
                                 updateProgressDialog = new ProgressDialog(getActivity());
                                 updateProgressDialog

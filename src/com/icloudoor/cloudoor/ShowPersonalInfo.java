@@ -246,9 +246,11 @@ public class ShowPersonalInfo extends Activity {
 									editor.putInt("CITYID", cityid);
 									editor.putInt("DISTRICTID", districtid);
 									editor.putInt("SEX", sex);
-									editor.putString("YEAR", birthday.substring(0, 4));
-									editor.putString("MONTH", birthday.substring(5, 7));
-									editor.putString("DAY", birthday.substring(8));
+									if(birthday.length() > 0){
+										editor.putString("YEAR", birthday.substring(0, 4));
+										editor.putString("MONTH", birthday.substring(5, 7));
+										editor.putString("DAY", birthday.substring(8));
+									}
 									editor.putBoolean("isHasPropServ", isHasPropServ);
 									editor.commit();
 
@@ -457,10 +459,12 @@ public class ShowPersonalInfo extends Activity {
 								cityid = Data.getInt("cityId");
 								districtid = Data.getInt("districtId");
 								portraitUrl = Data.getString("portraitUrl");
+								isHasPropServ = Data.getBoolean("isHasPropServ");
 
 								SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 								Editor edit = loginStatus.edit();
 								edit.putString("URL", portraitUrl);
+								edit.putBoolean("isHasPropServ", isHasPropServ);
 								edit.commit();
 
 								SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
@@ -475,6 +479,7 @@ public class ShowPersonalInfo extends Activity {
 								editor.putInt("CITYID", cityid);
 								editor.putInt("DISTRICTID", districtid);
 								editor.putInt("SEX", sex);
+								edit.putBoolean("isHasPropServ", isHasPropServ);
 								if(birthday.length() > 0){
 									editor.putString("YEAR", birthday.substring(0, 4));
 									editor.putString("MONTH", birthday.substring(5, 7));

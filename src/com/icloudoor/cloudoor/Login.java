@@ -307,9 +307,11 @@ public class Login extends Activity implements TextWatcher {
 												if(userStatus == 2) {
 													intent.setClass(Login.this, SetPersonalInfo.class);
 													startActivity(intent);
+													finish();
 												} else if(userStatus == 1) {
 													intent.setClass(Login.this, SetPersonalInfoNotCerti.class);
 													startActivity(intent);
+													finish();
 												}
 													
 											}
@@ -317,12 +319,9 @@ public class Login extends Activity implements TextWatcher {
 											if (setPersonal == 1) {
 												intent.setClass(Login.this, CloudDoorMainActivity.class);
 												startActivity(intent);
+												finish();
 											}
 											//
-
-											finish();
-											
-
 										} catch (JSONException e) {
 											e.printStackTrace();
 										}

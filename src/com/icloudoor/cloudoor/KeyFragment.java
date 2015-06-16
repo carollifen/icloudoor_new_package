@@ -192,7 +192,7 @@ public class KeyFragment extends Fragment {
 	private Map<String, Integer> mDevRssiValues;
 
 	private int deviceIndexToOpen = 0;
-
+	private Handler mHandlerReset = new Handler();
 	private SoundPool mSoundPool;
 		
 	private String doorIdForOfficeDoor;
@@ -223,6 +223,21 @@ public class KeyFragment extends Fragment {
 	public KeyFragment() {
 		// Required empty public constructor
 	}
+
+	private Runnable mRunnableReset = new Runnable() {
+		@Override
+		public void run() {
+			Log.e("test616", "car door fail1");
+			if (mOpenDoorState > 1) {
+//				if (getActivity() != null) {
+//					Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+//				}
+				Log.e("test616", "car door fail");
+				scanStatus.setText(R.string.can_shake_to_open_door);
+				mOpenDoorState = 0;
+			}
+		}
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -369,6 +384,9 @@ public class KeyFragment extends Fragment {
 				}else {
 					 if (mOpenDoorState == 0) {
 						 //TODO
+						 /*
+							 *  only for test version, we need to judge the reloadTimes & checkWithIn7DaysOrNot 
+							 */
 						 	SharedPreferences userConfig = getActivity().getSharedPreferences("Config", 0);
 						 	Editor editor = userConfig.edit();
 						 	reloadTimes = userConfig.getInt("TIMES", 0);
@@ -416,9 +434,9 @@ public class KeyFragment extends Fragment {
 		                }
 				}   
 			}
-			
-		});
 
+		});
+		
 		doorName = (StrokeTextView) view.findViewById(R.id.door_name);
         doorNameFlag = (ImageView) view.findViewById(R.id.door_name_flag);
 		scanStatus = (TextView) view.findViewById(R.id.scan_status);
@@ -1468,6 +1486,9 @@ public class KeyFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
+		/*
+		 *   getUserConfig() only for test version
+		 */
 		getUserConfig();
 		
 		Log.e("TEST", "keyFragment onResume()");
@@ -1684,10 +1705,6 @@ public class KeyFragment extends Fragment {
 		super.onPause();
 		if(mBluetoothAdapter.isEnabled())
 			scanLeDevice(false);
-//        if (myThread != null) {
-//            myThread.stopThread();
-//			myThread = null;
-//        }
 	}
 
 	@Override
@@ -2390,19 +2407,7 @@ public class KeyFragment extends Fragment {
 				}
 			}
 
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					if (mOpenDoorState > 1) {
-//								if (getActivity() != null) {
-//									Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
-//								}
-						Log.e("test", "car door fail");
-						scanStatus.setText(R.string.can_shake_to_open_door);
-						mOpenDoorState = 0;
-					}
-				}
-			}, 5000);
+			mHandlerReset.postDelayed(mRunnableReset, 6000);
 		}
     }
 
@@ -2534,7 +2539,9 @@ public class KeyFragment extends Fragment {
 								Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
 							}
                             Log.e("test for open door", "Gatt close");
-                            mOpenDoorState = 0;
+//							mHandlerReset.getLooper().quit();
+							mHandlerReset.removeCallbacks(mRunnableReset);
+							mOpenDoorState = 0;
 							mDoorState = false;
 							scanStatus.setText(R.string.can_shake_to_open_door);
 						}

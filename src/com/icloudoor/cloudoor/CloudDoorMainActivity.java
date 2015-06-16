@@ -260,14 +260,14 @@ public class CloudDoorMainActivity extends FragmentActivity {
         registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         instance = this;
         
-		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-		int setPersonal = personalInfo.getInt("SETINFO", 1);
-		if(setPersonal == 0) {
-			Log.e("jump to set", "in main activity");
-			Intent  intentSetInfo = new Intent();
-			intentSetInfo.setClass(getApplicationContext(), SetPersonalInfo.class);
-			startActivity(intentSetInfo);
-		}
+//		SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+//		int setPersonal = personalInfo.getInt("SETINFO", 1);
+//		if(setPersonal == 0) {
+//			Log.e("jump to set", "in main activity");
+//			Intent  intentSetInfo = new Intent();
+//			intentSetInfo.setClass(getApplicationContext(), SetPersonalInfo.class);
+//			startActivity(intentSetInfo);
+//		}
 
 		mMsgFragment = new MsgFragment();
 		currentVersion = android.os.Build.VERSION.SDK_INT;
