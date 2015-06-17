@@ -42,6 +42,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -230,7 +231,7 @@ public class KeyFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.key_page, container, false);
         vibrator = (Vibrator)getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-
+        
         carNumAndPhoneNumShare = getActivity().getSharedPreferences("carNumAndPhoneNum", 0);
         
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
@@ -2647,10 +2648,29 @@ public class KeyFragment extends Fragment {
 	}
 
 	public void playOpenDoorSound() {
-		mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-		mSoundPool.play(mSoundPool.load(getActivity(), R.raw.ring, 0), 1, 1, 0,
-				0, 1);
+		Log.e(TAG, "play open door sound");
+
+		if (getActivity() != null) {
+			getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+			mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+			AudioManager audioManager = (AudioManager) getActivity().getSystemService(getActivity().AUDIO_SERVICE);
+			final float volume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			final int soundID = mSoundPool.load(getActivity(), R.raw.ring, 0);
+
+			mSoundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+
+				@Override
+				public void onLoadComplete(SoundPool arg0, int arg1, int arg2) {
+					// TODO Auto-generated method stub
+					Log.e(TAG, "load open door sound complete");
+					mSoundPool.play(soundID, volume, volume, 0, 0, 1);
+				}
+
+			});
+		}
 	}
+		
 
 	private boolean hasData(SQLiteDatabase mDB, String str){
 		boolean hasData = false;

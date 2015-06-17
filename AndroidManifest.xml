@@ -97,6 +97,7 @@
         <!-- V1.3.0添加的service，负责下载通知的资源 -->
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
 
+        <!-- 友盟自动更新  -->
         <activity
             android:name="com.umeng.fb.ConversationActivity"
             android:configChanges="keyboardHidden|orientation"
