@@ -26,7 +26,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ForgetPwdNewPwd extends Activity {
+public class ForgetPwdNewPwd extends BaseActivity {
 	private EditText ETNewPwd;
 	private EditText ETConfirmPwd;
 	private TextView TVResetComplete;

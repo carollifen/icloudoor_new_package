@@ -32,7 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-public class NoOtherActivity extends Activity {
+public class NoOtherActivity extends BaseActivity {
 	
 	private String TAG = this.getClass().getSimpleName();
 	

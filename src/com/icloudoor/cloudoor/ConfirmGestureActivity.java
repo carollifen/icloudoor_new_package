@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ConfirmGestureActivity extends Activity implements OnClickListener {
+public class ConfirmGestureActivity extends BaseActivity implements OnClickListener {
 	private FrameLayout mGestureContainer;
 	private SetGestureContentView mGestureContentView;
 	private String gesturePwd;

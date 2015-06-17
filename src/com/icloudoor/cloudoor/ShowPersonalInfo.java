@@ -45,7 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ShowPersonalInfo extends Activity {
+public class ShowPersonalInfo extends BaseActivity {
 	
 	private String TAG = this.getClass().getSimpleName();
 

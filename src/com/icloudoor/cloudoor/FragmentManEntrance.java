@@ -22,10 +22,12 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 public class FragmentManEntrance extends Fragment implements OnClickListener{
 	private RelativeLayout call_contact;
 	private static final int REQUEST_CONTACT = 1;
-	
+	private final String mPageName = "FragmentManEntrance";
 	private SharedPreferences dateAndPhoneShare;
 	private Editor dateAndPhoneEditor;
 	
@@ -105,7 +107,18 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 		return view;
 	}
 	
-	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+	}
 	@Override
 	public void onClick(View v) {
 		if(v.getId()==R.id.id_call_contacts)

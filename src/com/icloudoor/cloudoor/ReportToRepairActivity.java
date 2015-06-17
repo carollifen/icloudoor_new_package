@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -56,7 +57,7 @@ import com.icloudoor.cloudoor.Entities.Part;
 import com.icloudoor.cloudoor.Entities.StringPart;
 import com.umeng.message.PushAgent;
 
-public class ReportToRepairActivity extends Activity {
+public class ReportToRepairActivity extends BaseActivity {
 
 	private String TAG = this.getClass().getSimpleName();
 
@@ -105,17 +106,25 @@ public class ReportToRepairActivity extends Activity {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	private MyDataBaseHelper mKeyDBHelper;
+	private SQLiteDatabase mKeyDB;
+	private final String DATABASE_NAME = "KeyDB.db";
+	private final String TABLE_NAME = "KeyInfoTable";
+	private final String CAR_TABLE_NAME = "CarKeyTable";
+	private final String ZONE_TABLE_NAME = "ZoneTable";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_report_to_repair);
 		
-		mFinishActivityBroadcast=	new Broadcast();
-		 IntentFilter intentFilter = new IntentFilter();
-		    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
-		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+		mFinishActivityBroadcast = new Broadcast();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
+		registerReceiver(mFinishActivityBroadcast, intentFilter);
 
-
+		mKeyDBHelper = new MyDataBaseHelper(this, DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
 
 		final TextView Title = (TextView) findViewById(R.id.page_title);
 		
@@ -413,6 +422,32 @@ public class ReportToRepairActivity extends Activity {
 
 		}
 
+		@JavascriptInterface
+		public void logout() {
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+            Editor editor1 = loginStatus.edit();
+            editor1.putInt("LOGIN", 0);
+            editor1.commit();
+            
+            String sql = "DELETE FROM " + TABLE_NAME +";";
+            mKeyDB.execSQL(sql);
+            
+            String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+            mKeyDB.execSQL(sq2);
+            
+            String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+            mKeyDB.execSQL(sq3);
+            
+            Intent intentKill = new Intent();
+			intentKill.setAction("com.icloudoor.cloudoor.ACTION_FINISH");
+			sendBroadcast(intentKill);
+            
+            Intent intent = new Intent();
+            intent.setClass(ReportToRepairActivity.this, Login.class);
+            startActivity(intent);
+            
+            ReportToRepairActivity.this.finish();
+		}
 	}
 
 	@Override

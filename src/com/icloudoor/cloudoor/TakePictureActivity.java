@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.RelativeLayout;
 
-public class TakePictureActivity extends Activity implements CamOpenOverCallback {
+public class TakePictureActivity extends BaseActivity implements CamOpenOverCallback {
 
 	TakePicCamSurfaceView surfaceView = null;
 	TakePicMaskView maskView = null;

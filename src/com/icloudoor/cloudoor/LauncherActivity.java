@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class LauncherActivity extends Activity {
+public class LauncherActivity extends BaseActivity {
 
 	private String sid = null;
 	private int isLogin = 0;

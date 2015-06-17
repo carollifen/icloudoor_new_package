@@ -20,7 +20,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 
-public class OffworkActivity extends Activity {
+public class OffworkActivity extends BaseActivity {
 
 	private RelativeLayout shareLayout;
 	private RelativeLayout dismiss;

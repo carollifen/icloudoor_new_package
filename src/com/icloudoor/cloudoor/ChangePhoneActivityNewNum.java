@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ChangePhoneActivityNewNum extends Activity {
+public class ChangePhoneActivityNewNum extends BaseActivity {
 	private TextView TVBtnChangePhone;
 	private RelativeLayout IVBack;
 	

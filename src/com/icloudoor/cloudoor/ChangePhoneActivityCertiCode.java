@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ChangePhoneActivityCertiCode extends Activity{
+public class ChangePhoneActivityCertiCode extends BaseActivity{
 	private TextView ChangePhoneDone;
 	private RelativeLayout IVBack;
 	

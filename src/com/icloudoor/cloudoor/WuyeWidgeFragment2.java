@@ -10,6 +10,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.umeng.analytics.MobclickAgent;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -38,7 +40,7 @@ import android.widget.Toast;
  *
  */
 public class WuyeWidgeFragment2 extends Fragment {
-
+	private final String mPageName = "WuyeWidgeFragment2";
 	private String TAG = this.getClass().getSimpleName();
 
 	private RelativeLayout bigLayout;
@@ -236,6 +238,20 @@ public class WuyeWidgeFragment2 extends Fragment {
 		}
 	};
 	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+		
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+	}
 	@Override
     public void onDetach() {
         try {

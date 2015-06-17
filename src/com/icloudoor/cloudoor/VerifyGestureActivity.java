@@ -31,7 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class VerifyGestureActivity extends Activity {
+public class VerifyGestureActivity extends BaseActivity {
 
 	private FrameLayout mGestureContainer;
 	private SetGestureContentView mGestureContentView;

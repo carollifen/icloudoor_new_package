@@ -61,7 +61,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("NewApi")
-public class KeyList extends FragmentActivity{
+public class KeyList extends BaseFragmentActivity{
 
 	private String TAG = "KeyList";
 	

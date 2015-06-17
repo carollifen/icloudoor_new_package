@@ -62,7 +62,7 @@ import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.tag.TagManager;
 
-public class CloudDoorMainActivity extends FragmentActivity {
+public class CloudDoorMainActivity extends BaseFragmentActivity {
     private final String TAG = this.getClass().getSimpleName();
 //	private ViewPager mViewPager;
 //	private ArrayList<Fragment> mFragmentsList;
@@ -292,8 +292,12 @@ public class CloudDoorMainActivity extends FragmentActivity {
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
 
-		myThread = new MyThread();
-		myThread.start();
+		
+		if(currentVersion >= 18 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)){
+			myThread = new MyThread();
+			myThread.start();
+		}
+
 	}
 	
 	public void InitViews() {

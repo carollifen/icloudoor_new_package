@@ -43,7 +43,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RegisterComplete extends Activity implements TextWatcher {
+public class RegisterComplete extends BaseActivity implements TextWatcher {
 	private TextView TVRegiComplete;
 	private EditText ETInputPwd;
 	private EditText ETConfirmPwd;

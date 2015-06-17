@@ -17,7 +17,7 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-public class SignActivity extends Activity{
+public class SignActivity extends BaseActivity{
 	private ImageView IvSignSwitch;
 	private RelativeLayout back;
 	private RelativeLayout changeSign;

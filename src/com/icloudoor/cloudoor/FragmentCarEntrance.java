@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.common.message.Log;
 
 public class FragmentCarEntrance extends Fragment {
@@ -75,6 +76,7 @@ public class FragmentCarEntrance extends Fragment {
 	boolean haveCarNum;
 
 	boolean isDebug = DEBUG.isDebug;
+	private final String mPageName = "FragmentCarEntrance";
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -217,12 +219,18 @@ public class FragmentCarEntrance extends Fragment {
 
 		return view;
 	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+	}
 
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
+		MobclickAgent.onPageStart(mPageName);
 		Log.e("carresponse", "onResume()");
 		sid = loadSid();
 		mQueue = Volley.newRequestQueue(getActivity());

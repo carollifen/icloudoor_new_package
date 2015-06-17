@@ -41,6 +41,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.fb.model.UserInfo;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -56,7 +57,7 @@ import com.umeng.socialize.weixin.media.WeiXinShareContent;
 public class SettingFragment extends Fragment {
 	private String TAG = this.getClass().getSimpleName();
 	public Context context;
-
+	private final String mPageName = "SettingFragment";
     private ProgressDialog updateProgressDialog;
     private UpdateManager updateMan;
 
@@ -199,10 +200,17 @@ public class SettingFragment extends Fragment {
 
 		return view;
 	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
 		portraitUrl = loginStatus.getString("URL", null);	
 		File f = new File(PATH + imageName);

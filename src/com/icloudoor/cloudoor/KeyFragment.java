@@ -1,6 +1,5 @@
 package com.icloudoor.cloudoor;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,10 +24,7 @@ import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothManager;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -37,47 +33,34 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -85,21 +68,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.cloudoor.ShakeEventManager;
-import com.icloudoor.cloudoor.UartService;
 import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.cloudoor.ShakeEventManager.OnShakeListener;
 import com.icloudoor.cloudoor.SwitchButton.OnSwitchListener;
+import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint("NewApi")
 public class KeyFragment extends Fragment {
-
+	private final String mPageName = "KeyFragment";
 	private String TAG = this.getClass().getSimpleName();
 	
 	private MyDataBaseHelper mKeyDBHelper;
@@ -1486,9 +1468,13 @@ public class KeyFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
+		MobclickAgent.onPageStart(mPageName);
+
+
 		/*
 		 *   getUserConfig() only for test version
 		 */
+
 		getUserConfig();
 		
 		Log.e("TEST", "keyFragment onResume()");
@@ -1705,6 +1691,7 @@ public class KeyFragment extends Fragment {
     @Override
 	public void onPause() {
 		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
 		if(mBluetoothAdapter.isEnabled())
 			scanLeDevice(false);
 	}

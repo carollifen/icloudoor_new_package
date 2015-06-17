@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-public class KeyContinue extends Activity {
+public class KeyContinue extends BaseActivity {
 
 	MyDatePickerUtilView mDatePicker;
 

@@ -3,14 +3,13 @@ package com.icloudoor.cloudoor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,23 +23,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
-import com.android.volley.toolbox.Volley;
-import com.icloudoor.cloudoor.Entities.FilePart;
-import com.icloudoor.cloudoor.Entities.MultipartEntity;
-import com.icloudoor.cloudoor.Entities.Part;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -51,44 +38,46 @@ import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SetPersonalInfo extends Activity {
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.icloudoor.cloudoor.Entities.FilePart;
+import com.icloudoor.cloudoor.Entities.MultipartEntity;
+import com.icloudoor.cloudoor.Entities.Part;
+
+public class SetPersonalInfo extends BaseActivity {
 
 	private Broadcast mFinishActivityBroadcast;
-	
+
 	private String TAG = this.getClass().getSimpleName();
 
 	private MyAreaDBHelper mAreaDBHelper;
@@ -128,7 +117,7 @@ public class SetPersonalInfo extends Activity {
 	private ImageView sexWoman;
 	private TextView personalID;
 	private TextView realName;
-	
+
 	private TextView birthday;
 	final Calendar c = Calendar.getInstance();
 	int mYear = c.get(Calendar.YEAR);
@@ -138,7 +127,7 @@ public class SetPersonalInfo extends Activity {
 	private static final int MSG_SUCCESS = 0;// get the image success
 	private static final int MSG_FAILURE = 1;// fail
 	private Thread mThread;
-	
+
 	private String NAME;
 	private String ID;
 	private String whereFrom;
@@ -166,31 +155,32 @@ public class SetPersonalInfo extends Activity {
 
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int PICTURE_REQUEST_CODE = 2;
-	
+	private static final int RESULT_REQUEST_CODE = 11;
+
 	private SelectPicPopupWindow menuWindow;
 
 	Uri photoUri = null, uri = null;
-	
+
 	private ProgressBar upLoadBar;
-	
+
 	boolean isDebug = DEBUG.isDebug;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// getActionBar().hide();
 		whereFrom = getIntent().getStringExtra("Whereis");
 		setContentView(R.layout.set_person_info);
-		
+
 		setupUI(findViewById(R.id.main));
-		
+
 		upLoadBar = (ProgressBar) findViewById(R.id.uploadBar);
 		upLoadBar.setVisibility(View.INVISIBLE);
-		
-		mFinishActivityBroadcast=	new Broadcast();
-		 IntentFilter intentFilter = new IntentFilter();
-		    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
-		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+
+		mFinishActivityBroadcast = new Broadcast();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
+		registerReceiver(mFinishActivityBroadcast, intentFilter);
 
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener() {
@@ -248,7 +238,8 @@ public class SetPersonalInfo extends Activity {
 		setSpinner();
 
 		// get the selected province name and id
-		provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		provinceSpinner
+				.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 					@Override
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -555,34 +546,22 @@ public class SetPersonalInfo extends Activity {
 			menuWindow.dismiss();
 			switch (v.getId()) {
 			case R.id.btn_take_photo:
-//				startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 1);
-//				Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//				SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-//				String filename = timeStampFormat.format(new Date());
-//				ContentValues values = new ContentValues();
-//				values.put(Media.TITLE, filename);
-//
-//				photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//
-//				intent1.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-//
-//				startActivityForResult(intent1, 1);
-				
+
 				if (!isExitsSdcard()) {
 					Toast.makeText(getApplicationContext(), "SD¿¨²»¿ÉÓÃ", 0).show();
 					return;
 				}
-				cameraFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/cloudoor", 
-						+ System.currentTimeMillis() + ".jpg");
+				cameraFile = new File(Environment.getExternalStorageDirectory()
+						.getAbsolutePath() + "/Cloudoor/CacheImage",
+						+System.currentTimeMillis() + ".jpg");
 				cameraFile.getParentFile().mkdirs();
-				startActivityForResult(
-						new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),
-						1);
-				
-				
+				startActivityForResult(new Intent(
+						MediaStore.ACTION_IMAGE_CAPTURE).putExtra(
+						MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)), 1);
+
 				break;
 			case R.id.btn_pick_photo:
-				
+
 				Intent intent = new Intent();
 				intent.setAction(Intent.ACTION_PICK);
 				intent.setType("image/*");
@@ -596,264 +575,35 @@ public class SetPersonalInfo extends Activity {
 		}
 
 	};
-	
-	
-	public  boolean isExitsSdcard() {
-		if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+
+	public boolean isExitsSdcard() {
+		if (android.os.Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED))
 			return true;
 		else
 			return false;
 	}
-	
-	
-	
-	private String getpicturePath(Uri selectedImage) {
-		// String[] filePathColumn = { MediaStore.Images.Media.DATA };
-		Cursor cursor = getContentResolver().query(selectedImage, null, null, null, null);
-		if (cursor != null) {
-			cursor.moveToFirst();
-			int columnIndex = cursor.getColumnIndex("_data");
-			String picturePath = cursor.getString(columnIndex);
-			cursor.close();
-			cursor = null;
 
-			if (picturePath == null || picturePath.equals("null")) {
-				Toast toast = Toast.makeText(this, "»ñÈ¡Í¼Æ¬Ê§°Ü", Toast.LENGTH_SHORT);
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.show();
-				return null;
-			}
-			return picturePath;
-			
-		} else {
-			
-			File file = new File(selectedImage.getPath());
-			if (!file.exists()) {
-				Toast toast = Toast.makeText(this, "Í¼Æ¬²»´æÔÚ", Toast.LENGTH_SHORT);
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.show();
-				return null;
-			}
-			return file.getAbsolutePath();
-		}
 
-	}
-	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-
-		if (requestCode == 0 && resultCode == RESULT_OK) {
-
-			final Uri uri = data.getData();
-			Log.e(TAG, "uri: " + getRealPathFromURI(uri));
-			
-			BitmapFactory.Options opts=new BitmapFactory.Options();
-			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.RGB_565;
-			opts.inPurgeable = true;
-			opts.inSampleSize = 4;
-			Bitmap bm = BitmapFactory.decodeFile(getRealPathFromURI(uri), opts);
-
-			if(bm.getWidth() < bm.getHeight()){
-				bm = zoomImage(bm, 400, 400);
-			}else{
-				bm = getRotateBitmap(bm, 90);
-				bm = zoomImage(bm, 400, 400);
-			}
-		
-			TakePicFileUtil.getInstance().saveBitmap(bm);			
-			personImage.setImageBitmap(bm);
-
-			// upload image
-			new Thread() {
-
-				@Override
-				public void run() {
-					
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							upLoadBar.setVisibility(View.VISIBLE);
-						}
-					});
-					
-					Log.e(TAG, "thread run");
-					
-					try {
-						sleep(1000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-
-					HttpClient httpClient = new DefaultHttpClient();
-					HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
-
-					File file = null;
-					file = new File(getRealPathFromURI(uri));
-					Part[] parts = null;
-					FilePart filePart = null;
-					try {
-						filePart = new FilePart("portrait", file);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-					parts = new Part[] { filePart };
-
-					postRequest.setEntity(new MultipartEntity(parts));
-					try {
-						HttpResponse response = httpClient.execute(postRequest);
-						BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-						String sResponse;
-						StringBuilder s = new StringBuilder();
-						while ((sResponse = reader.readLine()) != null) {
-							s = s.append(sResponse);
-						}
-						Log.e("TEst StringBuilder", s.toString());
-
-						//
-						JSONObject jsObj = new JSONObject(s.toString());
-
-						if (jsObj.getInt("code") == 1) {
-							JSONObject data = jsObj.getJSONObject("data");
-							portraitUrl = data.getString("portraitUrl");
-							Log.e(TAG, portraitUrl);
-
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Log.e(TAG, "run here");
-									upLoadBar.setVisibility(View.INVISIBLE);
-								}
-							});
-						}
-
-					} catch (ClientProtocolException e) {
-						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-						e.printStackTrace();
-					} catch (IOException e) {
-						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-						e.printStackTrace();
-					} catch (JSONException e) {
-						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-						e.printStackTrace();
-					}
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case 1:
+				if (cameraFile != null) {
+					startPhotoZoom(Uri.fromFile(cameraFile));
 				}
-
-			}.start();
-		} else if (requestCode == CAMERA_REQUEST_CODE
-				&& resultCode == Activity.RESULT_OK) {
-
-			 if (data != null && data.getData() != null) {
-				 Log.e(TAG, "data: " + data.toString());
-				 uri = data.getData();
-				 Log.e(TAG, "1uri: " + uri.toString());
-			 }
-			 
-			if (uri == null) {
-				if (photoUri != null) {
-					uri = photoUri;
-					Log.e(TAG, "2uri: " + uri.toString());
-				}
+				break;
+			case 0:
+				if (data != null)
+				startPhotoZoom(data.getData());
+				break;
+			case RESULT_REQUEST_CODE:
+				if (data != null)
+					sentPicToNext(data);
+				break;
 			}
-					
-//			final Uri uri = data.getData();
-			
-			BitmapFactory.Options opts=new BitmapFactory.Options();
-			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.RGB_565;
-			opts.inPurgeable = true;
-			opts.inSampleSize = 4;
-//			Bitmap bm = BitmapFactory.decodeFile(getRealPathFromURI(uri), opts);
-			Bitmap bm = BitmapFactory.decodeFile(cameraFile.getAbsolutePath(), opts);
-			
-			if(bm.getWidth() < bm.getHeight()){
-				bm = zoomImage(bm, 400, 400);
-			}else{
-				bm = getRotateBitmap(bm, 90);
-				bm = zoomImage(bm, 400, 400);
-			}
-			
-			TakePicFileUtil.getInstance().saveBitmap(bm);
-			personImage.setImageBitmap(bm);
-			
-			new Thread() {
-
-				@Override
-				public void run() {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							upLoadBar.setVisibility(View.VISIBLE);
-						}
-					});
-					Log.e(TAG, "thread run1");
-					
-					try {
-						sleep(1000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-
-					HttpClient httpClient = new DefaultHttpClient();
-					HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
-
-					File file = null;
-//					file = new File(getRealPathFromURI(uri));
-					file = new File(cameraFile.getAbsolutePath());
-					Part[] parts = null;
-					FilePart filePart = null;
-					try {
-						filePart = new FilePart("portrait", file);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-					parts = new Part[] { filePart };
-
-					postRequest.setEntity(new MultipartEntity(parts));
-					try {
-						HttpResponse response = httpClient.execute(postRequest);
-						BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-						String sResponse;
-						StringBuilder s = new StringBuilder();
-						while ((sResponse = reader.readLine()) != null) {
-							s = s.append(sResponse);
-						}
-						Log.e("TEst StringBuilder", s.toString());
-
-						//
-						JSONObject jsObj = new JSONObject(s.toString());
-						
-						if(jsObj.getInt("code") == 1){
-							JSONObject data = jsObj.getJSONObject("data");
-							portraitUrl = data.getString("portraitUrl");
-							Log.e(TAG, portraitUrl);
-							
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Log.e(TAG, "run here");
-									upLoadBar.setVisibility(View.INVISIBLE);
-								}
-							});
-						}
-					} catch (ClientProtocolException e) {
-						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-						e.printStackTrace();
-					} catch (IOException e) {
-						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-						e.printStackTrace();
-					} catch (JSONException e) {
-						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-						e.printStackTrace();
-					}
-				}
-
-			}.start();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -1202,4 +952,135 @@ public class SetPersonalInfo extends Activity {
 			}
 		}
 	}
+
+	public void startPhotoZoom(Uri uri) {
+
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		intent.putExtra("outputX", 300);
+		intent.putExtra("outputY", 300);
+		intent.putExtra("return-data", true);
+		intent.putExtra("noFaceDetection", true);
+		startActivityForResult(intent, RESULT_REQUEST_CODE);
+	}
+
+	File imageFile;
+
+	private void sentPicToNext(Intent data) {
+
+		Bundle bundle = data.getExtras();
+		if (bundle != null) {
+			imageFile = new File(PATH + System.currentTimeMillis() + ".jpg");
+			imageFile.getParentFile().mkdirs();
+			Bitmap photo = bundle.getParcelable("data");
+			TakePicFileUtil.getInstance().saveBitmap(photo);
+			personImage.setImageBitmap(photo);
+			FileOutputStream foutput = null;
+			try {
+				foutput = new FileOutputStream(this.imageFile);
+				photo.compress(Bitmap.CompressFormat.PNG, 100, foutput);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} finally {
+				if (null != foutput) {
+					try {
+						foutput.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			
+			
+			new Thread() {
+				@Override
+				public void run() {
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							upLoadBar.setVisibility(View.VISIBLE);
+						}
+					});
+
+					Log.e(TAG, "thread run");
+
+					try {
+						sleep(1000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+
+					HttpClient httpClient = new DefaultHttpClient();
+					HttpPost postRequest = new HttpPost(HOST
+							+ "/user/api/uploadPortrait.do" + "?sid=" + sid);
+
+					Part[] parts = null;
+					FilePart filePart = null;
+					try {
+						filePart = new FilePart("portrait", imageFile);
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					parts = new Part[] { filePart };
+
+					postRequest.setEntity(new MultipartEntity(parts));
+					try {
+						HttpResponse response = httpClient.execute(postRequest);
+						BufferedReader reader = new BufferedReader(
+								new InputStreamReader(response.getEntity()
+										.getContent(), "UTF-8"));
+						String sResponse;
+						StringBuilder s = new StringBuilder();
+						while ((sResponse = reader.readLine()) != null) {
+							s = s.append(sResponse);
+						}
+						Log.e("TEst StringBuilder", s.toString());
+
+						//
+						JSONObject jsObj = new JSONObject(s.toString());
+
+						if (jsObj.getInt("code") == 1) {
+							JSONObject data = jsObj.getJSONObject("data");
+							portraitUrl = data.getString("portraitUrl");
+							Log.e(TAG, portraitUrl);
+
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Log.e(TAG, "run here");
+									upLoadBar.setVisibility(View.INVISIBLE);
+								}
+							});
+						}
+
+					} catch (ClientProtocolException e) {
+						Toast.makeText(getApplicationContext(),
+								R.string.network_error, Toast.LENGTH_SHORT)
+								.show();
+						e.printStackTrace();
+					} catch (IOException e) {
+						Toast.makeText(getApplicationContext(),
+								R.string.network_error, Toast.LENGTH_SHORT)
+								.show();
+						e.printStackTrace();
+					} catch (JSONException e) {
+						Toast.makeText(getApplicationContext(),
+								R.string.network_error, Toast.LENGTH_SHORT)
+								.show();
+						e.printStackTrace();
+					}
+				}
+
+			}.start();
+		}
+
+	}
+
 }

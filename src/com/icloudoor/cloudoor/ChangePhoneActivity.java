@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ChangePhoneActivity extends Activity {
+public class ChangePhoneActivity extends BaseActivity {
 	private TextView MyNum;
 	private TextView TVBtnChangePhone;
 	private RelativeLayout IVBack;

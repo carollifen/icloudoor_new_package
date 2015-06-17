@@ -3,6 +3,7 @@ package com.icloudoor.cloudoor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -80,7 +81,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SetPersonalInfoNotCerti extends Activity {
+public class SetPersonalInfoNotCerti extends BaseActivity {
 	
     private Broadcast mFinishActivityBroadcast;
 	
@@ -157,6 +158,7 @@ public class SetPersonalInfoNotCerti extends Activity {
 	
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int PICTURE_REQUEST_CODE = 2;
+	private static final int RESULT_REQUEST_CODE = 11;
 	
 	private SelectPicPopupWindow menuWindow;
 	
@@ -581,213 +583,25 @@ public class SetPersonalInfoNotCerti extends Activity {
         // TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		
-         if(requestCode == 0 && resultCode == RESULT_OK) {
-        	 
-        	 final Uri uri = data.getData();
-        	 Log.e(TAG, "uri: " + getRealPathFromURI(uri));
-        	 
-        	 BitmapFactory.Options opts=new BitmapFactory.Options();
- 			 opts.inTempStorage = new byte[100 * 1024];
- 			 opts.inPreferredConfig = Bitmap.Config.RGB_565;
- 			 opts.inPurgeable = true;
- 			 opts.inSampleSize = 4;
- 			 Bitmap bm = BitmapFactory.decodeFile(getRealPathFromURI(uri), opts);
- 			 
- 			if(bm.getWidth() < bm.getHeight()){
-				bm = zoomImage(bm, 400, 400);
-			}else{
-				bm = getRotateBitmap(bm, 90);
-				bm = zoomImage(bm, 400, 400);
-			}
- 			
- 			 TakePicFileUtil.getInstance().saveBitmap(bm);
- 			personImage.setImageBitmap(bm);
-
-            // upload image
-        	 new Thread() {
-
-					@Override
-					public void run() {
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								upLoadBar.setVisibility(View.VISIBLE);
-							}
-						});
-						
-						try {
-							sleep(1000);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-
-						HttpClient httpClient = new DefaultHttpClient();
-						HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
-
-						File file = null;
-						file = new File(getRealPathFromURI(uri));
-						Part[] parts = null;
-						FilePart filePart = null;
-						try {
-							filePart = new FilePart("portrait", file);
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						parts = new Part[] { filePart };
-
-						postRequest.setEntity(new MultipartEntity(parts));
-						try {
-							HttpResponse response = httpClient.execute(postRequest);
-							BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-							String sResponse;
-							StringBuilder s = new StringBuilder();
-							while ((sResponse = reader.readLine()) != null) {
-								s = s.append(sResponse);
-							}
-							Log.e("TEst StringBuilder", s.toString());
-							
-							//
-							JSONObject jsObj = new JSONObject(s.toString());
-
-							if (jsObj.getInt("code") == 1) {
-								JSONObject data = jsObj.getJSONObject("data");
-								portraitUrl = data.getString("portraitUrl");
-								Log.e(TAG, portraitUrl);
-
-								runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										Log.e(TAG, "run here");
-										upLoadBar.setVisibility(View.INVISIBLE);
-									}
-								});
-							}
-							
-						} catch (ClientProtocolException e) {
-							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-							e.printStackTrace();
-						} catch (IOException e) {
-							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-							e.printStackTrace();
-						} catch (JSONException e) {
-							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-							e.printStackTrace();
-						}
-					}
-
-				}.start();
-        } else if(requestCode == CAMERA_REQUEST_CODE
-				&& resultCode == Activity.RESULT_OK){
-        	
-        	if (data != null && data.getData() != null) {
-				 Log.e(TAG, "data: " + data.toString());
-				 uri = data.getData();
-				 Log.e(TAG, "1uri: " + uri.toString());
-			 }
-			 
-			if (uri == null) {
-				if (photoUri != null) {
-					uri = photoUri;
-					Log.e(TAG, "2uri: " + uri.toString());
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case 1:
+				if (cameraFile != null) {
+					startPhotoZoom(Uri.fromFile(cameraFile));
 				}
+				break;
+			case 0:
+				if (data != null)
+				startPhotoZoom(data.getData());
+				break;
+			case RESULT_REQUEST_CODE:
+				if (data != null)
+					sentPicToNext(data);
+				break;
 			}
-        	
-//        	final Uri uri = data.getData();
-			
-			BitmapFactory.Options opts=new BitmapFactory.Options();
-			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.RGB_565;
-			opts.inPurgeable = true;
-			opts.inSampleSize = 4;
-//			Bitmap bm = BitmapFactory.decodeFile(getRealPathFromURI(uri), opts);
-			Bitmap bm = BitmapFactory.decodeFile(cameraFile.getAbsolutePath(), opts);
-        	
-			if(bm.getWidth() < bm.getHeight()){
-				bm = zoomImage(bm, 400, 400);
-			}else{
-				bm = getRotateBitmap(bm, 90);
-				bm = zoomImage(bm, 400, 400);
-			}
-			
-        	TakePicFileUtil.getInstance().saveBitmap(bm);
-			personImage.setImageBitmap(bm);
-
-       	 	new Thread() {
-
-					@Override
-					public void run() {
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								upLoadBar.setVisibility(View.VISIBLE);
-							}
-						});
-						
-						try {
-							sleep(1000);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-
-						HttpClient httpClient = new DefaultHttpClient();
-						HttpPost postRequest = new HttpPost(HOST + "/user/api/uploadPortrait.do" + "?sid=" + sid);
-
-						File file = null;
-						file = new File(PATH + imageName);
-						Part[] parts = null;
-						FilePart filePart = null;
-						try {
-							filePart = new FilePart("portrait", file);
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						parts = new Part[] { filePart };
-
-						postRequest.setEntity(new MultipartEntity(parts));
-						try {
-							HttpResponse response = httpClient.execute(postRequest);
-							BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-							String sResponse;
-							StringBuilder s = new StringBuilder();
-							while ((sResponse = reader.readLine()) != null) {
-								s = s.append(sResponse);
-							}
-							Log.e("TEst StringBuilder", s.toString());
-							
-							//
-							JSONObject jsObj = new JSONObject(s.toString());
-
-							if (jsObj.getInt("code") == 1) {
-								JSONObject data = jsObj.getJSONObject("data");
-								portraitUrl = data.getString("portraitUrl");
-								Log.e(TAG, portraitUrl);
-
-								runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										Log.e(TAG, "run here");
-										upLoadBar.setVisibility(View.INVISIBLE);
-									}
-								});
-							}			
-						} catch (ClientProtocolException e) {
-							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-							e.printStackTrace();
-						} catch (IOException e) {
-							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-							e.printStackTrace();
-						} catch (JSONException e) {
-							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-							e.printStackTrace();
-						}
-					}
-
-				}.start();
-        }
+		}
+		
+//        
     }
 	
 	public void onResume() {
@@ -1141,5 +955,135 @@ public class SetPersonalInfoNotCerti extends Activity {
 				setupUI(innerView);
 			}
 		}
+	}
+	
+	public void startPhotoZoom(Uri uri) {
+
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		intent.putExtra("outputX", 300);
+		intent.putExtra("outputY", 300);
+		intent.putExtra("return-data", true);
+		intent.putExtra("noFaceDetection", true);
+		startActivityForResult(intent, RESULT_REQUEST_CODE);
+	}
+
+	File imageFile;
+
+	private void sentPicToNext(Intent data) {
+
+		Bundle bundle = data.getExtras();
+		if (bundle != null) {
+			imageFile = new File(PATH + System.currentTimeMillis() + ".jpg");
+			imageFile.getParentFile().mkdirs();
+			Bitmap photo = bundle.getParcelable("data");
+			TakePicFileUtil.getInstance().saveBitmap(photo);
+			personImage.setImageBitmap(photo);
+			FileOutputStream foutput = null;
+			try {
+				foutput = new FileOutputStream(this.imageFile);
+				photo.compress(Bitmap.CompressFormat.PNG, 100, foutput);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} finally {
+				if (null != foutput) {
+					try {
+						foutput.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			
+			
+			new Thread() {
+				@Override
+				public void run() {
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							upLoadBar.setVisibility(View.VISIBLE);
+						}
+					});
+
+					Log.e(TAG, "thread run");
+
+					try {
+						sleep(1000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+
+					HttpClient httpClient = new DefaultHttpClient();
+					HttpPost postRequest = new HttpPost(HOST
+							+ "/user/api/uploadPortrait.do" + "?sid=" + sid);
+
+					Part[] parts = null;
+					FilePart filePart = null;
+					try {
+						filePart = new FilePart("portrait", imageFile);
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					parts = new Part[] { filePart };
+
+					postRequest.setEntity(new MultipartEntity(parts));
+					try {
+						HttpResponse response = httpClient.execute(postRequest);
+						BufferedReader reader = new BufferedReader(
+								new InputStreamReader(response.getEntity()
+										.getContent(), "UTF-8"));
+						String sResponse;
+						StringBuilder s = new StringBuilder();
+						while ((sResponse = reader.readLine()) != null) {
+							s = s.append(sResponse);
+						}
+						Log.e("TEst StringBuilder", s.toString());
+
+						//
+						JSONObject jsObj = new JSONObject(s.toString());
+
+						if (jsObj.getInt("code") == 1) {
+							JSONObject data = jsObj.getJSONObject("data");
+							portraitUrl = data.getString("portraitUrl");
+							Log.e(TAG, portraitUrl);
+
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Log.e(TAG, "run here");
+									upLoadBar.setVisibility(View.INVISIBLE);
+								}
+							});
+						}
+
+					} catch (ClientProtocolException e) {
+						Toast.makeText(getApplicationContext(),
+								R.string.network_error, Toast.LENGTH_SHORT)
+								.show();
+						e.printStackTrace();
+					} catch (IOException e) {
+						Toast.makeText(getApplicationContext(),
+								R.string.network_error, Toast.LENGTH_SHORT)
+								.show();
+						e.printStackTrace();
+					} catch (JSONException e) {
+						Toast.makeText(getApplicationContext(),
+								R.string.network_error, Toast.LENGTH_SHORT)
+								.show();
+						e.printStackTrace();
+					}
+				}
+
+			}.start();
+		}
+
 	}
 }

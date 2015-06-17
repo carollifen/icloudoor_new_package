@@ -2,6 +2,8 @@ package com.icloudoor.cloudoor;
 
 import java.lang.reflect.Field;
 
+import com.umeng.analytics.MobclickAgent;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,7 +15,7 @@ import android.view.ViewGroup;
  *
  */
 public class WizardFragmentTwo extends Fragment {
-
+	private final String mPageName = "WizardFragmentTwo";
 	public WizardFragmentTwo() {
 		// Required empty public constructor
 	}
@@ -24,6 +26,20 @@ public class WizardFragmentTwo extends Fragment {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_wizard_fragment_two,
 				container, false);
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
 	}
 
 	@Override

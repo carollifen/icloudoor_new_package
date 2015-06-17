@@ -9,10 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
-import android.webkit.WebView;
-import android.widget.Toast;
 
-import com.google.gson.JsonObject;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.IUmengUnregisterCallback;
 import com.umeng.message.PushAgent;
@@ -35,9 +33,10 @@ public class cloudApplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
+		MobclickAgent.openActivityDurationTrack(false);
+		MobclickAgent.updateOnlineConfig( this );
 		mPushAgent = PushAgent.getInstance(getApplicationContext());
 		mPushAgent.enable();
-		
 		UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler(){
 		    @Override
 		    public void dealWithCustomAction(Context context, UMessage msg) {

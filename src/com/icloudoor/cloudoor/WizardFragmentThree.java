@@ -2,6 +2,8 @@ package com.icloudoor.cloudoor;
 
 import java.lang.reflect.Field;
 
+import com.umeng.analytics.MobclickAgent;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 public class WizardFragmentThree extends Fragment {
-	
+	private final String mPageName = "WizardFragmentThree";
 	ImageView btnStartApp;
 
 	public WizardFragmentThree() {
@@ -42,6 +44,20 @@ public class WizardFragmentThree extends Fragment {
 		});
 		
 		return view;
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
 	}
 	
 	@Override

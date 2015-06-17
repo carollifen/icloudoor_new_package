@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
-public class CircleViewPager extends FragmentActivity {
+public class CircleViewPager extends BaseFragmentActivity {
 	private int size ;
 	protected ViewPager viewPager ;
 	private OnPageChangeListener listener ;

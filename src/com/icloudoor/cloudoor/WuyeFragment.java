@@ -9,20 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,8 +26,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class WuyeFragment extends Fragment {
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.umeng.analytics.MobclickAgent;
 
+public class WuyeFragment extends Fragment {
+	private final String mPageName = "WuyeFragment";
 	private String TAG = this.getClass().getSimpleName();
 
 	private ImageView WuyeWidgePush1;
@@ -202,12 +202,13 @@ public class WuyeFragment extends Fragment {
 		super.onPause();
 		// stop auto scroll when onPause
 		viewPager.stopAutoScroll();
+		MobclickAgent.onPageEnd(mPageName);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+		MobclickAgent.onPageStart(mPageName);
 		Log.e(TAG, "test");
 		
 		// start auto scroll when onResume

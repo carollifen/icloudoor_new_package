@@ -58,7 +58,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RegisterActivity extends Activity implements TextWatcher {
+public class RegisterActivity extends BaseActivity implements TextWatcher {
 	
 	private String TAG = this.getClass().getSimpleName();
 	
@@ -159,6 +159,30 @@ public class RegisterActivity extends Activity implements TextWatcher {
 		sendText.setWidth(screenWidth - 48*2);
 		
 		checkBox = (CheckBox) findViewById(R.id.check_box);
+		
+		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if(isChecked){
+					checkXieyi = true;
+					
+					nextLayout.setEnabled(true);
+					TVNextStep.setTextColor(0xFF0065a1);
+					nextLayout.setBackgroundResource(R.drawable.selector_next_step);
+					Log.e(TAG, "checked!");
+				}else{
+					checkXieyi = false;
+					
+					nextLayout.setEnabled(false);
+					TVNextStep.setTextColor(0xFF999999);
+					nextLayout.setBackgroundResource(R.drawable.shape_next_disable);
+					Log.e(TAG, "unchecked!");
+				}
+			}
+			
+		});
 		
 		phoneLayout.setLayoutParams(params);
 		phoneInputLayout.setLayoutParams(params1);
@@ -531,29 +555,10 @@ public class RegisterActivity extends Activity implements TextWatcher {
 		
 		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputCertiCode.getText().toString().length() > 4){
 			
-			checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+			nextLayout.setEnabled(true);
+			TVNextStep.setTextColor(0xFF0065a1);
+			nextLayout.setBackgroundResource(R.drawable.selector_next_step);
 
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView,
-						boolean isChecked) {
-					if(isChecked){
-						checkXieyi = true;
-						
-						nextLayout.setEnabled(true);
-						TVNextStep.setTextColor(0xFF0065a1);
-						nextLayout.setBackgroundResource(R.drawable.selector_next_step);
-						Log.e(TAG, "checked!");
-					}else{
-						checkXieyi = false;
-						
-						nextLayout.setEnabled(false);
-						TVNextStep.setTextColor(0xFF999999);
-						nextLayout.setBackgroundResource(R.drawable.shape_next_disable);
-						Log.e(TAG, "unchecked!");
-					}
-				}
-				
-			});
 		} else {
 			nextLayout.setEnabled(false);
 			TVNextStep.setTextColor(0xFF999999);

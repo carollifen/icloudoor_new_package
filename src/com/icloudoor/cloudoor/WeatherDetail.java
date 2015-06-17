@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class WeatherDetail extends Activity {
+public class WeatherDetail extends BaseActivity {
 	
 	private static int[] weatherIcons = new int[] { R.drawable.sunny,
 		R.drawable.clear, R.drawable.fair, R.drawable.fair1,

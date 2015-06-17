@@ -9,16 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.umeng.message.proguard.m;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -28,7 +18,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -54,13 +43,22 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.umeng.analytics.MobclickAgent;
+
 /**
  * A simple {@link Fragment} subclass.
  *
  */
 @SuppressLint("ResourceAsColor")
 public class KeyListAuthFragment extends Fragment {
-
+	private final String mPageName = "KeyListAuthFragment";
 	private String HOST = UrlUtils.HOST + "/user/api/getMyAddress.do";
 
 	private String postKerUrl = UrlUtils.HOST + "/user/api/authTempCar.do";
@@ -466,12 +464,13 @@ public class KeyListAuthFragment extends Fragment {
 
 		return view;
 	}
-
+	
+	
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
+		MobclickAgent.onPageStart(mPageName);
 		sid = loadSid();
 
 		Zonekeylist = new ArrayList<Map<String, String>>();
@@ -540,6 +539,13 @@ public class KeyListAuthFragment extends Fragment {
 				R.layout.keylist_child, new String[] { "zoneName" },
 				new int[] { R.id.id_keyname }));
 
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
 	}
 
 	private void saveSid(String sid) {

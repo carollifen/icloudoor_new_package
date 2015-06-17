@@ -7,17 +7,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.ConsoleMessage;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class BillActivity extends Activity {
+public class BillActivity extends BaseActivity {
 
 	private RelativeLayout back;
 	private WebView billWebView;
@@ -28,17 +30,25 @@ public class BillActivity extends Activity {
 	
 	boolean isDebug = DEBUG.isDebug;
 	
+	private MyDataBaseHelper mKeyDBHelper;
+	private SQLiteDatabase mKeyDB;
+	private final String DATABASE_NAME = "KeyDB.db";
+	private final String TABLE_NAME = "KeyInfoTable";
+	private final String CAR_TABLE_NAME = "CarKeyTable";
+	private final String ZONE_TABLE_NAME = "ZoneTable";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_bill);
 		
-		mFinishActivityBroadcast=	new Broadcast();
-		 IntentFilter intentFilter = new IntentFilter();
-		    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
-		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+		mFinishActivityBroadcast = new Broadcast();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
+		registerReceiver(mFinishActivityBroadcast, intentFilter);
 
-
+		mKeyDBHelper = new MyDataBaseHelper(this, DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
 		
 		final TextView Title = (TextView) findViewById(R.id.page_title);
 		
@@ -65,6 +75,8 @@ public class BillActivity extends Activity {
 		webSetting.setLoadsImagesAutomatically(true);
 		webSetting.setBuiltInZoomControls(true);
 
+		billWebView.addJavascriptInterface(new autoLogout(), "cloudoorNative");
+		
 		billWebView.loadUrl(url + "?sid=" + sid);
 		
 		WebChromeClient wcc = new WebChromeClient(){
@@ -134,5 +146,34 @@ public class BillActivity extends Activity {
 			BillActivity.this.finish();
 		}
 		
+	}
+	
+	public class autoLogout {
+		@JavascriptInterface
+		public void logout() {
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+            Editor editor1 = loginStatus.edit();
+            editor1.putInt("LOGIN", 0);
+            editor1.commit();
+            
+            String sql = "DELETE FROM " + TABLE_NAME +";";
+            mKeyDB.execSQL(sql);
+            
+            String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+            mKeyDB.execSQL(sq2);
+            
+            String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+            mKeyDB.execSQL(sq3);
+            
+            Intent intentKill = new Intent();
+			intentKill.setAction("com.icloudoor.cloudoor.ACTION_FINISH");
+			sendBroadcast(intentKill);
+            
+            Intent intent = new Intent();
+            intent.setClass(BillActivity.this, Login.class);
+            startActivity(intent);
+            
+            BillActivity.this.finish();
+		}
 	}
 }

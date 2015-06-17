@@ -36,7 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ResetPwdActivity extends Activity implements TextWatcher {
+public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 	private EditText ETInputOldPwd;
 	private EditText ETInputNewPwd;
 	private EditText ETConfirmNewPwd;

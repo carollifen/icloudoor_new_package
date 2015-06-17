@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class SettingDetailActivity extends Activity {
+public class SettingDetailActivity extends BaseActivity {
 	private LinearLayout TVBtnResetPwd;
 //	private TextView TVBtnChangePhone;
 	

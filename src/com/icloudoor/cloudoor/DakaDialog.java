@@ -36,7 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DakaDialog extends Activity {
+public class DakaDialog extends BaseActivity {
 	
 	private String TAG = this.getClass().getSimpleName();
 	

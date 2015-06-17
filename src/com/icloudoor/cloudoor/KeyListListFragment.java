@@ -12,24 +12,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.Request.Method;
-import com.android.volley.AuthFailureError;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +32,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.umeng.analytics.MobclickAgent;
+
 /**
  * A simple {@link Fragment} subclass.
  *
@@ -49,7 +47,7 @@ import android.widget.Toast;
 public class KeyListListFragment extends Fragment {
 	
 	private String TAG = this.getClass().getSimpleName();
-	
+	private final String mPageName = "KeyListListFragment";
 	private final String DATABASE_NAME = "KeyDB.db";
 	private final String TABLE_NAME = "KeyInfoTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
@@ -118,11 +116,16 @@ public class KeyListListFragment extends Fragment {
 		
 		return view;
 	}
-	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+	}
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+		MobclickAgent.onPageStart(mPageName);
 		// TODO show the keys	
 		doorNameList = new ArrayList<HashMap<String, String>>();
 		mAdapter = new KeyListAdapter(getActivity(), doorNameList);
@@ -291,9 +294,12 @@ public class KeyListListFragment extends Fragment {
 			}
 		};
 		
+		
 //		mQueue.add(mJsonRequest);
 
 	}
+	
+	
 	
 	/*
 	 * key params:

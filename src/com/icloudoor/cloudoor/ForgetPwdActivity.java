@@ -45,7 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ForgetPwdActivity extends Activity implements TextWatcher {
+public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 	private String TAG = this.getClass().getSimpleName();
 	
 	private TextView TVGetCertiCode;

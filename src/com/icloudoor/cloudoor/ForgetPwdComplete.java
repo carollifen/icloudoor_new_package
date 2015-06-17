@@ -43,7 +43,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ForgetPwdComplete extends Activity implements TextWatcher {
+public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 	private EditText ETInputPwd;
 	private EditText ETConfirmPwd;
 	private TextView TVConfirm;

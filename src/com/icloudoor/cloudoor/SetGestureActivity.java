@@ -18,7 +18,7 @@ import com.icloudoor.cloudoor.R.id;
 import com.icloudoor.cloudoor.SetGestureDrawLineView.SetGestureCallBack;
 
 
-public class SetGestureActivity extends Activity implements OnClickListener {
+public class SetGestureActivity extends BaseActivity implements OnClickListener {
 
 	private FrameLayout mGestureContainer;
 	private SetGestureContentView mGestureContentView;

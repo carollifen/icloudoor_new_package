@@ -8,12 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.umeng.analytics.MobclickAgent;
+
 /**
  * A simple {@link Fragment} subclass.
  *
  */
 public class WeatherWidgeFragment2 extends Fragment {
 
+	private final String mPageName = "WeatherWidgeFragment2";
 	public WeatherWidgeFragment2() {
 		// Required empty public constructor
 	}
@@ -26,6 +29,20 @@ public class WeatherWidgeFragment2 extends Fragment {
 				container, false);
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+	}
+	
 	@Override
     public void onDetach() {
         try {

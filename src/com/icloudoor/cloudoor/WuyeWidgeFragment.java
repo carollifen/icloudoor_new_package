@@ -1,6 +1,5 @@
 package com.icloudoor.cloudoor;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,8 +33,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class WuyeWidgeFragment extends Fragment {
+import com.umeng.analytics.MobclickAgent;
 
+public class WuyeWidgeFragment extends Fragment {
+	private final String mPageName = "WuyeWidgeFragment";
 	private String TAG = this.getClass().getSimpleName();
 
 	private RelativeLayout bigLayout;
@@ -159,6 +160,21 @@ public class WuyeWidgeFragment extends Fragment {
 		}
 
 		return view;
+	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+		
+	}
+	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
 	}
 	
 	public static String ToDBC(String input) {

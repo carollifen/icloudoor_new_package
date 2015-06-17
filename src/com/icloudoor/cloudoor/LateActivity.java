@@ -23,7 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-public class LateActivity extends Activity {
+public class LateActivity extends BaseActivity {
 	
 	private RelativeLayout shareLayout;
 	private RelativeLayout dismiss;
