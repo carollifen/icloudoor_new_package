@@ -58,9 +58,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
+import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.tag.TagManager;
+import com.umeng.update.UmengUpdateAgent;
 
 public class CloudDoorMainActivity extends BaseFragmentActivity {
     private final String TAG = this.getClass().getSimpleName();
@@ -184,7 +186,8 @@ public class CloudDoorMainActivity extends BaseFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.new_main);
-		
+		UmengUpdateAgent.setUpdateOnlyWifi(false);
+		UmengUpdateAgent.update(this);
 		// for Umeng Feedback
 		agent = new FeedbackAgent(this);
 		agent.sync();

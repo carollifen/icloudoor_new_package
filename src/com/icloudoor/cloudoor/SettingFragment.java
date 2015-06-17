@@ -53,6 +53,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
+import com.umeng.update.UmengUpdateAgent;
 
 public class SettingFragment extends Fragment {
 	private String TAG = this.getClass().getSimpleName();
@@ -313,14 +314,16 @@ public class SettingFragment extends Fragment {
 				mController.openShare(getActivity(), false);
 				break;
 			case R.id.btn_update:
-                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
-                    updateMan = new UpdateManager(getActivity().getApplicationContext(), appUpdateCb);
-                    updateMan.checkUpdate();
-                }else {
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
-                    }
-                }
+//                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+//                    updateMan = new UpdateManager(getActivity().getApplicationContext(), appUpdateCb);
+//                    updateMan.checkUpdate();
+//                }else {
+//                    if (getActivity() != null) {
+//                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+				UmengUpdateAgent.setUpdateOnlyWifi(false);
+				UmengUpdateAgent.update(getActivity());
 				break;
 			case R.id.btn_logout:
                 if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
