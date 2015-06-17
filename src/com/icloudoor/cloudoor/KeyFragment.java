@@ -141,6 +141,7 @@ public class KeyFragment extends Fragment {
 	private boolean haveRequestLHL = false;
     public boolean mBTScanning = false;
     public boolean mBtStateOpen = false;
+    private boolean mLogicScanning;
 	private boolean mThisFragment;
 
 	private long mLastRequestTime;
@@ -435,7 +436,7 @@ public class KeyFragment extends Fragment {
 						startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 					}else {
 						if (mOpenDoorState == 0) {
-							if (!mBTScanning) {
+							if (!mLogicScanning) {
 								mOpenDoorState = 1;
 								Log.i("test", "doOpenDoor");
 								doOpenDoor(mBtStateOpen);
@@ -1737,6 +1738,8 @@ public class KeyFragment extends Fragment {
             BtnOpenDoor.setImageResource(R.drawable.door_normalll_new);
             BtnOpenDoor.setEnabled(false);
 
+            mLogicScanning = true;
+
 			if (mDeviceList != null) {
 				mDeviceList.clear();
 				mDeviceList = null;
@@ -1790,7 +1793,7 @@ public class KeyFragment extends Fragment {
 					boolean bValidKey = false;
 					if (mBTScanning) {
 						mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//						mBTScanning = false;
+						mBTScanning = false;
 					}
 
 					Log.e(TAG, "mDeviceList.size() =" + String.valueOf(mDeviceList.size()));
@@ -2123,9 +2126,6 @@ public class KeyFragment extends Fragment {
 							}
 						}
 					}
-					
-									
-					mBTScanning = false;
 					if (bValidKey/*mDeviceList.size() != 0*/) {
 						scanStatus.setText(R.string.can_shake_to_open_door);
 //						myThread.mKeyFindState = true;
@@ -2134,7 +2134,9 @@ public class KeyFragment extends Fragment {
 						circle.setVisibility(View.INVISIBLE);
 						radar.setVisibility(View.INVISIBLE);
 						radar.clearAnimation();
+                        mLogicScanning = false;
 					} else {
+                        mLogicScanning = true;
 //						myThread.mKeyFindState = false;
 						activity.myThread.mKeyFindState = false;
 						circle.setVisibility(View.VISIBLE);
@@ -2149,6 +2151,7 @@ public class KeyFragment extends Fragment {
 		} else {
             if (mBTScanning) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
+				mBTScanning = false;
             }
 		}
 	}
@@ -2591,6 +2594,7 @@ public class KeyFragment extends Fragment {
     public void onStop() {
 		Log.e("TEST63", "onStop");
 		super.onStop();
+		mOpenDoorState = 5;
 		mThisFragment = false;
         vibrator.cancel();
     }
