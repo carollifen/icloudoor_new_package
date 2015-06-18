@@ -808,7 +808,10 @@ public class SetPersonalInfo extends BaseActivity {
 			Log.e("TAG", "SharedPreferences Name_of_your_preference : exist");
 			if(saveProfile.contains("SEX")){
 				Log.e("TAG", "SharedPreferences Name_of_your_preference contains sex");
-				Sex = saveProfile.getInt("SEX", 1);
+				if(saveProfile.getInt("SEX", 1) == 0)
+					Sex = 1;
+				else 
+					Sex = saveProfile.getInt("SEX", 1);
 				Log.e("TAG", "Sex: " + String.valueOf(Sex));
 			} else {
 				Log.e("TAG", "SharedPreferences Name_of_your_preference NOT contains sex");

@@ -800,12 +800,15 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 			BirthDay = saveProfile.getString("YEAR", "") + "-" + saveProfile.getString("MONTH", "") + "-" + saveProfile.getString("DAY", "");				
 		}
         
-		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PROFILE.xml");
+        File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PROFILE.xml");
 		if (f.exists()) {
 			Log.e("TAG", "SharedPreferences Name_of_your_preference : exist");
 			if(saveProfile.contains("SEX")){
 				Log.e("TAG", "SharedPreferences Name_of_your_preference contains sex");
-				Sex = saveProfile.getInt("SEX", 1);
+				if(saveProfile.getInt("SEX", 1) == 0)
+					Sex = 1;
+				else 
+					Sex = saveProfile.getInt("SEX", 1);
 				Log.e("TAG", "Sex: " + String.valueOf(Sex));
 			} else {
 				Log.e("TAG", "SharedPreferences Name_of_your_preference NOT contains sex");
