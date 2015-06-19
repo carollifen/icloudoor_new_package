@@ -315,7 +315,7 @@ public class DakaDialog extends BaseActivity {
 								formatter = new SimpleDateFormat("HH:mm");
 								curTime = new Date(response.getLong("data"));
 								time = formatter.format(curTime);
-								dakaTime.setText("现在是" + time+ "，请选择您的签到类别!");
+								dakaTime.setText(getString(R.string.daka_info1) + time+ getString(R.string.daka_info2));
 								Log.e(TAG, time);
 							}
 						} catch (JSONException e) {

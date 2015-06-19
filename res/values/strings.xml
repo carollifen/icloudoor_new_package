@@ -207,4 +207,6 @@
     <string name="shareContent">暴雨中无需取车卡摇一摇开闸，加密电子钥匙随身携带，炫酷、安全又方便！</string>
     <string name="shareTitle">摇一摇开门进小区！</string>
     
+    <string name="daka_info1">现在是</string>
+    <string name="daka_info2">，请选择您的签到类别!</string>
 </resources>
