@@ -1,8 +1,20 @@
 package com.icloudoor.cloudoor;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,10 +55,14 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -73,8 +89,11 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.icloudoor.cloudoor.ShakeEventManager;
+import com.icloudoor.cloudoor.UartService;
 import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.cloudoor.ShakeEventManager.OnShakeListener;
 import com.icloudoor.cloudoor.SwitchButton.OnSwitchListener;
@@ -202,7 +221,19 @@ public class KeyFragment extends Fragment {
 	//
 	private int reloadTimes;
 	private int reloadDays;
-	private String firstOpenDay;
+
+	//
+	private String foldPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cloudoor/";
+	private String fileName = "cacheTrace.txt";
+	private String userId;
+	private String openDoorDevicdId = null;
+	private SimpleDateFormat sDateFormat;
+	private String openDoorTime;	
+	private String modelNameAndVersion;
+	
+	private List<HashMap<String, String>> openDoorInfoList;
+	
+	private UpLoadUtils upLoadUtils;
 	
 	public KeyFragment() {
 		// Required empty public constructor
@@ -213,9 +244,16 @@ public class KeyFragment extends Fragment {
 		public void run() {
 			Log.e("test616", "car door fail1");
 			if (mOpenDoorState > 1) {
-//				if (getActivity() != null) {
-//					Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
-//				}
+				HashMap<String,String> map = new HashMap<String,String>();
+				map.put("TIME", openDoorTime);
+				map.put("UserID", userId);
+				map.put("DoorID", deviceIdTodoorId(openDoorDevicdId));
+				map.put("MODEL", modelNameAndVersion);
+				map.put("RESULT", String.valueOf(false));
+				MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics", map);
+
+				upLoadUtils.writeOpenInfoToFile(openDoorTime, userId, deviceIdTodoorId(openDoorDevicdId), false, modelNameAndVersion);
+				
 				Log.e("test616", "car door fail");
 				scanStatus.setText(R.string.can_shake_to_open_door);
 				mOpenDoorState = 0;
@@ -231,7 +269,17 @@ public class KeyFragment extends Fragment {
 		activity = (CloudDoorMainActivity)getActivity();
 
 		View view = inflater.inflate(R.layout.key_page, container, false);
+		
+		modelNameAndVersion = android.os.Build.MODEL + ":" + android.os.Build.VERSION.RELEASE;
+		
         vibrator = (Vibrator)getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        
+        openDoorInfoList = new ArrayList<HashMap<String, String>>();
+        
+        upLoadUtils = new UpLoadUtils();
+        
+        SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+		userId = loginStatus.getString("USERID", null);
         
         carNumAndPhoneNumShare = getActivity().getSharedPreferences("carNumAndPhoneNum", 0);
         
@@ -457,6 +505,7 @@ public class KeyFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
+
 		return view;
 	}
 	
@@ -1471,8 +1520,20 @@ public class KeyFragment extends Fragment {
 		super.onResume();
 
 		MobclickAgent.onPageStart(mPageName);
-
-
+		
+		MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics");
+		
+		if (getActivity() != null) {
+			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if (networkInfo != null) {
+				NetworkInfo.State state = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+				if (NetworkInfo.State.CONNECTED == state) {
+					upLoadUtils.upLoadInfo(loadSid(), mQueue);						
+				}
+			}
+		}
+		
 		/*
 		 *   getUserConfig() only for test version
 		 */
@@ -1625,38 +1686,6 @@ public class KeyFragment extends Fragment {
 		mQueue.add(mJsonRequest);
 	}
 	
-	
-//    public  class MyThread extends Thread {
-//
-//        private volatile boolean mStopThread = false;
-//		public volatile boolean mKeyFindState = false;
-//        private final long mScanningProidShort = 3000;
-//		private final long mScanningProidLong = 6000;
-//
-//        public void stopThread() {
-//            this.mStopThread = true;
-//        }
-//
-//        @Override
-//        public void run() {
-//            while (!Thread.currentThread().isInterrupted() && !mStopThread) {
-//                Message msg = new Message();
-//                msg.what = 10;
-//                mHandler.sendMessage(msg);
-//                Log.i("ThreadTest", Thread.currentThread().getId() + "myThread");
-//                try {
-//                    Thread.sleep(mScanningProidShort);
-//                    if (mKeyFindState == true){
-//						Log.i("ThreadTest", "mKeyFindState true : "+String.valueOf(mStopThread));
-//						Thread.sleep(mScanningProidLong);
-//                    }
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1694,6 +1723,19 @@ public class KeyFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		MobclickAgent.onPageEnd(mPageName);
+		
+		if (getActivity() != null) {
+			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if (networkInfo != null) {
+				NetworkInfo.State state = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+				if (NetworkInfo.State.CONNECTED == state) {
+					upLoadUtils.upLoadInfo(loadSid(), mQueue);						
+				}
+			}
+		}
+		
+
 		if(mBluetoothAdapter.isEnabled())
 			scanLeDevice(false);
 	}
@@ -1901,6 +1943,8 @@ public class KeyFragment extends Fragment {
 										channelSwitchLayout.setVisibility(View.INVISIBLE);
 										isChooseCarChannel = 1;
 										switchBtn.setSwitch(false);
+										
+										deviceIndexToOpen = 0;
 									}
 									findKey = true;
 									break;
@@ -1933,6 +1977,8 @@ public class KeyFragment extends Fragment {
 											channelSwitchLayout.setVisibility(View.INVISIBLE);
 											isChooseCarChannel = 0;
 											switchBtn.setSwitch(true);
+											
+											deviceIndexToOpen = 0;
 										}
 										findKey = true;
 										break;
@@ -2244,6 +2290,10 @@ public class KeyFragment extends Fragment {
 			onlyOneDoor = !onlyOneDoor;
 			//TODO
 			
+			Date date = new Date();
+			sDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+			openDoorTime = sDateFormat.format(date);			
+			
 			/*
 			 *  if find office door, we open it
 			 *  only when no office found, we open car or man door
@@ -2253,6 +2303,7 @@ public class KeyFragment extends Fragment {
 				scanStatus.setText(R.string.door_openning);
 				if (mUartService != null) {
 					if(mUartService.connect(tempOfficeDoorList.get(deviceIndexToOpen).getAddress())) {
+						openDoorDevicdId = tempOfficeDoorList.get(deviceIndexToOpen).getAddress();
 						mOpenDoorState = 4;
 					}
 				}
@@ -2296,6 +2347,7 @@ public class KeyFragment extends Fragment {
 													scanStatus.setText(R.string.door_openning);
 													if (mUartService != null) {
 														if(mUartService.connect(tempCarDoorList.get(deviceIndexToOpen).getAddress())) {
+															openDoorDevicdId = tempCarDoorList.get(deviceIndexToOpen).getAddress();
 															mOpenDoorState = 4;
 														}
 
@@ -2353,6 +2405,7 @@ public class KeyFragment extends Fragment {
 													scanStatus.setText(R.string.door_openning);
 													if (mUartService != null) {
 														if (mUartService.connect(tempCarDoorList.get(deviceIndexToOpen).getAddress())) {
+															openDoorDevicdId = tempCarDoorList.get(deviceIndexToOpen).getAddress();
 															mOpenDoorState = 4;
 														}
 													}
@@ -2393,7 +2446,8 @@ public class KeyFragment extends Fragment {
 					if (mUartService != null) {
 						// man door, can open
 						scanStatus.setText(R.string.door_openning);
-						if (!mUartService.connect(tempManDoorList.get(deviceIndexToOpen).getAddress())) {
+						if (mUartService.connect(tempManDoorList.get(deviceIndexToOpen).getAddress())) {
+							openDoorDevicdId = tempManDoorList.get(deviceIndexToOpen).getAddress();
 							mOpenDoorState = 4;
 						}
 					}
@@ -2404,6 +2458,31 @@ public class KeyFragment extends Fragment {
 		}
     }
 
+	public String deviceIdTodoorId(String deviceId){
+		String doorIDToOpen = null;
+		String formatDeviceId = deviceId.replace(":", "");
+		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+			if (DBCount() > 0) {
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
+				if (mCursor.moveToFirst()) {
+					int doorIdOpenIndex = mCursor.getColumnIndex("doorId");
+					int devicdIdOpenIndex = mCursor.getColumnIndex("deviceId");
+					
+					do{
+						String doorIdOpen = mCursor.getString(doorIdOpenIndex);
+						String deviceIdOpen = mCursor.getString(devicdIdOpenIndex);
+						
+						if(deviceIdOpen.equals(formatDeviceId)){
+							doorIDToOpen = doorIdOpen;
+							break;
+						}			
+					}while(mCursor.moveToNext());
+				}
+			}
+		}
+		return doorIDToOpen;
+	}
+	
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
 		@Override
@@ -2529,6 +2608,15 @@ public class KeyFragment extends Fragment {
                         mUartService.close();
                         if (mOpenDoorState != 0) {
 							if (!mDoorState) {
+								HashMap<String,String> map = new HashMap<String,String>();
+								map.put("TIME", openDoorTime);
+								map.put("UserID", userId);
+								map.put("DoorID",  deviceIdTodoorId(openDoorDevicdId));
+								map.put("MODEL", modelNameAndVersion);
+								map.put("RESULT", String.valueOf(false));
+								MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics", map);
+
+								upLoadUtils.writeOpenInfoToFile(openDoorTime, userId, deviceIdTodoorId(openDoorDevicdId), false, modelNameAndVersion);
 								Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
 							}
                             Log.e("test for open door", "Gatt close");
@@ -2580,6 +2668,16 @@ public class KeyFragment extends Fragment {
                     Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_SHORT).show();
 					scanStatus.setText(R.string.can_shake_to_open_door);
 					mDoorState = true;
+					
+					HashMap<String,String> map = new HashMap<String,String>();
+					map.put("TIME", openDoorTime);
+					map.put("UserID", userId);
+					map.put("DoorID", deviceIdTodoorId(openDoorDevicdId));
+					map.put("MODEL", modelNameAndVersion);
+					map.put("RESULT", String.valueOf(true));
+					MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics", map);
+
+					upLoadUtils.writeOpenInfoToFile(openDoorTime, userId, deviceIdTodoorId(openDoorDevicdId), true, modelNameAndVersion);
                 }
             }
 
@@ -2814,5 +2912,6 @@ public class KeyFragment extends Fragment {
 		SharedPreferences loadUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
 		return loadUUID.getString("UUID", null);
 	}
-
+	
+	
 }
