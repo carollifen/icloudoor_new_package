@@ -60,6 +60,10 @@ public class DakaDialog extends BaseActivity {
 	
 	boolean isDebug = DEBUG.isDebug;
 	
+	SimpleDateFormat formatter;
+	Date curTime;
+	String time = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,10 +80,7 @@ public class DakaDialog extends BaseActivity {
 		gowork = (TextView) findViewById(R.id.gowork);
 		offwork = (TextView) findViewById(R.id.offwork);
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-		Date curTime = new  Date(System.currentTimeMillis());
-		String time = formatter.format(curTime);
-		dakaTime.setText("现在是" + time+"，请选择您的签到类别!");
+		
 		
 		dismiss.setOnClickListener(new OnClickListener(){
 
@@ -92,6 +93,10 @@ public class DakaDialog extends BaseActivity {
 		});
 		
 		mQueue = Volley.newRequestQueue(this);
+		
+		getNowTime();
+		
+		
 		
 		gowork.setBackgroundResource(R.drawable.selector_gowork_bg);
 		gowork.setTextColor(getResources().getColorStateList(R.color.selector_daka_text));
@@ -284,5 +289,47 @@ public class DakaDialog extends BaseActivity {
 			finish();
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	public void getNowTime(){
+		sid = loadSid();
+		URL getTime = null;
+		
+		try {
+			getTime = new URL(UrlUtils.HOST + "/user/utils/time.do" + "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST, getTime.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						try {
+							if(response.getInt("code") == 1){
+								
+								if(response.getString("sid") != null)
+									saveSid(response.getString("sid"));
+								
+								formatter = new SimpleDateFormat("HH:mm");
+								curTime = new Date(response.getLong("data"));
+								time = formatter.format(curTime);
+								dakaTime.setText("现在是" + time+ "，请选择您的签到类别!");
+								Log.e(TAG, time);
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+							
+					}
+				}
+		);
+		mQueue.add(mJsonRequest);
 	}
 }
