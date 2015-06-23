@@ -16,11 +16,9 @@ import android.widget.TextView;
 
 public class XieYiActivity extends Activity {
 
-	private RelativeLayout back;
 	static Point size;
 	static float density;
-	
-	private RelativeLayout content;
+
 	private TextView textview1;
 	private TextView tishi;
 	private TextView fuwuneirong;
@@ -39,6 +37,9 @@ public class XieYiActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		RelativeLayout back;
+		RelativeLayout content;
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_xie_yi);
 		

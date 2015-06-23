@@ -42,15 +42,6 @@ public class WuyeFragment extends Fragment {
 	private ImageView WuyeWidgePush2;
 	private ImageView WuyeWidgePush3;
 
-	private ImageView BtnLianxiwuye;
-	private ImageView BtnNotice;
-	private ImageView BtnFix;
-	private ImageView BtnBad;
-	private ImageView BtnGood;
-	private ImageView BtnQuery;
-	private ImageView BtnBill;
-	private ImageView BtnPay;
-
 	private RelativeLayout unreadNoticeLayout;
 	private RelativeLayout unreadQueryLayout;
 	private ImageView unreadNoticeDot;
@@ -62,12 +53,7 @@ public class WuyeFragment extends Fragment {
 	public MyClickListener myClick;
 
 	private AutoScrollViewPager viewPager;
-	private ArrayList<Fragment> mWuyePageFragmentList;
-	private WuyePageAdapter mWuyePageAdapter;
 	public FragmentManager mFragmentManager;
-	private WuyeWidgeFragment mWuyeWidgeFragment;
-	private WuyeWidgeFragment2 mWuyeWidgeFragment2;
-	private WuyeWidgeFragment3 mWuyeWidgeFragment3;
 	public MyPageChangeListener myPageChangeListener;
 
 	private URL unReadURL;
@@ -87,6 +73,15 @@ public class WuyeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		ImageView BtnLianxiwuye;
+		ImageView BtnNotice;
+		ImageView BtnFix;
+		ImageView BtnBad;
+		ImageView BtnGood;
+		ImageView BtnQuery;
+		ImageView BtnBill;
+		ImageView BtnPay;
+
 		View view = inflater.inflate(R.layout.wuye_page, container, false);
 
 		mQueue = Volley.newRequestQueue(getActivity());
@@ -146,6 +141,12 @@ public class WuyeFragment extends Fragment {
 	}
 
 	public void InitViewPager() {
+		ArrayList<Fragment> mWuyePageFragmentList;
+		WuyePageAdapter mWuyePageAdapter;
+		WuyeWidgeFragment mWuyeWidgeFragment;
+		WuyeWidgeFragment2 mWuyeWidgeFragment2;
+		WuyeWidgeFragment3 mWuyeWidgeFragment3;
+
 		mWuyePageFragmentList = new ArrayList<Fragment>();
 
 		mWuyeWidgeFragment = new WuyeWidgeFragment();

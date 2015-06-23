@@ -3,8 +3,6 @@ package com.icloudoor.cloudoor;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -13,8 +11,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 
 public class LauncherActivity extends BaseActivity {
 
@@ -27,23 +24,27 @@ public class LauncherActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		String packageName;
-		
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.activity_launcher);
 		
 		final Intent intent = new Intent();
-		if(CheckFirstRun()){
+		if(CheckFirstRun()) {
 			String launcherPkgName = getLauncherPkgName(getApplicationContext());
 			if (launcherPkgName == null) {
+				Log.e("error", "launcherPkgName is null");
 			}
 			packageName = getPackageName();
-			if (!hasShortcut(getApplicationContext(), packageName, launcherPkgName)) {
-				addShortcutToDesktop();
+			try {
+				if (!hasShortcut(getApplicationContext(), packageName, launcherPkgName)) {
+					Log.i("test618", "pkgName = " + packageName);
+					addShortcutToDesktop();
+				}
+			}catch (SecurityException e){
+				Log.e("error", "There is a SecurityException error");
 			}
-
 			intent.setClass(this, WizardActivity.class);
-		}else{
+		} else {
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
 			isLogin = loginStatus.getInt("LOGIN", 0);
 			
@@ -84,7 +85,7 @@ public class LauncherActivity extends BaseActivity {
     }
     
 	private boolean CheckFirstRun() {
-    	SharedPreferences setting = getSharedPreferences("com.icloudoor.cloudoor", 0);
+    	SharedPreferences setting = getSharedPreferences("com.icloudoor.clouddoor", 0);
     	boolean user_first = setting.getBoolean("FIRST",true);
     	if(user_first) {
     		setting.edit().putBoolean("FIRST", false).commit();
@@ -119,16 +120,15 @@ public class LauncherActivity extends BaseActivity {
 			return false;
 		}
 	}
-	
 	private static String getLauncherPkgName(Context context) {
 		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<ActivityManager.RunningAppProcessInfo> list = activityManager.getRunningAppProcesses();
 		for (ActivityManager.RunningAppProcessInfo info: list) {
 			String pkgName = info.processName;
 			if (pkgName.contains("launcher") && pkgName.contains("android")) {
+				Log.i("test", "launcherPkg =  " + pkgName);
 				return pkgName;
 			}
-
 		}
 		return null;
 	}

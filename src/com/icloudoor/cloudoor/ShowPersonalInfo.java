@@ -426,7 +426,75 @@ public class ShowPersonalInfo extends BaseActivity {
 			certiImage.setImageResource(R.drawable.certi_user);
 			certiText.setText(R.string.certi);
 		}
+
+		File Imagefile = new File(PATH + imageName);
+		if(Imagefile.exists()){
+			Log.e(TAG, "use local");
+			BitmapFactory.Options opts=new BitmapFactory.Options();
+			opts.inTempStorage = new byte[100 * 1024];
+			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+			opts.inPurgeable = true;
+			opts.inSampleSize = 4;
+			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+			image.setImageBitmap(bm);
+		}
 		
+		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/LOGINSTATUS.xml");
+		if(f.exists()){
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+
+			String tempString = loginStatus.getString("NAME", null);
+			if (tempString != null){
+				if (tempString.length() > 0){
+					TVName.setText(loginStatus.getString("NAME", null));
+				}
+			}
+			tempString = loginStatus.getString("NICKNAME", null);
+			if (tempString != null){
+				if (tempString.length() > 0){
+					TVNickName.setText(loginStatus.getString("NICKNAME", null));
+				}
+			}
+
+			if(loginStatus.getInt("SEX", 1) == 1){
+				TVSex.setText(R.string.male);
+			} else if(loginStatus.getInt("SEX", 1) == 2){
+				TVSex.setText(R.string.female);
+			}
+
+			tempString = loginStatus.getString("BIRTH", null);
+			if (tempString != null){
+				if (tempString.length() > 0){
+					TVyear.setText(tempString.substring(0, 4));
+					TVmonth.setText(tempString.substring(5, 7));
+					TVday.setText(tempString.substring(8));
+				}
+			}
+
+			tempString = loginStatus.getString("ID", null);
+			if (tempString != null){
+				if (tempString.length() > 0){
+					String tempFormatID = changeNum(loginStatus.getString("ID", null));
+					TVid.setText(tempFormatID);
+				}
+			}
+
+			if (loginStatus.getInt("PROVINCE", 0) != 0) {
+				province = getProvinceName(loginStatus.getInt("PROVINCE", 0));
+				TVprovince.setText(province);
+			}
+
+			if (loginStatus.getInt("CITY", 0) != 0) {
+				city = getCityName(loginStatus.getInt("CITY", 0));
+				TVcity.setText(city);
+			}
+
+			if (loginStatus.getInt("DIS", 0) != 0) {
+				district = getDistrictName(loginStatus.getInt("DIS", 0));
+				TVdistrict.setText(district);
+			}
+		}
+
 		mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		try {

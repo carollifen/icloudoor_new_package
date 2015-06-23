@@ -792,12 +792,18 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
         realName.setText(saveProfile.getString("NAME", ""));
         nickName.setText(saveProfile.getString("NICKNAME", ""));
         personalID.setText(saveProfile.getString("ID", ""));
-        if(saveProfile.getString("YEAR", "").length() > 0 && saveProfile.getString("MONTH", "").length() > 0 && saveProfile.getString("DAY", "").length() > 0){
-			birthday.setText(saveProfile.getString("YEAR", "") + " " + getString(R.string.year)
-					 + " " + saveProfile.getString("MONTH", "") + " " + getString(R.string.month)
-					 + " " + saveProfile.getString("DAY", "") + " " + getString(R.string.day));
-			
-			BirthDay = saveProfile.getString("YEAR", "") + "-" + saveProfile.getString("MONTH", "") + "-" + saveProfile.getString("DAY", "");				
+
+		String tempString1 = saveProfile.getString("YEAR", "");
+		String tempString2 = saveProfile.getString("MONTH", "");
+		String tempString3 = saveProfile.getString("DAY", "");
+		if (tempString1 != null && tempString2 != null && tempString3 != null) {
+			if (tempString1.length() > 0 && tempString2.length() > 0 && tempString3.length() > 0) {
+				birthday.setText(saveProfile.getString("YEAR", "") + " " + getString(R.string.year)
+						+ " " + saveProfile.getString("MONTH", "") + " " + getString(R.string.month)
+						+ " " + saveProfile.getString("DAY", "") + " " + getString(R.string.day));
+
+				BirthDay = saveProfile.getString("YEAR", "") + "-" + saveProfile.getString("MONTH", "") + "-" + saveProfile.getString("DAY", "");
+			}
 		}
         
         File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PROFILE.xml");
@@ -1068,19 +1074,40 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 						}
 
 					} catch (ClientProtocolException e) {
-						Toast.makeText(getApplicationContext(),
-								R.string.network_error, Toast.LENGTH_SHORT)
-								.show();
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(SetPersonalInfoNotCerti.this,
+										R.string.network_error, Toast.LENGTH_SHORT)
+										.show();
+							}
+
+						});
 						e.printStackTrace();
 					} catch (IOException e) {
-						Toast.makeText(getApplicationContext(),
-								R.string.network_error, Toast.LENGTH_SHORT)
-								.show();
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(SetPersonalInfoNotCerti.this,
+										R.string.network_error, Toast.LENGTH_SHORT)
+										.show();
+							}
+
+						});
 						e.printStackTrace();
 					} catch (JSONException e) {
-						Toast.makeText(getApplicationContext(),
-								R.string.network_error, Toast.LENGTH_SHORT)
-								.show();
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(SetPersonalInfoNotCerti.this,
+										R.string.network_error, Toast.LENGTH_SHORT)
+										.show();
+							}
+
+						});
 						e.printStackTrace();
 					}
 				}

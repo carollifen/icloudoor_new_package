@@ -43,11 +43,6 @@ public class WuyeWidgeFragment2 extends Fragment {
 	private final String mPageName = "WuyeWidgeFragment2";
 	private String TAG = this.getClass().getSimpleName();
 
-	private RelativeLayout bigLayout;
-	private RelativeLayout contentLayout;
-	private TextView TVtitle;
-	private TextView TVcontent;
-	private TextView TVnamedate;
 	private ImageView bgImage;
 
 	private Thread mThread;
@@ -73,6 +68,12 @@ public class WuyeWidgeFragment2 extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		RelativeLayout bigLayout;
+		RelativeLayout contentLayout;
+		TextView TVtitle;
+		TextView TVcontent;
+		TextView TVnamedate;
+
 		View view = inflater.inflate(R.layout.fragment_wuye_widge_fragment2,
 				container, false);
 		
@@ -85,7 +86,7 @@ public class WuyeWidgeFragment2 extends Fragment {
 
 		SharedPreferences banner = getActivity().getSharedPreferences("BANNER",
 				0);
-		if (banner.getString("2type", "0").equals("1")) {
+		if ("1".equals(banner.getString("2type", "0"))) {
 			DisplayMetrics dm = new DisplayMetrics();
 			getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 			int screenWidth = dm.widthPixels;
@@ -106,22 +107,36 @@ public class WuyeWidgeFragment2 extends Fragment {
 			String color = banner.getString("2bg", null);
 			bigLayout.setBackgroundColor(Color.parseColor(color));
 			
-		} else if (banner.getString("2type", "0").equals("2")) {
+		} else if ("2".equals(banner.getString("2type", "0"))) {
 			
 			SharedPreferences tempurl = getActivity().getSharedPreferences("TEMPURL2", 0);
 			Editor editor = tempurl.edit();
 			String temp = tempurl.getString("URL", "");
-			if(temp.length() > 0){
-				if(temp.equals(banner.getString("2url", null))){
-					File f = new File(PATH + "/" + imageName);
-					Log.e(TAG, "use local");
+			if (temp != null) {
+				if (temp.length() > 0) {
+					if (temp.equals(banner.getString("2url", null))) {
+						File f = new File(PATH + "/" + imageName);
+						Log.e(TAG, "use local");
 
-					Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
-					bgImage.setImageBitmap(bm);
-				}else{
-					File f = new File(PATH + "/" + imageName);
-					if(f.exists()) 
-						f.delete();
+						Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
+						bgImage.setImageBitmap(bm);
+					} else {
+						File f = new File(PATH + "/" + imageName);
+						if (f.exists())
+							f.delete();
+						portraitUrl = banner.getString("2url", null);
+
+						Log.e(TAG, portraitUrl);
+
+						if (mThread == null) {
+							mThread = new Thread(runnable);
+							mThread.start();
+						}
+
+						editor.putString("URL", portraitUrl);
+						editor.commit();
+					}
+				} else {
 					portraitUrl = banner.getString("2url", null);
 
 					Log.e(TAG, portraitUrl);
@@ -130,22 +145,10 @@ public class WuyeWidgeFragment2 extends Fragment {
 						mThread = new Thread(runnable);
 						mThread.start();
 					}
-					
+
 					editor.putString("URL", portraitUrl);
 					editor.commit();
 				}
-			}else{
-				portraitUrl = banner.getString("2url", null);
-
-				Log.e(TAG, portraitUrl);
-
-				if (mThread == null) {
-					mThread = new Thread(runnable);
-					mThread.start();
-				}
-				
-				editor.putString("URL", portraitUrl);
-				editor.commit();
 			}
 
 			if (banner.getString("2link", null) != null) {

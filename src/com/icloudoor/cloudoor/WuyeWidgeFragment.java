@@ -10,6 +10,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -39,11 +40,6 @@ public class WuyeWidgeFragment extends Fragment {
 	private final String mPageName = "WuyeWidgeFragment";
 	private String TAG = this.getClass().getSimpleName();
 
-	private RelativeLayout bigLayout;
-	private RelativeLayout contentLayout;
-	private TextView TVtitle;
-	private TextView TVcontent;
-	private TextView TVnamedate;
 	private ImageView bgImage;
 
 	private Thread mThread;
@@ -69,6 +65,12 @@ public class WuyeWidgeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		RelativeLayout bigLayout;
+		RelativeLayout contentLayout;
+		TextView TVtitle;
+		TextView TVcontent;
+		TextView TVnamedate;
+
 		View view = inflater.inflate(R.layout.fragment_wuye_widge, container,
 				false);
 
@@ -79,9 +81,8 @@ public class WuyeWidgeFragment extends Fragment {
 		TVcontent = (TextView) view.findViewById(R.id.content);
 		TVnamedate = (TextView) view.findViewById(R.id.name_date);
 
-		SharedPreferences banner = getActivity().getSharedPreferences("BANNER",
-				0);
-		if (banner.getString("1type", "0").equals("1")) {
+		SharedPreferences banner = getActivity().getSharedPreferences("BANNER", Context.MODE_PRIVATE);
+		if ("1".equals(banner.getString("1type", "0"))) {
 			DisplayMetrics dm = new DisplayMetrics();
 			getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 			int screenWidth = dm.widthPixels;
@@ -98,26 +99,40 @@ public class WuyeWidgeFragment extends Fragment {
 				String formatContent = ToDBC(banner.getString("1content", null)).replace("\t", "         ");
 				TVcontent.setText(formatContent);
 			}
-			
+
 			String color = banner.getString("1bg", null);
 			bigLayout.setBackgroundColor(Color.parseColor(color));
 
-		} else if (banner.getString("1type", "0").equals("2")) {
+		} else if ("2".equals(banner.getString("1type", "0"))) {
 
 			SharedPreferences tempurl = getActivity().getSharedPreferences("TEMPURL1", 0);
 			Editor editor = tempurl.edit();
 			String temp = tempurl.getString("URL", "");
-			if(temp.length() > 0){
-				if(temp.equals(banner.getString("1url", null))){
-					File f = new File(PATH + "/" + imageName);
-					Log.e(TAG, "use local");
+			if (temp != null) {
+				if (temp.length() > 0) {
+					if (temp.equals(banner.getString("1url", null))) {
+						File f = new File(PATH + "/" + imageName);
+						Log.e(TAG, "use local");
 
-					Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
-					bgImage.setImageBitmap(bm);
-				}else{
-					File f = new File(PATH + "/" + imageName);
-					if(f.exists()) 
-						f.delete();
+						Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
+						bgImage.setImageBitmap(bm);
+					} else {
+						File f = new File(PATH + "/" + imageName);
+						if (f.exists())
+							f.delete();
+						portraitUrl = banner.getString("1url", null);
+
+						Log.e(TAG, portraitUrl);
+
+						if (mThread == null) {
+							mThread = new Thread(runnable);
+							mThread.start();
+						}
+
+						editor.putString("URL", portraitUrl);
+						editor.commit();
+					}
+				} else {
 					portraitUrl = banner.getString("1url", null);
 
 					Log.e(TAG, portraitUrl);
@@ -126,22 +141,10 @@ public class WuyeWidgeFragment extends Fragment {
 						mThread = new Thread(runnable);
 						mThread.start();
 					}
-					
+
 					editor.putString("URL", portraitUrl);
 					editor.commit();
 				}
-			}else{
-				portraitUrl = banner.getString("1url", null);
-
-				Log.e(TAG, portraitUrl);
-
-				if (mThread == null) {
-					mThread = new Thread(runnable);
-					mThread.start();
-				}
-				
-				editor.putString("URL", portraitUrl);
-				editor.commit();
 			}
 
 			if (banner.getString("1link", null) != null) {

@@ -44,11 +44,6 @@ public class WuyeWidgeFragment3 extends Fragment {
 	private final String mPageName = "WuyeWidgeFragment3";
 	private String TAG = this.getClass().getSimpleName();
 
-	private RelativeLayout bigLayout;
-	private RelativeLayout contentLayout;
-	private TextView TVtitle;
-	private TextView TVcontent;
-	private TextView TVnamedate;
 	private ImageView bgImage;
 
 	private Thread mThread;
@@ -74,6 +69,11 @@ public class WuyeWidgeFragment3 extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		RelativeLayout bigLayout;
+		RelativeLayout contentLayout;
+		TextView TVtitle;
+		TextView TVcontent;
+		TextView TVnamedate;
 
 		Log.e(TAG, "create");
 
@@ -88,7 +88,7 @@ public class WuyeWidgeFragment3 extends Fragment {
 
 		SharedPreferences banner = getActivity().getSharedPreferences("BANNER",
 				0);
-		if (banner.getString("3type", "0").equals("1")) {
+		if ("1".equals(banner.getString("3type", "0"))) {
 			DisplayMetrics dm = new DisplayMetrics();
 			getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 			int screenWidth = dm.widthPixels;
@@ -109,22 +109,36 @@ public class WuyeWidgeFragment3 extends Fragment {
 			String color = banner.getString("3bg", null);
 			bigLayout.setBackgroundColor(Color.parseColor(color));
 			
-		} else if (banner.getString("3type", "0").equals("2")) {
+		} else if ("2".equals(banner.getString("3type", "0"))) {
 
 			SharedPreferences tempurl = getActivity().getSharedPreferences("TEMPURL3", 0);
 			Editor editor = tempurl.edit();
 			String temp = tempurl.getString("URL", "");
-			if(temp.length() > 0){
-				if(temp.equals(banner.getString("3url", null))){
-					File f = new File(PATH + "/" + imageName);
-					Log.e(TAG, "use local");
+			if (temp != null) {
+				if (temp.length() > 0) {
+					if (temp.equals(banner.getString("3url", null))) {
+						File f = new File(PATH + "/" + imageName);
+						Log.e(TAG, "use local");
 
-					Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
-					bgImage.setImageBitmap(bm);
-				}else{
-					File f = new File(PATH + "/" + imageName);
-					if(f.exists()) 
-						f.delete();
+						Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
+						bgImage.setImageBitmap(bm);
+					} else {
+						File f = new File(PATH + "/" + imageName);
+						if (f.exists())
+							f.delete();
+						portraitUrl = banner.getString("3url", null);
+
+						Log.e(TAG, portraitUrl);
+
+						if (mThread == null) {
+							mThread = new Thread(runnable);
+							mThread.start();
+						}
+
+						editor.putString("URL", portraitUrl);
+						editor.commit();
+					}
+				} else {
 					portraitUrl = banner.getString("3url", null);
 
 					Log.e(TAG, portraitUrl);
@@ -133,36 +147,27 @@ public class WuyeWidgeFragment3 extends Fragment {
 						mThread = new Thread(runnable);
 						mThread.start();
 					}
-					
+
 					editor.putString("URL", portraitUrl);
 					editor.commit();
 				}
-			}else{
-				portraitUrl = banner.getString("3url", null);
-
-				Log.e(TAG, portraitUrl);
-
-				if (mThread == null) {
-					mThread = new Thread(runnable);
-					mThread.start();
-				}
-				
-				editor.putString("URL", portraitUrl);
-				editor.commit();
 			}
 
-			if (banner.getString("3link", null).length() > 0) {
-				link = banner.getString("3link", null);
-				bgImage.setOnClickListener(new OnClickListener() {
+			String tempString = banner.getString("3link", null);
+			if (tempString != null){
+				if (tempString.length() > 0){
+					link = banner.getString("3link", null);
+					bgImage.setOnClickListener(new OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						Uri uri = Uri.parse(link);
-						Intent it = new Intent(Intent.ACTION_VIEW, uri);
-						startActivity(it);
-					}
+						@Override
+						public void onClick(View v) {
+							Uri uri = Uri.parse(link);
+							Intent it = new Intent(Intent.ACTION_VIEW, uri);
+							startActivity(it);
+						}
 
-				});
+					});
+				}
 			}
 		}
 

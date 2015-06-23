@@ -277,7 +277,7 @@ public class Login extends Activity implements TextWatcher {
 										editor.putInt("LOGIN", isLogin);
 										editor.putString("PHONENUM", phoneNum);
 										editor.putString("PASSWARD", password);
-										editor.commit();
+//										editor.commit();
 
 										SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
 										Editor mEditor=firstLoginShare.edit();

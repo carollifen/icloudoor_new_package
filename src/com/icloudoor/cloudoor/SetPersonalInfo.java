@@ -1064,19 +1064,40 @@ public class SetPersonalInfo extends BaseActivity {
 						}
 
 					} catch (ClientProtocolException e) {
-						Toast.makeText(getApplicationContext(),
-								R.string.network_error, Toast.LENGTH_SHORT)
-								.show();
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(SetPersonalInfo.this,
+										R.string.network_error, Toast.LENGTH_SHORT)
+										.show();
+							}
+
+						});
 						e.printStackTrace();
 					} catch (IOException e) {
-						Toast.makeText(getApplicationContext(),
-								R.string.network_error, Toast.LENGTH_SHORT)
-								.show();
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(SetPersonalInfo.this,
+										R.string.network_error, Toast.LENGTH_SHORT)
+										.show();
+							}
+
+						});
 						e.printStackTrace();
 					} catch (JSONException e) {
-						Toast.makeText(getApplicationContext(),
-								R.string.network_error, Toast.LENGTH_SHORT)
-								.show();
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(SetPersonalInfo.this,
+										R.string.network_error, Toast.LENGTH_SHORT)
+										.show();
+							}
+
+						});
 						e.printStackTrace();
 					}
 				}
