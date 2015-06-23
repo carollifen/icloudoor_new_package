@@ -266,9 +266,9 @@ public class ShowPersonalInfo extends BaseActivity {
 										Log.e(TAG, "use local");
 										BitmapFactory.Options opts = new BitmapFactory.Options();
 										opts.inTempStorage = new byte[100 * 1024];
-										opts.inPreferredConfig = Bitmap.Config.RGB_565;
+										opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 										opts.inPurgeable = true;
-										opts.inSampleSize = 4;
+//										opts.inSampleSize = 4;
 										Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 										image.setImageBitmap(bm);
 									} else {
@@ -432,13 +432,13 @@ public class ShowPersonalInfo extends BaseActivity {
 			Log.e(TAG, "use local");
 			BitmapFactory.Options opts=new BitmapFactory.Options();
 			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 			opts.inPurgeable = true;
-			opts.inSampleSize = 4;
+//			opts.inSampleSize = 4;
 			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 			image.setImageBitmap(bm);
 		}
-		
+
 		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/LOGINSTATUS.xml");
 		if(f.exists()){
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
@@ -567,9 +567,9 @@ public class ShowPersonalInfo extends BaseActivity {
 									Log.e(TAG, "use local");
 									BitmapFactory.Options opts = new BitmapFactory.Options();
 									opts.inTempStorage = new byte[100 * 1024];
-									opts.inPreferredConfig = Bitmap.Config.RGB_565;
+									opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 									opts.inPurgeable = true;
-									opts.inSampleSize = 4;
+//									opts.inSampleSize = 4;
 									Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 									image.setImageBitmap(bm);
 								} else {
@@ -669,9 +669,9 @@ public class ShowPersonalInfo extends BaseActivity {
 
 				BitmapFactory.Options opts=new BitmapFactory.Options();
 				opts.inTempStorage = new byte[100 * 1024];
-				opts.inPreferredConfig = Bitmap.Config.RGB_565;
+				opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 				opts.inPurgeable = true;
-				opts.inSampleSize = 4;
+//				opts.inSampleSize = 4;
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity().getContent(), null, opts);
 			} catch (Exception e) {
 				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();

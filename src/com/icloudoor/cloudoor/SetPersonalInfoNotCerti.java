@@ -208,9 +208,9 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 			Log.e(TAG, "use local");
 			BitmapFactory.Options opts=new BitmapFactory.Options();
 			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 			opts.inPurgeable = true;
-			opts.inSampleSize = 4;
+//			opts.inSampleSize = 4;
 			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 			personImage.setImageBitmap(bm);
 		}
@@ -615,9 +615,9 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 			Log.e(TAG, "use local");
 			BitmapFactory.Options opts=new BitmapFactory.Options();
 			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 			opts.inPurgeable = true;
-			opts.inSampleSize = 4;
+//			opts.inSampleSize = 4;
 			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 			personImage.setImageBitmap(bm);
 		}else{
@@ -656,9 +656,9 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 						.execute(httpGet);
 				BitmapFactory.Options opts=new BitmapFactory.Options();
 				opts.inTempStorage = new byte[100 * 1024];
-				opts.inPreferredConfig = Bitmap.Config.RGB_565;
+				opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 				opts.inPurgeable = true;
-				opts.inSampleSize = 4;
+//				opts.inSampleSize = 4;
 				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity()
 						.getContent(), null, opts);
 			} catch (Exception e) {
