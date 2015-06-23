@@ -57,14 +57,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.easemob.EMEventListener;
+import com.easemob.EMNotifierEvent;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMMessage;
+import com.easemob.chat.EMMessage.ChatType;
 import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
+import com.icloudoor.cloudoor.chat.HXSDKHelper;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.tag.TagManager;
 import com.umeng.update.UmengUpdateAgent;
 
-public class CloudDoorMainActivity extends BaseFragmentActivity {
+public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEventListener{
     private final String TAG = this.getClass().getSimpleName();
 //	private ViewPager mViewPager;
 //	private ArrayList<Fragment> mFragmentsList;
@@ -377,6 +383,13 @@ public class CloudDoorMainActivity extends BaseFragmentActivity {
 	public void onResume() {
 		super.onResume();
 		Log.e(TAG, "onResume");
+		EMChatManager.getInstance().registerEventListener(
+				this,
+				new EMNotifierEvent.Event[] { EMNotifierEvent.Event.EventNewMessage,EMNotifierEvent.Event.EventOfflineMessage,
+						EMNotifierEvent.Event.EventDeliveryAck, EMNotifierEvent.Event.EventReadAck });
+		if(mMsgFragment!=null){
+			mMsgFragment.refresh();
+		}
 		
 		SharedPreferences setting = getSharedPreferences("SETTING", 0);	
 		if(setting.getInt("disturb", 1) == 0)
@@ -750,6 +763,12 @@ public class CloudDoorMainActivity extends BaseFragmentActivity {
 		}
 		
 	}
+    @Override
+    protected void onStop() {
+    	// TODO Auto-generated method stub
+    	super.onStop();
+    	EMChatManager.getInstance().unregisterEventListener(this);
+    }
 	
 	public void onDestroy() {
         Log.e("ThreadTest", "onDestroy");
@@ -762,5 +781,65 @@ public class CloudDoorMainActivity extends BaseFragmentActivity {
         unregisterReceiver(mFinishActivityBroadcast);
         
     }
+
+	@Override
+	public void onEvent(EMNotifierEvent event) {
+		
+		System.out.println("ÏûÏ¢T");
+		
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+				mMsgFragment.refresh();
+				Toast.makeText(CloudDoorMainActivity.this, "ÏûÏ¢T", Toast.LENGTH_SHORT).show();;
+			}
+		});
+		
+		
+		 switch (event.getEvent()) {
+	        case EventNewMessage:
+	        {
+	            //»ñÈ¡µ½message
+	            EMMessage message = (EMMessage) event.getData();
+	            
+	            String username = null;
+	            //Èº×éÏûÏ¢
+	            if(message.getChatType() == ChatType.GroupChat || message.getChatType() == ChatType.ChatRoom){
+	                username = message.getTo();
+	            }
+	            else{
+	                //µ¥ÁÄÏûÏ¢
+	                username = message.getFrom();
+	                
+	            }
+	          
+
+	            break;
+	        }
+	        case EventDeliveryAck:
+	        {
+	            //»ñÈ¡µ½message
+	            EMMessage message = (EMMessage) event.getData();
+	            
+	            break;
+	        }
+	        case EventReadAck:
+	        {
+	            //»ñÈ¡µ½message
+	            EMMessage message = (EMMessage) event.getData();
+	            break;
+	        }
+	        case EventOfflineMessage:
+	        {
+	            break;
+	        }
+	        default:
+	            break;
+	        }
+		
+	}
     
 }

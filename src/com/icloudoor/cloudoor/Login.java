@@ -14,13 +14,20 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMGroupManager;
+import com.icloudoor.cloudoor.chat.CommonUtils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,6 +36,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -259,9 +267,7 @@ public class Login extends Activity implements TextWatcher {
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
-									
-									if(isDebug)
-										Log.e("TEST", response.toString());
+									Log.e("TEST", response.toString());
 
                                     pbLoginBar.setVisibility(View.INVISIBLE);
 									if (loginStatusCode == 1) {
@@ -358,11 +364,11 @@ public class Login extends Activity implements TextWatcher {
 											}
 
 											if (setPersonal == 1) {
-												intent.setClass(Login.this, CloudDoorMainActivity.class);
-												startActivity(intent);
-												finish();
+												login("fff", "111");//test username password
+//												intent.setClass(Login.this, CloudDoorMainActivity.class);a
+//												startActivity(intent);
+//												finish();
 											}
-											//
 										} catch (JSONException e) {
 											e.printStackTrace();
 										}
@@ -420,6 +426,109 @@ public class Login extends Activity implements TextWatcher {
      	Editor editor = RegiPhone.edit();
      	editor.putString("PHONE", "");
      	editor.commit();
+	}
+	
+	
+	
+	boolean progressShow;
+	public void login(final String currentUsername,final String currentPassword) {
+		if (!CommonUtils.isNetWorkConnected(Login.this)) {
+			Toast.makeText(Login.this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		if (TextUtils.isEmpty(currentUsername)) {
+			Toast.makeText(Login.this, R.string.User_name_cannot_be_empty, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if (TextUtils.isEmpty(currentPassword)) {
+			Toast.makeText(Login.this, R.string.Password_cannot_be_empty, Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		progressShow = true;
+		final ProgressDialog pd = new ProgressDialog(Login.this);
+		pd.setCanceledOnTouchOutside(false);
+		pd.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				progressShow = false;
+			}
+		});
+		pd.setMessage(getString(R.string.Is_landing));
+		pd.show();
+
+		final long start = System.currentTimeMillis();
+		// µ÷ÓÃsdkµÇÂ½·½·¨µÇÂ½ÁÄÌì·þÎñÆ÷
+		EMChatManager.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
+
+			@Override
+			public void onSuccess() {
+				if (!progressShow) {
+					return;
+				}
+				// µÇÂ½³É¹¦£¬±£´æÓÃ»§ÃûÃÜÂë
+				cloudApplication.getInstance().setUserName(currentUsername);
+				cloudApplication.getInstance().setPassword(currentPassword);
+
+				System.out.println("µÇÂ¼³É¹¦....");
+				Login.this.runOnUiThread(new Runnable() {
+					public void run() {
+						pd.setMessage(getString(R.string.list_is_for));
+					}
+				});
+				try {
+					// ** µÚÒ»´ÎµÇÂ¼»òÕßÖ®Ç°logoutºóÔÙµÇÂ¼£¬¼ÓÔØËùÓÐ±¾µØÈººÍ»Ø»°
+					// ** manually load all local groups and
+				    EMGroupManager.getInstance().loadAllGroups();
+					EMChatManager.getInstance().loadAllConversations();
+					// ´¦ÀíºÃÓÑºÍÈº×é
+//					processContactsAndGroups();
+				} catch (Exception e) {
+					e.printStackTrace();
+					// È¡ºÃÓÑ»òÕßÈºÁÄÊ§°Ü£¬²»ÈÃ½øÈëÖ÷Ò³Ãæ
+					Login.this.runOnUiThread(new Runnable() {
+						public void run() {
+							pd.dismiss();
+							cloudApplication.getInstance().logout(null);
+							Toast.makeText(Login.this.getApplicationContext(), R.string.login_failure_failed, 1).show();
+						}
+					});
+					return;
+				}
+				// ¸üÐÂµ±Ç°ÓÃ»§µÄnickname ´Ë·½·¨µÄ×÷ÓÃÊÇÔÚiosÀëÏßÍÆËÍÊ±ÄÜ¹»ÏÔÊ¾ÓÃ»§nick
+				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
+						cloudApplication.currentUserNick.trim());
+				if (!updatenick) {
+					Log.e("LoginActivity", "update current user nick fail");
+				}
+				if (!Login.this.isFinishing())
+					pd.dismiss();
+				// ½øÈëÖ÷Ò³Ãæ
+				finish();
+				startActivity(new Intent(Login.this, CloudDoorMainActivity.class));
+			}
+
+			@Override
+			public void onProgress(int progress, String status) {
+			}
+
+			@Override
+			public void onError(final int code, final String message) {
+				System.out.println("µÇÂ¼Ê§°Ü....");
+				if (!progressShow) {
+					return;
+				}
+				Login.this.runOnUiThread(new Runnable() {
+					public void run() {
+						pd.dismiss();
+						Toast.makeText(Login.this, getString(R.string.Login_failed) + message,
+								Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
+		});
 	}
 
 	@Override

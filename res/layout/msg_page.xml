@@ -1,23 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="#f8f8f8">
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    android:orientation="vertical" >
 
     <include
         android:id="@+id/title_bar_msg_page"
         android:layout_width="fill_parent"
         android:layout_height="44dp"
         layout="@layout/title_bar_msg_page" />
-    
-    <com.icloudoor.cloudoor.MsgListView
-        android:id="@+id/msg_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="#bdc7d4"
-        android:dividerHeight="1.0px"
-        android:scrollbars="none" 
-        android:layout_below="@id/title_bar_msg_page">
-    </com.icloudoor.cloudoor.MsgListView>
 
-</RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="#ffffff"
+                android:descendantFocusability="blocksDescendants"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:id="@+id/msg_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/icon_boy_110" />
+
+                <TextView
+                    android:id="@+id/msg_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/msg_image"
+                    android:text="NAME"
+                    android:textColor="#000000"
+                    android:textSize="17sp" />
+
+
+                
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="#ffffff"
+                android:descendantFocusability="blocksDescendants"
+                android:layout_marginTop="1dp"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:id="@+id/group_msg_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/icon_boy_110" />
+
+                <TextView
+                    android:id="@+id/group_msg_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/group_msg_image"
+                    android:text="NAME"
+                    android:textColor="#000000"
+                    android:textSize="17sp" />
+
+              
+
+              
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="#ffffff"
+                android:descendantFocusability="blocksDescendants"
+                android:layout_marginTop="1dp"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:id="@+id/mail_list_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/icon_boy_110" />
+
+                <TextView
+                    android:id="@+id/mail_list_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/mail_list_image"
+                    android:layout_marginTop="5dp"
+                    android:layout_centerVertical="true"
+                    android:text="NAME"
+                    android:textColor="#000000"
+                    android:textSize="17sp" />
+
+            </RelativeLayout>
+
+            <com.icloudoor.cloudoor.ListViewForScrollView
+                android:id="@+id/msg_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:divider="#bdc7d4"
+                android:dividerHeight="1.0px"
+                android:background="#ffffff"
+                android:scrollbars="none" >
+            </com.icloudoor.cloudoor.ListViewForScrollView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -1,5 +1,7 @@
 package com.icloudoor.cloudoor;
 
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,6 +12,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import com.easemob.EMCallBack;
+import com.icloudoor.cloudoor.chat.DemoHXSDKHelper;
+import com.icloudoor.cloudoor.chat.User;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.IUmengUnregisterCallback;
@@ -28,11 +33,17 @@ public class cloudApplication extends Application {
 	public static final String CALLBACK_RECEIVER_ACTION = "callback_receiver_action";
 	public static IUmengRegisterCallback mRegisterCallback;	
 	public static IUmengUnregisterCallback mUnregisterCallback;
-	
+	private static cloudApplication instance;
+	public static Context applicationContext;
+	public static DemoHXSDKHelper hxSDKHelper = new DemoHXSDKHelper();
+	public static String currentUserNick = "";
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
+		instance = this;
+		applicationContext = this;
+		hxSDKHelper.onInit(applicationContext);
 		MobclickAgent.openActivityDurationTrack(false);
 		MobclickAgent.updateOnlineConfig( this );
 		mPushAgent = PushAgent.getInstance(getApplicationContext());
@@ -96,5 +107,67 @@ public class cloudApplication extends Application {
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(getApplicationContext());
 	}
+	
+	
+	public static cloudApplication getInstance() {
+		return instance;
+	}
+	
+	/**
+	 * 
+	 *
+	 * @return
+	 */
+	public Map<String, User> getContactList() {
+	    return hxSDKHelper.getContactList();
+	}
+
+	/**
+	 * 
+	 *
+	 * @param contactList
+	 */
+	public void setContactList(Map<String, User> contactList) {
+	    hxSDKHelper.setContactList(contactList);
+	}
+
+	/**
+	 * 
+	 *
+	 * @return
+	 */
+	public String getUserName() {
+	    return hxSDKHelper.getHXId();
+	}
+
+	/**
+	 * 
+	 *
+	 * @return
+	 */
+	public String getPassword() {
+		return hxSDKHelper.getPassword();
+	}
+
+	/**
+	 *
+	 *
+	 * @param user
+	 */
+	public void setUserName(String username) {
+	    hxSDKHelper.setHXId(username);
+	}
+
+
+	public void setPassword(String pwd) {
+	    hxSDKHelper.setPassword(pwd);
+	}
+
+
+	public void logout(final EMCallBack emCallBack) {
+		
+	    hxSDKHelper.logout(emCallBack);
+	}
+	
 
 }

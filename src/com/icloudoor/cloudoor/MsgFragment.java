@@ -2,10 +2,22 @@ package com.icloudoor.cloudoor;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +29,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMContactManager;
+import com.easemob.chat.EMConversation;
+import com.easemob.chat.EMConversation.EMConversationType;
+import com.easemob.chat.EMGroupManager;
+import com.easemob.exceptions.EaseMobException;
+import com.easemob.util.EMLog;
+import com.easemob.util.HanziToPinyin;
 import com.icloudoor.cloudoor.SlideView.OnSlideListener;
+import com.icloudoor.cloudoor.chat.ChatActivity;
+import com.icloudoor.cloudoor.chat.ChatAllHistoryAdapter;
+import com.icloudoor.cloudoor.chat.CommonUtils;
+import com.icloudoor.cloudoor.chat.Constant;
+import com.icloudoor.cloudoor.chat.User;
+import com.icloudoor.cloudoor.chat.UserDao;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -28,7 +55,11 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 //	private SlideView mLastSlideViewWithStatusOn;
 	
 	private TextView mPopupWindow;
-
+	ListViewForScrollView msg_list;
+	private ChatAllHistoryAdapter adapter;
+	
+	private List<EMConversation> conversationList ;
+	
 	public MsgFragment() {
 		// Required empty public constructor
 	}
@@ -37,19 +68,56 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.msg_page, container,false);
+		conversationList = new ArrayList<EMConversation>();
+		conversationList.addAll(loadConversationsWithRecentChat());
+		msg_list = (ListViewForScrollView) view.findViewById(R.id.msg_list);
+		adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
+		// ÉèÖÃadapter
+		msg_list.setAdapter(adapter);
 		
-//		mMsgList = (MsgListView) view.findViewById(R.id.msg_list);
-		MessageItem item = new MessageItem();
-		item.image = R.drawable.icon_boy_110;
-		item.name = "Name";
-		item.content = "message";
-		item.time = "11:50";
-		mMessageItems.add(item);
-//		mMsgList.setAdapter(new SlideAdapter());
-//		mMsgList.setOnItemClickListener(this);
+		
+		msg_list.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				EMConversation conversation = adapter.getItem(position);
+				String username = conversation.getUserName();
+				if (username.equals(cloudApplication.getInstance().getUserName()))
+					Toast.makeText(getActivity(), "sssssssssssss", 0).show();
+				else {
+				    // ½øÈëÁÄÌìÒ³Ãæ
+				    Intent intent = new Intent(getActivity(), ChatActivity.class);
+				    if(conversation.isGroup()){
+				        if(conversation.getType() == EMConversationType.ChatRoom){
+				         // it is group chat
+	                        intent.putExtra("chatType", ChatActivity.CHATTYPE_CHATROOM);
+	                        intent.putExtra("groupId", username);
+				        }else{
+				         // it is group chat
+	                        intent.putExtra("chatType", ChatActivity.CHATTYPE_GROUP);
+	                        intent.putExtra("groupId", username);
+				        }
+				        
+				    }else{
+				        // it is single chat
+                        intent.putExtra("userId", username);
+				    }
+				    startActivity(intent);
+				}
+			}
+		});
 		
 		return view;
 	}
+	
+	
+	public void refresh(){
+		if(adapter!=null){
+			adapter.setData(loadConversationsWithRecentChat());
+			adapter.notifyDataSetChanged();
+		}
+	}
+	
 	
 	
 	@Override
@@ -66,6 +134,59 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 		super.onPause();
 		MobclickAgent.onPageEnd(mPageName);
 	}
+	
+	
+	
+	private List<EMConversation> loadConversationsWithRecentChat() {
+		
+		Hashtable<String, EMConversation> conversations = EMChatManager.getInstance().getAllConversations();
+		List<Pair<Long, EMConversation>> sortList = new ArrayList<Pair<Long, EMConversation>>();
+		synchronized (conversations) {
+			for (EMConversation conversation : conversations.values()) {
+				if (conversation.getAllMessages().size() != 0) {
+					//if(conversation.getType() != EMConversationType.ChatRoom){
+						sortList.add(new Pair<Long, EMConversation>(conversation.getLastMessage().getMsgTime(), conversation));
+					//}
+				}
+			}
+		}
+		try {
+			// Internal is TimSort algorithm, has bug
+			sortConversationByLastChatTime(sortList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		List<EMConversation> list = new ArrayList<EMConversation>();
+		for (Pair<Long, EMConversation> sortItem : sortList) {
+			list.add(sortItem.second);
+		}
+		return list;
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param usernames
+	 */
+	private void sortConversationByLastChatTime(List<Pair<Long, EMConversation>> conversationList) {
+		Collections.sort(conversationList, new Comparator<Pair<Long, EMConversation>>() {
+			@Override
+			public int compare(final Pair<Long, EMConversation> con1, final Pair<Long, EMConversation> con2) {
+
+				if (con1.first == con2.first) {
+					return 0;
+				} else if (con2.first > con1.first) {
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+
+		});
+	}
+	
+	
 
 	private class SlideAdapter extends BaseAdapter {
 
