@@ -1,11 +1,17 @@
 package com.icloudoor.cloudoor;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,15 +26,23 @@ public class LauncherActivity extends BaseActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		String packageName;
+		
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.activity_launcher);
 		
 		final Intent intent = new Intent();
 		if(CheckFirstRun()){
-    		//addShortcutToDesktop();
-    		
-    		intent.setClass(this, WizardActivity.class);
+			String launcherPkgName = getLauncherPkgName(getApplicationContext());
+			if (launcherPkgName == null) {
+			}
+			packageName = getPackageName();
+			if (!hasShortcut(getApplicationContext(), packageName, launcherPkgName)) {
+				addShortcutToDesktop();
+			}
+
+			intent.setClass(this, WizardActivity.class);
 		}else{
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
 			isLogin = loginStatus.getInt("LOGIN", 0);
@@ -84,4 +98,38 @@ public class LauncherActivity extends BaseActivity {
 		return loadSid.getString("SID", null);
 	}
 	
+	private static boolean hasShortcut(Context context, String lableName,String launcherPkgName) {
+
+		String url;
+		url = "content://" + launcherPkgName + ".settings/favorites?notify=true";
+
+		ContentResolver resolver = context.getContentResolver();
+		Cursor cursor = resolver.query(Uri.parse(url), null, "title=?",
+				new String[] { lableName }, null);
+
+		if (cursor == null) {
+			return false;
+		}
+
+		if (cursor.getCount()>0) {
+			cursor.close();
+			return true;
+		}else {
+			cursor.close();
+			return false;
+		}
+	}
+	
+	private static String getLauncherPkgName(Context context) {
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningAppProcessInfo> list = activityManager.getRunningAppProcesses();
+		for (ActivityManager.RunningAppProcessInfo info: list) {
+			String pkgName = info.processName;
+			if (pkgName.contains("launcher") && pkgName.contains("android")) {
+				return pkgName;
+			}
+
+		}
+		return null;
+	}
 }
