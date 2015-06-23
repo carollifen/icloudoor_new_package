@@ -118,7 +118,7 @@
              android:layout_height="match_parent"
              android:gravity="center_vertical"
              android:layout_marginLeft="26dp"
-             android:text="非攻云门软件许可及"
+             android:text="同意非攻云门软件许可及"
              android:textSize="12sp"
              android:textColor="#333333"
              />
