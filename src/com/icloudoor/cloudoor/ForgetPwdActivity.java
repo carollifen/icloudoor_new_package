@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,17 +17,21 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.cloudoor.RegisterActivity.TimeCount;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.ContentObserver;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -56,6 +62,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 	private RequestQueue mQueue;
 	private RelativeLayout BtnBack;
 	
+    private SmsContent content;
 	private TimeCount counter;
 	
 	private int RequestCertiStatusCode;
@@ -171,7 +178,9 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 		
 		sid = loadSid();
 		
-		
+        content = new SmsContent(new Handler());
+        this.getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, content);
+
 		counter = new TimeCount(60000, 1000);
 		getCertiCodeLayout.setOnClickListener(new OnClickListener(){
 
@@ -642,4 +651,64 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 			}
 		}
 	}
+	
+    class SmsContent extends ContentObserver {
+        private Cursor cursor = null;
+        private String subString = null;
+
+        public SmsContent(Handler handler){
+            super(handler);
+            // TODO Auto-generated constructor stub
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            cursor = managedQuery(Uri.parse("content://sms/inbox"),
+                    new String[] { "_id", "address", "read", "body" },
+                    /*" address=? and read=?"*/null,
+                    /*new String[] { "10690023192088", "0" }*/null, "_id desc");
+            if (cursor != null && cursor.getCount() > 0){
+                ContentValues values = new ContentValues();
+                values.put("read", "1");
+                cursor.moveToNext();
+                int smsbodyColumn = cursor.getColumnIndex("body");
+                String smsBody = cursor.getString(smsbodyColumn);
+                if (smsBody.toString().length() > 10) {
+                    subString = smsBody.substring(0, 6);
+//                Log.e("test22", subString);
+                    int ret = subString.compareTo(getString(R.string.sms_content_to_compare));
+                    if (ret == 0) {
+                        ETInputCertiCode.setText(getDynamicPassword(smsBody));
+                        ETInputCertiCode.clearFocus();
+                    }
+                }
+            }
+
+            if (Build.VERSION.SDK_INT < 14) {
+                cursor.close();
+            }
+        }
+
+        /**
+         *
+         * @param str Content of the message
+         *
+         * @return get the verify code (5-bit)
+         */
+        public String getDynamicPassword(String str) {
+            // verify code is 5 bits
+            Pattern continuousNumberPattern = Pattern.compile("(?<![0-9])([0-9]{"
+                    + 5 + "})(?![0-9])");
+            Matcher m = continuousNumberPattern.matcher(str);
+            String dynamicPassword = "";
+            while (m.find()) {
+                System.out.print(m.group());
+                dynamicPassword = m.group();
+            }
+
+            return dynamicPassword;
+        }
+    }
 }
