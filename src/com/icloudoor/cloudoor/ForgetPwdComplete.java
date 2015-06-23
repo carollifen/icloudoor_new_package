@@ -265,7 +265,7 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 			int mid = temC[0];
 
 			if ((mid >= 48 && mid <= 57) || (mid >= 65 && mid <= 90)
-					|| (mid > 97 && mid <= 122)) {
+					|| (mid >= 97 && mid <= 122)) {
 
 			} else {
 				s.delete(temp.length() - 1, temp.length());
@@ -277,7 +277,7 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 			int mid = temC[0];
 
 			if ((mid >= 48 && mid <= 57) || (mid >= 65 && mid <= 90)
-					|| (mid > 97 && mid <= 122)) {
+					|| (mid >= 97 && mid <= 122)) {
 
 			} else {
 				s.clear();
