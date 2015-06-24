@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -22,10 +23,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,16 +54,14 @@ import com.umeng.analytics.MobclickAgent;
 
 public class MsgFragment extends Fragment implements OnItemClickListener, OnClickListener, OnSlideListener {
 	private final String mPageName = "MsgFragment";
-//	private MsgListView mMsgList;
 	private List<MessageItem> mMessageItems = new ArrayList<MessageItem>();
-//	private SlideView mLastSlideViewWithStatusOn;
 	
 	private TextView mPopupWindow;
 	ListViewForScrollView msg_list;
 	private ChatAllHistoryAdapter adapter;
-	
+	private RelativeLayout group_layout;
 	private List<EMConversation> conversationList ;
-	
+	private ImageView add_friends;
 	public MsgFragment() {
 		// Required empty public constructor
 	}
@@ -71,6 +73,8 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 		conversationList = new ArrayList<EMConversation>();
 		conversationList.addAll(loadConversationsWithRecentChat());
 		msg_list = (ListViewForScrollView) view.findViewById(R.id.msg_list);
+		group_layout = (RelativeLayout) view.findViewById(R.id.group_layout);
+		add_friends = (ImageView) view.findViewById(R.id.add_friends);
 		adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
 		// ÉèÖÃadapter
 		msg_list.setAdapter(adapter);
@@ -106,7 +110,8 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 				}
 			}
 		});
-		
+		group_layout.setOnClickListener(this);
+		add_friends.setOnClickListener(this);
 		return view;
 	}
 	
@@ -281,9 +286,69 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.holder){
+		switch (v.getId()) {
+		case R.id.holder:
 			Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+			break;
+		case R.id.group_layout:
+			
+			Intent intent = new Intent();
+			startActivity(intent);
+			
+			break;
+		
+		case R.id.add_friends:
+			
+			initPopupWindow();
+			
+			break;
+		case R.id.sweep_layout:
+			if(pw!=null&&pw.isShowing()){
+				pw.dismiss();
+			}
+			
+			break;
+		case R.id.add_friend_layout:
+			if(pw!=null&&pw.isShowing()){
+				pw.dismiss();
+			}
+			
+			break;
+		case R.id.constat_layout:
+			if(pw!=null&&pw.isShowing()){
+				pw.dismiss();
+			}
+			Intent contactIntent = new Intent(getActivity(),ContactActivity.class);
+			startActivity(contactIntent);
+			break;
+
+		default:
+			break;
 		}
+	}
+	
+	
+	PopupWindow pw;
+	
+	public void initPopupWindow(){
+		if(pw==null){
+			View view = LayoutInflater.from(getActivity()).inflate(R.layout.pw_addfriend, null);
+			view.findViewById(R.id.sweep_layout).setOnClickListener(this);
+			view.findViewById(R.id.add_friend_layout).setOnClickListener(this);
+			view.findViewById(R.id.constat_layout).setOnClickListener(this);
+			pw = new PopupWindow(view);
+			pw.setHeight(LayoutParams.WRAP_CONTENT);
+			pw.setWidth(LayoutParams.WRAP_CONTENT);
+			pw.setFocusable(true);
+			pw.setBackgroundDrawable(new BitmapDrawable());
+			pw.showAsDropDown(add_friends,0,0);
+		}else{
+			if(!pw.isShowing()){
+				pw.showAsDropDown(add_friends);
+			}
+			
+		}
+		
 	}
 
 	@Override

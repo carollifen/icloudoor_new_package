@@ -285,6 +285,8 @@ public class Login extends Activity implements TextWatcher {
 										try {
 											JSONObject data = response.getJSONObject("data");
 											JSONObject info = data.getJSONObject("info");
+											JSONObject im = data.getJSONObject("im");
+											JSONObject account = im.getJSONObject("account");
 
 											name = info.getString("userName");
 											nickname = info.getString("nickname");
@@ -364,10 +366,11 @@ public class Login extends Activity implements TextWatcher {
 											}
 
 											if (setPersonal == 1) {
-												login("fff", "111");//test username password
-//												intent.setClass(Login.this, CloudDoorMainActivity.class);a
-//												startActivity(intent);
-//												finish();
+												if(account!=null){
+													login(account.getString("userId"), account.getString("password"));
+												}else{
+													Toast.makeText(Login.this, getString(R.string.imError), Toast.LENGTH_SHORT).show();
+												}
 											}
 										} catch (JSONException e) {
 											e.printStackTrace();

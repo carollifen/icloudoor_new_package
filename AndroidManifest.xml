@@ -507,7 +507,18 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" />
-        
+        <activity
+            android:name=".chat.ContactActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".chat.VerificationFrientsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
          <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"

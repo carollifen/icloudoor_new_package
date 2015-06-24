@@ -15,6 +15,11 @@ import android.util.Log;
 import com.easemob.EMCallBack;
 import com.icloudoor.cloudoor.chat.DemoHXSDKHelper;
 import com.icloudoor.cloudoor.chat.User;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.IUmengUnregisterCallback;
@@ -26,17 +31,18 @@ public class cloudApplication extends Application {
 	private PushAgent mPushAgent;
 	private SharedPreferences noticeUrlShare;
 	private Editor noticeUrlEditor;
-	
+
 	private SharedPreferences queryShare;
 	private Editor queryEditor;
-	
+
 	public static final String CALLBACK_RECEIVER_ACTION = "callback_receiver_action";
-	public static IUmengRegisterCallback mRegisterCallback;	
+	public static IUmengRegisterCallback mRegisterCallback;
 	public static IUmengUnregisterCallback mUnregisterCallback;
 	private static cloudApplication instance;
 	public static Context applicationContext;
 	public static DemoHXSDKHelper hxSDKHelper = new DemoHXSDKHelper();
 	public static String currentUserNick = "";
+
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -45,7 +51,7 @@ public class cloudApplication extends Application {
 		applicationContext = this;
 		hxSDKHelper.onInit(applicationContext);
 		MobclickAgent.openActivityDurationTrack(false);
-		MobclickAgent.updateOnlineConfig( this );
+		MobclickAgent.updateOnlineConfig(this);
 		mPushAgent = PushAgent.getInstance(getApplicationContext());
 		mPushAgent.enable();
 		UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler(){
@@ -106,9 +112,28 @@ public class cloudApplication extends Application {
 		
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(getApplicationContext());
+		initImageLoaderConfiguration();
 	}
-	
-	
+
+	public void initImageLoaderConfiguration() {
+
+		
+
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				this).threadPriority(Thread.NORM_PRIORITY - 2)
+				.denyCacheImageMultipleSizesInMemory()
+				.discCacheFileNameGenerator(new Md5FileNameGenerator())
+				// ½«±£´æµÄÊ±ºòµÄURIÃû³ÆÓÃMD5 ¼ÓÃÜ
+				.tasksProcessingOrder(QueueProcessingType.LIFO)
+				.defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // Not
+				.diskCacheSize(50 * 1024 * 1024) // 50 Mb
+				// .writeDebugLogs() // Remove for release app
+				.build();
+		// Initialize ImageLoader with configuration.
+		ImageLoader.getInstance().init(config);
+
+	}
+
 	public static cloudApplication getInstance() {
 		return instance;
 	}
