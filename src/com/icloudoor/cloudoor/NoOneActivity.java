@@ -124,4 +124,10 @@ public class NoOneActivity extends BaseActivity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mController.unregisterListener(mSnsPostListener);
+	}
 }

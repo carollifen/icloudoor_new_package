@@ -2976,17 +2976,20 @@ public class KeyFragment extends Fragment {
 								if(response.getString("sid") != null)
 									saveSid(response.getString("sid"));
 								
-								SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
-								Editor editor = loginStatus.edit();
-								editor.putInt("STATUS", response.getJSONObject("data").getInt("userStatus"));
-								editor.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
-								editor.commit();
+								if (getActivity() != null) {
+									SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+									Editor editor = loginStatus.edit();
+									editor.putInt("STATUS", response.getJSONObject("data").getInt("userStatus"));
+									editor.putBoolean( "isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
+									editor.commit();
+
+									SharedPreferences saveProfile = getActivity().getSharedPreferences("PROFILE", 0);
+									Editor edit = saveProfile.edit();
+									edit.putInt("userStatus", response.getJSONObject("data").getInt("userStatus"));
+									edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
+									edit.commit();
+								}
 								
-								SharedPreferences saveProfile = getActivity().getSharedPreferences("PROFILE", 0);
-								Editor edit = saveProfile.edit();
-								edit.putInt("userStatus", response.getJSONObject("data").getInt("userStatus"));
-								edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
-								edit.commit();
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();

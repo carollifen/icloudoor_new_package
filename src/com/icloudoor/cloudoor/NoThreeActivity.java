@@ -123,4 +123,10 @@ public class NoThreeActivity extends BaseActivity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mController.unregisterListener(mSnsPostListener);
+	}
 }

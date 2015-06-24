@@ -206,6 +206,7 @@ public class SettingFragment extends Fragment {
 		// TODO Auto-generated method stub
 		super.onPause();
 		MobclickAgent.onPageEnd(mPageName);
+		mController.unregisterListener(mSnsPostListener);
 	}
 	
 	@Override
