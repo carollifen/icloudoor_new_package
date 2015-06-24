@@ -1845,6 +1845,9 @@ public class KeyFragment extends Fragment {
             doorName.setText("");
             doorNameFlag.setVisibility(View.INVISIBLE);
 
+            switchBtn.setVisibility(View.VISIBLE);
+			channelSwitchLayout.setVisibility(View.INVISIBLE);
+            
 			scanStatus.setText(R.string.scanning);
             scanLeDevice(true);
 		}
