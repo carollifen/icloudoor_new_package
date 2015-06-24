@@ -4,20 +4,13 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,22 +26,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMContactManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMConversation.EMConversationType;
-import com.easemob.chat.EMGroupManager;
-import com.easemob.exceptions.EaseMobException;
-import com.easemob.util.EMLog;
-import com.easemob.util.HanziToPinyin;
 import com.icloudoor.cloudoor.SlideView.OnSlideListener;
-import com.icloudoor.cloudoor.chat.ChatActivity;
 import com.icloudoor.cloudoor.chat.ChatAllHistoryAdapter;
-import com.icloudoor.cloudoor.chat.CommonUtils;
-import com.icloudoor.cloudoor.chat.Constant;
-import com.icloudoor.cloudoor.chat.User;
-import com.icloudoor.cloudoor.chat.UserDao;
+import com.icloudoor.cloudoor.chat.activity.ChatActivity;
+import com.icloudoor.cloudoor.chat.activity.ContactActivity;
 import com.umeng.analytics.MobclickAgent;
 
 

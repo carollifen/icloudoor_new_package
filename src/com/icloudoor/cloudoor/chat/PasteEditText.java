@@ -24,6 +24,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 
 /**
  * 自定义的textview，用来处理复制粘贴的消息

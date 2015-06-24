@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.StrictMode;
 
+import com.icloudoor.cloudoor.chat.activity.ImageGridActivity;
+
 public class Utils {
 
 	private Utils() {

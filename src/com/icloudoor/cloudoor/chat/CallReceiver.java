@@ -19,6 +19,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.easemob.util.EMLog;
+import com.icloudoor.cloudoor.chat.activity.VideoCallActivity;
+import com.icloudoor.cloudoor.chat.activity.VoiceCallActivity;
 
 public class CallReceiver extends BroadcastReceiver{
 

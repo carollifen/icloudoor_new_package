@@ -66,6 +66,12 @@ import com.easemob.util.FileUtils;
 import com.easemob.util.LatLng;
 import com.easemob.util.TextFormater;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.activity.AlertDialog;
+import com.icloudoor.cloudoor.chat.activity.BaiduMapActivity;
+import com.icloudoor.cloudoor.chat.activity.ChatActivity;
+import com.icloudoor.cloudoor.chat.activity.ShowBigImage;
+import com.icloudoor.cloudoor.chat.activity.ShowNormalFileActivity;
+import com.icloudoor.cloudoor.chat.activity.ShowVideoActivity;
 
 public class MessageAdapter extends BaseAdapter{
 

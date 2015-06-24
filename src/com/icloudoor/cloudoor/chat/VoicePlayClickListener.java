@@ -32,6 +32,7 @@ import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.VoiceMessageBody;
 import com.easemob.util.EMLog;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 
 public class VoicePlayClickListener implements View.OnClickListener {
 	private static final String TAG = "VoicePlayClickListener";

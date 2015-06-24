@@ -14,6 +14,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.VideoMessageBody;
 import com.easemob.util.ImageUtils;
+import com.icloudoor.cloudoor.chat.activity.ShowVideoActivity;
 
 public class LoadVideoImageTask extends AsyncTask<Object, Void, Bitmap> {
 
