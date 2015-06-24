@@ -235,6 +235,10 @@ public class KeyFragment extends Fragment {
 	
 	private UpLoadUtils upLoadUtils;
 	
+	private Toast mToast;
+	
+	Handler mHandler = new Handler();
+	
 	public KeyFragment() {
 		// Required empty public constructor
 	}
@@ -439,7 +443,8 @@ public class KeyFragment extends Fragment {
 			                    editor.commit();
 						 	} else {
 						 		if(getActivity() != null){
-						 			Toast.makeText(getActivity(), R.string.plz_login_again, Toast.LENGTH_SHORT).show();
+						 			toastShow(getString(R.string.plz_login_again));
+//						 			Toast.makeText(getActivity(), R.string.plz_login_again, Toast.LENGTH_SHORT).show();
 						 			
 						 			SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
                                     Editor editor1 = loginStatus.edit();
@@ -704,9 +709,8 @@ public class KeyFragment extends Fragment {
 								
 							} else if (response.getInt("code") == -81) {
 								if (getActivity() != null)
-									Toast.makeText(getActivity(),
-											R.string.have_no_key_authorised,
-											Toast.LENGTH_SHORT).show();
+									toastShow(getString(R.string.have_no_key_authorised));
+//									Toast.makeText(getActivity(), R.string.have_no_key_authorised, Toast.LENGTH_SHORT).show();
 							}
 						} catch (JSONException e) {
 							Log.e(TAG, "request error");
@@ -718,8 +722,10 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						if(getActivity() != null)
-							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
+						if(getActivity() != null){
+							toastShow(getString(R.string.network_error));
+						}
+//							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 			@Override
@@ -962,8 +968,10 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						if(getActivity() != null)
-							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
+						if(getActivity() != null){
+							toastShow(getString(R.string.network_error));
+						}
+//							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 			@Override
@@ -1259,8 +1267,10 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						if(getActivity() != null)
-							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
+						if(getActivity() != null){
+							toastShow(getString(R.string.network_error));
+						}
+//							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 			@Override
@@ -1335,8 +1345,10 @@ public class KeyFragment extends Fragment {
 						weatherTemperature.setText(getString(R.string.weather_not_available));
 						weatherTemperature.setTextSize(16);
 						
-						if(getActivity() != null)
-							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
+						if(getActivity() != null){
+							toastShow(getString(R.string.network_error));
+						}
+//							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
 		};
@@ -1475,7 +1487,8 @@ public class KeyFragment extends Fragment {
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
+            	toastShow(getString(R.string.bt_not_supported));
+//                Toast.makeText(getActivity(), R.string.bt_not_supported, Toast.LENGTH_SHORT).show();
         }
 
 //        mHandler = new Handler(){
@@ -1522,6 +1535,18 @@ public class KeyFragment extends Fragment {
 		MobclickAgent.onPageStart(mPageName);
 		
 		MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics");
+		
+		if (getActivity() != null) {
+			mHandler.post(new Runnable() {
+
+				@Override
+				public void run() {
+					checkForUserStatus();
+					mHandler.postDelayed(this, 30 * 1000);
+				}
+
+			});
+		}
 		
 		if (getActivity() != null) {
 			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -1738,6 +1763,8 @@ public class KeyFragment extends Fragment {
 
 		if(mBluetoothAdapter.isEnabled())
 			scanLeDevice(false);
+		
+		mHandler.removeCallbacksAndMessages(null);
 	}
 
 	@Override
@@ -2368,13 +2395,15 @@ public class KeyFragment extends Fragment {
 
 												} else if(carStatus.equals("3")){
 													if (getActivity() != null) {
-														Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
+														toastShow(getString(R.string.car_already_lend));
+//														Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
 													}
 												} else {
 													// can not open
 													if (getActivity() != null) {
 														Log.e(TAG, "sorry, cannot open");
-														Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
+														toastShow(getString(R.string.sorry_you_are_in_the_zone));
+//														Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
 													}
 												}
 
@@ -2423,14 +2452,16 @@ public class KeyFragment extends Fragment {
 												} else if(carStatus.equals("3")){
 													mOpenDoorState = 2;
 													if (getActivity() != null) {
-														Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
+														toastShow(getString(R.string.car_already_lend));
+//														Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
 													}
 												} else {
 													mOpenDoorState = 3;
 													// can not open
 													if (getActivity() != null) {
 														Log.e(TAG, "sorry, cannot open");
-														Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
+														toastShow(getString(R.string.sorry_you_are_out_the_zone));
+//														Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
 													}
 												}
 
@@ -2617,7 +2648,8 @@ public class KeyFragment extends Fragment {
 								MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics", map);
 
 								upLoadUtils.writeOpenInfoToFile(openDoorTime, userId, deviceIdTodoorId(openDoorDevicdId), false, modelNameAndVersion);
-								Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+//								Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+								toastShow(getString(R.string.open_door_fail));
 							}
                             Log.e("test for open door", "Gatt close");
 //							mHandlerReset.getLooper().quit();
@@ -2665,7 +2697,8 @@ public class KeyFragment extends Fragment {
                 if (txValue[0] == 0x10) {
                     vibrator.vibrate(500);
                     // door had opened. go on ...
-                    Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_SHORT).show();
+                    toastShow(getString(R.string.open_door_success));
+//                    Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_SHORT).show();
 					scanStatus.setText(R.string.can_shake_to_open_door);
 					mDoorState = true;
 					
@@ -2913,5 +2946,59 @@ public class KeyFragment extends Fragment {
 		return loadUUID.getString("UUID", null);
 	}
 	
+	public void toastShow(String arg) {
+        if (mToast == null) {
+        	mToast = Toast.makeText(getActivity(), arg, Toast.LENGTH_SHORT);
+        } else {
+        	mToast.cancel();
+        	mToast.setText(arg);
+        }
+        mToast.show();
+    }
 	
+	public void checkForUserStatus() {
+		URL getUserStatusURL = null;
+		sid = loadSid();
+		try {
+			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST, getUserStatusURL.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.e(TAG, "checkForUserStatus: " + response.toString());
+						try {
+							if(response.getInt("code") == 1){
+								if(response.getString("sid") != null)
+									saveSid(response.getString("sid"));
+								
+								SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+								Editor editor = loginStatus.edit();
+								editor.putInt("STATUS", response.getJSONObject("data").getInt("userStatus"));
+								editor.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
+								editor.commit();
+								
+								SharedPreferences saveProfile = getActivity().getSharedPreferences("PROFILE", 0);
+								Editor edit = saveProfile.edit();
+								edit.putInt("userStatus", response.getJSONObject("data").getInt("userStatus"));
+								edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
+								edit.commit();
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						
+					}
+				});
+		mQueue.add(mJsonRequest);
+	}
 }
