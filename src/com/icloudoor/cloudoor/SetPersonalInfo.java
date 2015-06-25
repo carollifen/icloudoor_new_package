@@ -230,6 +230,15 @@ public class SetPersonalInfo extends BaseActivity {
 //			opts.inSampleSize = 8;
 			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
 			personImage.setImageBitmap(bm);
+		} else {
+			// request bitmap in the new thread
+			if (portraitUrl != null) {
+				Log.e(TAG, "use net");
+				if (mThread == null) {
+					mThread = new Thread(runnable);
+					mThread.start();
+				}
+			}
 		}
 		//
 
@@ -610,30 +619,30 @@ public class SetPersonalInfo extends BaseActivity {
 
 	public void onResume() {
 		super.onResume();
-		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
-		portraitUrl = loginStatus.getString("URL", null);
-
-		File f = new File(PATH + imageName);
-		Log.e(TAG, PATH + imageName);
-		if (f.exists()) {
-			Log.e(TAG, "use local");
-			BitmapFactory.Options opts = new BitmapFactory.Options();
-			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-			opts.inPurgeable = true;
-//			opts.inSampleSize = 4;
-			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-			personImage.setImageBitmap(bm);
-		} else {
-			// request bitmap in the new thread
-			if (portraitUrl != null) {
-				Log.e(TAG, "use net");
-				if (mThread == null) {
-					mThread = new Thread(runnable);
-					mThread.start();
-				}
-			}
-		}
+//		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+//		portraitUrl = loginStatus.getString("URL", null);
+//
+//		File f = new File(PATH + imageName);
+//		Log.e(TAG, PATH + imageName);
+//		if (f.exists()) {
+//			Log.e(TAG, "use local");
+//			BitmapFactory.Options opts = new BitmapFactory.Options();
+//			opts.inTempStorage = new byte[100 * 1024];
+//			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//			opts.inPurgeable = true;
+////			opts.inSampleSize = 4;
+//			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+//			personImage.setImageBitmap(bm);
+//		} else {
+//			// request bitmap in the new thread
+//			if (portraitUrl != null) {
+//				Log.e(TAG, "use net");
+//				if (mThread == null) {
+//					mThread = new Thread(runnable);
+//					mThread.start();
+//				}
+//			}
+//		}
 	}
 
 	private Handler mHandler = new Handler() {
