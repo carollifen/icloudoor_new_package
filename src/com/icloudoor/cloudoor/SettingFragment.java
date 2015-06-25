@@ -41,6 +41,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.fb.model.UserInfo;
@@ -217,23 +223,49 @@ public class SettingFragment extends Fragment {
 		portraitUrl = loginStatus.getString("URL", null);	
 		File f = new File(PATH + imageName);
 		Log.e(TAG, PATH + imageName);
+		
+		String imagePath = PATH + imageName;
+		String imageUrl = Scheme.FILE.wrap(imagePath);
+		
+		ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(getActivity());
+		ImageLoader.getInstance().init(configuration);
+        
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+        .showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
+        .showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
+        .showImageOnFail(R.drawable.icon_boy_110) // resource or drawable
+        .resetViewBeforeLoading(false)  // default
+        .delayBeforeLoading(10)
+        .cacheInMemory(false) // default
+        .cacheOnDisk(false) // default
+        .considerExifParams(false) // default
+        .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
+        .bitmapConfig(Bitmap.Config.ARGB_8888) // default
+        .displayer(new SimpleBitmapDisplayer()) // default
+        .handler(new Handler()) // default
+        .build();
+		
 		if(f.exists()){
+
+	        ImageLoader.getInstance().displayImage(imageUrl, image, options);
+			
 			Log.e(TAG, "use local");
-			BitmapFactory.Options opts=new BitmapFactory.Options();
-			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-			opts.inPurgeable = true;
-//			opts.inSampleSize = 4;
-			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-			image.setImageBitmap(bm);
+//			BitmapFactory.Options opts=new BitmapFactory.Options();
+//			opts.inTempStorage = new byte[100 * 1024];
+//			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//			opts.inPurgeable = true;
+////			opts.inSampleSize = 4;
+//			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+//			image.setImageBitmap(bm);
 		}else{
 			// request bitmap in the new thread
 			if(portraitUrl != null){
 				Log.e(TAG, "use net");
-				if (mThread == null) {
-					mThread = new Thread(runnable);
-					mThread.start();
-				}
+				ImageLoader.getInstance().displayImage(portraitUrl, image, options);
+//				if (mThread == null) {
+//					mThread = new Thread(runnable);
+//					mThread.start();
+//				}
 			}
 		}
 	}

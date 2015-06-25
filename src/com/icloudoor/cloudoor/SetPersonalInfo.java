@@ -38,6 +38,8 @@ import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -73,6 +75,12 @@ import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.Entities.FilePart;
 import com.icloudoor.cloudoor.Entities.MultipartEntity;
 import com.icloudoor.cloudoor.Entities.Part;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 
 public class SetPersonalInfo extends BaseActivity {
 
@@ -165,6 +173,10 @@ public class SetPersonalInfo extends BaseActivity {
 
 	boolean isDebug = DEBUG.isDebug;
 
+	String imageUrl;
+	DisplayImageOptions options;
+	String tempURL;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -174,6 +186,27 @@ public class SetPersonalInfo extends BaseActivity {
 
 		setupUI(findViewById(R.id.main));
 
+		String imagePath = PATH + imageName;
+		imageUrl = Scheme.FILE.wrap(imagePath);
+		
+		ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
+		ImageLoader.getInstance().init(configuration);
+        
+        options = new DisplayImageOptions.Builder()
+        .showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
+        .showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
+        .showImageOnFail(R.drawable.icon_boy_110) // resource or drawable
+        .resetViewBeforeLoading(false)  // default
+        .delayBeforeLoading(10)
+        .cacheInMemory(false) // default
+        .cacheOnDisk(false) // default
+        .considerExifParams(false) // default
+        .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
+        .bitmapConfig(Bitmap.Config.ARGB_8888) // default
+        .displayer(new SimpleBitmapDisplayer()) // default
+        .handler(new Handler()) // default
+        .build();
+		
 		upLoadBar = (ProgressBar) findViewById(R.id.uploadBar);
 		upLoadBar.setVisibility(View.INVISIBLE);
 
@@ -199,6 +232,8 @@ public class SetPersonalInfo extends BaseActivity {
 		ID = loginStatus.getString("ID", null);
 		portraitUrl = loginStatus.getString("URL", null);
 
+		tempURL = portraitUrl;
+		
 		realName = (TextView) findViewById(R.id.personal_RealName);
 		personalID = (TextView) findViewById(R.id.personal_ID);
 
@@ -223,21 +258,23 @@ public class SetPersonalInfo extends BaseActivity {
 		File f = new File(PATH + imageName);
 		if (f.exists()) {
 			Log.e(TAG, "use local");
-			BitmapFactory.Options opts=new BitmapFactory.Options();
-			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-			opts.inPurgeable = true;
-//			opts.inSampleSize = 8;
-			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-			personImage.setImageBitmap(bm);
+			ImageLoader.getInstance().displayImage(imageUrl, personImage, options);
+//			BitmapFactory.Options opts=new BitmapFactory.Options();
+//			opts.inTempStorage = new byte[100 * 1024];
+//			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//			opts.inPurgeable = true;
+////			opts.inSampleSize = 8;
+//			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+//			personImage.setImageBitmap(bm);
 		} else {
 			// request bitmap in the new thread
 			if (portraitUrl != null) {
 				Log.e(TAG, "use net");
-				if (mThread == null) {
-					mThread = new Thread(runnable);
-					mThread.start();
-				}
+				ImageLoader.getInstance().displayImage(portraitUrl, personImage, options);
+//				if (mThread == null) {
+//					mThread = new Thread(runnable);
+//					mThread.start();
+//				}
 			}
 		}
 		//
@@ -610,7 +647,7 @@ public class SetPersonalInfo extends BaseActivity {
 				break;
 			case RESULT_REQUEST_CODE:
 				if (data != null)
-					sentPicToNext(data);
+					sentPicToNext(data);					
 				break;
 			}
 		}
@@ -985,133 +1022,151 @@ public class SetPersonalInfo extends BaseActivity {
 
 		Bundle bundle = data.getExtras();
 		if (bundle != null) {
-			imageFile = new File(PATH + System.currentTimeMillis() + ".jpg");
-			imageFile.getParentFile().mkdirs();
-			Bitmap photo = bundle.getParcelable("data");
-			TakePicFileUtil.getInstance().saveBitmap(photo);
-			personImage.setImageBitmap(photo);
-			FileOutputStream foutput = null;
-			try {
-				foutput = new FileOutputStream(this.imageFile);
-				photo.compress(Bitmap.CompressFormat.PNG, 100, foutput);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} finally {
-				if (null != foutput) {
+			
+			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+			if (networkInfo != null) {
+//				NetworkInfo.State state = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+				if (NetworkInfo.State.CONNECTED == connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState()
+						|| NetworkInfo.State.CONNECTED == connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState()) {
+					imageFile = new File(PATH + System.currentTimeMillis() + ".jpg");
+					imageFile.getParentFile().mkdirs();
+					Bitmap photo = bundle.getParcelable("data");
+					TakePicFileUtil.getInstance().saveBitmap(photo);
+					personImage.setImageBitmap(photo);
+					FileOutputStream foutput = null;
 					try {
-						foutput.close();
-					} catch (IOException e) {
+						foutput = new FileOutputStream(this.imageFile);
+						photo.compress(Bitmap.CompressFormat.PNG, 100, foutput);
+					} catch (FileNotFoundException e) {
 						e.printStackTrace();
+					} finally {
+						if (null != foutput) {
+							try {
+								foutput.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
 					}
-				}
-			}
-			
-			
-			
-			new Thread() {
-				@Override
-				public void run() {
 
-					runOnUiThread(new Runnable() {
+					new Thread() {
 						@Override
 						public void run() {
-							upLoadBar.setVisibility(View.VISIBLE);
-						}
-					});
-
-					Log.e(TAG, "thread run");
-
-					try {
-						sleep(1000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-
-					HttpClient httpClient = new DefaultHttpClient();
-					HttpPost postRequest = new HttpPost(HOST
-							+ "/user/api/uploadPortrait.do" + "?sid=" + sid);
-
-					Part[] parts = null;
-					FilePart filePart = null;
-					try {
-						filePart = new FilePart("portrait", imageFile);
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-					parts = new Part[] { filePart };
-
-					postRequest.setEntity(new MultipartEntity(parts));
-					try {
-						HttpResponse response = httpClient.execute(postRequest);
-						BufferedReader reader = new BufferedReader(
-								new InputStreamReader(response.getEntity()
-										.getContent(), "UTF-8"));
-						String sResponse;
-						StringBuilder s = new StringBuilder();
-						while ((sResponse = reader.readLine()) != null) {
-							s = s.append(sResponse);
-						}
-						Log.e("TEst StringBuilder", s.toString());
-
-						//
-						JSONObject jsObj = new JSONObject(s.toString());
-
-						if (jsObj.getInt("code") == 1) {
-							JSONObject data = jsObj.getJSONObject("data");
-							portraitUrl = data.getString("portraitUrl");
-							Log.e(TAG, portraitUrl);
 
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
-									Log.e(TAG, "run here");
-									upLoadBar.setVisibility(View.INVISIBLE);
+									upLoadBar.setVisibility(View.VISIBLE);
 								}
 							});
+
+							Log.e(TAG, "thread run");
+
+							try {
+								sleep(1000);
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							}
+
+							HttpClient httpClient = new DefaultHttpClient();
+							HttpPost postRequest = new HttpPost(HOST
+									+ "/user/api/uploadPortrait.do" + "?sid=" + sid);
+
+							Part[] parts = null;
+							FilePart filePart = null;
+							try {
+								filePart = new FilePart("portrait", imageFile);
+							} catch (FileNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							parts = new Part[] { filePart };
+
+							postRequest.setEntity(new MultipartEntity(parts));
+							try {
+								HttpResponse response = httpClient.execute(postRequest);
+								BufferedReader reader = new BufferedReader(
+										new InputStreamReader(response.getEntity()
+												.getContent(), "UTF-8"));
+								String sResponse;
+								StringBuilder s = new StringBuilder();
+								while ((sResponse = reader.readLine()) != null) {
+									s = s.append(sResponse);
+								}
+								Log.e("TEst StringBuilder", s.toString());
+
+								//
+								JSONObject jsObj = new JSONObject(s.toString());
+
+								if (jsObj.getInt("code") == 1) {
+									JSONObject data = jsObj.getJSONObject("data");
+									portraitUrl = data.getString("portraitUrl");
+									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+									Editor edit = loginStatus.edit();
+									edit.putString("URL", portraitUrl);
+									edit.commit();
+									
+									Log.e(TAG, portraitUrl);
+
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											Log.e(TAG, "run here");
+											upLoadBar.setVisibility(View.INVISIBLE);
+										}
+									});
+								}
+
+							} catch (ClientProtocolException e) {
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										Toast.makeText(SetPersonalInfo.this,
+												R.string.network_error, Toast.LENGTH_SHORT)
+												.show();
+									}
+
+								});
+								e.printStackTrace();
+							} catch (IOException e) {
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										Toast.makeText(SetPersonalInfo.this,
+												R.string.network_error, Toast.LENGTH_SHORT)
+												.show();
+									}
+
+								});
+								e.printStackTrace();
+							} catch (JSONException e) {
+								runOnUiThread(new Runnable() {
+
+									@Override
+									public void run() {
+										Toast.makeText(SetPersonalInfo.this,
+												R.string.network_error, Toast.LENGTH_SHORT)
+												.show();
+									}
+
+								});
+								e.printStackTrace();
+							}
 						}
 
-					} catch (ClientProtocolException e) {
-						runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								Toast.makeText(SetPersonalInfo.this,
-										R.string.network_error, Toast.LENGTH_SHORT)
-										.show();
-							}
-
-						});
-						e.printStackTrace();
-					} catch (IOException e) {
-						runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								Toast.makeText(SetPersonalInfo.this,
-										R.string.network_error, Toast.LENGTH_SHORT)
-										.show();
-							}
-
-						});
-						e.printStackTrace();
-					} catch (JSONException e) {
-						runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								Toast.makeText(SetPersonalInfo.this,
-										R.string.network_error, Toast.LENGTH_SHORT)
-										.show();
-							}
-
-						});
-						e.printStackTrace();
-					}
+					}.start();
+				} else {
+					
 				}
-
-			}.start();
+			} else {
+				upLoadBar.setVisibility(View.VISIBLE);
+				Toast.makeText(this, getString(R.string.no_network_try_again), Toast.LENGTH_SHORT).show();
+			}
+		
 		}
 
 	}

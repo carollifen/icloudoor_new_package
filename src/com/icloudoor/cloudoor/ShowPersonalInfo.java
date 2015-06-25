@@ -49,6 +49,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 
 public class ShowPersonalInfo extends BaseActivity {
 	
@@ -108,6 +114,10 @@ public class ShowPersonalInfo extends BaseActivity {
 	
 	boolean isDebug = DEBUG.isDebug;
 	
+	String imageUrl;
+	DisplayImageOptions options;
+	String tempURL;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -116,9 +126,31 @@ public class ShowPersonalInfo extends BaseActivity {
 		
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 		userStatus = loginStatus.getInt("STATUS", 1);
+		tempURL = loginStatus.getString("URL", null);
 		
 		mAreaDBHelper = new MyAreaDBHelper(ShowPersonalInfo.this, DATABASE_NAME, null, 1);
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
+		
+		String imagePath = PATH + imageName;
+		imageUrl = Scheme.FILE.wrap(imagePath);
+		
+		ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
+		ImageLoader.getInstance().init(configuration);
+        
+        options = new DisplayImageOptions.Builder()
+        .showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
+        .showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
+        .showImageOnFail(R.drawable.icon_boy_110) // resource or drawable
+        .resetViewBeforeLoading(false)  // default
+        .delayBeforeLoading(10)
+        .cacheInMemory(false) // default
+        .cacheOnDisk(false) // default
+        .considerExifParams(false) // default
+        .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
+        .bitmapConfig(Bitmap.Config.ARGB_8888) // default
+        .displayer(new SimpleBitmapDisplayer()) // default
+        .handler(new Handler()) // default
+        .build();
 		
 		initViews();
 	}
@@ -261,23 +293,28 @@ public class ShowPersonalInfo extends BaseActivity {
 
 									File f = new File(PATH + imageName);
 									Log.e(TAG, PATH + imageName);
-									if (f.exists()) {
+									if (f.exists() && !tempURL.equals(portraitUrl)) {
+										tempURL = portraitUrl;
+										ImageLoader.getInstance().displayImage(imageUrl, image, options);
+										
 										Log.e(TAG, "use local");
-										BitmapFactory.Options opts = new BitmapFactory.Options();
-										opts.inTempStorage = new byte[100 * 1024];
-										opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-										opts.inPurgeable = true;
-//										opts.inSampleSize = 4;
-										Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-										image.setImageBitmap(bm);
+//										BitmapFactory.Options opts = new BitmapFactory.Options();
+//										opts.inTempStorage = new byte[100 * 1024];
+//										opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//										opts.inPurgeable = true;
+////										opts.inSampleSize = 4;
+//										Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+//										image.setImageBitmap(bm);
 									} else {
 										// request bitmap in the new thread
-										if (portraitUrl != null) {
+										if (portraitUrl != null && !tempURL.equals(portraitUrl)) {
 											Log.e(TAG, "use net");
-											if (mThread == null) {
-												mThread = new Thread(runnable);
-												mThread.start();
-											}
+											tempURL = portraitUrl;
+											ImageLoader.getInstance().displayImage(portraitUrl, image, options);
+//											if (mThread == null) {
+//												mThread = new Thread(runnable);
+//												mThread.start();
+//											}
 										}
 									}
 
@@ -429,13 +466,14 @@ public class ShowPersonalInfo extends BaseActivity {
 		File Imagefile = new File(PATH + imageName);
 		if(Imagefile.exists()){
 			Log.e(TAG, "use local");
-			BitmapFactory.Options opts=new BitmapFactory.Options();
-			opts.inTempStorage = new byte[100 * 1024];
-			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-			opts.inPurgeable = true;
-//			opts.inSampleSize = 4;
-			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-			image.setImageBitmap(bm);
+			ImageLoader.getInstance().displayImage(imageUrl, image, options);
+//			BitmapFactory.Options opts=new BitmapFactory.Options();
+//			opts.inTempStorage = new byte[100 * 1024];
+//			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//			opts.inPurgeable = true;
+////			opts.inSampleSize = 4;
+//			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+//			image.setImageBitmap(bm);
 		}
 
 		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/LOGINSTATUS.xml");
@@ -562,23 +600,29 @@ public class ShowPersonalInfo extends BaseActivity {
 
 								File f = new File(PATH + imageName);
 								Log.e(TAG, PATH + imageName);
-								if (f.exists()) {
+								if (f.exists() && !tempURL.equals(portraitUrl)) {
+									tempURL = portraitUrl;
+									
+									ImageLoader.getInstance().displayImage(imageUrl, image, options);
+									
 									Log.e(TAG, "use local");
-									BitmapFactory.Options opts = new BitmapFactory.Options();
-									opts.inTempStorage = new byte[100 * 1024];
-									opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-									opts.inPurgeable = true;
-//									opts.inSampleSize = 4;
-									Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-									image.setImageBitmap(bm);
+//									BitmapFactory.Options opts = new BitmapFactory.Options();
+//									opts.inTempStorage = new byte[100 * 1024];
+//									opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//									opts.inPurgeable = true;
+////									opts.inSampleSize = 4;
+//									Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+//									image.setImageBitmap(bm);
 								} else {
 									// request bitmap in the new thread
-									if (portraitUrl != null) {
+									if (portraitUrl != null && !tempURL.equals(portraitUrl)) {
+										tempURL = portraitUrl;
 										Log.e(TAG, "use net");
-										if (mThread == null) {
-											mThread = new Thread(runnable);
-											mThread.start();
-										}
+										ImageLoader.getInstance().displayImage(portraitUrl, image, options);
+//										if (mThread == null) {
+//											mThread = new Thread(runnable);
+//											mThread.start();
+//										}
 									}
 								}
 
