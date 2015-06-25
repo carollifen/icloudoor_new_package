@@ -42,6 +42,15 @@ public class WuyeFragment extends Fragment {
 	private ImageView WuyeWidgePush2;
 	private ImageView WuyeWidgePush3;
 
+	private ImageView BtnLianxiwuye;
+	private ImageView BtnNotice;
+	private ImageView BtnFix;
+	private ImageView BtnBad;
+	private ImageView BtnGood;
+	private ImageView BtnQuery;
+	private ImageView BtnBill;
+	private ImageView BtnPay;
+
 	private RelativeLayout unreadNoticeLayout;
 	private RelativeLayout unreadQueryLayout;
 	private ImageView unreadNoticeDot;

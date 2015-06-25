@@ -253,4 +253,12 @@
     <string name="imError">获取IM账号失败</string>
     <string name="contact">小区通讯录</string>
     <string name="jsonerror">解析异常</string>
+    <string name="searchuser">搜索云门用户</string>
+    <string name="detail_data">详细资料</string>
+    <string name="add_contact">添加到通讯录</string>
+    <string name="search_result">你搜索的用户不存在</string>
+    <string name="getuseriderror">获取用户信息失败</string>
+    <string name="friend_vf">好友验证</string>
+    <string name="send">发送</string>
+    <string name="send_msg">你需要发送验证申请并验证通过</string>
 </resources>
