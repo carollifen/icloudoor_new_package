@@ -261,6 +261,9 @@
     <string name="friend_vf">好友验证</string>
     <string name="send">发送</string>
     <string name="send_msg">你需要发送验证申请并验证通过</string>
+    <string name="addphonecontact">添加手机联系人</string>
+    <string name="addfridendSuccess">添加好友成功</string>
+    <string name="new_room_list">最近群聊列表</string>
     
     <string name="no_network_try_again">未连接网络，图片上传不成功</string>
 </resources>

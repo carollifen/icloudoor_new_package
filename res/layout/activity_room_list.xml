@@ -4,22 +4,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#efefef"
+    android:background="#f8f8f8"
     tools:context=".chat.RoomListActivity" >
     
-    <include
-        android:id="@+id/title_bar_msg_page"
-        android:layout_width="fill_parent"
+     <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="44dp"
-        layout="@layout/title_bar_msg_page" />
+        android:background="#0065a1" >
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:src="@drawable/new_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/new_room_list"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+        
+        
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/room_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
         android:background="#ffffff"
-        android:divider="#bdc7d4"
+        android:divider="#dddddd"
         android:dividerHeight="1.0px"
         android:scrollbars="none" >
     </ListView>

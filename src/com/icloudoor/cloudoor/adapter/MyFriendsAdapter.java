@@ -1,6 +1,9 @@
 package com.icloudoor.cloudoor.adapter;
 
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,7 +16,15 @@ import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.icloudoor.cloudoor.BaseActivity;
+import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.UrlUtils;
+import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -89,11 +100,6 @@ public class MyFriendsAdapter extends BaseAdapter implements SectionIndexer{
 
 	}
 	
-	public void setData(List<MyFriendsEn> list){
-		this.list = list;
-		notifyDataSetChanged();
-	}
-	
 
 
 	final static class ViewHolder {
@@ -102,6 +108,10 @@ public class MyFriendsAdapter extends BaseAdapter implements SectionIndexer{
 		ImageView head_img;
 		RelativeLayout friend_layout;
 	}
+	
+	
+	
+	
 
 
 	/**

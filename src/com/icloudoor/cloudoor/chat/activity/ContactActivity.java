@@ -68,7 +68,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		sortListView.addHeaderView(v);
 		adapter = new MyFriendsAdapter(this, null);
 		sortListView.setAdapter(adapter);
-
+		characterParser = new CharacterParser();
 		setListener();
 		mQueue = Volley.newRequestQueue(this);
 		getNetworkData(this, "/user/im/getFriends.do", null);
@@ -89,7 +89,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		});
 	}
 
-	public void getMyFriends() {
+	public void getMyFriends() { 
 
 		String url = UrlUtils.HOST + "/user/im/listFriends.do" + "?sid="
 				+ loadSid();
@@ -110,14 +110,13 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		mQueue.add(mJsonRequest);
 	}
 
-	private List<MyFriendsEn> filledData(String[] date) {
+	private List<MyFriendsEn> filledData(List<MyFriendsEn> data) {
 		List<MyFriendsEn> mSortList = new ArrayList<MyFriendsEn>();
 
-		for (int i = 0; i < date.length; i++) {
-			MyFriendsEn sortModel = new MyFriendsEn();
-			sortModel.setNickname(date[i]);
+		for (int i = 0; i < data.size(); i++) {
+			MyFriendsEn sortModel = data.get(i);
 			// 汉字转换成拼音
-			String pinyin = characterParser.getSelling(date[i]);
+			String pinyin = characterParser.getSelling(data.get(i).getNickname());
 			String sortString = pinyin.substring(0, 1).toUpperCase();
 			// 正则表达式，判断首字母是否是英文字母
 			if (sortString.matches("[A-Z]")) {
@@ -155,7 +154,8 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 				MyFriendInfo.class);
 		if (friendInfo != null) {
 			List<MyFriendsEn> data = friendInfo.getData();
-			adapter.setData(data);
+			System.out.println(data.size()+" = ***");
+			adapter.updateListView(filledData(data));
 		} else {
 			showToast(R.string.jsonerror);
 		}

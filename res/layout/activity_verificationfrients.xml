@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#efefef"
+    android:background="#f8f8f8"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -28,29 +28,98 @@
             android:textColor="#ffffff"
             android:textSize="18sp" />
     </RelativeLayout>
-    
-    
-    <RelativeLayout 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="17dp"
+        android:background="#dddddd" />
+
+    <LinearLayout
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@drawable/edit_bg"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        >
+        android:layout_height="50dp"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/search_blue" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:text="@string/search"
+            android:textColor="#dddddd"
+            android:textSize="15dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="17dp"
+        android:background="#dddddd" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd" />
+    
+
+    <RelativeLayout
+        android:id="@+id/addphoneContact_layout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/addphonecontact_layout_bg"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/addphonecontact_ioc"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/addphonecontact_ioc" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/addphonecontact_ioc"
+            android:text="@string/addphonecontact"
+            android:textColor="#333333"
+            android:textSize="16sp" />
         
         
+        <ImageView
+            android:layout_width="11dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/next_ioc" />
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="17dp"
+        android:background="#dddddd" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd" />
     <ListView
         android:id="@+id/vf_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@null"
-        android:listSelector="@android:color/transparent"
-         >
+        android:divider="#dddddd"
+        android:listSelector="@android:color/transparent" >
     </ListView>
 
 </LinearLayout>

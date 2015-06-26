@@ -48,15 +48,15 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="70dp"
                 android:background="#ffffff"
                 android:descendantFocusability="blocksDescendants"
                 android:gravity="center_vertical" >
 
                 <ImageView
                     android:id="@+id/msg_image"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
                     android:background="@drawable/msg_canon" />
@@ -99,7 +99,7 @@
             <RelativeLayout
                 android:id="@+id/group_layout"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="70dp"
                 android:background="#ffffff"
                 android:descendantFocusability="blocksDescendants"
                 android:layout_marginTop="1dp"
@@ -107,8 +107,8 @@
 
                 <ImageView
                     android:id="@+id/group_msg_image"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
                     android:background="@drawable/groupchat_ioc" />

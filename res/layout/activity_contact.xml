@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#efefef"
+    android:background="#f8f8f8"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -51,8 +51,9 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center"
+            android:divider="#dddddd"
             android:listSelector="@android:color/transparent"
-            android:divider="@null" />
+             />
 
         <TextView
             android:id="@+id/dialog"
@@ -68,7 +69,8 @@
         <com.icloudoor.cloudoor.widget.SideBar
             android:id="@+id/sidrbar"
             android:layout_width="30.0dip"
-            android:layout_height="fill_parent"
+            android:layout_marginTop="30dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="right|center" />
     </FrameLayout>
 

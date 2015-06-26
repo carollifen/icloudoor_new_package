@@ -33,6 +33,7 @@ import com.icloudoor.cloudoor.SlideView.OnSlideListener;
 import com.icloudoor.cloudoor.chat.ChatAllHistoryAdapter;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.activity.ContactActivity;
+import com.icloudoor.cloudoor.chat.activity.RoomListActivity;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -275,10 +276,8 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 			Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.group_layout:
-			
-			Intent intent = new Intent();
+			Intent intent = new Intent(getActivity(),RoomListActivity.class);
 			startActivity(intent);
-			
 			break;
 		
 		case R.id.add_friends:

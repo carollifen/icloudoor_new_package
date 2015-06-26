@@ -2,36 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/catalog"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#E0E0E0"
-        android:paddingBottom="5dip"
-        android:paddingLeft="5dip"
-        android:paddingTop="5dip"
+        android:layout_height="20dp"
+        android:paddingLeft="16dip"
+        android:gravity="center_vertical"
+        android:textSize="14sp"
         android:text="A"
-        android:textColor="#454545" />
+        android:textColor="#999999" />
 
     <RelativeLayout
         android:id="@+id/friend_layout"
         android:layout_width="match_parent"
-        android:layout_height="60dp" >
+        android:layout_height="70dp" >
 
         <ImageView
             android:id="@+id/head_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="16dp"
             android:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/friend_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            android:layout_toRightOf="@+id/head_img"
+            android:layout_marginLeft="16dp"
             android:layout_centerVertical="true" />
     </RelativeLayout>
 

@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ public class SearchFriendActivity extends BaseActivity implements OnClickListene
 	private EditText edit_search;
 	private LinearLayout search_layout;
 	private TextView search_tx;
+	private ImageView btn_back;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
@@ -38,6 +40,7 @@ public class SearchFriendActivity extends BaseActivity implements OnClickListene
 		edit_search = (EditText) findViewById(R.id.edit_search);
 		search_layout = (LinearLayout) findViewById(R.id.search_layout);
 		search_tx = (TextView) findViewById(R.id.search_tx);
+		btn_back = (ImageView) findViewById(R.id.btn_back);
 		edit_search.addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -67,6 +70,7 @@ public class SearchFriendActivity extends BaseActivity implements OnClickListene
 		
 		
 		search_layout.setOnClickListener(this);
+		btn_back.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View v) {
@@ -78,6 +82,10 @@ public class SearchFriendActivity extends BaseActivity implements OnClickListene
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("searchValue", search);
 			getNetworkData(this, "/user/im/searchUser.do", map);
+			break;
+		case R.id.btn_back:
+			
+			finish();
 			break;
 
 		default:

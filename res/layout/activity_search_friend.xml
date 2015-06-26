@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#efefef"
+    android:background="#f8f8f8"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -55,6 +55,7 @@
             android:hint="搜索"
             android:paddingRight="3dp"
             android:singleLine="true"
+            android:textColor="#bbbaba"
             android:textSize="15sp" />
     </RelativeLayout>
 
@@ -63,14 +64,14 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center_vertical"
-        android:visibility="invisible"
         android:background="@drawable/search_layout_bg"
+        android:visibility="invisible"
         android:orientation="horizontal" >
         
         <ImageView 
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/icon_boy_110"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/search_ioc1"
             android:layout_marginLeft="20dp"
             />
         
@@ -78,15 +79,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="搜索:"
-            android:layout_marginLeft="5dp"
-            android:textColor="#bbbaba"
+            android:layout_marginLeft="15dp"
+            android:textColor="#333333"
+            android:textSize="16sp"
             />
         <TextView 
             android:id="@+id/search_tx"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="#30ed56"
+            android:textColor="#37a64d"
+            android:textSize="16sp"
             android:layout_marginRight="17dp"
             />
         
