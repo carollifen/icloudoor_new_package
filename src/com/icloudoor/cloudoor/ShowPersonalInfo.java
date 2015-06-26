@@ -53,6 +53,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 
@@ -126,7 +127,8 @@ public class ShowPersonalInfo extends BaseActivity {
 		
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 		userStatus = loginStatus.getInt("STATUS", 1);
-		tempURL = loginStatus.getString("URL", null);
+		portraitUrl = loginStatus.getString("URL", null);
+		tempURL = portraitUrl;
 		
 		mAreaDBHelper = new MyAreaDBHelper(ShowPersonalInfo.this, DATABASE_NAME, null, 1);
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
@@ -150,6 +152,7 @@ public class ShowPersonalInfo extends BaseActivity {
         .bitmapConfig(Bitmap.Config.ARGB_8888) // default
         .displayer(new SimpleBitmapDisplayer()) // default
         .handler(new Handler()) // default
+        .displayer(new RoundedBitmapDisplayer(10))
         .build();
 		
 		initViews();
@@ -465,15 +468,13 @@ public class ShowPersonalInfo extends BaseActivity {
 
 		File Imagefile = new File(PATH + imageName);
 		if(Imagefile.exists()){
-			Log.e(TAG, "use local");
+			Log.e(TAG, "use local on resume");
 			ImageLoader.getInstance().displayImage(imageUrl, image, options);
-//			BitmapFactory.Options opts=new BitmapFactory.Options();
-//			opts.inTempStorage = new byte[100 * 1024];
-//			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//			opts.inPurgeable = true;
-////			opts.inSampleSize = 4;
-//			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-//			image.setImageBitmap(bm);
+		} else {
+			Log.e(TAG, "ON RESUME file not exists, use net");
+			if(portraitUrl != null){
+				ImageLoader.getInstance().displayImage(portraitUrl, image, options);
+			}
 		}
 
 		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/LOGINSTATUS.xml");
@@ -605,7 +606,7 @@ public class ShowPersonalInfo extends BaseActivity {
 									
 									ImageLoader.getInstance().displayImage(imageUrl, image, options);
 									
-									Log.e(TAG, "use local");
+									Log.e(TAG, "use local on resume request");
 //									BitmapFactory.Options opts = new BitmapFactory.Options();
 //									opts.inTempStorage = new byte[100 * 1024];
 //									opts.inPreferredConfig = Bitmap.Config.ARGB_8888;

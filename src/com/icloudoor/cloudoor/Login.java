@@ -345,33 +345,39 @@ public class Login extends Activity implements TextWatcher {
 											editor1.putBoolean("isHasPropServ", isHasPropServ);
 											editor1.commit();
 											//
-											Intent intent = new Intent();
-
-											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-											setPersonal = personalInfo.getInt("SETINFO", 1);
-
-											if (setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0) {
-												Log.e("jump to set", "in login activity");
-												
-												if(userStatus == 2) {
-													intent.setClass(Login.this, SetPersonalInfo.class);
-													startActivity(intent);
-													finish();
-												} else if(userStatus == 1) {
-													intent.setClass(Login.this, SetPersonalInfoNotCerti.class);
-													startActivity(intent);
-													finish();
-												}
-													
-											}
-
-											if (setPersonal == 1) {
-												if(account!=null){
-													login(account.getString("userId"), account.getString("password"));
-												}else{
-													Toast.makeText(Login.this, getString(R.string.imError), Toast.LENGTH_SHORT).show();
-												}
-											}
+											if(account!=null){
+												login(account.getString("userId"), account.getString("password"));
+											}else{
+												Toast.makeText(Login.this, getString(R.string.imError), Toast.LENGTH_SHORT).show();
+											}										
+//											
+//											Intent intent = new Intent();
+//
+//											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+//											setPersonal = personalInfo.getInt("SETINFO", 1);
+//
+//											if (setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0) {
+//												Log.e("jump to set", "in login activity");
+//												
+//												if(userStatus == 2) {
+//													intent.setClass(Login.this, SetPersonalInfo.class);
+//													startActivity(intent);
+//													finish();
+//												} else if(userStatus == 1) {
+//													intent.setClass(Login.this, SetPersonalInfoNotCerti.class);
+//													startActivity(intent);
+//													finish();
+//												}
+//													
+//											}
+//
+//											if (setPersonal == 1) {
+//												if(account!=null){
+//													login(account.getString("userId"), account.getString("password"));
+//												}else{
+//													Toast.makeText(Login.this, getString(R.string.imError), Toast.LENGTH_SHORT).show();
+//												}
+//											}
 										} catch (JSONException e) {
 											e.printStackTrace();
 										}

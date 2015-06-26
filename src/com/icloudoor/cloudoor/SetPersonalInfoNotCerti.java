@@ -38,6 +38,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 
@@ -207,6 +208,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
         .bitmapConfig(Bitmap.Config.ARGB_8888) // default
         .displayer(new SimpleBitmapDisplayer()) // default
         .handler(new Handler()) // default
+        .displayer(new RoundedBitmapDisplayer(10))
         .build();
 		
 		upLoadBar = (ProgressBar) findViewById(R.id.uploadBar);
@@ -239,28 +241,28 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 		portraitUrl = loginStatus.getString("URL", null);
 
-		File f = new File(PATH + imageName);
-		if (f.exists()) {
-			Log.e(TAG, "use local");
-			ImageLoader.getInstance().displayImage(imageUrl, personImage, options);
-//			BitmapFactory.Options opts=new BitmapFactory.Options();
-//			opts.inTempStorage = new byte[100 * 1024];
-//			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//			opts.inPurgeable = true;
-////			opts.inSampleSize = 4;
-//			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-//			personImage.setImageBitmap(bm);
-		} else {
-			// request bitmap in the new thread
-			if (portraitUrl != null) {
-				Log.e(TAG, "use net");
-				ImageLoader.getInstance().displayImage(portraitUrl, personImage, options);
-//				if (mThread == null) {
-//					mThread = new Thread(runnable);
-//					mThread.start();
-//				}
-			}
-		}
+//		File f = new File(PATH + imageName);
+//		if (f.exists()) {
+//			Log.e(TAG, "use local");
+//			ImageLoader.getInstance().displayImage(imageUrl, personImage, options);
+////			BitmapFactory.Options opts=new BitmapFactory.Options();
+////			opts.inTempStorage = new byte[100 * 1024];
+////			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+////			opts.inPurgeable = true;
+//////			opts.inSampleSize = 4;
+////			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
+////			personImage.setImageBitmap(bm);
+//		} else {
+//			// request bitmap in the new thread
+//			if (portraitUrl != null) {
+//				Log.e(TAG, "use net");
+//				ImageLoader.getInstance().displayImage(portraitUrl, personImage, options);
+////				if (mThread == null) {
+////					mThread = new Thread(runnable);
+////					mThread.start();
+////				}
+//			}
+//		}
 		//
 		
 		initSpinnerData();
@@ -653,30 +655,17 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 	
 	public void onResume() {
 		super.onResume();
-//		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
-//		portraitUrl = loginStatus.getString("URL", null);
-//		
-//		File f = new File(PATH + imageName);
-//		Log.e(TAG, PATH + imageName);
-//		if(f.exists()){
-//			Log.e(TAG, "use local");
-//			BitmapFactory.Options opts=new BitmapFactory.Options();
-//			opts.inTempStorage = new byte[100 * 1024];
-//			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//			opts.inPurgeable = true;
-////			opts.inSampleSize = 4;
-//			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-//			personImage.setImageBitmap(bm);
-//		}else{
-//			// request bitmap in the new thread
-//			if(portraitUrl != null){
-//				Log.e(TAG, "use net");
-//				if (mThread == null) {
-//					mThread = new Thread(runnable);
-//					mThread.start();
-//				}
-//			}
-//		}
+		File f = new File(PATH + imageName);
+		if (f.exists()) {
+			Log.e(TAG, "use local");
+			ImageLoader.getInstance().displayImage(imageUrl, personImage, options);
+		} else {
+			// request bitmap in the new thread
+			if (portraitUrl != null) {
+				Log.e(TAG, "use net");
+				ImageLoader.getInstance().displayImage(portraitUrl, personImage, options);
+			}
+		}
 	}
 	
 	private Handler mHandler = new Handler() {
