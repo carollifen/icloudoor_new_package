@@ -443,7 +443,6 @@ public class KeyListAuthFragment extends Fragment {
 						@Override
 						protected Map<String, String> getParams()
 								throws AuthFailureError {
-							StringBuilder ss = new StringBuilder();
 							Map<String, String> map = new HashMap<String, String>();
 
 							map.put("zoneUserId", zoneIdShare.getString("ZONEID", null));
@@ -569,33 +568,41 @@ public class KeyListAuthFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 1 && resultCode == Activity.RESULT_OK)
-			;
-		{
+		if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
 			if (resultCode == Activity.RESULT_OK) {
-				ContentResolver reContentResolverol = getActivity()
-						.getContentResolver();
+				ContentResolver reContentResolverol = getActivity().getContentResolver();
 				Uri contactData = data.getData();
+				
 				@SuppressWarnings("deprecation")
-				Cursor cursor = reContentResolverol.query(contactData, null,
-						null, null, null);
+				Cursor cursor = reContentResolverol.query(contactData, null, null, null, null);
 				cursor.moveToFirst();
 				String username = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 				String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 cursor.close();
-				Cursor phone = reContentResolverol.query(
-						ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-						null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-								+ " = " + contactId, null, null);
-				while (phone.moveToNext()) {
-					String usernumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-					mManFragment.getData(usernumber);
+				Cursor phone = reContentResolverol.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+						null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+				
+				if(phone.moveToFirst()){
+					for (;!phone.isAfterLast();phone.moveToNext()) { 
+						int index = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER); 
+                        int typeindex = phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE); 
+                        int phone_type = phone.getInt(typeindex);
+                        String phoneNumber = phone.getString(index);
+                        switch(phone_type) 
+                        { 
+                            case 2: 
+                            	String usernumber = phoneNumber; 
+                            	mManFragment.getData(usernumber);
+                            break; 
+                        } 
+					}
+					if (!phone.isClosed()) 
+                    { 
+                           phone.close(); 
+                    } 
 				}
-                phone.close();
 			}
 		}
-		Log.e("sd", "dsjdkfkl");
-
 	}
 
     @Override

@@ -7,7 +7,11 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Contacts;
+import android.provider.Contacts.People;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -21,6 +25,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 
@@ -71,7 +76,7 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 		call_datepicker.setOnClickListener(this);
 		date_show=(TextView) view.findViewById(R.id.date_show_textview);
 		String str=mYear+"/"+(mMonth+1)+"/"+mDay;
-		date_show.setText(str);
+		date_show.setText(str + " " + getString(R.string.only_one_day));
 		
 		phoneEdit.addTextChangedListener(new TextWatcher() {
 			
@@ -91,7 +96,29 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				dateAndPhoneEditor.putString("PHONENUM",phoneEdit.getText().toString()).commit();
+				String temp = s.toString();
+				if(temp.length() > 1){
+					String tem = temp.substring(temp.length()-1, temp.length());
+					char[] temC = tem.toCharArray();
+					int mid = temC[0];
+					
+					if(mid>=48 && mid<=57){
+						
+					}else{
+						s.delete(temp.length()-1, temp.length());
+					}
+				}else if(temp.length() == 1){
+					char[] temC = temp.toCharArray();
+					int mid = temC[0];
+					
+					if(mid>=48 && mid<=57){
+						
+					}else{
+						s.clear();
+					}
+				}
+				
+				dateAndPhoneEditor.putString("PHONENUM", phoneEdit.getText().toString()).commit();
 				phoneEdit.setTextColor(0xff333333);
 				
 				//TODO
@@ -102,8 +129,7 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 				}
 			}
 		});
-		
-	
+
 		return view;
 	}
 	
@@ -123,6 +149,8 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 	public void onClick(View v) {
 		if(v.getId()==R.id.id_call_contacts)
 		{
+			phoneEdit.setText("");
+			
 			Intent intent = new Intent();
 
 			intent.setAction(Intent.ACTION_PICK);
@@ -139,7 +167,7 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 		                int dayOfMonth) {
 		            String s=year+"/"+(monthOfYear+1)+"/"+dayOfMonth;
 		            dateAndPhoneEditor.putString("DATE", year+"-"+(monthOfYear+1)+"-"+dayOfMonth).commit();
-		            date_show.setText(s);
+		            date_show.setText(s + " " + getString(R.string.only_one_day));
 		            date_show.setTextColor(0xff333333);
 		        }  
 		    };  
@@ -155,17 +183,13 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 		
 	}
 	
-	public void getData(String phonenum)
-	{
-	Log.e("phone", phonenum);
-	StringBuilder ss=new StringBuilder(phonenum);
-	phonenum.replace(" ", "");
-	phoneEdit.setText(phonenum.replace(" ", ""));
-	
-	//dateAndPhoneEditor.putString("PHONENUM",phoneEdit.getText().toString()).commit();
-	
-	phoneEdit.setTextColor(0xff333333);
-}
+	public void getData(String phonenum) {
+		Log.e("phone", phonenum);
 
+		phoneEdit.setText(phonenum.replace(" ", "").replace("-", "").replace("+86", ""));
 
+		dateAndPhoneEditor.putString("PHONENUM", phonenum).commit();
+
+		phoneEdit.setTextColor(0xff333333);
+	}
 }

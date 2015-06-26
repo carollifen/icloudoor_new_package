@@ -78,7 +78,7 @@
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-             android:text="2015/05/21"
+            android:text="2015/05/21"
             android:textColor="#999999" 
            
            />

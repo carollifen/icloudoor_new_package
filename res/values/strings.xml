@@ -266,4 +266,5 @@
     <string name="new_room_list">最近群聊列表</string>
     
     <string name="no_network_try_again">未连接网络，图片上传不成功</string>
+    <string name="only_one_day">(当天有效)</string>
 </resources>
