@@ -90,7 +90,7 @@
 
             <EditText
                 android:id="@+id/personal_NickName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@null"
@@ -381,7 +381,7 @@
 
             <EditText
                 android:id="@+id/personal_RealName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@null"
@@ -419,7 +419,7 @@
 
             <EditText
                 android:id="@+id/personal_ID"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@null"

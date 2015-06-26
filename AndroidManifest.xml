@@ -284,7 +284,8 @@
 
         <activity
             android:name=".ContactWuyeActivity"
-            android:label="@string/title_activity_contact_wuye" >
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
         </activity>
 
         <!-- 友盟推送 -->

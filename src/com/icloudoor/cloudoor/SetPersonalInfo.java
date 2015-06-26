@@ -840,14 +840,14 @@ public class SetPersonalInfo extends BaseActivity {
 
 		SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
 
-		nickName.setText(saveProfile.getString("NICKNAME", ""));
-		if(saveProfile.getString("YEAR", "").length() > 0 && saveProfile.getString("MONTH", "").length() > 0 && saveProfile.getString("DAY", "").length() > 0){
-			birthday.setText(saveProfile.getString("YEAR", "") + " " + getString(R.string.year)
-					 + " " + saveProfile.getString("MONTH", "") + " " + getString(R.string.month)
-					 + " " + saveProfile.getString("DAY", "") + " " + getString(R.string.day));
-			
-			BirthDay = saveProfile.getString("YEAR", "") + "-" + saveProfile.getString("MONTH", "") + "-" + saveProfile.getString("DAY", "");				
-		}
+//		nickName.setText(saveProfile.getString("NICKNAME", ""));
+//		if(saveProfile.getString("YEAR", "").length() > 0 && saveProfile.getString("MONTH", "").length() > 0 && saveProfile.getString("DAY", "").length() > 0){
+//			birthday.setText(saveProfile.getString("YEAR", "") + " " + getString(R.string.year)
+//					 + " " + saveProfile.getString("MONTH", "") + " " + getString(R.string.month)
+//					 + " " + saveProfile.getString("DAY", "") + " " + getString(R.string.day));
+//			
+//			BirthDay = saveProfile.getString("YEAR", "") + "-" + saveProfile.getString("MONTH", "") + "-" + saveProfile.getString("DAY", "");				
+//		}
 		
 		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PROFILE.xml");
 		if (f.exists()) {
@@ -864,9 +864,44 @@ public class SetPersonalInfo extends BaseActivity {
 				Sex = 2;
 				Log.e("TAG", "Sex: " + String.valueOf(Sex));
 			}
+			
+			if(saveProfile.contains("NICKNAME")){
+				nickName.setText(saveProfile.getString("NICKNAME", ""));
+			} else {
+				nickName.setText("");
+			}
+			
+			if(saveProfile.contains("YEAR") && saveProfile.contains("MONTH") && saveProfile.contains("DAY")){
+				if (saveProfile.getString("YEAR", "").length() > 0 && saveProfile.getString("MONTH", "").length() > 0 && saveProfile.getString("DAY", "").length() > 0) {
+					birthday.setText(saveProfile.getString("YEAR", "") + " " + getString(R.string.year)
+						+ " " + saveProfile.getString("MONTH", "") + " " + getString(R.string.month)
+						+ " " + saveProfile.getString("DAY", "") + " " + getString(R.string.day));
+
+					BirthDay = saveProfile.getString("YEAR", "") + "-" + saveProfile.getString("MONTH", "") + "-" + saveProfile.getString("DAY", "");
+				} else {
+					Calendar cal = Calendar.getInstance();
+					birthday.setText(String.valueOf(cal.get(Calendar.YEAR)) + " " + getString(R.string.year)
+							+ " " + String.valueOf(cal.get(Calendar.MONTH)+1) + " " + getString(R.string.month)
+							+ " " + String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) + " " + getString(R.string.day));
+					BirthDay = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1) + "-" + String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+				}
+			} else {
+				Calendar cal = Calendar.getInstance();
+				birthday.setText(String.valueOf(cal.get(Calendar.YEAR)) + " " + getString(R.string.year)
+						+ " " + String.valueOf(cal.get(Calendar.MONTH)+1) + " " + getString(R.string.month)
+						+ " " + String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) + " " + getString(R.string.day));
+				BirthDay = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1) + "-" + String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+			}
 		} else {
 			Sex = 2;
 			Log.e("TAG", "Setup default preferences");
+			
+			nickName.setText("");
+			Calendar cal = Calendar.getInstance();
+			birthday.setText(String.valueOf(cal.get(Calendar.YEAR)) + " " + getString(R.string.year)
+					+ " " + String.valueOf(cal.get(Calendar.MONTH)+1) + " " + getString(R.string.month)
+					+ " " + String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) + " " + getString(R.string.day));
+			BirthDay = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1) + "-" + String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
 		}
 		
 		if(Sex == 1){
