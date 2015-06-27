@@ -247,6 +247,12 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 						}
 					}else if (response.getInt("code") == -2){
                         Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
+                        
+                        SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+						Editor editor = loginStatus.edit();
+						editor.putInt("LOGIN", 0);
+						editor.commit();
+                        
                         final Intent intent = new Intent();
                         intent.setClass(getApplicationContext(), Login.class);
                         startActivity(intent);
