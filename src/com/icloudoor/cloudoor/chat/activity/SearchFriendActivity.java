@@ -99,10 +99,31 @@ public class SearchFriendActivity extends BaseActivity implements OnClickListene
 		if(searchUserInfo!=null){
 			List<SearchUserList> data = searchUserInfo.getData();
 			if(data!=null && data.size()>0){
-				Intent intent = new Intent(this,UsersDetailActivity.class);
 				SearchUserList searchUserList = data.get(0);
-				intent.putExtra("userId", searchUserList.getUserId());
-				startActivity(intent);
+				
+				Boolean isFirend = searchUserList.getIsFriend();
+				if(isFirend){
+					Intent intent = new Intent(this,FriendDetailActivity.class);
+					intent.putExtra("CityId", searchUserList.getCityId());
+					intent.putExtra("DistrictId", searchUserList.getDistrictId());
+					intent.putExtra("ProvinceId", searchUserList.getProvinceId());
+					intent.putExtra("Nickname", searchUserList.getNickname());
+					intent.putExtra("PortraitUrl", searchUserList.getPortraitUrl());
+					intent.putExtra("Sex", searchUserList.getSex());
+					intent.putExtra("UserId", searchUserList.getUserId());
+					startActivity(intent);
+				}else{
+					Intent intent = new Intent(this,UsersDetailActivity.class);
+					intent.putExtra("CityId", searchUserList.getCityId());
+					intent.putExtra("DistrictId", searchUserList.getDistrictId());
+					intent.putExtra("ProvinceId", searchUserList.getProvinceId());
+					intent.putExtra("Nickname", searchUserList.getNickname());
+					intent.putExtra("PortraitUrl", searchUserList.getPortraitUrl());
+					intent.putExtra("Sex", searchUserList.getSex());
+					intent.putExtra("UserId", searchUserList.getUserId());
+					startActivity(intent);
+				}
+				
 			}else{
 				showToast(R.string.search_result);
 			}

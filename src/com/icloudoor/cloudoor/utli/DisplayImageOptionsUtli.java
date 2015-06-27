@@ -18,7 +18,6 @@ public class DisplayImageOptionsUtli {
 			// delayInMillis为你设置的下载前的延迟时间
 			// 设置图片加入缓存前，对bitmap进行设置
 			// .preProcessor(BitmapProcessor preProcessor)
-			.displayer(new RoundedBitmapDisplayer(20))// 是否设置为圆角，弧度为多少
 			.displayer(new FadeInBitmapDisplayer(100))// 是否图片加载好后渐入的动画时间
 			.build();// 构建完成
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.icloudoor.cloudoor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff" >
@@ -8,19 +9,24 @@
         android:layout_width="match_parent"
         android:layout_height="70dp" >
 
-        <ImageView
+        <com.icloudoor.cloudoor.widget.RoundedImageView
             android:id="@+id/room_head"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp" />
+            android:layout_marginLeft="16dp"
+            android:scaleType="centerCrop"
+            app:riv_border_color="@color/roundedimageview"
+            app:riv_border_width="1dip"
+            app:riv_corner_radius="10dp"
+            app:riv_oval="false" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/room_head"
             android:gravity="center_vertical"
-            android:layout_marginLeft="16dp"
             android:orientation="vertical" >
 
             <TextView

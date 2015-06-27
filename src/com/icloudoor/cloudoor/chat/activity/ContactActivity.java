@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -43,6 +45,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	private ListView sortListView;
 	private SideBar sideBar;
 	private TextView dialog;
+	private TextView sweep_tx;
 	private MyFriendsAdapter adapter;
 	private CharacterParser characterParser;
 	private PinyinComparator pinyinComparator;
@@ -56,6 +59,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		setContentView(R.layout.activity_contact);
 		sideBar = (SideBar) findViewById(R.id.sidrbar);
 		dialog = (TextView) findViewById(R.id.dialog);
+		sweep_tx = (TextView) findViewById(R.id.sweep_tx);
 		sideBar.setTextView(dialog);
 		btn_back = (ImageView) findViewById(R.id.btn_back);
 		sortListView = (ListView) findViewById(R.id.country_lvcountry);
@@ -64,6 +68,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 				R.layout.friend_header_view, null);
 		v.findViewById(R.id.add_friend).setOnClickListener(this);
 		btn_back.setOnClickListener(this);
+		sweep_tx.setOnClickListener(this);
 
 		sortListView.addHeaderView(v);
 		adapter = new MyFriendsAdapter(this, null);
@@ -71,6 +76,17 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		characterParser = new CharacterParser();
 		setListener();
 		mQueue = Volley.newRequestQueue(this);
+		sortListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				Intent intent = new Intent(ContactActivity.this, FriendDetailActivity.class);
+				startActivity(intent);
+				
+			}
+		});
 		getNetworkData(this, "/user/im/getFriends.do", null);
 	}
 
@@ -88,6 +104,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 			}
 		});
 	}
+	
 
 	public void getMyFriends() { 
 
@@ -140,6 +157,12 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 			break;
 		case R.id.btn_back:
 			finish();
+			break;
+		case R.id.sweep_tx:
+			Intent sweepIntent = new Intent();
+			sweepIntent.setClass(this, MipcaActivityCapture.class);
+			sweepIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(sweepIntent);
 			break;
 
 		default:

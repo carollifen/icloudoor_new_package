@@ -131,4 +131,20 @@ public class BaseActivity extends Activity{
 		Toast.makeText(this, resid, Toast.LENGTH_SHORT).show();
 	}
 	
+	
+	 /** 
+     * ¸ù¾ÝÊÖ»úµÄ·Ö±æÂÊ´Ó dp µÄµ¥Î» ×ª³ÉÎª px(ÏñËØ) 
+     */  
+    public  int dip2px(float dpValue) {  
+        final float scale = getResources().getDisplayMetrics().density;  
+        return (int) (dpValue * scale + 0.5f);  
+    }  
+  
+    /** 
+     * ¸ù¾ÝÊÖ»úµÄ·Ö±æÂÊ´Ó px(ÏñËØ) µÄµ¥Î» ×ª³ÉÎª dp 
+     */  
+    public  int px2dip(float pxValue) {  
+        final float scale = getResources().getDisplayMetrics().density;  
+        return (int) (pxValue / scale + 0.5f);  
+    }  
 }

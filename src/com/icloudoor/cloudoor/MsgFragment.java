@@ -33,7 +33,9 @@ import com.icloudoor.cloudoor.SlideView.OnSlideListener;
 import com.icloudoor.cloudoor.chat.ChatAllHistoryAdapter;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.activity.ContactActivity;
+import com.icloudoor.cloudoor.chat.activity.MipcaActivityCapture;
 import com.icloudoor.cloudoor.chat.activity.RoomListActivity;
+import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -47,6 +49,7 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 	private RelativeLayout group_layout;
 	private List<EMConversation> conversationList ;
 	private ImageView add_friends;
+	private final static int SCANNIN_GREQUEST_CODE = 1;
 	public MsgFragment() {
 		// Required empty public constructor
 	}
@@ -281,7 +284,6 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 			break;
 		
 		case R.id.add_friends:
-			
 			initPopupWindow();
 			
 			break;
@@ -289,12 +291,17 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 			if(pw!=null&&pw.isShowing()){
 				pw.dismiss();
 			}
-			
+			Intent sweepIntent = new Intent();
+			sweepIntent.setClass(getActivity(), MipcaActivityCapture.class);
+			sweepIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivityForResult(sweepIntent, SCANNIN_GREQUEST_CODE);
 			break;
 		case R.id.add_friend_layout:
 			if(pw!=null&&pw.isShowing()){
 				pw.dismiss();
 			}
+			Intent VerificationIntent = new Intent(getActivity(),VerificationFrientsActivity.class);
+			startActivity(VerificationIntent);
 			
 			break;
 		case R.id.constat_layout:

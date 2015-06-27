@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <color name="translucent_background">#BF000000</color>
     <color name="common_top_bar_blue">#4ebcd3</color>
     <color name="btn_login_normal">#00acff</color>
@@ -39,4 +39,9 @@
     <color name="btn_answer_normal">#2dafa3</color>
     <color name="search_layout">#bfbfbf</color>
     <color name="color_dddddd">#dddddd</color>
+    <color name="roundedimageview">#dddddd</color>
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+
 </resources>

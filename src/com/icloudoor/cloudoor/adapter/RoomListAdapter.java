@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.entity.ChatRoomList;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
+import com.icloudoor.cloudoor.widget.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class RoomListAdapter extends BaseAdapter{
@@ -51,7 +51,7 @@ public class RoomListAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		convertView = LayoutInflater.from(context).inflate(R.layout.item_room_list, null);
-		ImageView room_head = (ImageView) convertView.findViewById(R.id.room_head);
+		RoundedImageView room_head = (RoundedImageView) convertView.findViewById(R.id.room_head);
 		TextView room_name = (TextView) convertView.findViewById(R.id.room_name);
 		TextView content_tx = (TextView)convertView.findViewById(R.id.content_tx);
 		TextView time_tx = (TextView)convertView.findViewById(R.id.time_tx);

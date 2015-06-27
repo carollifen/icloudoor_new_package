@@ -43,13 +43,19 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp" >
 
-        <ImageView
+        <com.icloudoor.cloudoor.widget.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res/com.icloudoor.cloudoor"
             android:id="@+id/user_head"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="22dp"
-            android:background="@drawable/icon_boy_110" />
+            android:background="@drawable/icon_boy_110"
+            app:riv_border_color="@color/roundedimageview"
+            app:riv_border_width="1dip"
+            app:riv_corner_radius="10dp"
+            app:riv_oval="false"
+             />
 
         <TextView
             android:id="@+id/user_name"
@@ -61,6 +67,16 @@
             android:layout_toRightOf="@+id/user_head"
             android:textColor="#333333"
             android:textSize="18sp" />
+        
+        <ImageView 
+            android:id="@+id/sex_img"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/boy_ioc"
+            android:layout_toRightOf="@+id/user_name"
+            android:layout_alignTop="@+id/user_name"
+            />
     </RelativeLayout>
 
     <View
