@@ -267,5 +267,7 @@
     <string name="submit">提交</string>
     <string name="reportsuccess">投诉成功</string>
     <string name="reportfail">投诉失败,请从新提交</string>
+    
+    <string name="only_one_day">(当天有效)</string>
 
 </resources>
