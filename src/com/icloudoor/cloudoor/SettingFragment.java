@@ -365,16 +365,20 @@ public class SettingFragment extends Fragment {
 				    public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
 				        switch (updateStatus) {
 				        case UpdateStatus.Yes: // has update
-				            UmengUpdateAgent.showUpdateDialog(getActivity(), updateInfo);
+				        	if(getActivity() != null)
+				        		UmengUpdateAgent.showUpdateDialog(getActivity(), updateInfo);
 				            break;
 				        case UpdateStatus.No: // has no update
-				            Toast.makeText(getActivity(), R.string.latest_version_now, Toast.LENGTH_SHORT).show();
+				        	if(getActivity() != null)
+				        		Toast.makeText(getActivity(), R.string.latest_version_now, Toast.LENGTH_SHORT).show();
 				            break;
 				        case UpdateStatus.NoneWifi: // none wifi
-				            Toast.makeText(getActivity(), R.string.update_only_in_wifi, Toast.LENGTH_SHORT).show();
+				        	if(getActivity() != null)
+				        		Toast.makeText(getActivity(), R.string.update_only_in_wifi, Toast.LENGTH_SHORT).show();
 				            break;
 				        case UpdateStatus.Timeout: // time out
-				            Toast.makeText(getActivity(), R.string.get_update_timeout, Toast.LENGTH_SHORT).show();
+				        	if(getActivity() != null)
+				        		Toast.makeText(getActivity(), R.string.get_update_timeout, Toast.LENGTH_SHORT).show();
 				            break;
 				        }
 				    }
