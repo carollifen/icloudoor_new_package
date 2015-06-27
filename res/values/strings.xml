@@ -269,5 +269,8 @@
     <string name="reportfail">投诉失败,请从新提交</string>
     
     <string name="only_one_day">(当天有效)</string>
+    <string name="latest_version_now">当前已是最新版本</string>
+    <string name="get_update_timeout">获取信息失败，请登录 http://fir.im/yunmen下载最新版本</string>
+    <string name="update_only_in_wifi">没有wifi连接， 只在wifi下更新</string>
 
 </resources>

@@ -60,6 +60,9 @@ import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 
 public class SettingFragment extends Fragment {
 	private String TAG = this.getClass().getSimpleName();
@@ -356,6 +359,26 @@ public class SettingFragment extends Fragment {
 //                    }
 //                }
 				UmengUpdateAgent.setUpdateOnlyWifi(false);
+				UmengUpdateAgent.setUpdateAutoPopup(false);
+				UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+				    @Override
+				    public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
+				        switch (updateStatus) {
+				        case UpdateStatus.Yes: // has update
+				            UmengUpdateAgent.showUpdateDialog(getActivity(), updateInfo);
+				            break;
+				        case UpdateStatus.No: // has no update
+				            Toast.makeText(getActivity(), R.string.latest_version_now, Toast.LENGTH_SHORT).show();
+				            break;
+				        case UpdateStatus.NoneWifi: // none wifi
+				            Toast.makeText(getActivity(), R.string.update_only_in_wifi, Toast.LENGTH_SHORT).show();
+				            break;
+				        case UpdateStatus.Timeout: // time out
+				            Toast.makeText(getActivity(), R.string.get_update_timeout, Toast.LENGTH_SHORT).show();
+				            break;
+				        }
+				    }
+				});
 				UmengUpdateAgent.update(getActivity());
 				break;
 			case R.id.btn_logout:

@@ -196,28 +196,28 @@ public class ShowPersonalInfo extends BaseActivity {
 				
 				Intent intent = new Intent();
 				
-				SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-				if(personalInfo.getInt("SETINFO", 1) == 1){
+//				SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
+//				if(personalInfo.getInt("SETINFO", 1) == 1){
 					
-					Log.e(TAG, "onClick1");
-					
-					if(userStatus == 1) {
-						Log.e(TAG, "onClick2");
-						intent.setClass(ShowPersonalInfo.this, SetPersonalInfoNotCerti.class);
-						startActivityForResult(intent, 0);
-					} else if(userStatus == 2){
-						Log.e(TAG, "onClick3");
-						intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
-                        intent.putExtra("Whereis", "settingFace");
-                        startActivityForResult(intent, 0);
-					}
+				Log.e(TAG, "onClick1");
 
-				} else if (personalInfo.getInt("SETINFO", 1) == 0){
-					Log.e(TAG, "onClick4");
+				if (userStatus == 1) {
+					Log.e(TAG, "onClick2");
+					intent.setClass(ShowPersonalInfo.this, SetPersonalInfoNotCerti.class);
+					startActivityForResult(intent, 0);
+				} else if (userStatus == 2) {
+					Log.e(TAG, "onClick3");
 					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
-                    intent.putExtra("Whereis", "settingFace");
-                    startActivityForResult(intent, 0);
+					intent.putExtra("Whereis", "settingFace");
+					startActivityForResult(intent, 0);
 				}
+//
+//				} else if (personalInfo.getInt("SETINFO", 1) == 0){
+//					Log.e(TAG, "onClick4");
+//					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
+//                    intent.putExtra("Whereis", "settingFace");
+//                    startActivityForResult(intent, 0);
+//				}
 				
 			}
 			
