@@ -2653,8 +2653,9 @@ public class KeyFragment extends Fragment {
 								MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics", map);
 
 								upLoadUtils.writeOpenInfoToFile(openDoorTime, userId, deviceIdTodoorId(openDoorDevicdId), false, modelNameAndVersion);
-//								Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
-								toastShow(getString(R.string.open_door_fail));
+								if(getActivity() != null)
+									Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+//								toastShow(getString(R.string.open_door_fail));
 							}
                             Log.e("test for open door", "Gatt close");
 //							mHandlerReset.getLooper().quit();
@@ -2702,8 +2703,8 @@ public class KeyFragment extends Fragment {
                 if (txValue[0] == 0x10) {
                     vibrator.vibrate(500);
                     // door had opened. go on ...
-                    toastShow(getString(R.string.open_door_success));
-//                    Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_SHORT).show();
+                    if(getActivity() != null)
+                    	Toast.makeText(getActivity(), R.string.open_door_success, Toast.LENGTH_SHORT).show();
 					scanStatus.setText(R.string.can_shake_to_open_door);
 					mDoorState = true;
 					
