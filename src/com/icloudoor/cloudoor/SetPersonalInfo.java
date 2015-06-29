@@ -526,6 +526,8 @@ public class SetPersonalInfo extends BaseActivity {
 									editor.putInt("SETINFO", setPersonal);
 									editor.commit();
 
+									Toast.makeText(getApplicationContext(), R.string.modify_info_success, Toast.LENGTH_SHORT).show();
+									
 									if (whereFrom == null) {
 										Intent intent = new Intent();
 										intent.setClass(SetPersonalInfo.this, CloudDoorMainActivity.class);

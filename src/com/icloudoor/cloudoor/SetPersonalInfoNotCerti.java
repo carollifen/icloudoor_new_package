@@ -515,6 +515,8 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 									editor1.putString("NAME", Name);
 									editor1.commit();
 									
+									Toast.makeText(getApplicationContext(), R.string.modify_info_success, Toast.LENGTH_SHORT).show();
+									
 									if (whereFrom == null) {
 										Intent intent = new Intent();
 										intent.setClass(SetPersonalInfoNotCerti.this, CloudDoorMainActivity.class);
