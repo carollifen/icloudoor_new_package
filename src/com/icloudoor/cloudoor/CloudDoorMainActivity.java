@@ -412,36 +412,34 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
 		Editor mEditor=firstLoginShare.edit();
 		
-	if(!(firstLoginShare.getBoolean("FIRSTLOGIN", true)))
-	{	
-		if(homePressed == 1 && useSign == 1) {
-			Intent intent = new Intent();
-			intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
-			startActivity(intent);
+		if(!(firstLoginShare.getBoolean("FIRSTLOGIN", true)))
+		{	
+			if(homePressed == 1 && useSign == 1) {
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
+				startActivity(intent);
+			}
 		}
-	}
-	mEditor.putBoolean("FIRSTLOGIN", false).commit();
-		// save image to file
-		SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
-		if (downPic.getInt("PIC", 0) == 0) {
+		mEditor.putBoolean("FIRSTLOGIN", false).commit();
+		// save image to file		
+//		SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
+//		if (downPic.getInt("PIC", 0) == 0) {
 
 			File f = new File(PATH + "/" + jpegName);
-			if(f.exists())
+			if (f.exists())
 				f.delete();
-			
-			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
-					MODE_PRIVATE);
+
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 			imageURL = loginStatus.getString("URL", null);
 			if (imageURL != null) {
-				Log.e(TAG, imageURL);
+				Log.e(TAG, imageURL + "  downloading");
 				if (mThread == null) {
 					mThread = new Thread(runnable);
 					mThread.start();
 				}
 			}
-		}	
+//		}
 	}
-	
 
 	private Handler mHandler = new Handler() {
 
@@ -504,10 +502,6 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		}
 	};
 	
-	
-	
-	
- 
 	public class MyOnClickListener implements OnClickListener {
 		@Override
 		public void onClick(View view) {
