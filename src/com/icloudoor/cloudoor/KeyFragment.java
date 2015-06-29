@@ -608,6 +608,102 @@ public class KeyFragment extends Fragment {
 		return isWithin;
 	}
 	
+	public class DownloadeKeyTask implements Runnable{
+
+		private JSONObject response = null;
+
+		public DownloadeKeyTask (JSONObject data) {
+			this.response = data;
+		}
+		public void run(){
+
+			try {
+				parseKeyData(response);
+				if (response.getString("sid") != null)
+					saveSid(response.getString("sid"));
+
+			}catch (JSONException e){
+				Log.e("error", "There is a error");
+			}
+
+//			Log.e(TAG, response.toString());
+
+			if(carDoorList != null){
+				carDoorList.clear();
+				carDoorList = null;
+			}
+			if(manDoorList != null){
+				manDoorList.clear();
+				manDoorList = null;
+			}
+			if(officeDoorList != null){
+				officeDoorList.clear();
+				officeDoorList = null;
+			}
+
+			carDoorList = new ArrayList<HashMap<String, String>>();
+			manDoorList = new ArrayList<HashMap<String, String>>();
+			officeDoorList = new ArrayList<HashMap<String, String>>();
+
+			//TODO DELETE TEMPARY
+			if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+				if (DBCount() > 0) {
+
+					Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
+							null);
+					if (mCursor.moveToFirst()) {
+						int zoneIdIndex = mCursor.getColumnIndex("zoneId");
+						int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+						int doorNamemIndex = mCursor.getColumnIndex("doorName");
+						int doorTypeIndex = mCursor.getColumnIndex("doorType");
+						int directionIndex = mCursor.getColumnIndex("direction");
+						int doorIdIndex = mCursor.getColumnIndex("doorId");
+
+						do {
+							HashMap<String, String> temp = new HashMap<String, String>();
+							String deviceId = mCursor.getString(deviceIdIndex);
+							String doorName = mCursor.getString(doorNamemIndex);
+							String doorType = mCursor.getString(doorTypeIndex);
+							String direction = mCursor.getString(directionIndex);
+							String zoneId = mCursor.getString(zoneIdIndex);
+							String doorId = mCursor.getString(doorIdIndex);
+
+												/*  Add new logic for car key
+												 *  select the car doors can be opened,
+												 *  and all the man doors
+												 */
+							if (doorType.equals("2")) {
+								Log.e(TAG, "add a car key");
+								temp.put("CDdeviceid", deviceId);
+								temp.put("CDdoorName", doorName);
+								temp.put("CDdoorType", doorType);
+								temp.put("CDDirection", direction);
+								carDoorList.add(temp);
+							} else if (doorType.equals("1")) {
+								Log.e(TAG, "add man key");
+								temp.put("MDdeviceid", deviceId);
+								temp.put("MDdoorName", doorName);
+								temp.put("MDdoorType", doorType);
+								temp.put("MDDirection", direction);
+								manDoorList.add(temp);
+							} else if (doorType.equals("3")) {
+								Log.e(TAG, "add office key");
+								temp.put("ODdeviceid", deviceId);
+								temp.put("ODdoorName", doorName);
+								temp.put("ODdoorType", doorType);
+								temp.put("ODDirection", direction);
+								temp.put("ODdoorId", doorId);
+								officeDoorList.add(temp);
+							}
+						} while (mCursor.moveToNext());
+					}
+					mCursor.close();
+				}
+			}
+		}
+
+	}
+	
 	public void checkForNewKey() {
 		uuid = loadUUID();
 		if (uuid == null) {
@@ -632,85 +728,86 @@ public class KeyFragment extends Fragment {
 						try {
 							if (response.getInt("code") == 1) {
 
-								parseKeyData(response);
-
-								Log.e(TAG, response.toString());
-
-								if (response.getString("sid") != null)
-									saveSid(response.getString("sid"));
-								
-								if(carDoorList != null){
-						        	carDoorList.clear();
-						        	carDoorList = null;
-						        }
-						        if(manDoorList != null){
-						        	manDoorList.clear();
-						        	manDoorList = null;
-						        }
-						        if(officeDoorList != null){
-						        	officeDoorList.clear();
-						        	officeDoorList = null;
-						        }
-						        
-						        carDoorList = new ArrayList<HashMap<String, String>>();
-								manDoorList = new ArrayList<HashMap<String, String>>();
-								officeDoorList = new ArrayList<HashMap<String, String>>();
-								
-								//TODO DELETE TEMPARY
-								if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
-									if (DBCount() > 0) {
-										
-										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
-												null);
-										if (mCursor.moveToFirst()) {
-											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
-											int deviceIdIndex = mCursor.getColumnIndex("deviceId");
-											int doorNamemIndex = mCursor.getColumnIndex("doorName");
-											int doorTypeIndex = mCursor.getColumnIndex("doorType");
-											int directionIndex = mCursor.getColumnIndex("direction");
-											int doorIdIndex = mCursor.getColumnIndex("doorId");
-
-											do {
-												HashMap<String, String> temp = new HashMap<String, String>();
-												String deviceId = mCursor.getString(deviceIdIndex);
-												String doorName = mCursor.getString(doorNamemIndex);
-												String doorType = mCursor.getString(doorTypeIndex);
-												String direction = mCursor.getString(directionIndex);
-												String zoneId = mCursor.getString(zoneIdIndex);
-												String doorId = mCursor.getString(doorIdIndex);
-
-												/*  Add new logic for car key
-												 *  select the car doors can be opened, 
-												 *  and all the man doors
-												 */
-												if (doorType.equals("2")) {						
-													Log.e(TAG, "add a car key");
-													temp.put("CDdeviceid", deviceId);
-													temp.put("CDdoorName", doorName);
-													temp.put("CDdoorType", doorType);
-													temp.put("CDDirection", direction);
-													carDoorList.add(temp);		
-												} else if (doorType.equals("1")) {
-													Log.e(TAG, "add man key");
-													temp.put("MDdeviceid", deviceId);
-													temp.put("MDdoorName", doorName);
-													temp.put("MDdoorType", doorType);
-													temp.put("MDDirection", direction);
-													manDoorList.add(temp);
-												} else if (doorType.equals("3")) {
-													Log.e(TAG, "add office key");
-													temp.put("ODdeviceid", deviceId);
-													temp.put("ODdoorName", doorName);
-													temp.put("ODdoorType", doorType);
-													temp.put("ODDirection", direction);
-													temp.put("ODdoorId", doorId);
-													officeDoorList.add(temp);
-												}
-											} while (mCursor.moveToNext());
-										}
-						                mCursor.close();
-									}
-								}
+//								parseKeyData(response);
+//
+//								Log.e(TAG, response.toString());
+//
+//								if (response.getString("sid") != null)
+//									saveSid(response.getString("sid"));
+//								
+//								if(carDoorList != null){
+//						        	carDoorList.clear();
+//						        	carDoorList = null;
+//						        }
+//						        if(manDoorList != null){
+//						        	manDoorList.clear();
+//						        	manDoorList = null;
+//						        }
+//						        if(officeDoorList != null){
+//						        	officeDoorList.clear();
+//						        	officeDoorList = null;
+//						        }
+//						        
+//						        carDoorList = new ArrayList<HashMap<String, String>>();
+//								manDoorList = new ArrayList<HashMap<String, String>>();
+//								officeDoorList = new ArrayList<HashMap<String, String>>();
+//								
+//								//TODO DELETE TEMPARY
+//								if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
+//									if (DBCount() > 0) {
+//										
+//										Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME,
+//												null);
+//										if (mCursor.moveToFirst()) {
+//											int zoneIdIndex = mCursor.getColumnIndex("zoneId");
+//											int deviceIdIndex = mCursor.getColumnIndex("deviceId");
+//											int doorNamemIndex = mCursor.getColumnIndex("doorName");
+//											int doorTypeIndex = mCursor.getColumnIndex("doorType");
+//											int directionIndex = mCursor.getColumnIndex("direction");
+//											int doorIdIndex = mCursor.getColumnIndex("doorId");
+//
+//											do {
+//												HashMap<String, String> temp = new HashMap<String, String>();
+//												String deviceId = mCursor.getString(deviceIdIndex);
+//												String doorName = mCursor.getString(doorNamemIndex);
+//												String doorType = mCursor.getString(doorTypeIndex);
+//												String direction = mCursor.getString(directionIndex);
+//												String zoneId = mCursor.getString(zoneIdIndex);
+//												String doorId = mCursor.getString(doorIdIndex);
+//
+//												/*  Add new logic for car key
+//												 *  select the car doors can be opened, 
+//												 *  and all the man doors
+//												 */
+//												if (doorType.equals("2")) {						
+//													Log.e(TAG, "add a car key");
+//													temp.put("CDdeviceid", deviceId);
+//													temp.put("CDdoorName", doorName);
+//													temp.put("CDdoorType", doorType);
+//													temp.put("CDDirection", direction);
+//													carDoorList.add(temp);		
+//												} else if (doorType.equals("1")) {
+//													Log.e(TAG, "add man key");
+//													temp.put("MDdeviceid", deviceId);
+//													temp.put("MDdoorName", doorName);
+//													temp.put("MDdoorType", doorType);
+//													temp.put("MDDirection", direction);
+//													manDoorList.add(temp);
+//												} else if (doorType.equals("3")) {
+//													Log.e(TAG, "add office key");
+//													temp.put("ODdeviceid", deviceId);
+//													temp.put("ODdoorName", doorName);
+//													temp.put("ODdoorType", doorType);
+//													temp.put("ODDirection", direction);
+//													temp.put("ODdoorId", doorId);
+//													officeDoorList.add(temp);
+//												}
+//											} while (mCursor.moveToNext());
+//										}
+//						                mCursor.close();
+//									}
+//								}
+                                new Thread(new DownloadeKeyTask(response)).start();
 								
 							} else if (response.getInt("code") == -81) {
 								if (getActivity() != null)
@@ -945,7 +1042,14 @@ public class KeyFragment extends Fragment {
 		// for cars table -- END
 			
 		if (newNum > 0) {
-			keyRedDot.setVisibility(View.VISIBLE);
+			if(getActivity() != null){
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						keyRedDot.setVisibility(View.VISIBLE);
+					}
+				});
+			}
 		}
 	}
 	
@@ -1348,11 +1452,11 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						weatherTemperature.setText(getString(R.string.weather_not_available));
-						weatherTemperature.setTextSize(16);
 						
 						if(getActivity() != null){
 							toastShow(getString(R.string.network_error));
+							weatherTemperature.setText(getString(R.string.weather_not_available));
+							weatherTemperature.setTextSize(16);
 						}
 //							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
