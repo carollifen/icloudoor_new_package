@@ -1000,41 +1000,41 @@ public class KeyFragment extends Fragment {
     	return 0;
     }
 	
-	// for new UI weather
-	private void toggleGPS() {
-		Intent gpsIntent = new Intent();
-		gpsIntent.setClassName("com.android.settings",
-				"com.android.settings.widget.SettingsAppWidgetProvider");
-		gpsIntent.addCategory("android.intent.category.ALTERNATIVE");
-		gpsIntent.setData(Uri.parse("custom:3"));
-		try {
-			PendingIntent.getBroadcast(getActivity(), 0, gpsIntent, 0).send();
-		} catch (CanceledException e) {
-			e.printStackTrace();
-			locationManager
-					.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-							1000, 0, locationListener);
-			Location location1 = locationManager
-					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			if (location1 != null) {
-				latitude = location1.getLatitude(); 
-				longitude = location1.getLongitude(); 
-			}
-		}
-	}
-	
-	private void getLocation() {
-		Location location = locationManager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		if (location != null) {
-			latitude = location.getLatitude();
-			longitude = location.getLongitude();
-		} else {
-
-			locationManager.requestLocationUpdates(
-					LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
-		}
-	}
+//	// for new UI weather
+//	private void toggleGPS() {
+//		Intent gpsIntent = new Intent();
+//		gpsIntent.setClassName("com.android.settings",
+//				"com.android.settings.widget.SettingsAppWidgetProvider");
+//		gpsIntent.addCategory("android.intent.category.ALTERNATIVE");
+//		gpsIntent.setData(Uri.parse("custom:3"));
+//		try {
+//			PendingIntent.getBroadcast(getActivity(), 0, gpsIntent, 0).send();
+//		} catch (CanceledException e) {
+//			e.printStackTrace();
+//			locationManager
+//					.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+//							1000, 0, locationListener);
+//			Location location1 = locationManager
+//					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//			if (location1 != null) {
+//				latitude = location1.getLatitude(); 
+//				longitude = location1.getLongitude(); 
+//			}
+//		}
+//	}
+//	
+//	private void getLocation() {
+//		Location location = locationManager
+//				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//		if (location != null) {
+//			latitude = location.getLatitude();
+//			longitude = location.getLongitude();
+//		} else {
+//
+//			locationManager.requestLocationUpdates(
+//					LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+//		}
+//	}
 
 	LocationListener locationListener = new LocationListener() {
 		
@@ -1177,20 +1177,20 @@ public class KeyFragment extends Fragment {
 		date.setText(D1);
 		
 		// To get the longitude and latitude
-		locationManager = (LocationManager) getActivity().getSystemService(
-				Context.LOCATION_SERVICE);
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			getLocation();
-		} else {
-			toggleGPS();
-			new Handler() {
-			}.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					getLocation();
-				}
-			}, 2000);
-		}
+//		locationManager = (LocationManager) getActivity().getSystemService(
+//				Context.LOCATION_SERVICE);
+//		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//			getLocation();
+//		} else {
+//			toggleGPS();
+//			new Handler() {
+//			}.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					getLocation();
+//				}
+//			}, 2000);
+//		}
 
 		// INIT
 		Date date = new Date();
@@ -1215,8 +1215,7 @@ public class KeyFragment extends Fragment {
 					
 			weatherURL = new URL(HOST + "city=ip&language=zh-chs&unit=c&aqi=city&key=" + Key);
 
-			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid="
-					+ sid);
+			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid=" + sid);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
