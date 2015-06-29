@@ -449,7 +449,31 @@ public class SettingFragment extends Fragment {
                     mQueue.add(mJsonRequest);
                 }else {
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
+                    	SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+                        Editor editor1 = loginStatus.edit();
+                        editor1.putInt("LOGIN", 0);
+                        editor1.commit();
+                        
+                        saveSid("SID", null);
+                        
+                        String sql = "DELETE FROM " + TABLE_NAME +";";
+                        mKeyDB.execSQL(sql);
+                        
+                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+                        mKeyDB.execSQL(sq2);
+                        
+                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+                        mKeyDB.execSQL(sq3);
+                        
+                        Intent intent4 = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
+                        intent4.putExtras(bundle);
+                        intent4.setClass(getActivity(), Login.class);
+                        startActivity(intent4);
+                        
+                        CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
+                        mainActivity.finish();
                     }
                 }
 				break;

@@ -338,6 +338,7 @@ public class KeyFragment extends Fragment {
 		sid = loadSid();
 		
 		newNum = 0;
+		
 		checkForNewKey();		
 		
 		requestWeatherData();
@@ -452,6 +453,8 @@ public class KeyFragment extends Fragment {
                                     Editor editor1 = loginStatus.edit();
                                     editor1.putInt("LOGIN", 0);
                                     editor1.commit();
+                                    
+                                    saveSid(null);
                                     
                                     String sql = "DELETE FROM " + TABLE_NAME +";";
                                     mKeyDB.execSQL(sql);
