@@ -271,6 +271,8 @@ public class SettingFragment extends Fragment {
 //				}
 			}
 		}
+		
+		checkForUserStatus();
 	}
 	
 	private Handler mHandler = new Handler() {
@@ -641,4 +643,57 @@ public class SettingFragment extends Fragment {
             }
         }
     };
+    
+    public void checkForUserStatus() {
+		Log.e(TAG, "checkForUserStatus()");
+		URL getUserStatusURL = null;
+		sid = loadSid("SID");
+		try {
+			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST, getUserStatusURL.toString(), null,
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						Log.e(TAG, "checkForUserStatus: " + response.toString());
+						try {
+							if(response.getInt("code") == 1){
+								if(response.getString("sid") != null)
+									saveSid("SID", response.getString("sid"));
+								
+								if (getActivity() != null) {
+									SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+									Editor editor = loginStatus.edit();
+									editor.putInt("STATUS", response.getJSONObject("data").getInt("userStatus"));
+									editor.putBoolean( "isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
+									editor.commit();
+
+									SharedPreferences saveProfile = getActivity().getSharedPreferences("PROFILE", 0);
+									Editor edit = saveProfile.edit();
+									edit.putInt("userStatus", response.getJSONObject("data").getInt("userStatus"));
+									edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
+									edit.commit();
+									
+									Log.e(TAG, String.valueOf(response.getJSONObject("data").getInt("userStatus")) + "in SettingFragment***********");
+									Log.e(TAG, String.valueOf(response.getJSONObject("data").getBoolean("isHasPropServ")) + "in SettingFragment***********");
+								}
+								
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						
+					}
+				});
+		mQueue.add(mJsonRequest);
+	}
 }
