@@ -1054,7 +1054,7 @@ public class SetPersonalInfo extends BaseActivity {
 			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 			if (networkInfo != null) {
 //				NetworkInfo.State state = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-				if (NetworkInfo.State.CONNECTED == connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState()
+				if (NetworkInfo.State.CONNECTED == connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()
 						|| NetworkInfo.State.CONNECTED == connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState()) {
 					imageFile = new File(PATH + System.currentTimeMillis() + ".jpg");
 					imageFile.getParentFile().mkdirs();
