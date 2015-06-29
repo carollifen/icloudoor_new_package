@@ -1209,9 +1209,11 @@ public class KeyFragment extends Fragment {
 			haveRequestLHL = false;
 
 		try {
-					weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
-							+ ":" + String.valueOf(longitude)
-							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+//					weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
+//							+ ":" + String.valueOf(longitude)
+//							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+					
+			weatherURL = new URL(HOST + "city=ip&language=zh-chs&unit=c&aqi=city&key=" + Key);
 
 			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid="
 					+ sid);
