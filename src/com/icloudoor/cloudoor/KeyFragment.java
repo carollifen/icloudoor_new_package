@@ -2088,7 +2088,7 @@ public class KeyFragment extends Fragment {
 										+ String.valueOf(data[10]) + String.valueOf(data[11]);
 
 								if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// 2.one car door
-									if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-75)) {
+									if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-80)) {
 										bValidKey = true;
 										tempCarDoorList.add(mDeviceList.get(0));
 										BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
@@ -2122,7 +2122,7 @@ public class KeyFragment extends Fragment {
 									Log.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 									if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// one man door
-										if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-80)) {
+										if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-85)) {
 											bValidKey = true;
 											tempManDoorList.add(mDeviceList.get(0));
 											BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
@@ -2181,7 +2181,7 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
 
 											if (tempCarDoorList.get(0).getAddress().equals(formatDeviceId)) {
-												if (mDevRssiValues.get(tempCarDoorList.get(0).getAddress()) > (int)(-75)) {
+												if (mDevRssiValues.get(tempCarDoorList.get(0).getAddress()) > (int)(-80)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);
@@ -2222,7 +2222,7 @@ public class KeyFragment extends Fragment {
 //											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 											if (tempCarDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
-												if (mDevRssiValues.get(tempCarDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-75)) {
+												if (mDevRssiValues.get(tempCarDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-80)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);
@@ -2270,7 +2270,7 @@ public class KeyFragment extends Fragment {
 
 											if (tempManDoorList.get(0).getAddress().equals(formatDeviceId)) {
 //												Log.e("TEST69", "man rssi:"+String.valueOf(mDevRssiValues.get(tempManDoorList.get(0).getAddress())));
-												if (mDevRssiValues.get(tempManDoorList.get(0).getAddress()) > (int)(-80)) {
+												if (mDevRssiValues.get(tempManDoorList.get(0).getAddress()) > (int)(-85)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);
@@ -2311,7 +2311,7 @@ public class KeyFragment extends Fragment {
 											Log.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 											if (tempManDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
-												if (mDevRssiValues.get(tempManDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-80)) {
+												if (mDevRssiValues.get(tempManDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-85)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);
