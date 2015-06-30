@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.easemob.util.DateUtils;
 import com.easemob.util.EMLog;
 import com.easemob.util.TextFormater;
-import com.icloudoor.cloudoor.BuildConfig;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.activity.RecorderVideoActivity;
 

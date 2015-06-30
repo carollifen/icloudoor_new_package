@@ -20,8 +20,10 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.easemob.util.ImageUtils;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.ImageCacheBitmap;
 
 public class LoadLocalBigImgTask extends AsyncTask<Void, Void, Bitmap> {
 

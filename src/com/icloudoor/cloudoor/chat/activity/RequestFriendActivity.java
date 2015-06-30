@@ -3,6 +3,7 @@ package com.icloudoor.cloudoor.chat.activity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
@@ -12,8 +13,13 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.easemob.EMCallBack;
+import com.easemob.chat.CmdMessageBody;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMMessage;
 import com.icloudoor.cloudoor.BaseActivity;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
@@ -54,6 +60,7 @@ public class RequestFriendActivity extends BaseActivity implements OnClickListen
 			}else{
 				map.put("comment", comment);
 			}
+			
 			getNetworkData(this, "/user/im/invite.do", map);
 			break;
 		case R.id.delete_msg:
@@ -70,6 +77,13 @@ public class RequestFriendActivity extends BaseActivity implements OnClickListen
 	@Override
 	public void onSuccess(JSONObject response) {
 		// TODO Auto-generated method stub
+		try {
+			Toast.makeText(this, response.getString("code"), Toast.LENGTH_LONG).show();
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	@Override

@@ -28,12 +28,6 @@ import com.icloudoor.cloudoor.R;
 
 public class CommonUtils {
 	private static final String TAG = "CommonUtils";
-	/**
-	 * �?测网络是否可�?
-	 * 
-	 * @param context
-	 * @return
-	 */
 	public static boolean isNetWorkConnected(Context context) {
 		if (context != null) {
 			ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -46,11 +40,6 @@ public class CommonUtils {
 		return false;
 	}
 
-	/**
-	 * �?测Sdcard是否存在
-	 * 
-	 * @return
-	 */
 	public static boolean isExitsSdcard() {
 		if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
 			return true;
@@ -58,14 +47,6 @@ public class CommonUtils {
 			return false;
 	}
 	
-
-	/**
-     * 根据消息内容和消息类型获取消息内容提�?
-     * 
-     * @param message
-     * @param context
-     * @return
-     */
     public static String getMessageDigest(EMMessage message, Context context) {
         String digest = "";
         switch (message.getType()) {
@@ -99,7 +80,7 @@ public class CommonUtils {
                 digest = getString(context, R.string.voice_call) + txtBody.getMessage();
             }
             break;
-        case FILE: //普�?�文件消�?
+        case FILE: //普通文件消息
             digest = getString(context, R.string.file);
             break;
         default:

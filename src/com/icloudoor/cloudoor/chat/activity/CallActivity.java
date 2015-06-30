@@ -5,18 +5,16 @@ import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import com.easemob.chat.EMCallStateChangeListener;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
+import com.icloudoor.cloudoor.BaseActivity;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.Constant;
-import com.icloudoor.cloudoor.chat.HXSDKHelper;
-import com.umeng.analytics.MobclickAgent;
 
-public class CallActivity extends FragmentActivity {
+public class CallActivity extends BaseActivity {
 
     protected boolean isInComingCall;
     protected String username;
@@ -35,22 +33,6 @@ public class CallActivity extends FragmentActivity {
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
     }
     
-    
-    
-    @Override
-    protected void onResume() {
-        super.onResume();
-        HXSDKHelper.getInstance().getNotifier().reset();
-        
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        MobclickAgent.onPause(this);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -74,7 +56,7 @@ public class CallActivity extends FragmentActivity {
      */
     protected int playMakeCallSounds() {
         try {
-            // �?大音�?
+            // 最大音量
             float audioMaxVolumn = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
             // 当前音量
             float audioCurrentVolumn = audioManager.getStreamVolume(AudioManager.STREAM_RING);
@@ -85,18 +67,18 @@ public class CallActivity extends FragmentActivity {
 
             // 播放
             int id = soundPool.play(outgoing, // 声音资源
-                    0.3f, // 左声�?
-                    0.3f, // 右声�?
-                    1, // 优先级，0�?�?
-                    -1, // 循环次数�?0是不循环�?-1是永远循�?
-                    1); // 回放速度�?0.5-2.0之间�?1为正常�?�度
+                    0.3f, // 左声道
+                    0.3f, // 右声道
+                    1, // 优先级，0最低
+                    -1, // 循环次数，0是不循环，-1是永远循环
+                    1); // 回放速度，0.5-2.0之间。1为正常速度
             return id;
         } catch (Exception e) {
             return -1;
         }
     }
     
-    // 打开扬声�?
+    // 打开扬声器
     protected void openSpeakerOn() {
         try {
             if (!audioManager.isSpeakerphoneOn())
@@ -107,7 +89,7 @@ public class CallActivity extends FragmentActivity {
         }
     }
 
-    // 关闭扬声�?
+    // 关闭扬声器
     protected void closeSpeakerOn() {
 
         try {
@@ -129,7 +111,7 @@ public class CallActivity extends FragmentActivity {
 
     /**
      * 保存通话消息记录
-     * @param type 0：音频，1：视�?
+     * @param type 0：音频，1：视频
      */
     protected void saveCallRecord(int type) {
         EMMessage message = null;
@@ -176,7 +158,6 @@ public class CallActivity extends FragmentActivity {
             txtBody = new TextMessageBody(st8);
             break;
         }
-        // 设置扩展属�??
         if(type == 0)
             message.setAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, true);
         else

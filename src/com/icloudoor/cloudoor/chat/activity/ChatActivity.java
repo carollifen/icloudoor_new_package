@@ -63,6 +63,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.EMCallBack;
 import com.easemob.EMChatRoomChangeListener;
 import com.easemob.EMError;
 import com.easemob.EMEventListener;
@@ -78,6 +79,7 @@ import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
+import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.LocationMessageBody;
 import com.easemob.chat.NormalFileMessageBody;
@@ -102,10 +104,6 @@ import com.icloudoor.cloudoor.chat.PasteEditText;
 import com.icloudoor.cloudoor.chat.SmileUtils;
 import com.icloudoor.cloudoor.chat.VoicePlayClickListener;
 
-/**
- * 聊天页面
- * 
- */
 public class ChatActivity extends FragmentActivity implements OnClickListener, EMEventListener{
 	private static final String TAG = "ChatActivity";
 	private static final int REQUEST_CODE_EMPTY_HISTORY = 2;
@@ -168,7 +166,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	private int chatType;
 	private EMConversation conversation;
 	public static ChatActivity activityInstance = null;
-	// 给谁发送消息
 	private String toChatUsername;
 	private VoiceRecorder voiceRecorder;
 	private MessageAdapter adapter;
@@ -190,7 +187,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	private Handler micImageHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
-			// 切换msg切换图片
 			micImage.setImageDrawable(micImages[msg.what]);
 		}
 	};
@@ -233,7 +229,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		more = findViewById(R.id.more);
 		edittext_layout.setBackgroundResource(R.drawable.input_bar_bg_normal);
 
-		// 动画资源文件,用于录制语音时
 		micImages = new Drawable[] { getResources().getDrawable(R.drawable.record_animate_01),
 				getResources().getDrawable(R.drawable.record_animate_02),
 				getResources().getDrawable(R.drawable.record_animate_03),
@@ -249,9 +244,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 				getResources().getDrawable(R.drawable.record_animate_13),
 				getResources().getDrawable(R.drawable.record_animate_14), };
 
-		// 表情list
 		reslist = getExpressionRes(35);
-		// 初始化表情viewpager
 		List<View> views = new ArrayList<View>();
 		View gv1 = getGridChildView(1);
 		View gv2 = getGridChildView(2);
@@ -285,7 +278,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 				btnContainer.setVisibility(View.GONE);
 			}
 		});
-		// 监听文字框
 		mEditTextContent.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -320,14 +312,12 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(
 				PowerManager.SCREEN_DIM_WAKE_LOCK, "demo");
-		// 判断单聊还是群聊
 		chatType = getIntent().getIntExtra("chatType", CHATTYPE_SINGLE);
 
 		if (chatType == CHATTYPE_SINGLE) { // 单聊
 			toChatUsername = getIntent().getStringExtra("userId");
 			((TextView) findViewById(R.id.name)).setText(toChatUsername);
 		} else {
-			// 群聊
 			findViewById(R.id.container_to_group).setVisibility(View.VISIBLE);
 			findViewById(R.id.container_remove).setVisibility(View.GONE);
 			findViewById(R.id.container_voice_call).setVisibility(View.GONE);
@@ -350,7 +340,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	        // show forward message if the message is not null
 	        String forward_msg_id = getIntent().getStringExtra("forward_msg_id");
 	        if (forward_msg_id != null) {
-	            // 显示发送要转发的消息
 	            forwardMessage(forward_msg_id);
 	        }
 		}
@@ -365,11 +354,8 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	        conversation = EMChatManager.getInstance().getConversationByType(toChatUsername,EMConversationType.ChatRoom);
 	    }
 	     
-        // 把此会话的未读数置为0
         conversation.markAllMessagesAsRead();
 
-        // 初始化db时，每个conversation加载数目是getChatOptions().getNumberOfMessagesLoaded
-        // 这个数目如果比用户期望进入会话界面时显示的个数不一样，就多加载一些
         final List<EMMessage> msgs = conversation.getAllMessages();
         int msgCount = msgs != null ? msgs.size() : 0;
         if (msgCount < conversation.getAllMsgCount() && msgCount < pagesize) {
@@ -420,7 +406,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	
 	protected void onListViewCreation(){
         adapter = new MessageAdapter(ChatActivity.this, toChatUsername, chatType);
-        // 显示消息
         listView.setAdapter(adapter);
         
         listView.setOnScrollListener(new ListScrollListener());
@@ -450,7 +435,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
             ((TextView) findViewById(R.id.name)).setText(toChatUsername);
         }
         
-        // 监听当前会话的群聊解散被T事件
         groupListener = new GroupListener();
         EMGroupManager.getInstance().addGroupChangeListener(groupListener);
 	}

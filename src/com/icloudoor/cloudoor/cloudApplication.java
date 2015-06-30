@@ -83,10 +83,10 @@ public class cloudApplication extends Application {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		    }
+			}
 		};
 		mPushAgent.setNotificationClickHandler(notificationClickHandler);
-		
+
 		mRegisterCallback = new IUmengRegisterCallback() {
 
 			@Override
@@ -109,7 +109,7 @@ public class cloudApplication extends Application {
 			}
 		};
 		mPushAgent.setUnregisterCallback(mUnregisterCallback);
-		
+
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(getApplicationContext());
 		initImageLoaderConfiguration();
@@ -137,37 +137,37 @@ public class cloudApplication extends Application {
 	public static cloudApplication getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * 
-	 *
+	 * 
 	 * @return
 	 */
 	public Map<String, User> getContactList() {
-	    return hxSDKHelper.getContactList();
+		return hxSDKHelper.getContactList();
 	}
 
 	/**
 	 * 
-	 *
+	 * 
 	 * @param contactList
 	 */
 	public void setContactList(Map<String, User> contactList) {
-	    hxSDKHelper.setContactList(contactList);
+		hxSDKHelper.setContactList(contactList);
 	}
 
 	/**
 	 * 
-	 *
+	 * 
 	 * @return
 	 */
 	public String getUserName() {
-	    return hxSDKHelper.getHXId();
+		return hxSDKHelper.getHXId();
 	}
 
 	/**
 	 * 
-	 *
+	 * 
 	 * @return
 	 */
 	public String getPassword() {
@@ -175,24 +175,21 @@ public class cloudApplication extends Application {
 	}
 
 	/**
-	 *
-	 *
+	 * 
+	 * 
 	 * @param user
 	 */
 	public void setUserName(String username) {
-	    hxSDKHelper.setHXId(username);
+		hxSDKHelper.setHXId(username);
 	}
-
 
 	public void setPassword(String pwd) {
-	    hxSDKHelper.setPassword(pwd);
+		hxSDKHelper.setPassword(pwd);
 	}
-
 
 	public void logout(final EMCallBack emCallBack) {
-		
-	    hxSDKHelper.logout(emCallBack);
+
+		hxSDKHelper.logout(emCallBack);
 	}
-	
 
 }

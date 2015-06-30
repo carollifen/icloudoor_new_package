@@ -1,5 +1,11 @@
 package com.icloudoor.cloudoor.chat.activity;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -12,14 +18,16 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.icloudoor.cloudoor.BaseActivity;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.entity.SearchUserList;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FindDBUtile;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class FriendDetailActivity extends BaseActivity implements OnClickListener{
+public class FriendDetailActivity extends BaseActivity implements OnClickListener , NetworkInterface{
 	
 	
 	private ImageView right_img;
@@ -113,6 +121,9 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 			break;
 		case R.id.delete_layout:
 			pw.dismiss();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("friendUserId", UserId);
+			getNetworkData(this, "/user/im/removeFriend.do", map);
 			break;
 		case R.id.report_layout:
 			pw.dismiss();
@@ -130,5 +141,27 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onSuccess(JSONObject response) {
+		// TODO Auto-generated method stub
+		try {
+			int code = response.getInt("code");
+			if(code==1){
+				showToast(R.string.removeFriendSuccess);
+			}else{
+				showToast(R.string.removeFriendFail);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onFailure(VolleyError error) {
+		// TODO Auto-generated method stub
+		
 	}
 }

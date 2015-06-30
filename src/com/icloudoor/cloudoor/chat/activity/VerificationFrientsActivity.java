@@ -1,5 +1,7 @@
 package com.icloudoor.cloudoor.chat.activity;
 
+import java.util.List;
+
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -17,9 +19,11 @@ import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.adapter.VerificationFrientsAdapter;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsInfo;
+import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.utli.GsonUtli;
+import com.icloudoor.cloudoor.utli.VFDaoImpl;
 
-public class VerificationFrientsActivity extends BaseActivity implements NetworkInterface, OnClickListener{
+public class VerificationFrientsActivity extends BaseActivity implements  OnClickListener{
 	
 	
 	private ListView vf_listView;
@@ -42,24 +46,14 @@ public class VerificationFrientsActivity extends BaseActivity implements Network
 		search_layout.setOnClickListener(this);
 		addphoneContact_layout.setOnClickListener(this);
 		btn_back.setOnClickListener(this);
-		getNetworkData(this, "/user/im/getInvitations.do", null);
+		
+		VFDaoImpl daoImpl = new VFDaoImpl(this);
+		List<VerificationFrientsList> data= daoImpl.find();
+		adapter.setData(data);
+//		getNetworkData(this, "/user/im/getInvitations.do", null);
 		
 	}
 
-	@Override
-	public void onSuccess(JSONObject response) {
-		// TODO Auto-generated method stub
-		VerificationFrientsInfo frientsInfo = GsonUtli.jsonToObject(response.toString(), VerificationFrientsInfo.class);
-		if(frientsInfo!=null){
-			adapter.setData(frientsInfo.getData());
-		}
-	}
-
-	@Override
-	public void onFailure(VolleyError error) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void onClick(View v) {

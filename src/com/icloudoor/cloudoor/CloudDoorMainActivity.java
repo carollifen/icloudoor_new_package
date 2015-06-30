@@ -2,10 +2,8 @@ package com.icloudoor.cloudoor;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -59,6 +57,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
+import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
@@ -192,6 +191,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.new_main);
+		EMChat.getInstance().setAppInited();
 		UmengUpdateAgent.setUpdateOnlyWifi(false);
 		UmengUpdateAgent.update(this);
 		// for Umeng Feedback
@@ -785,7 +785,6 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 	@Override
 	public void onEvent(EMNotifierEvent event) {
 		
-		System.out.println("ÏûÏ¢T");
 		
 		runOnUiThread(new Runnable() {
 			
@@ -794,7 +793,6 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 				// TODO Auto-generated method stub
 				
 				mMsgFragment.refresh();
-				Toast.makeText(CloudDoorMainActivity.this, "ÏûÏ¢T", Toast.LENGTH_SHORT).show();;
 			}
 		});
 		
@@ -819,23 +817,13 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 
 	            break;
 	        }
-	        case EventDeliveryAck:
-	        {
-	            //»ñÈ¡µ½message
-	            EMMessage message = (EMMessage) event.getData();
-	            
-	            break;
-	        }
-	        case EventReadAck:
-	        {
-	            //»ñÈ¡µ½message
-	            EMMessage message = (EMMessage) event.getData();
-	            break;
-	        }
-	        case EventOfflineMessage:
-	        {
-	            break;
-	        }
+	        case EventOfflineMessage: {
+				break;
+			}
+
+			case EventConversationListChanged: {
+			    break;
+			}
 	        default:
 	            break;
 	        }

@@ -15,7 +15,6 @@ package com.icloudoor.cloudoor.chat;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.text.ClipboardManager;
@@ -24,6 +23,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.activity.AlertDialog;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 
 /**

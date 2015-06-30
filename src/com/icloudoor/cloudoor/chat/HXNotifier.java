@@ -34,13 +34,6 @@ import com.easemob.chat.EMMessage;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
 
-/**
- * 鏂版秷鎭彁閱抍lass
- * 2.1.8鎶婃柊娑堟伅鎻愮ず鐩稿叧鐨刟pi绉婚櫎鍑簊dk锛屾柟渚垮紑鍙戣?呰嚜鐢变慨鏀?
- * 寮?鍙戣?呬篃鍙互缁ф壙姝ょ被瀹炵幇鐩稿叧鐨勬帴鍙?
- * 
- * this class is subject to be inherited and implement the relative APIs
- */
 public class HXNotifier {
     private final static String TAG = "notify";
     Ringtone ringtone = null;
@@ -48,8 +41,8 @@ public class HXNotifier {
     protected final static String[] msg_eng = { "sent a message", "sent a picture", "sent a voice",
                                                 "sent location message", "sent a video", "sent a file", "%1 contacts sent %2 messages"
                                               };
-    protected final static String[] msg_ch = { "鍙戞潵涓?鏉℃秷鎭?", "鍙戞潵涓?寮犲浘鐗?", "鍙戞潵涓?娈佃闊?", "鍙戞潵浣嶇疆淇℃伅", "鍙戞潵涓?涓棰?", "鍙戞潵涓?涓枃浠?",
-                                               "%1涓仈绯讳汉鍙戞潵%2鏉℃秷鎭?"
+    protected final static String[] msg_ch = { "发来一条消息", "发来一张图片", "发来一段语音", "发来位置信息", "发来一个视频", "发来一个文件",
+                                               "%1个联系人发来%2条消息"
                                              };
 
     protected static int notifyID = 0525; // start notification id
@@ -71,12 +64,6 @@ public class HXNotifier {
     public HXNotifier() {
     }
     
-    /**
-     * 寮?鍙戣?呭彲浠ラ噸杞芥鍑芥暟
-     * this function can be override
-     * @param context
-     * @return
-     */
     public HXNotifier init(Context context){
         appContext = context;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -94,10 +81,6 @@ public class HXNotifier {
         return this;
     }
     
-    /**
-     * 寮?鍙戣?呭彲浠ラ噸杞芥鍑芥暟
-     * this function can be override
-     */
     public void reset(){
         resetNotificationCount();
         cancelNotificaton();
@@ -113,20 +96,11 @@ public class HXNotifier {
             notificationManager.cancel(notifyID);
     }
 
-    /**
-     * 澶勭悊鏂版敹鍒扮殑娑堟伅锛岀劧鍚庡彂閫侀?氱煡
-     * 
-     * 寮?鍙戣?呭彲浠ラ噸杞芥鍑芥暟
-     * this function can be override
-     * 
-     * @param message
-     */
     public synchronized void onNewMsg(EMMessage message) {
         if(EMChatManager.getInstance().isSlientMessage(message)){
             return;
         }
         
-        // 鍒ゆ柇app鏄惁鍦ㄥ悗鍙?
         if (!EasyUtils.isAppRunningForeground(appContext)) {
             EMLog.d(TAG, "app is running in backgroud");
             sendNotification(message, false);
@@ -142,7 +116,6 @@ public class HXNotifier {
         if(EMChatManager.getInstance().isSlientMessage(messages.get(messages.size()-1))){
             return;
         }
-        // 鍒ゆ柇app鏄惁鍦ㄥ悗鍙?
         if (!EasyUtils.isAppRunningForeground(appContext)) {
             EMLog.d(TAG, "app is running in backgroud");
             sendNotification(messages, false);
@@ -152,12 +125,6 @@ public class HXNotifier {
         viberateAndPlayTone(messages.get(messages.size()-1));
     }
 
-    /**
-     * 鍙戦?侀?氱煡鏍忔彁绀?
-     * This can be override by subclass to provide customer implementation
-     * @param messages
-     * @param isForeground
-     */
     protected void sendNotification (List<EMMessage> messages, boolean isForeground){
         for(EMMessage message : messages){
             if(!isForeground){
@@ -172,15 +139,10 @@ public class HXNotifier {
         sendNotification(message, isForeground, true);
     }
     
-    /**
-     * 鍙戦?侀?氱煡鏍忔彁绀?
-     * This can be override by subclass to provide customer implementation
-     * @param message
-     */
     protected void sendNotification(EMMessage message, boolean isForeground, boolean numIncrease) {
         String username = message.getFrom();
         try {
-            String notifyText = username + " 浣犳湁鏂版秷鎭?";
+            String notifyText = username + " 你有新消息";
             switch (message.getType()) {
             case TXT:
                 notifyText += msgs[0];
@@ -212,12 +174,10 @@ public class HXNotifier {
                 String customNotifyText = notificationInfoProvider.getDisplayedText(message);
                 String customCotentTitle = notificationInfoProvider.getTitle(message);
                 if (customNotifyText != null){
-                    // 璁剧疆鑷畾涔夌殑鐘舵?佹爮鎻愮ず鍐呭
                     notifyText = customNotifyText;
                 }
                     
                 if (customCotentTitle != null){
-                    // 璁剧疆鑷畾涔夌殑閫氱煡鏍忔爣棰?
                     contentTitle = customCotentTitle;
                 }   
             }
@@ -230,7 +190,6 @@ public class HXNotifier {
 
             Intent msgIntent = appContext.getPackageManager().getLaunchIntentForPackage(packageName);
             if (notificationInfoProvider != null) {
-                // 璁剧疆鑷畾涔夌殑notification鐐瑰嚮璺宠浆intent
                 msgIntent = notificationInfoProvider.getLaunchIntent(message);
             }
 
@@ -262,8 +221,8 @@ public class HXNotifier {
             }
 
             mBuilder.setContentTitle(contentTitle);
-            mBuilder.setTicker("浣犳湁鏂版秷鎭?");
-            mBuilder.setContentText(summaryBody);//娑堟伅浣?
+            mBuilder.setTicker("你有新消息");
+            mBuilder.setContentText(summaryBody);//消息体
             mBuilder.setContentIntent(pendingIntent);
             // mBuilder.setNumber(notificationNum);
             Notification notification = mBuilder.build();
@@ -280,9 +239,6 @@ public class HXNotifier {
         }
     }
 
-    /**
-     * 鎵嬫満闇囧姩鍜屽０闊虫彁绀?
-     */
     public void viberateAndPlayTone(EMMessage message) {
         if(message != null){
             if(EMChatManager.getInstance().isSlientMessage(message)){

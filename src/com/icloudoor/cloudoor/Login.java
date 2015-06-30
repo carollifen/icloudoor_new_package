@@ -469,7 +469,6 @@ public class Login extends Activity implements TextWatcher {
 		pd.show();
 
 		final long start = System.currentTimeMillis();
-		// µ÷ÓÃsdkµÇÂ½·½·¨µÇÂ½ÁÄÌì·þÎñÆ÷
 		EMChatManager.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
 
 			@Override
@@ -477,26 +476,21 @@ public class Login extends Activity implements TextWatcher {
 				if (!progressShow) {
 					return;
 				}
-				// µÇÂ½³É¹¦£¬±£´æÓÃ»§ÃûÃÜÂë
 				cloudApplication.getInstance().setUserName(currentUsername);
 				cloudApplication.getInstance().setPassword(currentPassword);
 
-				System.out.println("µÇÂ¼³É¹¦....");
 				Login.this.runOnUiThread(new Runnable() {
 					public void run() {
 						pd.setMessage(getString(R.string.list_is_for));
 					}
 				});
 				try {
-					// ** µÚÒ»´ÎµÇÂ¼»òÕßÖ®Ç°logoutºóÔÙµÇÂ¼£¬¼ÓÔØËùÓÐ±¾µØÈººÍ»Ø»°
 					// ** manually load all local groups and
 				    EMGroupManager.getInstance().loadAllGroups();
 					EMChatManager.getInstance().loadAllConversations();
-					// ´¦ÀíºÃÓÑºÍÈº×é
 //					processContactsAndGroups();
 				} catch (Exception e) {
 					e.printStackTrace();
-					// È¡ºÃÓÑ»òÕßÈºÁÄÊ§°Ü£¬²»ÈÃ½øÈëÖ÷Ò³Ãæ
 					Login.this.runOnUiThread(new Runnable() {
 						public void run() {
 							pd.dismiss();
@@ -506,7 +500,6 @@ public class Login extends Activity implements TextWatcher {
 					});
 					return;
 				}
-				// ¸üÐÂµ±Ç°ÓÃ»§µÄnickname ´Ë·½·¨µÄ×÷ÓÃÊÇÔÚiosÀëÏßÍÆËÍÊ±ÄÜ¹»ÏÔÊ¾ÓÃ»§nick
 				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
 						cloudApplication.currentUserNick.trim());
 				if (!updatenick) {
@@ -514,7 +507,6 @@ public class Login extends Activity implements TextWatcher {
 				}
 				if (!Login.this.isFinishing())
 					pd.dismiss();
-				// ½øÈëÖ÷Ò³Ãæ
 				finish();
 				startActivity(new Intent(Login.this, CloudDoorMainActivity.class));
 			}
@@ -525,7 +517,6 @@ public class Login extends Activity implements TextWatcher {
 
 			@Override
 			public void onError(final int code, final String message) {
-				System.out.println("µÇÂ¼Ê§°Ü....");
 				if (!progressShow) {
 					return;
 				}

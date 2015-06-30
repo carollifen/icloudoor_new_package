@@ -42,11 +42,6 @@ public class UserDao {
 		dbHelper = DbOpenHelper.getInstance(context);
 	}
 
-	/**
-	 * 保存好友list
-	 * 
-	 * @param contactList
-	 */
 	public void saveContactList(List<User> contactList) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		if (db.isOpen()) {
@@ -63,11 +58,6 @@ public class UserDao {
 		}
 	}
 
-	/**
-	 * 获取好友list
-	 * 
-	 * @return
-	 */
 	public Map<String, User> getContactList() {
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Map<String, User> users = new HashMap<String, User>();
@@ -108,10 +98,6 @@ public class UserDao {
 		return users;
 	}
 	
-	/**
-	 * 删除�?个联系人
-	 * @param username
-	 */
 	public void deleteContact(String username){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		if(db.isOpen()){
@@ -119,10 +105,6 @@ public class UserDao {
 		}
 	}
 	
-	/**
-	 * 保存�?个联系人
-	 * @param user
-	 */
 	public void saveContact(User user){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();

@@ -26,14 +26,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.EMCallBack;
+import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
+import com.easemob.chat.EMMessage;
+import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.EMConversation.EMConversationType;
 import com.icloudoor.cloudoor.SlideView.OnSlideListener;
 import com.icloudoor.cloudoor.chat.ChatAllHistoryAdapter;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.activity.ContactActivity;
 import com.icloudoor.cloudoor.chat.activity.MipcaActivityCapture;
+import com.icloudoor.cloudoor.chat.activity.RequestFriendActivity;
 import com.icloudoor.cloudoor.chat.activity.RoomListActivity;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.umeng.analytics.MobclickAgent;
@@ -260,17 +265,7 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
         }
     }	
 	
-//	@Override
-//	public void onSlide(View view, int status) {
-//		if (mLastSlideViewWithStatusOn != null && mLastSlideViewWithStatusOn != view) {
-//            mLastSlideViewWithStatusOn.shrink();
-//        }
-//
-//        if (status == SLIDE_STATUS_ON) {
-//            mLastSlideViewWithStatusOn = (SlideView) view;
-//        }
-//		
-//	}
+
 
 	@Override
 	public void onClick(View v) {
@@ -279,8 +274,7 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 			Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.group_layout:
-			Intent intent = new Intent(getActivity(),RoomListActivity.class);
-			startActivity(intent);
+			
 			break;
 		
 		case R.id.add_friends:

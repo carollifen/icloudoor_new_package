@@ -42,10 +42,6 @@ import com.easemob.util.DateUtils;
 import com.easemob.util.EMLog;
 import com.icloudoor.cloudoor.R;
 
-/**
- * 显示所有聊天记录adpater
- * 
- */
 public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 
 	private static final String TAG = "ChatAllHistoryAdapter";
@@ -86,12 +82,9 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 			holder.list_item_layout.setBackgroundResource(R.drawable.mm_listitem_grey);
 		}
 
-		// 获取与此用户/群组的会话
 		EMConversation conversation = getItem(position);
-		// 获取用户username或者群组groupid
 		String username = conversation.getUserName();
 		if (conversation.getType() == EMConversationType.GroupChat) {
-			// 群聊消息，显示群聊头像
 //			holder.avatar.setImageResource(R.drawable.group_icon);
 			EMGroup group = EMGroupManager.getInstance().getGroup(username);
 			holder.name.setText(group != null ? group.getGroupName() : username);
@@ -102,16 +95,15 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		}else {
 		    UserUtils.setUserAvatar(getContext(), username, holder.avatar);
 			if (username.equals(Constant.GROUP_USERNAME)) {
-				holder.name.setText("群聊");
+				holder.name.setText("群锟斤拷");
 
 			} else if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
-				holder.name.setText("申请与通知");
+				holder.name.setText("锟斤拷锟斤拷锟斤拷通知");
 			}
 			holder.name.setText(username);
 		}
 
 		if (conversation.getUnreadMsgCount() > 0) {
-			// 显示与此用户的消息未读数
 			holder.unreadLabel.setText(String.valueOf(conversation.getUnreadMsgCount()));
 			holder.unreadLabel.setVisibility(View.VISIBLE);
 		} else {
@@ -119,7 +111,6 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		}
 
 		if (conversation.getMsgCount() != 0) {
-			// 把最后一条消息的内容作为item的message内容
 			EMMessage lastMessage = conversation.getLastMessage();
 			holder.message.setText(SmileUtils.getSmiledText(getContext(), getMessageDigest(lastMessage, (this.getContext()))),
 					BufferType.SPANNABLE);
@@ -140,41 +131,29 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		
 	}
 
-	/**
-	 * 根据消息内容和消息类型获取消息内容提示
-	 * 
-	 * @param message
-	 * @param context
-	 * @return
-	 */
 	private String getMessageDigest(EMMessage message, Context context) {
 		String digest = "";
 		switch (message.getType()) {
-		case LOCATION: // 位置消息
+		case LOCATION: // 位锟斤拷锟斤拷息
 			if (message.direct == EMMessage.Direct.RECEIVE) {
-				// 从sdk中提到了ui中，使用更简单不犯错的获取string的方法
-				// digest = EasyUtils.getAppResourceString(context,
-				// "location_recv");
 				digest = getStrng(context, R.string.location_recv);
 				digest = String.format(digest, message.getFrom());
 				return digest;
 			} else {
-				// digest = EasyUtils.getAppResourceString(context,
-				// "location_prefix");
 				digest = getStrng(context, R.string.location_prefix);
 			}
 			break;
-		case IMAGE: // 图片消息
+		case IMAGE: // 图片锟斤拷息
 			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
 			digest = getStrng(context, R.string.picture) + imageBody.getFileName();
 			break;
-		case VOICE:// 语音消息
+		case VOICE:// 锟斤拷锟斤拷锟斤拷息
 			digest = getStrng(context, R.string.voice);
 			break;
-		case VIDEO: // 视频消息
+		case VIDEO: // 锟斤拷频锟斤拷息
 			digest = getStrng(context, R.string.video);
 			break;
-		case TXT: // 文本消息
+		case TXT: // 锟侥憋拷锟斤拷息
 			if(!message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL,false)){
 				TextMessageBody txtBody = (TextMessageBody) message.getBody();
 				digest = txtBody.getMessage();
@@ -183,7 +162,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 				digest = getStrng(context, R.string.voice_call) + txtBody.getMessage();
 			}
 			break;
-		case FILE: // 普通文件消息
+		case FILE: // 锟斤拷通锟侥硷拷锟斤拷息
 			digest = getStrng(context, R.string.file);
 			break;
 		default:
@@ -195,19 +174,12 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 	}
 
 	private static class ViewHolder {
-		/** 和谁的聊天记录 */
 		TextView name;
-		/** 消息未读数 */
 		TextView unreadLabel;
-		/** 最后一条消息的内容 */
 		TextView message;
-		/** 最后一条消息的时间 */
 		TextView time;
-		/** 用户头像 */
 		ImageView avatar;
-		/** 最后一条消息的发送状态 */
 		View msgState;
-		/** 整个list中每一行总布局 */
 		RelativeLayout list_item_layout;
 
 	}

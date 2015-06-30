@@ -338,7 +338,6 @@ public class KeyFragment extends Fragment {
 		sid = loadSid();
 		
 		newNum = 0;
-		
 		checkForNewKey();		
 		
 		requestWeatherData();

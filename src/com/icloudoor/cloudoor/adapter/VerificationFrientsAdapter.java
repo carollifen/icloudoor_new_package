@@ -24,6 +24,7 @@ import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
+import com.icloudoor.cloudoor.utli.VFDaoImpl;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class VerificationFrientsAdapter extends BaseAdapter{
@@ -78,13 +79,9 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 		final VerificationFrientsList frientsList = data.get(position);
 		ImageLoader.getInstance().displayImage(frientsList.getPortraitUrl(), holder.user_head, DisplayImageOptionsUtli.options);
 		holder.user_name.setText(frientsList.getNickname());
-		if(TextUtils.isEmpty(frientsList.getComment())){
-			holder.user_content.setText("");
-		}else{
-			holder.user_content.setText(frientsList.getComment());
-		}
+		
 		String state = frientsList.getStatus();
-		if(state.equals("1")){
+		if(state.equals("0")){
 			holder.state_tv.setVisibility(View.GONE);
 			holder.state_bnt.setOnClickListener(new OnClickListener() {
 				
@@ -98,13 +95,15 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 						@Override
 						public void onSuccess(JSONObject response) {
 							// TODO Auto-generated method stub
-//							06-25 14:33:06.802: I/System.out(6157): ºÃÓÑresponse = {"message":"successful","sid":"9dc7458797ac4259b6855e355ba71d78","code":1}
 							int code;
 							try {
 								code = response.getInt("code");
 								if(code==1){
 									activity.showToast(R.string.addfridendSuccess);
+									VFDaoImpl daoImpl = new VFDaoImpl(context);
+									daoImpl.execSql("update verificationFrients set status=? where invitationId=?", new String[]{"1",frientsList.getInvitationId()});
 									activity.finish();
+									
 								}
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block

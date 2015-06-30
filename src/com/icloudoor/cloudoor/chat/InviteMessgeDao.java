@@ -23,6 +23,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.icloudoor.cloudoor.chat.InviteMessage.InviteMesageStatus;
 
+
 public class InviteMessgeDao {
 	public static final String TABLE_NAME = "new_friends_msgs";
 	public static final String COLUMN_NAME_ID = "id";

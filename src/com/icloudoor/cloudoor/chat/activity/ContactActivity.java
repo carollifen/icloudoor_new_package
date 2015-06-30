@@ -40,7 +40,6 @@ import com.icloudoor.cloudoor.widget.SideBar.OnTouchingLetterChangedListener;
 public class ContactActivity extends BaseActivity implements OnClickListener,
 		NetworkInterface {
 
-	private RequestQueue mQueue;
 
 	private ListView sortListView;
 	private SideBar sideBar;
@@ -48,7 +47,6 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	private TextView sweep_tx;
 	private MyFriendsAdapter adapter;
 	private CharacterParser characterParser;
-	private PinyinComparator pinyinComparator;
 	LayoutInflater inflater;
 	private ImageView btn_back;
 
@@ -75,14 +73,20 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		sortListView.setAdapter(adapter);
 		characterParser = new CharacterParser();
 		setListener();
-		mQueue = Volley.newRequestQueue(this);
 		sortListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
+				MyFriendsEn friendsEn = (MyFriendsEn) adapter.getItem(position-1);
 				Intent intent = new Intent(ContactActivity.this, FriendDetailActivity.class);
+				intent.putExtra("CityId", friendsEn.getCityId());
+				intent.putExtra("DistrictId", friendsEn.getDistrictId());
+				intent.putExtra("ProvinceId", friendsEn.getProvinceId());
+				intent.putExtra("Sex", friendsEn.getSex());
+				intent.putExtra("Nickname", friendsEn.getNickname());
+				intent.putExtra("PortraitUrl", friendsEn.getPortraitUrl());
+				intent.putExtra("UserId", friendsEn.getUserId());
 				startActivity(intent);
 				
 			}
@@ -106,36 +110,14 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	}
 	
 
-	public void getMyFriends() { 
-
-		String url = UrlUtils.HOST + "/user/im/listFriends.do" + "?sid="
-				+ loadSid();
-
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
-				url, null, new Response.Listener<JSONObject>() {
-
-					@Override
-					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
-					}
-				});
-		mQueue.add(mJsonRequest);
-	}
 
 	private List<MyFriendsEn> filledData(List<MyFriendsEn> data) {
 		List<MyFriendsEn> mSortList = new ArrayList<MyFriendsEn>();
 
 		for (int i = 0; i < data.size(); i++) {
 			MyFriendsEn sortModel = data.get(i);
-			// 汉字转换成拼音
 			String pinyin = characterParser.getSelling(data.get(i).getNickname());
 			String sortString = pinyin.substring(0, 1).toUpperCase();
-			// 正则表达式，判断首字母是否是英文字母
 			if (sortString.matches("[A-Z]")) {
 				sortModel.setSortLetters(sortString.toUpperCase());
 			} else {
@@ -176,6 +158,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		MyFriendInfo friendInfo = GsonUtli.jsonToObject(response.toString(),
 				MyFriendInfo.class);
 		if (friendInfo != null) {
+			
 			List<MyFriendsEn> data = friendInfo.getData();
 			System.out.println(data.size()+" = ***");
 			adapter.updateListView(filledData(data));

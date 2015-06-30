@@ -54,9 +54,6 @@ public class CameraHelper implements PreviewCallback {
         this.localSurfaceHolder = localSurfaceHolder;
     }
 
-    /**
-     * �?启相机拍�?
-     */
     public void startCapture(){
         try {
             if (mCamera == null) {
@@ -114,7 +111,6 @@ public class CameraHelper implements PreviewCallback {
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
         if (start_flag == true) {
-            // 根据屏幕方向写入及传输数�?
             if (isScreenOriatationPortrait()) {
                 YUV420spRotate90(yuv_Rotate90, yuv_frame, mwidth, mheight);
                 YUV42left2right(yuv_Rotate90lr, yuv_Rotate90, mheight, mwidth);
@@ -127,9 +123,6 @@ public class CameraHelper implements PreviewCallback {
         camera.addCallbackBuffer(yuv_frame);
     }
 
-    /**
-     * 停止拍摄
-     */
     public void stopCapture() {
         start_flag = false;
         if (mCamera != null) {
@@ -140,20 +133,10 @@ public class CameraHelper implements PreviewCallback {
         }
     }
 
-    /**
-     * 获取是否已开启视频数据传�?
-     * 
-     * @return
-     */
     public boolean isStarted() {
         return start_flag;
     }
 
-    /**
-     * 设置是否传输视频数据
-     * 
-     * @param start
-     */
     public void setStartFlag(boolean start) {
         this.start_flag = start;
     }
@@ -203,7 +186,6 @@ public class CameraHelper implements PreviewCallback {
             uvHeight = srcHeight >> 1;// uvHeight = height / 2
         }
 
-        // 转换Y
         int k = 0;
         int nPos = 0;
         for (int i = 0; i < srcHeight; i++) {

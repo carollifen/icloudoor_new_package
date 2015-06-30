@@ -101,8 +101,7 @@ public class VoicePlayClickListener implements View.OnClickListener {
 			audioManager.setSpeakerphoneOn(true);
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
 		} else {
-			audioManager.setSpeakerphoneOn(false);// 关闭扬声�?
-			// 把声音设定成Earpiece（听筒）出来，设定为正在通话�?
+			audioManager.setSpeakerphoneOn(false);// 关闭扬声器
 			audioManager.setMode(AudioManager.MODE_IN_CALL);
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
 		}
@@ -125,7 +124,6 @@ public class VoicePlayClickListener implements View.OnClickListener {
 			mediaPlayer.start();
 			showAnimation();
 
-			// 如果是接收的消息
 			if (message.direct == EMMessage.Direct.RECEIVE) {
 				try {
 					if (!message.isAcked) {

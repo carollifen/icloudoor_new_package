@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,10 +38,15 @@ import com.easemob.chat.EMChatOptions;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
+import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
+import com.icloudoor.cloudoor.CloudDoorMainActivity;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
+import com.icloudoor.cloudoor.chat.activity.ChatActivity;
+import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
+import com.icloudoor.cloudoor.utli.VFDaoImpl;
 
 /**
  * Demo UI HX SDK helper class which subclass HXSDKHelper
@@ -134,36 +142,60 @@ public class DemoHXSDKHelper extends HXSDKHelper{
                 case EventNewCMDMessage:
                 {
                     
-                    EMLog.d(TAG, "收到透传消息");
-                    //获取消息body
-                    CmdMessageBody cmdMsgBody = (CmdMessageBody) message.getBody();
-                    final String action = cmdMsgBody.action;//获取自定义action
+//                    CmdMessageBody cmdMsgBody = (CmdMessageBody) message.getBody();
+                    try {
+                    	JSONObject vfoj = message.getJSONObjectAttribute("data");
+						VFDaoImpl daoImpl = new VFDaoImpl(appContext);
+						
+						List<VerificationFrientsList> vfData = daoImpl.find
+								(null, "invitationId = ?", new String[]{vfoj.getString("invitationId")}, 
+								null, null, null, null);
+						if(vfData==null || vfData.size()==0){
+							VerificationFrientsList vf = new VerificationFrientsList();
+							vf.setPortraitUrl(vfoj.getString("portraitUrl"));
+							vf.setComment(vfoj.getString("comment"));
+							vf.setNickname(vfoj.getString("nickname"));
+							vf.setUserId(vfoj.getString("userId"));
+							vf.setInvitationId(vfoj.getString("invitationId"));
+							vf.setStatus("0");
+							daoImpl.insert(vf);
+						}
+						
+						
+					} catch (EaseMobException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                     
-                    //获取扩展属�?? 此处省略
+//                    daoImpl.insert(entity);
+                    
                     //message.getStringAttribute("");
-                    EMLog.d(TAG, String.format("透传消息：action:%s,message:%s", action,message.toString()));
-                    final String str = appContext.getString(R.string.receive_the_passthrough);
-                    
-                    final String CMD_TOAST_BROADCAST = "easemob.demo.cmd.toast";
-                    IntentFilter cmdFilter = new IntentFilter(CMD_TOAST_BROADCAST);
-                    
-                    if(broadCastReceiver == null){
-                        broadCastReceiver = new BroadcastReceiver(){
-
-                            @Override
-                            public void onReceive(Context context, Intent intent) {
-                                // TODO Auto-generated method stub
-                                Toast.makeText(appContext, intent.getStringExtra("cmd_value"), Toast.LENGTH_SHORT).show();
-                            }
-                        };
-                        
-                      //注册通话广播接收�?
-                        appContext.registerReceiver(broadCastReceiver,cmdFilter);
-                    }
-
-                    Intent broadcastIntent = new Intent(CMD_TOAST_BROADCAST);
-                    broadcastIntent.putExtra("cmd_value", str+action);
-                    appContext.sendBroadcast(broadcastIntent, null);
+//                    EMLog.d(TAG, String.format("透传消息：action:%s,message:%s", action,message.toString()));
+//                    final String str = appContext.getString(R.string.receive_the_passthrough);
+//                    
+//                    final String CMD_TOAST_BROADCAST = "easemob.demo.cmd.toast";
+//                    IntentFilter cmdFilter = new IntentFilter(CMD_TOAST_BROADCAST);
+//                    
+//                    if(broadCastReceiver == null){
+//                        broadCastReceiver = new BroadcastReceiver(){
+//
+//                            @Override
+//                            public void onReceive(Context context, Intent intent) {
+//                                // TODO Auto-generated method stub
+//                                Toast.makeText(appContext, intent.getStringExtra("cmd_value"), Toast.LENGTH_SHORT).show();
+//                            }
+//                        };
+//                        
+//                      //注册通话广播接收�?
+//                        appContext.registerReceiver(broadCastReceiver,cmdFilter);
+//                    }
+//
+//                    Intent broadcastIntent = new Intent(CMD_TOAST_BROADCAST);
+//                    broadcastIntent.putExtra("cmd_value", str+action);
+//                    appContext.sendBroadcast(broadcastIntent, null);
                     
                     break;
                 }
@@ -182,6 +214,11 @@ public class DemoHXSDKHelper extends HXSDKHelper{
         };
         
         EMChatManager.getInstance().registerEventListener(eventListener);
+        
+        
+        
+        
+        
         
         EMChatManager.getInstance().addChatRoomChangeListener(new EMChatRoomChangeListener(){
             private final static String ROOM_CHANGE_BROADCAST = "easemob.demo.chatroom.changeevent.toast";
@@ -248,7 +285,7 @@ public class DemoHXSDKHelper extends HXSDKHelper{
     protected HXNotificationInfoProvider getNotificationListener() {
         //可以覆盖默认的设�?
         return new HXNotificationInfoProvider() {
-            
+          
             @Override
             public String getTitle(EMMessage message) {
               //修改标题,这里使用默认
@@ -281,19 +318,18 @@ public class DemoHXSDKHelper extends HXSDKHelper{
             @Override
             public Intent getLaunchIntent(EMMessage message) {
                 //设置点击通知栏跳转事�?
-                Intent intent = new Intent();
-//                = new Intent(appContext, ChatActivity.class);
+                Intent intent = new Intent(appContext, ChatActivity.class);
                 ChatType chatType = message.getChatType();
                 if (chatType == ChatType.Chat) { // 单聊信息
-//                    intent.putExtra("userId", message.getFrom());
-//                    intent.putExtra("chatType", ChatActivity.CHATTYPE_SINGLE);
+                    intent.putExtra("userId", message.getFrom());
+                    intent.putExtra("chatType", ChatActivity.CHATTYPE_SINGLE);
                 } else { // 群聊信息
                     // message.getTo()为群聊id
-//                    intent.putExtra("groupId", message.getTo());
+                    intent.putExtra("groupId", message.getTo());
                     if(chatType == ChatType.GroupChat){
-//                        intent.putExtra("chatType", ChatActivity.CHATTYPE_GROUP);
+                        intent.putExtra("chatType", ChatActivity.CHATTYPE_GROUP);
                     }else{
-//                        intent.putExtra("chatType", ChatActivity.CHATTYPE_CHATROOM);
+                        intent.putExtra("chatType", ChatActivity.CHATTYPE_CHATROOM);
                     }
                     
                 }
@@ -306,18 +342,18 @@ public class DemoHXSDKHelper extends HXSDKHelper{
     
     @Override
     protected void onConnectionConflict(){
-//        Intent intent = new Intent(appContext, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.putExtra("conflict", true);
-//        appContext.startActivity(intent);
+        Intent intent = new Intent(appContext, CloudDoorMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("conflict", true);
+        appContext.startActivity(intent);
     }
     
     @Override
     protected void onCurrentAccountRemoved(){
-//    	Intent intent = new Intent(appContext, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.putExtra(Constant.ACCOUNT_REMOVED, true);
-//        appContext.startActivity(intent);
+    	Intent intent = new Intent(appContext, CloudDoorMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Constant.ACCOUNT_REMOVED, true);
+        appContext.startActivity(intent);
     }
     
 
