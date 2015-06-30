@@ -139,9 +139,9 @@ public class KeyFragment extends Fragment {
 	private String D1, D2, D3;
 	private TextView date;
 
-	private LocationManager locationManager;
-	private double longitude = 0.0;
-	private double latitude = 0.0;
+//	private LocationManager locationManager;
+//	private double longitude = 0.0;
+//	private double latitude = 0.0;
 	
 	public final Calendar c =  Calendar.getInstance();
 	
@@ -332,7 +332,12 @@ public class KeyFragment extends Fragment {
 		contentJi.setSelected(true);
 		
 		keyRedDot = (ImageView) view.findViewById(R.id.key_red_dot);
-		keyRedDot.setVisibility(View.INVISIBLE); 
+		SharedPreferences saveNewKeyState = getActivity().getSharedPreferences("SAVESIGN", Context.MODE_PRIVATE);
+		if (saveNewKeyState.getString("newKeyState", "false").equals("true")) {
+			keyRedDot.setVisibility(View.VISIBLE);
+		} else {
+			keyRedDot.setVisibility(View.INVISIBLE);
+		}
 		
 		mQueue = Volley.newRequestQueue(getActivity());
 		sid = loadSid();
@@ -508,6 +513,13 @@ public class KeyFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				keyRedDot.setVisibility(View.INVISIBLE); 
+				SharedPreferences saveNewKeyState = getActivity().getSharedPreferences("SAVESIGN",
+						Context.MODE_PRIVATE);
+				if (saveNewKeyState.getString("newKeyState", "false").equals("true")) {
+					Editor editor = saveNewKeyState.edit();
+					editor.putString("newKeyState", "false");
+					editor.commit();
+				}
 
 				Intent intent = new Intent();
 				intent.setClass(getActivity(), KeyList.class);
@@ -1041,6 +1053,12 @@ public class KeyFragment extends Fragment {
 		// for cars table -- END
 			
 		if (newNum > 0) {
+			SharedPreferences saveNewKeyState = getActivity().getSharedPreferences("SAVESIGN",
+					Context.MODE_PRIVATE);
+			Editor editor = saveNewKeyState.edit();
+			editor.putString("newKeyState", "true");
+			editor.commit();
+			
 			if(getActivity() != null){
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
@@ -1139,36 +1157,36 @@ public class KeyFragment extends Fragment {
 //		}
 //	}
 
-	LocationListener locationListener = new LocationListener() {
-		
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-
-		
-		@Override
-		public void onProviderEnabled(String provider) {
-			
-		}
-
-		
-		@Override
-		public void onProviderDisabled(String provider) {
-			
-		}
-
-		
-		@Override
-		public void onLocationChanged(Location location) {
-			if (location != null) {
-				Log.e("Map",
-						"Location changed : Lat: " + location.getLatitude()
-								+ " Lng: " + location.getLongitude());
-				latitude = location.getLatitude(); 
-				longitude = location.getLongitude(); 
-			}
-		}
-	};
+//	LocationListener locationListener = new LocationListener() {
+//		
+//		@Override
+//		public void onStatusChanged(String provider, int status, Bundle extras) {
+//		}
+//
+//		
+//		@Override
+//		public void onProviderEnabled(String provider) {
+//			
+//		}
+//
+//		
+//		@Override
+//		public void onProviderDisabled(String provider) {
+//			
+//		}
+//
+//		
+//		@Override
+//		public void onLocationChanged(Location location) {
+//			if (location != null) {
+//				Log.e("Map",
+//						"Location changed : Lat: " + location.getLatitude()
+//								+ " Lng: " + location.getLongitude());
+//				latitude = location.getLatitude(); 
+//				longitude = location.getLongitude(); 
+//			}
+//		}
+//	};
 
 	public boolean isBigMonth(int m) {
 		if(m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) 

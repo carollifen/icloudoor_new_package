@@ -207,8 +207,17 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		// remove tags before add
 		new Thread(){
 			public void run(){
+				String device_token;
 				try {
 					mPushAgent.getTagManager().reset();
+					for (int i=0; i<5; i++) {
+						device_token = UmengRegistrar.getRegistrationId(getApplicationContext());
+						if (device_token != null) {
+							Log.e("devicetoken", device_token);
+							break;
+						}
+						sleep(3000);
+					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -217,15 +226,15 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		}.start();
 		
 		mFinishActivityBroadcast=	new Broadcast();
-		 IntentFilter intentFilter = new IntentFilter();
-		    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 		  
-		    registerReceiver(mFinishActivityBroadcast, intentFilter);
+		registerReceiver(mFinishActivityBroadcast, intentFilter);
 		
-		String device_token = UmengRegistrar
-				.getRegistrationId(getApplicationContext());
-		Log.e("devicetoken", device_token);
+//		String device_token = UmengRegistrar.getRegistrationId(getApplicationContext());
+//		Log.e("devicetoken", device_token);		
 		// mPushAgent.setDebugMode(true);
+		
 		mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 		sid = loadSid();
 		JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url
