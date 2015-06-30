@@ -3037,16 +3037,20 @@ public class KeyFragment extends Fragment {
     }
 	
 	public void saveLastRequestTime(long time) {
-		SharedPreferences savedTime = getActivity().getSharedPreferences("SAVEDTIME",
-				0);
-		Editor editor = savedTime.edit();
-		editor.putLong("TIME", time);
-		editor.commit();
+		if (getActivity() != null) {
+			SharedPreferences savedTime = getActivity().getSharedPreferences("SAVEDTIME", 0);
+			Editor editor = savedTime.edit();
+			editor.putLong("TIME", time);
+			editor.commit();
+		}
 	}
 
 	public long loadLastRequestTime() {
-		SharedPreferences loadTime = getActivity().getSharedPreferences("SAVEDTIME", 0);
-		return loadTime.getLong("TIME", 0);
+		if (getActivity() != null) {
+			SharedPreferences loadTime = getActivity().getSharedPreferences("SAVEDTIME", 0);
+			return loadTime.getLong("TIME", 0);
+		}
+		return 0;
 	}
 	
 	public void saveSid(String sid) {
@@ -3059,8 +3063,11 @@ public class KeyFragment extends Fragment {
 	}
 
 	public String loadSid() {
-		SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
-		return loadSid.getString("SID", null);
+		if (getActivity() != null) {
+			SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+			return loadSid.getString("SID", null);
+		}
+		return null;
 	}
 	
 	public void saveUUID(String uuid){	
@@ -3073,8 +3080,11 @@ public class KeyFragment extends Fragment {
 	}
 	
 	public String loadUUID(){
-		SharedPreferences loadUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
-		return loadUUID.getString("UUID", null);
+		if(getActivity() != null) {
+			SharedPreferences loadUUID = getActivity().getSharedPreferences("SAVEDUUID", 0);
+			return loadUUID.getString("UUID", null);
+		}
+		return null;
 	}
 	
 	public void toastShow(String arg) {

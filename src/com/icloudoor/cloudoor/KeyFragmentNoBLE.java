@@ -539,7 +539,8 @@ public class KeyFragmentNoBLE extends Fragment {
 						try {
 							if (response.getString("sid") != null) {
 								sid = response.getString("sid");
-								saveSid(sid);
+
+									saveSid(sid);
 							}
 							lhlCode = response.getInt("code");
 							
@@ -617,32 +618,34 @@ public class KeyFragmentNoBLE extends Fragment {
 								JSONObject tomorrow= (JSONObject)future.get(0);	
 								JSONObject tomorrow2= (JSONObject)future.get(1);
 								
-								SharedPreferences savedWeather = getActivity().getSharedPreferences("SAVEDWEATHER",
-										0);
-								Editor editor = savedWeather.edit();
-								editor.putString("City", data.getString("city_name"));
-								editor.putString("Day1Temp", now.getString("temperature"));
-								editor.putString("Day1Weather", now.getString("text"));
-								editor.putString("Day1IconIndex", now.getString("code"));
+								if(getActivity() != null){
+									SharedPreferences savedWeather = getActivity().getSharedPreferences("SAVEDWEATHER", 0);
+									Editor editor = savedWeather.edit();
+									editor.putString("City", data.getString("city_name"));
+									editor.putString("Day1Temp", now.getString("temperature"));
+									editor.putString("Day1Weather", now.getString("text"));
+									editor.putString("Day1IconIndex", now.getString("code"));
 								
-								editor.putString("Day2TempLow", tomorrow.getString("low"));
-								editor.putString("Day2TempHigh", tomorrow.getString("high"));
-								editor.putString("Day2Weather", tomorrow.getString("text"));
-								editor.putString("Day2IconIndexDay", tomorrow.getString("code1"));
-								editor.putString("Day2IconIndexNight", tomorrow.getString("code2"));
+									editor.putString("Day2TempLow", tomorrow.getString("low"));
+									editor.putString("Day2TempHigh", tomorrow.getString("high"));
+									editor.putString("Day2Weather", tomorrow.getString("text"));
+									editor.putString("Day2IconIndexDay", tomorrow.getString("code1"));
+									editor.putString("Day2IconIndexNight", tomorrow.getString("code2"));
 								
-								editor.putString("Day3TempLow", tomorrow2.getString("low"));
-								editor.putString("Day3TempHigh", tomorrow2.getString("high"));
-								editor.putString("Day3Weather", tomorrow2.getString("text"));
-								editor.putString("Day3IconIndexDay", tomorrow2.getString("code1"));
-								editor.putString("Day3IconIndexNight", tomorrow2.getString("code2"));
+									editor.putString("Day3TempLow", tomorrow2.getString("low"));
+									editor.putString("Day3TempHigh", tomorrow2.getString("high"));
+									editor.putString("Day3Weather", tomorrow2.getString("text"));
+									editor.putString("Day3IconIndexDay", tomorrow2.getString("code1"));
+									editor.putString("Day3IconIndexNight", tomorrow2.getString("code2"));
 								
-								editor.commit();
+									editor.commit();
 								
-								weatherTemp.setText(now.getString("temperature") + String.valueOf(centigrade));
-								weatherStatus.setText(now.getString("text"));
-								weatherTemp.setTextSize(19);
-								weatherStatus.setTextSize(13);
+									weatherTemp.setText(now.getString("temperature") + String.valueOf(centigrade));
+									weatherStatus.setText(now.getString("text"));
+									weatherTemp.setTextSize(19);
+									weatherStatus.setTextSize(13);
+								}
+								
 							}else {
 								weatherTemp.setText(getString(R.string.weather_not_available));
 								weatherTemp.setTextSize(16);
@@ -655,10 +658,10 @@ public class KeyFragmentNoBLE extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						weatherTemp.setText(getString(R.string.weather_not_available));
-						weatherTemp.setTextSize(16);
 						
 						if(getActivity() != null)
+							weatherTemp.setText(getString(R.string.weather_not_available));
+							weatherTemp.setTextSize(16);
 							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
@@ -823,27 +826,36 @@ public class KeyFragmentNoBLE extends Fragment {
     }
 	
 	public void saveLastRequestTime(long time) {
-		SharedPreferences savedTime = getActivity().getSharedPreferences("SAVEDTIME",
-				0);
-		Editor editor = savedTime.edit();
-		editor.putLong("TIME", time);
-		editor.commit();
+		if(getActivity() != null) {
+			SharedPreferences savedTime = getActivity().getSharedPreferences("SAVEDTIME", 0);
+			Editor editor = savedTime.edit();
+			editor.putLong("TIME", time);
+			editor.commit();
+		}		
 	}
 
 	public long loadLastRequestTime() {
-		SharedPreferences loadTime = getActivity().getSharedPreferences("SAVEDTIME", 0);
-		return loadTime.getLong("TIME", 0);
+		if(getActivity() != null) {
+			SharedPreferences loadTime = getActivity().getSharedPreferences("SAVEDTIME", 0);
+			return loadTime.getLong("TIME", 0);
+		}
+		return 0;
 	}
 	
 	public void saveSid(String sid) {
-		SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
-		Editor editor = savedSid.edit();
-		editor.putString("SID", sid);
-		editor.commit();
+		if(getActivity() != null) {
+			SharedPreferences savedSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+			Editor editor = savedSid.edit();
+			editor.putString("SID", sid);
+			editor.commit();
+		}
 	}
 
 	public String loadSid() {
-		SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
-		return loadSid.getString("SID", null);
+		if(getActivity() != null) {
+			SharedPreferences loadSid = getActivity().getSharedPreferences("SAVEDSID", 0);
+			return loadSid.getString("SID", null);
+		}
+		return null;
 	}
 }
