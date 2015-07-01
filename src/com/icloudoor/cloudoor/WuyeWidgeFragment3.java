@@ -110,7 +110,6 @@ public class WuyeWidgeFragment3 extends Fragment {
 			bigLayout.setBackgroundColor(Color.parseColor(color));
 			
 		} else if ("2".equals(banner.getString("3type", "0"))) {
-
 			SharedPreferences tempurl = getActivity().getSharedPreferences("TEMPURL3", 0);
 			Editor editor = tempurl.edit();
 			String temp = tempurl.getString("URL", "");
@@ -140,7 +139,21 @@ public class WuyeWidgeFragment3 extends Fragment {
 						editor.putString("URL", portraitUrl);
 						editor.commit();
 					}
-				} 
+				} else {
+					portraitUrl = banner.getString("3url", null);
+
+					Log.e(TAG, "use net -- creat local");
+					
+					Log.e(TAG, portraitUrl);
+
+					if (mThread == null) {
+						mThread = new Thread(runnable);
+						mThread.start();
+					}
+
+					editor.putString("URL", portraitUrl);
+					editor.commit();
+				}
 			} else {
 				portraitUrl = banner.getString("3url", null);
 
