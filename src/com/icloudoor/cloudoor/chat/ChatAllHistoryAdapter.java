@@ -41,6 +41,11 @@ import com.easemob.chat.TextMessageBody;
 import com.easemob.util.DateUtils;
 import com.easemob.util.EMLog;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
+import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 
@@ -50,10 +55,13 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 	private List<EMConversation> copyConversationList;
 	private ConversationFilter conversationFilter;
     private boolean notiyfyByFilter;
-
+    Context context;
+    FriendDaoImpl daoImpl ;
 	public ChatAllHistoryAdapter(Context context, int textViewResourceId, List<EMConversation> objects) {
 		super(context, textViewResourceId, objects);
 		this.conversationList = objects;
+		this.context = context;
+		daoImpl = new FriendDaoImpl(context);
 		copyConversationList = new ArrayList<EMConversation>();
 		copyConversationList.addAll(objects);
 		inflater = LayoutInflater.from(context);
@@ -84,6 +92,10 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 
 		EMConversation conversation = getItem(position);
 		String username = conversation.getUserName();
+		
+		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{username}, null, null, null, null);
+		MyFriendsEn friendsEn  = list.get(0);
+		
 		if (conversation.getType() == EMConversationType.GroupChat) {
 //			holder.avatar.setImageResource(R.drawable.group_icon);
 			EMGroup group = EMGroupManager.getInstance().getGroup(username);
@@ -93,14 +105,15 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
             EMChatRoom room = EMChatManager.getInstance().getChatRoom(username);
             holder.name.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
 		}else {
-		    UserUtils.setUserAvatar(getContext(), username, holder.avatar);
+//		    UserUtils.setUserAvatar(getContext(), friendsEn.getPortraitUrl(), holder.avatar); 
 			if (username.equals(Constant.GROUP_USERNAME)) {
 				holder.name.setText("Ⱥ��");
 
 			} else if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
 				holder.name.setText("������֪ͨ");
 			}
-			holder.name.setText(username);
+			ImageLoader.getInstance().displayImage(friendsEn.getPortraitUrl(), holder.avatar, DisplayImageOptionsUtli.options);
+			holder.name.setText(friendsEn.getNickname());
 		}
 
 		if (conversation.getUnreadMsgCount() > 0) {
@@ -127,14 +140,21 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 	}
 	
 	public void setData(List<EMConversation> objects){
-		this.conversationList = objects;
+		List<EMConversation> haveFriendData = new ArrayList<EMConversation>();
+		for (int i = 0; i < objects.size(); i++) {
+			List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{objects.get(i).getUserName()}, null, null, null, null);
+			if(list!=null && list.size()>0){
+				haveFriendData.add(objects.get(i));
+			}
+		}
+		this.conversationList = haveFriendData;
 		
 	}
 
 	private String getMessageDigest(EMMessage message, Context context) {
 		String digest = "";
 		switch (message.getType()) {
-		case LOCATION: // λ����Ϣ
+		case LOCATION: 
 			if (message.direct == EMMessage.Direct.RECEIVE) {
 				digest = getStrng(context, R.string.location_recv);
 				digest = String.format(digest, message.getFrom());
@@ -143,17 +163,17 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 				digest = getStrng(context, R.string.location_prefix);
 			}
 			break;
-		case IMAGE: // ͼƬ��Ϣ
+		case IMAGE: 
 			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
 			digest = getStrng(context, R.string.picture) + imageBody.getFileName();
 			break;
-		case VOICE:// ������Ϣ
+		case VOICE:
 			digest = getStrng(context, R.string.voice);
 			break;
-		case VIDEO: // ��Ƶ��Ϣ
+		case VIDEO: 
 			digest = getStrng(context, R.string.video);
 			break;
-		case TXT: // �ı���Ϣ
+		case TXT: 
 			if(!message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL,false)){
 				TextMessageBody txtBody = (TextMessageBody) message.getBody();
 				digest = txtBody.getMessage();
@@ -162,7 +182,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 				digest = getStrng(context, R.string.voice_call) + txtBody.getMessage();
 			}
 			break;
-		case FILE: // ��ͨ�ļ���Ϣ
+		case FILE: 
 			digest = getStrng(context, R.string.file);
 			break;
 		default:

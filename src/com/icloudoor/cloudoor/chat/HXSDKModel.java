@@ -21,25 +21,21 @@ package com.icloudoor.cloudoor.chat;
 public abstract class HXSDKModel {
     public abstract void setSettingMsgNotification(boolean paramBoolean);
     
-    // 震动和声音�?�开关，来消息时，是否允许此�?关打�?
     // the vibrate and sound notification are allowed or not?
     public abstract boolean getSettingMsgNotification();
 
     public abstract void setSettingMsgSound(boolean paramBoolean);
     
-    // 是否打开声音
     // sound notification is switched on or not?
     public abstract boolean getSettingMsgSound();
 
     public abstract void setSettingMsgVibrate(boolean paramBoolean);
     
-    // 是否打开震动
     // vibrate notification is switched on or not?
     public abstract boolean getSettingMsgVibrate();
 
     public abstract void setSettingMsgSpeaker(boolean paramBoolean);
     
-    // 是否打开扬声�?
     // the speaker is switched on or not?
     public abstract boolean getSettingMsgSpeaker();
    
@@ -50,12 +46,10 @@ public abstract class HXSDKModel {
     public abstract String getPwd();
     
     /**
-     * 返回application�?在的process name,默认是包�?
      * @return
      */
     public abstract String getAppProcessName();
     /**
-     * 是否总是接收好友�?�?
      * @return
      */
     public boolean getAcceptInvitationAlways(){
@@ -63,7 +57,6 @@ public abstract class HXSDKModel {
     }
     
     /**
-     * 是否�?要环信好友关系，默认是false
      * @return
      */
     public boolean getUseHXRoster(){
@@ -71,7 +64,6 @@ public abstract class HXSDKModel {
     }
     
     /**
-     * 是否�?要已读回�?
      * @return
      */
     public boolean getRequireReadAck(){
@@ -79,7 +71,6 @@ public abstract class HXSDKModel {
     }
     
     /**
-     * 是否�?要已送达回执
      * @return
      */
     public boolean getRequireDeliveryAck(){
@@ -87,16 +78,12 @@ public abstract class HXSDKModel {
     }
     
     /**
-     * 是否运行在sandbox测试环境. 默认是关掉的
-     * 设置sandbox 测试环境
-     * 建议�?发�?�开发时设置此模�?
      */
     public boolean isSandboxMode(){
         return false;
     }
     
     /**
-     * 是否设置debug模式
      * @return
      */
     public boolean isDebugMode(){

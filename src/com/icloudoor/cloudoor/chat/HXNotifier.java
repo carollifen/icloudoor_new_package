@@ -259,7 +259,6 @@ public class HXNotifier {
         try {
             lastNotifiyTime = System.currentTimeMillis();
             
-            // 判断是否处于静音模式
             if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
                 EMLog.e(TAG, "in slient mode now");
                 return;
@@ -311,61 +310,18 @@ public class HXNotifier {
     }
 
 
-    /**
-     * 设置NotificationInfoProvider
-     * 
-     * @param provider
-     */
     public void setNotificationInfoProvider(HXNotificationInfoProvider provider) {
         notificationInfoProvider = provider;
     }
 
     public interface HXNotificationInfoProvider {
-        /**
-         * 设置发�?�notification时状态栏提示新消息的内容(比如Xxx发来了一条图片消�?)
-         * 
-         * @param message
-         *            接收到的消息
-         * @return null为使用默�?
-         */
         String getDisplayedText(EMMessage message);
-
-        /**
-         * 设置notification持续显示的新消息提示(比如2个联系人发来�?5条消�?)
-         * 
-         * @param message
-         *            接收到的消息
-         * @param fromUsersNum
-         *            发�?�人的数�?
-         * @param messageNum
-         *            消息数量
-         * @return null为使用默�?
-         */
         String getLatestText(EMMessage message, int fromUsersNum, int messageNum);
 
-        /**
-         * 设置notification标题
-         * 
-         * @param message
-         * @return null为使用默�?
-         */
         String getTitle(EMMessage message);
 
-        /**
-         * 设置小图�?
-         * 
-         * @param message
-         * @return 0使用默认图标
-         */
         int getSmallIcon(EMMessage message);
 
-        /**
-         * 设置notification点击时的跳转intent
-         * 
-         * @param message
-         *            显示在notification上最近的�?条消�?
-         * @return null为使用默�?
-         */
         Intent getLaunchIntent(EMMessage message);
     }
 }

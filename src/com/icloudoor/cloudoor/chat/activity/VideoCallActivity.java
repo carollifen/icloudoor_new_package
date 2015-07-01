@@ -42,7 +42,6 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMVideoCallHelper;
 import com.easemob.exceptions.EMServiceNotReadyException;
 import com.icloudoor.cloudoor.R;
-import com.icloudoor.cloudoor.chat.CameraHelper;
 
 public class VideoCallActivity extends CallActivity implements OnClickListener {
 

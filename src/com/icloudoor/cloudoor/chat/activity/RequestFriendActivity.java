@@ -78,8 +78,10 @@ public class RequestFriendActivity extends BaseActivity implements OnClickListen
 	public void onSuccess(JSONObject response) {
 		// TODO Auto-generated method stub
 		try {
-			Toast.makeText(this, response.getString("code"), Toast.LENGTH_LONG).show();
-			
+			if(response.getInt("code")==1){
+				Toast.makeText(this, R.string.friendquestsuccess, Toast.LENGTH_LONG).show();
+				finish();
+			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

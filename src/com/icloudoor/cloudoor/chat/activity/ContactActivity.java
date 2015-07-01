@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.BaseActivity;
+import com.icloudoor.cloudoor.CloudDoorMainActivity;
 import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
@@ -32,6 +33,7 @@ import com.icloudoor.cloudoor.adapter.MyFriendsAdapter;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.CharacterParser;
+import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.icloudoor.cloudoor.utli.PinyinComparator;
 import com.icloudoor.cloudoor.widget.SideBar;
@@ -91,7 +93,12 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 				
 			}
 		});
-		getNetworkData(this, "/user/im/getFriends.do", null);
+		
+		
+		FriendDaoImpl daoImpl = new FriendDaoImpl(this);
+		List<MyFriendsEn> data = daoImpl.find();
+		adapter.updateListView(filledData(data));
+//		getNetworkData(this, "/user/im/getFriends.do", null);
 	}
 
 	public void setListener() {
@@ -159,9 +166,6 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 				MyFriendInfo.class);
 		if (friendInfo != null) {
 			
-			List<MyFriendsEn> data = friendInfo.getData();
-			System.out.println(data.size()+" = ***");
-			adapter.updateListView(filledData(data));
 		} else {
 			showToast(R.string.jsonerror);
 		}

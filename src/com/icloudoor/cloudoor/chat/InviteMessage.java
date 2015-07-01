@@ -15,16 +15,11 @@ package com.icloudoor.cloudoor.chat;
 
 public class InviteMessage {
 	private String from;
-	//时间
 	private long time;
-	//添加理由
 	private String reason;
 	
-	//未验证，已同意等状�??
 	private InviteMesageStatus status;
-	//群id
 	private String groupId;
-	//群名�?
 	private String groupName;
 	
 
@@ -92,17 +87,11 @@ public class InviteMessage {
 
 
 	public enum InviteMesageStatus{
-		/**被邀�?*/
 		BEINVITEED,
-		/**被拒�?*/
 		BEREFUSED,
-		/**对方同意*/
 		BEAGREED,
-		/**对方申请*/
 		BEAPPLYED,
-		/**我同意了对方的请�?*/
 		AGREED,
-		/**我拒绝了对方的请�?*/
 		REFUSED
 		
 	}

@@ -26,20 +26,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.EMCallBack;
-import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
-import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.EMConversation.EMConversationType;
 import com.icloudoor.cloudoor.SlideView.OnSlideListener;
 import com.icloudoor.cloudoor.chat.ChatAllHistoryAdapter;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.activity.ContactActivity;
 import com.icloudoor.cloudoor.chat.activity.MipcaActivityCapture;
-import com.icloudoor.cloudoor.chat.activity.RequestFriendActivity;
-import com.icloudoor.cloudoor.chat.activity.RoomListActivity;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.umeng.analytics.MobclickAgent;
 

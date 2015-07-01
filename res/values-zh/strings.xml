@@ -52,7 +52,7 @@
     <string name="attach_picture">图片</string>
     <string name="attach_take_pic">拍照</string>
     <string name="attach_location">位置</string>
-    <string name="attach_file">文件</string>
+    <string name="attach_file">名片</string>
     <string name="attach_voice_call">语音电话</string>
     <string name="attach_video_call">视频通话</string>
     <string name="user_card">名片</string>
@@ -289,5 +289,6 @@
     <string name= "chatroom_allow_owner_leave"> 允许聊天室群主离开</string>
     <string name= "removeFriendSuccess">删除好友 成功</string>
     <string name= "removeFriendFail">删除好友 失败</string>
+    <string name= "auth_key">授权钥匙</string>
 
 </resources>

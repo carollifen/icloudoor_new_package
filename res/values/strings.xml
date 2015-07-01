@@ -273,5 +273,7 @@
     <string name="get_update_timeout">获取信息失败，请登录 http://fir.im/yunmen下载最新版本</string>
     <string name="update_only_in_wifi">没有wifi连接， 只在wifi下更新</string>
     <string name="modify_info_success">个人资料修改成功</string>
+    <string name="friendquestsuccess">好友申请发送成功</string>
+    <string name="notfriend">此人不是你好友，禁止骚扰</string>
 
 </resources>

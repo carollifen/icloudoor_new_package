@@ -88,14 +88,6 @@ public class MyFriendsAdapter extends BaseAdapter implements SectionIndexer{
 		}
 		viewHolder.friend_name.setText(mContent.getNickname());
 		ImageLoader.getInstance().displayImage(mContent.getPortraitUrl(), viewHolder.head_img, DisplayImageOptionsUtli.options);
-		viewHolder.friend_layout.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
 		return view;
 
 	}

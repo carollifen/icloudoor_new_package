@@ -30,16 +30,6 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
 
-/**
- * The developer can derive from this class to talk with HuanXin SDK
- * All the Huan Xin related initialization and global listener are implemented in this class which will 
- * help developer to speed up the SDK integration�?
- * this is a global instance class which can be obtained in any codes through getInstance()
- * 
- * 
- * @author easemob
- *
- */
 public abstract class HXSDKHelper {
     private static final String TAG = "HXSDKHelper";
     /**
@@ -86,24 +76,6 @@ public abstract class HXSDKHelper {
         me = this;
     }
     
-    /**
-     * this function will initialize the HuanXin SDK
-     * 
-     * @return boolean true if caller can continue to call HuanXin related APIs after calling onInit, otherwise false.
-     * 
-     * 环信初始化SDK帮助函数
-     * 返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代�?
-     * 
-     * for example:
-     * 例子�?
-     * 
-     * public class DemoHXSDKHelper extends HXSDKHelper
-     * 
-     * HXHelper = new DemoHXSDKHelper();
-     * if(HXHelper.onInit(context)){
-     *     // do HuanXin related work
-     * }
-     */
     public synchronized boolean onInit(Context context){
         if(sdkInited){
             return true;
@@ -124,21 +96,14 @@ public abstract class HXSDKHelper {
         
         Log.d(TAG, "process app name : " + processAppName);
         
-        // 如果app启用了远程的service，此application:onCreate会被调用2�?
-        // 为了防止环信SDK被初始化2次，加此判断会保证SDK被初始化1�?
-        // 默认的app会在以包名为默认的process name下运行，如果查到的process name不是app的process name就立即返�?
         if (processAppName == null || !processAppName.equalsIgnoreCase(hxModel.getAppProcessName())) {
             Log.e(TAG, "enter the service process!");
             
-            // 则此application::onCreate 是被service 调用的，直接返回
             return false;
         }
 
-        // 初始化环信SDK,�?定要先调用init()
         EMChat.getInstance().init(context);
         
-        // 设置sandbox测试环境
-        // 建议�?发�?�开发时设置此模�?
         if(hxModel.isSandboxMode()){
             EMChat.getInstance().setEnv(EMEnvMode.EMSandboxMode);
         }
@@ -209,17 +174,11 @@ public abstract class HXSDKHelper {
     protected void initHXOptions(){
         Log.d(TAG, "init HuanXin Options");
         
-        // 获取到EMChatOptions对象
         EMChatOptions options = EMChatManager.getInstance().getChatOptions();
-        // 默认添加好友时，是不�?要验证的，改成需要验�?
         options.setAcceptInvitationAlways(hxModel.getAcceptInvitationAlways());
-        // 默认环信是不维护好友关系列表的，如果app依赖环信的好友关系，把这个属性设置为true
         options.setUseRoster(hxModel.getUseHXRoster());
-        // 设置是否�?要已读回�?
         options.setRequireAck(hxModel.getRequireReadAck());
-        // 设置是否�?要已送达回执
         options.setRequireDeliveryAck(hxModel.getRequireDeliveryAck());
-        // 设置从db初始化加载时, 每个conversation�?要加载msg的个�?
         options.setNumberOfMessagesLoaded(1);
         
         notifier = createNotifier();
@@ -273,10 +232,6 @@ public abstract class HXSDKHelper {
         });
     }
     
-    /**
-     * �?查是否已经登录过
-     * @return
-     */
     public boolean isLogined(){
        return EMChat.getInstance().isLoggedIn();
     }
@@ -310,7 +265,6 @@ public abstract class HXSDKHelper {
             }
         };
         
-        //注册连接监听
         EMChatManager.getInstance().addConnectionListener(connectionListener);       
     }
 

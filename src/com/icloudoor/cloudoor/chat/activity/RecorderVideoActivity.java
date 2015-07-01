@@ -64,17 +64,16 @@ public class RecorderVideoActivity extends Activity implements
 	private static final String TAG = "RecorderVideoActivity";
 	private final static String CLASS_LABEL = "RecordActivity";
 	private PowerManager.WakeLock mWakeLock;
-	private ImageView btnStart;// �?始录制按�?
+	private ImageView btnStart;// 开始录制按钮
 	private ImageView btnStop;// 停止录制按钮
 	private MediaRecorder mediaRecorder;// 录制视频的类
-	private VideoView mVideoView;// 显示视频的控�?
-	String localPath = "";// 录制的视频路�?
+	private VideoView mVideoView;// 显示视频的控件
+	String localPath = "";// 录制的视频路径
 	private Camera mCamera;
-	// 预览的宽�?
 	private int previewWidth = 480;
 	private int previewHeight = 480;
 	private Chronometer chronometer;
-	private int frontCamera = 0;// 0是后置摄像头�?1是前置摄像头
+	private int frontCamera = 0;// 0是后置摄像头，1是前置摄像头
 	private Button btn_switch;
 	Parameters cameraParameters = null;
 	private SurfaceHolder mSurfaceHolder;
@@ -83,10 +82,9 @@ public class RecorderVideoActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题�?
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);// 设置全屏
-		// 选择支持半�?�明模式，在有surfaceview的activity中使�?
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		setContentView(R.layout.recorder_activity);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -121,7 +119,7 @@ public class RecorderVideoActivity extends Activity implements
 	protected void onResume() {
 		super.onResume();
 		if (mWakeLock == null) {
-			// 获取唤醒�?,保持屏幕常亮
+			// 获取唤醒锁,保持屏幕常亮
 			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 			mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
 					CLASS_LABEL);
@@ -180,13 +178,13 @@ public class RecorderVideoActivity extends Activity implements
 			}
 
 		}
-		// 获取摄像头的�?有支持的分辨�?
+		// 获取摄像头的所有支持的分辨率
 		List<Camera.Size> resolutionList = Utils.getResolutionList(mCamera);
 		if (resolutionList != null && resolutionList.size() > 0) {
 			Collections.sort(resolutionList, new Utils.ResolutionComparator());
 			Camera.Size previewSize = null;
 			boolean hasSize = false;
-			// 如果摄像头支�?640*480，那么强制设�?640*480
+			// 如果摄像头支持640*480，那么强制设为640*480
 			for (int i = 0; i < resolutionList.size(); i++) {
 				Size size = resolutionList.get(i);
 				if (size != null && size.width == 640 && size.height == 480) {
@@ -355,20 +353,14 @@ public class RecorderVideoActivity extends Activity implements
 		} else {
 			mediaRecorder.setOrientationHint(90);
 		}
-		// 设置录制完成后视频的封装格式THREE_GPP�?3gp.MPEG_4为mp4
 		mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 		mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-		// 设置录制的视频编码h263 h264
 		mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-		// 设置视频录制的分辨率。必须放在设置编码和格式的后面，否则报错
 		mediaRecorder.setVideoSize(previewWidth, previewHeight);
-		// 设置视频的比特率
 		mediaRecorder.setVideoEncodingBitRate(384 * 1024);
-		// // 设置录制的视频帧率�?�必须放在设置编码和格式的后面，否则报错
 		if (defaultVideoFrameRate != -1) {
 			mediaRecorder.setVideoFrameRate(defaultVideoFrameRate);
 		}
-		// 设置视频文件输出的路�?
 		localPath = PathUtil.getInstance().getVideoPath() + "/"
 				+ System.currentTimeMillis() + ".mp4";
 		mediaRecorder.setOutputFile(localPath);

@@ -4,6 +4,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -23,6 +25,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteTransactionListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -50,9 +55,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.easemob.EMEventListener;
@@ -63,6 +70,10 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
 import com.icloudoor.cloudoor.chat.HXSDKHelper;
+import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
+import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
@@ -236,6 +247,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		// mPushAgent.setDebugMode(true);
 		
 		mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+		getFriends();
 		sid = loadSid();
 		JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url
 				+ "?sid=" + sid, null, new Response.Listener<JSONObject>() {
@@ -830,13 +842,64 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 				break;
 			}
 
-			case EventConversationListChanged: {
-			    break;
+		case EventConversationListChanged: {
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	public void getFriends() {
+
+		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid();
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
+				url, null, new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						// TODO Auto-generated method stub
+						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
+								response.toString(), MyFriendInfo.class);
+						if (friendInfo != null) {
+							List<MyFriendsEn> data = friendInfo.getData();
+							if (data != null && data.size() > 0) {
+								FriendDaoImpl daoImpl = new FriendDaoImpl(
+										CloudDoorMainActivity.this);
+								SQLiteDatabase db = daoImpl.getDbHelper()
+										.getWritableDatabase();
+								db.beginTransaction();
+								try {
+									db.execSQL("delete from friends");
+									for (int i = 0; i < data.size(); i++) {
+										MyFriendsEn friendsEn = data.get(i);
+										db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+												new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
+												friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
+									}
+									db.setTransactionSuccessful();// µ÷ÓÃ´Ë·½·¨»áÔÚÖ´ÐÐµ½endTransaction()
+								} finally {
+									db.endTransaction();
+
+								}
+							}
+						} else {
+						}
+
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+
+					}
+				}) {
+
+			@Override
+			protected Map<String, String> getParams() throws AuthFailureError {
+				// TODO Auto-generated method stub
+				return null;
 			}
-	        default:
-	            break;
-	        }
-		
+		};
+		mRequestQueue.add(mJsonRequest);
 	}
     
 }
