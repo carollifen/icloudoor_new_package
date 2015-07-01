@@ -128,6 +128,8 @@ public class WuyeWidgeFragment3 extends Fragment {
 							f.delete();
 						portraitUrl = banner.getString("3url", null);
 
+						Log.e(TAG, "use net - update local");
+						
 						Log.e(TAG, portraitUrl);
 
 						if (mThread == null) {
@@ -138,19 +140,21 @@ public class WuyeWidgeFragment3 extends Fragment {
 						editor.putString("URL", portraitUrl);
 						editor.commit();
 					}
-				} else {
-					portraitUrl = banner.getString("3url", null);
+				} 
+			} else {
+				portraitUrl = banner.getString("3url", null);
 
-					Log.e(TAG, portraitUrl);
+				Log.e(TAG, "use net -- creat local");
+				
+				Log.e(TAG, portraitUrl);
 
-					if (mThread == null) {
-						mThread = new Thread(runnable);
-						mThread.start();
-					}
-
-					editor.putString("URL", portraitUrl);
-					editor.commit();
+				if (mThread == null) {
+					mThread = new Thread(runnable);
+					mThread.start();
 				}
+
+				editor.putString("URL", portraitUrl);
+				editor.commit();
 			}
 
 			String tempString = banner.getString("3link", null);

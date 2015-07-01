@@ -132,19 +132,19 @@ public class WuyeWidgeFragment extends Fragment {
 						editor.putString("URL", portraitUrl);
 						editor.commit();
 					}
-				} else {
-					portraitUrl = banner.getString("1url", null);
+				} 
+			} else {
+				portraitUrl = banner.getString("1url", null);
 
-					Log.e(TAG, portraitUrl);
+				Log.e(TAG, portraitUrl);
 
-					if (mThread == null) {
-						mThread = new Thread(runnable);
-						mThread.start();
-					}
-
-					editor.putString("URL", portraitUrl);
-					editor.commit();
+				if (mThread == null) {
+					mThread = new Thread(runnable);
+					mThread.start();
 				}
+
+				editor.putString("URL", portraitUrl);
+				editor.commit();
 			}
 
 			if (banner.getString("1link", null) != null) {
