@@ -39,7 +39,9 @@ public class WuyeFragment extends Fragment {
 	private String TAG = this.getClass().getSimpleName();
 
 	private ImageView WuyeWidgePush1;
+	private View blank1;
 	private ImageView WuyeWidgePush2;
+	private View blank2;
 	private ImageView WuyeWidgePush3;
 
 	private ImageView BtnLianxiwuye;
@@ -71,10 +73,12 @@ public class WuyeFragment extends Fragment {
 	private String sid;
 
 	// for test
-	private URL bannerURL;
+//	private URL bannerURL;
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	int bannerCount = 2;
+		
 	public WuyeFragment() {
 
 	}
@@ -93,13 +97,26 @@ public class WuyeFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.wuye_page, container, false);
 
+		if(getActivity() != null){
+			SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
+			bannerCount = banner.getInt("COUNT", 2);
+		}
+		
+		
 		mQueue = Volley.newRequestQueue(getActivity());
 		sid = loadSid();
 
 		WuyeWidgePush1 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push1);
-		WuyeWidgePush2 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push2);
+		blank1 = (View) view.findViewById(R.id.blankview1);
+		WuyeWidgePush2 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push2);		
+		blank2 = (View) view.findViewById(R.id.blankview2);
 		WuyeWidgePush3 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push3);
 
+		if(bannerCount == 2){
+			blank2.setVisibility(View.GONE);
+			WuyeWidgePush3.setVisibility(View.GONE);
+		}
+		
 		BtnLianxiwuye = (ImageView) view.findViewById(R.id.btn_lianxiwuye);
 		BtnNotice = (ImageView) view.findViewById(R.id.btn_notice);
 		BtnFix = (ImageView) view.findViewById(R.id.btn_fix);
@@ -138,42 +155,71 @@ public class WuyeFragment extends Fragment {
 		myPageChangeListener = new MyPageChangeListener();
 
 		InitFragmentViews();
-		InitViewPager();
+//		InitViewPager();
 
 		return view;
 	}
 
 	public void InitFragmentViews() {
-		WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
-		WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
-		WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
-	}
-
-	public void InitViewPager() {
 		ArrayList<Fragment> mWuyePageFragmentList;
 		WuyePageAdapter mWuyePageAdapter;
 		WuyeWidgeFragment mWuyeWidgeFragment;
 		WuyeWidgeFragment2 mWuyeWidgeFragment2;
 		WuyeWidgeFragment3 mWuyeWidgeFragment3;
-
+		
 		mWuyePageFragmentList = new ArrayList<Fragment>();
+		
+		if(bannerCount == 2){
+			WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
+			WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+			
+			mWuyeWidgeFragment = new WuyeWidgeFragment();
+			mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
+			
+			mWuyePageFragmentList.add(mWuyeWidgeFragment);
+			mWuyePageFragmentList.add(mWuyeWidgeFragment2);
+		}else if(bannerCount == 3){
+			WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
+			WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+			WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
 
-		mWuyeWidgeFragment = new WuyeWidgeFragment();
-		mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
-		mWuyeWidgeFragment3 = new WuyeWidgeFragment3();
+			mWuyeWidgeFragment = new WuyeWidgeFragment();
+			mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
+			mWuyeWidgeFragment3 = new WuyeWidgeFragment3();
 
-		mWuyePageFragmentList.add(mWuyeWidgeFragment);
-		mWuyePageFragmentList.add(mWuyeWidgeFragment2);
-		mWuyePageFragmentList.add(mWuyeWidgeFragment3);
+			mWuyePageFragmentList.add(mWuyeWidgeFragment);
+			mWuyePageFragmentList.add(mWuyeWidgeFragment2);
+			mWuyePageFragmentList.add(mWuyeWidgeFragment3);
+		}
 
-		mWuyePageAdapter = new WuyePageAdapter(mFragmentManager,
-				mWuyePageFragmentList);
+		mWuyePageAdapter = new WuyePageAdapter(mFragmentManager, mWuyePageFragmentList);
 		viewPager.setAdapter(mWuyePageAdapter);
 		viewPager.setOnPageChangeListener(myPageChangeListener);
 		viewPager.setInterval(4000);
 		viewPager.startAutoScroll();
 		viewPager.setCurrentItem(0);
 	}
+
+//	public void InitViewPager() {
+//		
+//		mWuyePageFragmentList = new ArrayList<Fragment>();
+//
+//		mWuyeWidgeFragment = new WuyeWidgeFragment();
+//		mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
+//		mWuyeWidgeFragment3 = new WuyeWidgeFragment3();
+//
+//		mWuyePageFragmentList.add(mWuyeWidgeFragment);
+//		mWuyePageFragmentList.add(mWuyeWidgeFragment2);
+//		mWuyePageFragmentList.add(mWuyeWidgeFragment3);
+//
+//		mWuyePageAdapter = new WuyePageAdapter(mFragmentManager,
+//				mWuyePageFragmentList);
+//		viewPager.setAdapter(mWuyePageAdapter);
+//		viewPager.setOnPageChangeListener(myPageChangeListener);
+//		viewPager.setInterval(4000);
+//		viewPager.startAutoScroll();
+//		viewPager.setCurrentItem(0);
+//	}
 	
 	public class MyPageChangeListener implements OnPageChangeListener {
 
@@ -189,19 +235,29 @@ public class WuyeFragment extends Fragment {
 		@Override
 		public void onPageSelected(int position) {
 			Log.e(TAG, String.valueOf(position));
-
-			if (position == 0) {
-				WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
-				WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
-				WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
-			} else if (position == 1) {
-				WuyeWidgePush2.setImageResource(R.drawable.wuye_push_current);
-				WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
-				WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
-			} else if (position == 2) {
-				WuyeWidgePush3.setImageResource(R.drawable.wuye_push_current);
-				WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
-				WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+		
+			if(bannerCount == 2){
+				if (position == 0) {
+					WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
+					WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+				} else if (position == 1) {
+					WuyeWidgePush2.setImageResource(R.drawable.wuye_push_current);
+					WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
+				}
+			} else if(bannerCount == 3) {
+				if (position == 0) {
+					WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
+					WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+					WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
+				} else if (position == 1) {
+					WuyeWidgePush2.setImageResource(R.drawable.wuye_push_current);
+					WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
+					WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
+				} else if (position == 2) {
+					WuyeWidgePush3.setImageResource(R.drawable.wuye_push_current);
+					WuyeWidgePush1.setImageResource(R.drawable.wuye_push_next);
+					WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
+				}
 			}
 		}
 
@@ -225,174 +281,7 @@ public class WuyeFragment extends Fragment {
 		viewPager.startAutoScroll();
 
 		try {
-			bannerURL = new URL(
-					UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do"
-							+ "?sid=" + sid);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		JsonObjectRequest mBannerRequest = new JsonObjectRequest(Method.POST,
-				bannerURL.toString(), null,
-				new Response.Listener<JSONObject>() {
-					@Override
-					public void onResponse(JSONObject response) {
-						Log.e("response", response.toString());
-						try {
-
-							Log.e(TAG, response.toString());
-
-							if (response.getInt("code") == 1) {
-								if (getActivity() != null) {
-									SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
-									Editor editor = banner.edit();
-
-									JSONArray data = response.getJSONArray("data");
-									if (data.length() == 1) {
-										if (data.getJSONObject(0).getString("type").equals("1")) {
-											String bg = data.getJSONObject(0).getString("bgColor");
-											String content = data.getJSONObject(0).getString("content");
-											String title = data.getJSONObject(0).getString("title");
-											String date = data.getJSONObject(0).getString("createDate");
-
-											editor.putString("1bg", bg);
-											editor.putString("1content", content);
-											editor.putString("1title", title);
-											editor.putString("1date", date);
-											editor.putString("1type", "1");
-										} else if (data.getJSONObject(0).getString("type").equals("2")) {
-											String url = data.getJSONObject(0).getString("photoUrl");
-											String link = data.getJSONObject(0).getString("link");
-											editor.putString("1url", url);
-											editor.putString("1link", link);
-											editor.putString("1type", "2");
-										}
-									} else if (data.length() == 2) {
-										if (data.getJSONObject(0).getString("type").equals("1")) {
-											String bg = data.getJSONObject(0).getString("bgColor");
-											String content = data.getJSONObject(0).getString("content");
-											String title = data.getJSONObject(0).getString("title");
-											String date = data.getJSONObject(0).getString("createDate");
-
-											editor.putString("1bg", bg);
-											editor.putString("1content", content);
-											editor.putString("1title", title);
-											editor.putString("1date", date);
-											editor.putString("1type", "1");
-										} else if (data.getJSONObject(0).getString("type").equals("2")) {
-											String url = data.getJSONObject(0).getString("photoUrl");
-											String link = data.getJSONObject(0).getString("link");
-											editor.putString("1url", url);
-											editor.putString("1link", link);
-											editor.putString("1type", "2");
-										}
-
-										if (data.getJSONObject(1).getString("type").equals("1")) {
-											String bg = data.getJSONObject(1).getString("bgColor");
-											String content = data.getJSONObject(1).getString("content");
-											String title = data.getJSONObject(1).getString("title");
-											String date = data.getJSONObject(1).getString("createDate");
-
-											editor.putString("2bg", bg);
-											editor.putString("2content", content);
-											editor.putString("2title", title);
-											editor.putString("2date", date);
-											editor.putString("2type", "1");
-										} else if (data.getJSONObject(1).getString("type").equals("2")) {
-											String url = data.getJSONObject(1).getString("photoUrl");
-											String link = data.getJSONObject(1).getString("link");
-											editor.putString("2url", url);
-											editor.putString("2link", link);
-											editor.putString("2type", "2");
-										}
-									} else if (data.length() == 3) {
-
-										Log.e(TAG, "here");
-
-										if (data.getJSONObject(0).getString("type").equals("1")) {
-											String bg = data.getJSONObject(0).getString("bgColor");
-											String content = data.getJSONObject(0).getString("content");
-											String title = data.getJSONObject(0).getString("title");
-											String date = data.getJSONObject(0).getString("createDate");
-											
-											editor.putString("1bg", bg);
-											editor.putString("1content", content);
-											editor.putString("1title", title);
-											editor.putString("1date", date);
-											editor.putString("1type", "1");
-										} else if (data.getJSONObject(0).getString("type").equals("2")) {
-											String url = data.getJSONObject(0).getString("photoUrl");
-											String link = data.getJSONObject(0).getString("link");
-											editor.putString("1url", url);
-											editor.putString("1link", link);
-											editor.putString("1type", "2");
-										}
-
-										if (data.getJSONObject(1).getString("type").equals("1")) {
-											String bg = data.getJSONObject(1).getString("bgColor");
-											String content = data.getJSONObject(1).getString("content");
-											String title = data.getJSONObject(1).getString("title");
-											String date = data.getJSONObject(1).getString("createDate");
-
-											editor.putString("2bg", bg);
-											editor.putString("2content", content);
-											editor.putString("2title", title);
-											editor.putString("2date", date);
-											editor.putString("2type", "1");
-										} else if (data.getJSONObject(1).getString("type").equals("2")) {
-											String url = data.getJSONObject(1).getString("photoUrl");
-											String link = data.getJSONObject(1).getString("link");
-											editor.putString("2url", url);
-											editor.putString("2link", link);
-											editor.putString("2type", "2");
-										}
-
-										if (data.getJSONObject(2).getString("type").equals("1")) {
-											String bg = data.getJSONObject(2).getString("bgColor");
-											String content = data.getJSONObject(2).getString("content");
-											String title = data.getJSONObject(2).getString("title");
-											String date = data.getJSONObject(2).getString("createDate");
-
-											editor.putString("3bg", bg);
-											editor.putString("3content", content);
-											editor.putString("3title", title);
-											editor.putString("3date", date);
-											editor.putString("3type", "1");
-										} else if (data.getJSONObject(2).getString("type").equals("2")) {
-											String url = data.getJSONObject(2).getString("photoUrl");
-											String link = data.getJSONObject(2).getString("link");
-											editor.putString("3url", url);
-											editor.putString("3link", link);
-											editor.putString("3type", "2");
-										}
-									}
-									editor.commit();
-								}
-							} else if (response.getInt("code") == -2) {
-								if (getActivity() != null) {
-									Toast.makeText(getActivity(), R.string.not_login, Toast.LENGTH_SHORT).show();
-								}
-								final Intent intent = new Intent();
-								intent.setClass(getActivity(), Login.class);
-								startActivity(intent);
-								getActivity().finish();
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// TODO Auto-generated method stub
-						if(getActivity() != null)
-							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
-					}
-				});
-		mQueue.add(mBannerRequest);
-
-		try {
-			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do"
-					+ "?sid=" + sid);
+			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do" + "?sid=" + sid);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -502,8 +391,7 @@ public class WuyeFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		try {
-			Field childFragmentManager = Fragment.class
-					.getDeclaredField("mChildFragmentManager");
+			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
 			childFragmentManager.setAccessible(true);
 			childFragmentManager.set(this, null);
 		} catch (NoSuchFieldException e) {

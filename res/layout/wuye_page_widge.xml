@@ -20,28 +20,39 @@
         android:layout_height="20dp"
         android:layout_alignParentBottom="true" >
 
-        <RelativeLayout
-            android:layout_width="32dp"
+        <LinearLayout
+            android:id="@+id/layout_push_dot"
+            android:layout_width="wrap_content"
             android:layout_height="8dp"
-            android:layout_centerHorizontal="true" >
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" >
 
             <ImageView
                 android:id="@+id/Iv_wuye_widge_push1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <View
+                android:id="@+id/blankview1"
+                android:layout_width="4dp"
+                android:layout_height="match_parent" />
+            
             <ImageView
                 android:id="@+id/Iv_wuye_widge_push2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true" />
+                android:layout_height="wrap_content"  />
+            
+            <View
+                android:id="@+id/blankview2"
+                android:layout_width="4dp"
+                android:layout_height="match_parent" />
             
             <ImageView
                 android:id="@+id/Iv_wuye_widge_push3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true" />
-        </RelativeLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 
