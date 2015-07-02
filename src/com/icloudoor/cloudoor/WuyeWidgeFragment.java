@@ -134,6 +134,7 @@ public class WuyeWidgeFragment extends Fragment {
 				        .bitmapConfig(Bitmap.Config.ARGB_8888) // default
 				        .displayer(new SimpleBitmapDisplayer()) // default
 				        .handler(new Handler()) // default
+				        .displayer(new RoundedBitmapDisplayer(0))
 				        .build();
 						
 						String imageUrl = Scheme.FILE.wrap(PATH + "/" + imageName);
