@@ -41,6 +41,7 @@ public class VerifyGestureActivity extends BaseActivity {
 	
 	private Broadcast mFinishActivityBroadcast;
 
+    private Logout logoutToDo;
 	
 	private TextView phoneNum;
 	private String phone;
@@ -62,6 +63,7 @@ public class VerifyGestureActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_verify_gesture);
+        logoutToDo = new Logout(getApplicationContext());
 		
 		IntentFilter intentFilter = new IntentFilter();
 	    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
@@ -185,11 +187,13 @@ public class VerifyGestureActivity extends BaseActivity {
 		                                 //   int    statusCode = response.getInt("code");
 		                                    if(response.getInt("code")==1)
 
-		                                    {  int  isLogin = 0;
+		                                    {  
+//		                                    	int  isLogin = 0;
 		                                        SharedPreferences loginStatus = VerifyGestureActivity.this.getSharedPreferences("LOGINSTATUS", 0);
-		                                        Editor editor1 = loginStatus.edit();
-		                                        editor1.putInt("LOGIN", isLogin);
-		                                        editor1.commit();
+                                                logoutToDo.logoutDoing();
+//		                                        Editor editor1 = loginStatus.edit();
+//		                                        editor1.putInt("LOGIN", isLogin);
+//		                                        editor1.commit();
 		 
 		                                        Intent intent3 = new Intent();
 		                                        Bundle bundle = new Bundle();

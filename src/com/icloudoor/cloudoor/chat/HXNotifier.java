@@ -14,13 +14,18 @@ package com.icloudoor.cloudoor.chat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import org.json.JSONObject;
 
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -29,10 +34,24 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
+import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
+import com.icloudoor.cloudoor.CloudDoorMainActivity;
+import com.icloudoor.cloudoor.MyJsonObjectRequest;
+import com.icloudoor.cloudoor.UrlUtils;
+import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
+import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.icloudoor.cloudoor.utli.GsonUtli;
 
 public class HXNotifier {
     private final static String TAG = "notify";
@@ -104,8 +123,10 @@ public class HXNotifier {
         if (!EasyUtils.isAppRunningForeground(appContext)) {
             EMLog.d(TAG, "app is running in backgroud");
             sendNotification(message, false);
+            System.out.println("11111");
         } else {
             sendNotification(message, true);
+            System.out.println("22222");
 
         }
         
@@ -138,6 +159,8 @@ public class HXNotifier {
     protected void sendNotification (EMMessage message, boolean isForeground){
         sendNotification(message, isForeground, true);
     }
+    
+  
     
     protected void sendNotification(EMMessage message, boolean isForeground, boolean numIncrease) {
         String username = message.getFrom();

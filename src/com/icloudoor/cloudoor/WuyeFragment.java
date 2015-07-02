@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -71,6 +72,7 @@ public class WuyeFragment extends Fragment {
 	private RequestQueue mQueue;
 	private String HOST = UrlUtils.HOST;
 	private String sid;
+    private Logout logoutToDo;
 
 	// for test
 //	private URL bannerURL;
@@ -102,7 +104,8 @@ public class WuyeFragment extends Fragment {
 			bannerCount = banner.getInt("COUNT", 2);
 		}
 		
-		
+        logoutToDo = new Logout(getActivity());
+
 		mQueue = Volley.newRequestQueue(getActivity());
 		sid = loadSid();
 
@@ -563,12 +566,19 @@ public class WuyeFragment extends Fragment {
 								
 							} else if (response.getInt("code") == -2) {
 								
-								Toast.makeText(getActivity(), R.string.not_login, Toast.LENGTH_SHORT).show();
+                                logoutToDo.logoutDoing();
 								
-								Intent intent = new Intent();
-								intent.setClass(getActivity(), Login.class);
-								startActivity(intent);
-								getActivity().finish();
+                                if (getActivity() != null) {
+                                	Toast.makeText(getActivity(), R.string.not_login, Toast.LENGTH_SHORT).show();
+                                }
+								
+								if (getActivity() != null) {
+									Intent intent = new Intent();
+									intent.setClass(getActivity(), Login.class);
+									startActivity(intent);
+									getActivity().finish();
+								}
+								
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();

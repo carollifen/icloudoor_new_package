@@ -385,6 +385,29 @@ public class SettingFragment extends Fragment {
 				        }
 				    }
 				});
+				
+				UmengUpdateAgent.setDownloadListener(new UmengDownloadListener(){
+
+				    @Override
+				    public void OnDownloadStart() {
+				    }
+
+				    @Override
+				    public void OnDownloadUpdate(int progress) {
+				    }
+
+				    @Override
+				    public void OnDownloadEnd(int result, String file) {
+				    	if(getActivity() != null) {
+				    		SharedPreferences setting = getActivity().getSharedPreferences("com.icloudoor.clouddoor", 0);
+				    		setting.edit().putBoolean("FIRST", true).commit();
+				    	
+				    		File f = new File(file);
+				    		UmengUpdateAgent.startInstall(getActivity(), f);
+				    	}
+				    }           
+				});
+				
 				UmengUpdateAgent.update(getActivity());
 				break;
 			case R.id.btn_logout:
@@ -573,76 +596,76 @@ public class SettingFragment extends Fragment {
 
 	}
 
-	UpdateManager.UpdateCallback appUpdateCb = new UpdateManager.UpdateCallback() {
-		@Override
-		public void checkUpdateCompleted(Boolean hasUpdate,
-				CharSequence updateInfo) {
-			if (hasUpdate) {
-				DialogHelper.Confirm(
-						getActivity(),
-						getText(R.string.dialog_update_title),
-						getText(R.string.dialog_update_msg).toString()
-								+ updateInfo
-								+ getText(R.string.dialog_update_msg2)
-										.toString(),
-						getText(R.string.dialog_update_btnupdate),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-
-                                updateProgressDialog = new ProgressDialog(getActivity());
-                                updateProgressDialog
-                                        .setMessage(getText(R.string.dialog_downloading_msg));
-                                updateProgressDialog.setIndeterminate(false);
-                                updateProgressDialog
-                                        .setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                                updateProgressDialog.setMax(100);
-                                updateProgressDialog.setProgress(0);
-                                updateProgressDialog.show();
-
-                                updateMan.downloadPackage();
-                            }
-                        },getText( R.string.dialog_update_btnnext), null);
-            }
-        }
-
-        @Override
-        public void downloadProgressChanged(int progress) {
-            if (updateProgressDialog != null
-                    && updateProgressDialog.isShowing()) {
-                updateProgressDialog.setProgress(progress);
-            }
-        }
-
-        @Override
-        public void downloadCanceled() {
-
-        }
-
-        @Override
-        public void downloadCompleted(Boolean sucess, CharSequence errorMsg) {
-            if (updateProgressDialog != null
-                    && updateProgressDialog.isShowing()) {
-                updateProgressDialog.dismiss();
-            }
-            if (sucess) {
-                updateMan.update();
-            } else {
-                DialogHelper.Confirm(getActivity(),
-                        R.string.dialog_error_title,
-                        R.string.dialog_downfailed_msg,
-                        R.string.dialog_downfailed_btnnext,
-                        new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                updateMan.downloadPackage();
-
-                            }
-                        }, R.string.dialog_update_btnnext, null);
-            }
-        }
-    };
+//	UpdateManager.UpdateCallback appUpdateCb = new UpdateManager.UpdateCallback() {
+//		@Override
+//		public void checkUpdateCompleted(Boolean hasUpdate,
+//				CharSequence updateInfo) {
+//			if (hasUpdate) {
+//				DialogHelper.Confirm(
+//						getActivity(),
+//						getText(R.string.dialog_update_title),
+//						getText(R.string.dialog_update_msg).toString()
+//								+ updateInfo
+//								+ getText(R.string.dialog_update_msg2)
+//										.toString(),
+//						getText(R.string.dialog_update_btnupdate),
+//						new DialogInterface.OnClickListener() {
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//
+//                                updateProgressDialog = new ProgressDialog(getActivity());
+//                                updateProgressDialog
+//                                        .setMessage(getText(R.string.dialog_downloading_msg));
+//                                updateProgressDialog.setIndeterminate(false);
+//                                updateProgressDialog
+//                                        .setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//                                updateProgressDialog.setMax(100);
+//                                updateProgressDialog.setProgress(0);
+//                                updateProgressDialog.show();
+//
+//                                updateMan.downloadPackage();
+//                            }
+//                        },getText( R.string.dialog_update_btnnext), null);
+//            }
+//        }
+//
+//        @Override
+//        public void downloadProgressChanged(int progress) {
+//            if (updateProgressDialog != null
+//                    && updateProgressDialog.isShowing()) {
+//                updateProgressDialog.setProgress(progress);
+//            }
+//        }
+//
+//        @Override
+//        public void downloadCanceled() {
+//
+//        }
+//
+//        @Override
+//        public void downloadCompleted(Boolean sucess, CharSequence errorMsg) {
+//            if (updateProgressDialog != null
+//                    && updateProgressDialog.isShowing()) {
+//                updateProgressDialog.dismiss();
+//            }
+//            if (sucess) {
+//                updateMan.update();
+//            } else {
+//                DialogHelper.Confirm(getActivity(),
+//                        R.string.dialog_error_title,
+//                        R.string.dialog_downfailed_msg,
+//                        R.string.dialog_downfailed_btnnext,
+//                        new DialogInterface.OnClickListener() {
+//
+//                            public void onClick(DialogInterface dialog,
+//                                                int which) {
+//                                updateMan.downloadPackage();
+//
+//                            }
+//                        }, R.string.dialog_update_btnnext, null);
+//            }
+//        }
+//    };
     
     public void checkForUserStatus() {
 		Log.e(TAG, "checkForUserStatus()");

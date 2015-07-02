@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
+import com.icloudoor.cloudoor.chat.BuildConfig;
 import com.icloudoor.cloudoor.chat.ImageGridFragment;
+import com.icloudoor.cloudoor.chat.Utils;
 
 public class ImageGridActivity extends FragmentActivity {
 
@@ -13,9 +15,9 @@ public class ImageGridActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        if (BuildConfig.DEBUG) {
-//            Utils.enableStrictMode();
-//        }
+        if (BuildConfig.DEBUG) {
+            Utils.enableStrictMode();
+        }
         super.onCreate(savedInstanceState);
 
         if (getSupportFragmentManager().findFragmentByTag(TAG) == null) {

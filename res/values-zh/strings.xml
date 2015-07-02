@@ -290,5 +290,6 @@
     <string name= "removeFriendSuccess">删除好友 成功</string>
     <string name= "removeFriendFail">删除好友 失败</string>
     <string name= "auth_key">授权钥匙</string>
+    <string name= "returnChat">返回聊天</string>
 
 </resources>

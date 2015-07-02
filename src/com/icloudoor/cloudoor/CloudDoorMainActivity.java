@@ -81,6 +81,7 @@ import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.tag.TagManager;
 import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengDownloadListener;
 
 public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEventListener{
     private final String TAG = this.getClass().getSimpleName();
@@ -93,6 +94,8 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 	private KeyFragmentNoBLE mKeyFragmentNoBLE;
 	private SettingFragment mSettingFragment;
 	private WuyeFragment mWuyeFragment;
+	
+    private Logout logoutToDo;
 
 	private Broadcast mFinishActivityBroadcast;
 	
@@ -205,6 +208,31 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 
 		setContentView(R.layout.new_main);
 		EMChat.getInstance().setAppInited();
+		
+		logoutToDo = new Logout(getApplicationContext());
+
+		UmengUpdateAgent.setDownloadListener(new UmengDownloadListener() {
+
+			@Override
+			public void OnDownloadStart() {
+				Log.e("testDownload", "OnDownloadStart");
+			}
+
+			@Override
+			public void OnDownloadUpdate(int progress) {
+			}
+
+			@Override
+			public void OnDownloadEnd(int result, String file) {
+				Log.e("testDownload", "OnDownloadEnd");
+				SharedPreferences setting = getSharedPreferences("com.icloudoor.clouddoor", 0);
+				setting.edit().putBoolean("FIRST", true).commit();
+
+				File f = new File(file);
+				UmengUpdateAgent.startInstall(getApplicationContext(), f);
+			}
+		});
+		
 		UmengUpdateAgent.setUpdateOnlyWifi(false);
 		UmengUpdateAgent.update(this);
 		// for Umeng Feedback
@@ -271,10 +299,11 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 					}else if (response.getInt("code") == -2){
                         Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
                         
-                        SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-						Editor editor = loginStatus.edit();
-						editor.putInt("LOGIN", 0);
-						editor.commit();
+//                        SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+//						Editor editor = loginStatus.edit();
+//						editor.putInt("LOGIN", 0);
+//						editor.commit();
+                        logoutToDo.logoutDoing();
                         
                         final Intent intent = new Intent();
                         intent.setClass(getApplicationContext(), Login.class);

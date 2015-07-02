@@ -109,6 +109,7 @@ import com.icloudoor.cloudoor.chat.SmileUtils;
 import com.icloudoor.cloudoor.chat.VoicePlayClickListener;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.icloudoor.cloudoor.widget.BusinessCardDialog;
 
 public class ChatActivity extends FragmentActivity implements OnClickListener, EMEventListener{
 	private static final String TAG = "ChatActivity";
@@ -135,6 +136,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	public static final int REQUEST_CODE_SELECT_VIDEO = 23;
 	public static final int REQUEST_CODE_SELECT_FILE = 24;
 	public static final int REQUEST_CODE_ADD_TO_BLACKLIST = 25;
+	public static final int REQUEST_CODE_CONTACT = 26;
 
 	public static final int RESULT_CODE_COPY = 1;
 	public static final int RESULT_CODE_DELETE = 2;
@@ -210,14 +212,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		
 		initView();
 		setUpView();
-		FriendDaoImpl daoImpl = new FriendDaoImpl(this);
-		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
-		if(list!=null && list.size()>0){
-			friendsEn = list.get(0);
-		}else{
-			Toast.makeText(this, R.string.notfriend, Toast.LENGTH_SHORT).show();
-			finish();
-		}
 	}
 
 	/**
@@ -331,22 +325,34 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(
 				PowerManager.SCREEN_DIM_WAKE_LOCK, "demo");
 		chatType = getIntent().getIntExtra("chatType", CHATTYPE_SINGLE);
+		
 
 		if (chatType == CHATTYPE_SINGLE) { 
 			toChatUsername = getIntent().getStringExtra("userId");
 			((TextView) findViewById(R.id.name)).setText(toChatUsername);
-		} else {
-			findViewById(R.id.container_to_group).setVisibility(View.VISIBLE);
-			findViewById(R.id.container_remove).setVisibility(View.GONE);
-			findViewById(R.id.container_voice_call).setVisibility(View.GONE);
-			findViewById(R.id.container_video_call).setVisibility(View.GONE);
-			toChatUsername = getIntent().getStringExtra("groupId");
-
-			if(chatType == CHATTYPE_GROUP){
-			    onGroupViewCreation();
-			}else{ 
-			    onChatRoomViewCreation();
-			}
+		} 
+//		else {
+//			findViewById(R.id.container_to_group).setVisibility(View.VISIBLE);
+//			findViewById(R.id.container_remove).setVisibility(View.GONE);
+//			findViewById(R.id.container_voice_call).setVisibility(View.GONE);
+//			findViewById(R.id.container_video_call).setVisibility(View.GONE);
+//			toChatUsername = getIntent().getStringExtra("groupId");
+//
+//			if(chatType == CHATTYPE_GROUP){
+//			    onGroupViewCreation();
+//			}else{ 
+//			    onChatRoomViewCreation();
+//			}
+//		}
+		
+		
+		FriendDaoImpl daoImpl = new FriendDaoImpl(this);
+		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
+		if(list!=null && list.size()>0){
+			friendsEn = list.get(0);
+		}else{
+			Toast.makeText(this, R.string.notfriend, Toast.LENGTH_SHORT).show();
+			finish();
 		}
         
 		// for chatroom type, we only init conversation and create view adapter on success
@@ -423,7 +429,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	}
 	
 	protected void onListViewCreation(){
-        adapter = new MessageAdapter(ChatActivity.this, toChatUsername, chatType);
+        adapter = new MessageAdapter(ChatActivity.this, toChatUsername, chatType,friendsEn);
         listView.setAdapter(adapter);
         
         listView.setOnScrollListener(new ListScrollListener());
@@ -499,11 +505,53 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
             }
         });
 	}
-	
+	BusinessCardDialog cardDialog;
 	/**
 	 * onActivityResult
 	 */
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	
+	
+	public void sendCard(Intent intent){
+		
+		JSONObject card = getCardJSONO(intent);
+		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+		setExt(message);
+		if (chatType == CHATTYPE_GROUP){
+		    message.setChatType(ChatType.GroupChat);
+		}else if(chatType == CHATTYPE_CHATROOM){
+		    message.setChatType(ChatType.ChatRoom);
+		}
+		message.setAttribute("type", 3);
+		message.setAttribute("card", card);
+		TextMessageBody txtBody = new TextMessageBody("");
+		message.addBody(txtBody);
+		message.setReceipt(toChatUsername);
+		conversation.addMessage(message);
+		adapter.refreshSelectLast();
+		
+	}
+	
+	public JSONObject getCardJSONO(Intent intent){
+		
+		JSONObject card = new JSONObject();
+		try {
+			card.put("CityId", intent.getIntExtra("CityId", 0));
+			card.put("DistrictId", intent.getIntExtra("DistrictId", 0));
+			card.put("ProvinceId", intent.getIntExtra("ProvinceId", 0));
+			card.put("Sex", intent.getIntExtra("Sex", 0));
+			card.put("Nickname", intent.getStringExtra("Nickname"));
+			card.put("PortraitUrl", intent.getStringExtra("PortraitUrl"));
+			card.put("UserId", intent.getStringExtra("UserId"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return card;
+		
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_CODE_EXIT_GROUP) {
 			setResult(RESULT_OK);
@@ -533,7 +581,22 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			}
 		}
 		if (resultCode == RESULT_OK) { 
-			if (requestCode == REQUEST_CODE_EMPTY_HISTORY) {
+			
+			if(requestCode == REQUEST_CODE_CONTACT){
+				cardDialog = new BusinessCardDialog(this, R.style.card_dialog);
+				cardDialog.show();
+				cardDialog.setMSGText(data.getStringExtra("Nickname"));
+				cardDialog.setOKOnClickListener(new android.view.View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						sendCard(data);
+						cardDialog.dismiss();
+					}
+				});
+				
+			}else if (requestCode == REQUEST_CODE_EMPTY_HISTORY) {
 				EMChatManager.getInstance().clearConversation(toChatUsername);
 				adapter.refresh();
 			} else if (requestCode == REQUEST_CODE_CAMERA) { 
@@ -659,7 +722,10 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			Intent intent = new Intent(ChatActivity.this, ImageGridActivity.class);
 			startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
 		} else if (id == R.id.btn_file) { 
-//			selectFileFromLocal();
+//			selectFileFromLocal();ÃûÆ¬
+			Intent intent = new Intent(this, ContactActivity.class);
+			intent.putExtra("type", 1);
+			startActivityForResult(intent, REQUEST_CODE_CONTACT);
 			
 		} else if (id == R.id.btn_voice_call) { 
 			if (!EMChatManager.getInstance().isConnected())

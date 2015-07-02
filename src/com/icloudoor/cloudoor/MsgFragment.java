@@ -30,6 +30,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMConversation.EMConversationType;
 import com.icloudoor.cloudoor.SlideView.OnSlideListener;
+import com.icloudoor.cloudoor.adapter.ChatAllHistoryAdapter1;
 import com.icloudoor.cloudoor.chat.ChatAllHistoryAdapter;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.activity.ContactActivity;
@@ -44,7 +45,7 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 	
 	private TextView mPopupWindow;
 	ListViewForScrollView msg_list;
-	private ChatAllHistoryAdapter adapter;
+	private ChatAllHistoryAdapter1 adapter;
 	private RelativeLayout group_layout;
 	private List<EMConversation> conversationList ;
 	private ImageView add_friends;
@@ -62,16 +63,15 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 		msg_list = (ListViewForScrollView) view.findViewById(R.id.msg_list);
 		group_layout = (RelativeLayout) view.findViewById(R.id.group_layout);
 		add_friends = (ImageView) view.findViewById(R.id.add_friends);
-		adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
+		adapter = new ChatAllHistoryAdapter1(getActivity());
 		// ÉèÖÃadapter
 		msg_list.setAdapter(adapter);
-		
-		
+		adapter.setData(conversationList);
 		msg_list.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				EMConversation conversation = adapter.getItem(position);
+				EMConversation conversation = (EMConversation) adapter.getItem(position);
 				String username = conversation.getUserName();
 				if (username.equals(cloudApplication.getInstance().getUserName()))
 					Toast.makeText(getActivity(), "sssssssssssss", 0).show();
@@ -106,7 +106,6 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 	public void refresh(){
 		if(adapter!=null){
 			adapter.setData(loadConversationsWithRecentChat());
-			adapter.notifyDataSetChanged();
 		}
 	}
 	
@@ -297,6 +296,7 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 				pw.dismiss();
 			}
 			Intent contactIntent = new Intent(getActivity(),ContactActivity.class);
+			contactIntent.putExtra("type", 0);
 			startActivity(contactIntent);
 			break;
 

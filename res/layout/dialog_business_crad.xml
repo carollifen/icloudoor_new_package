@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:background="@drawable/dialog_business_crad_bg"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/msg_tx"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:textColor="#333333"
+             android:textSize="16sp"
+            android:layout_weight="1" />
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            >
+            <Button 
+                android:id="@+id/cancel_bnt"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="@drawable/card_cancel_bg"
+                android:text="@string/cancel"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                />
+            
+            <Button 
+                android:id="@+id/ok_bnt"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="@drawable/card_ok_bg"
+                android:text="@string/ok"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+        
+    </LinearLayout>
+
+</LinearLayout>

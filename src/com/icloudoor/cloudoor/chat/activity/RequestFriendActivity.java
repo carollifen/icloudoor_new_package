@@ -1,11 +1,13 @@
 package com.icloudoor.cloudoor.chat.activity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,14 +17,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.toolbox.Volley;
 import com.easemob.EMCallBack;
 import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.icloudoor.cloudoor.BaseActivity;
+import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
+import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
+import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.icloudoor.cloudoor.utli.GsonUtli;
 
 public class RequestFriendActivity extends BaseActivity implements OnClickListener,NetworkInterface{
 	
@@ -93,5 +106,5 @@ public class RequestFriendActivity extends BaseActivity implements OnClickListen
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 }

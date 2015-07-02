@@ -27,29 +27,103 @@
             android:background="@drawable/icon_boy_110"
             android:scaleType="fitXY" />
 
-       <TextView
-            android:id="@+id/tv_chatcontent"
+        <FrameLayout
+            android:id="@+id/layout_chatcontent"
             style="@style/chat_content_date_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_chat_activity"
             android:layout_toLeftOf="@id/iv_userhead"
-            android:autoLink="web"
             android:background="@drawable/chatto_bg"
-            android:gravity="left|center"
-            android:lineSpacingExtra="2dp"
-            android:maxWidth="225.0dip"
-            android:paddingLeft="8dip"
-            android:textSize="15sp" />
+            android:maxWidth="225.0dip" >
 
-       
+            <TextView
+                android:id="@+id/tv_chatcontent"
+                style="@style/chat_content_date_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:gravity="left|center"
+                android:lineSpacingExtra="2dp"
+                android:paddingLeft="8dip"
+                android:background="@android:color/transparent"
+                android:textSize="15sp" />
+            
+            
+            <LinearLayout
+                android:id="@+id/card_layout"
+                android:layout_width="226dp"
+                android:layout_height="100dp"
+                android:minWidth="100dp"
+                android:visibility="gone"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="名片"
+                    android:textColor="#333333"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#cccccc" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                     >
+
+                    <com.icloudoor.cloudoor.widget.RoundedImageView
+                        xmlns:app="http://schemas.android.com/apk/res/com.icloudoor.cloudoor"
+                        android:id="@+id/user_head"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="6dp"
+                        app:riv_border_color="@color/roundedimageview"
+                        app:riv_border_width="1dip"
+                        app:riv_corner_radius="10dp"
+                        app:riv_oval="false" />
+
+                    <TextView
+                        android:id="@+id/card_name"
+                        android:layout_alignTop="@+id/user_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="名片"
+                        android:singleLine="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/user_head"
+                        android:textColor="#333333"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/addr_tx"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="名片"
+                        android:singleLine="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_below="@+id/card_name"
+                        android:layout_toRightOf="@+id/user_head"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+            </LinearLayout>
+            
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/msg_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_toLeftOf="@id/layout_chatcontent"
             android:clickable="true"
             android:src="@drawable/msg_state_failed_resend"
             android:visibility="gone" />
@@ -60,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_toLeftOf="@id/layout_chatcontent"
             android:text="@string/text_ack_msg"
             android:textSize="12sp"
             android:visibility="invisible" />
@@ -71,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_toLeftOf="@id/layout_chatcontent"
             android:text="@string/text_delivered_msg"
             android:textSize="12sp"
             android:visibility="invisible" />
@@ -81,7 +155,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_toLeftOf="@id/layout_chatcontent"
             android:visibility="visible" />
     </RelativeLayout>
 

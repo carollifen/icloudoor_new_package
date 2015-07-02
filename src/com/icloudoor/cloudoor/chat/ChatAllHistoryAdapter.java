@@ -61,7 +61,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		super(context, textViewResourceId, objects);
 		this.conversationList = objects;
 		this.context = context;
-		daoImpl = new FriendDaoImpl(context);
+		
 		copyConversationList = new ArrayList<EMConversation>();
 		copyConversationList.addAll(objects);
 		inflater = LayoutInflater.from(context);
@@ -93,8 +93,9 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 		EMConversation conversation = getItem(position);
 		String username = conversation.getUserName();
 		
-		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{username}, null, null, null, null);
-		MyFriendsEn friendsEn  = list.get(0);
+//		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{username}, null, null, null, null);
+//			
+//			MyFriendsEn friendsEn  = list.get(0);
 		
 		if (conversation.getType() == EMConversationType.GroupChat) {
 //			holder.avatar.setImageResource(R.drawable.group_icon);
@@ -112,8 +113,8 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 			} else if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
 				holder.name.setText("������֪ͨ");
 			}
-			ImageLoader.getInstance().displayImage(friendsEn.getPortraitUrl(), holder.avatar, DisplayImageOptionsUtli.options);
-			holder.name.setText(friendsEn.getNickname());
+//			ImageLoader.getInstance().displayImage(friendsEn.getPortraitUrl(), holder.avatar, DisplayImageOptionsUtli.options);
+//			holder.name.setText(friendsEn.getNickname());
 		}
 
 		if (conversation.getUnreadMsgCount() > 0) {
@@ -140,6 +141,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 	}
 	
 	public void setData(List<EMConversation> objects){
+		daoImpl = new FriendDaoImpl(context);
 		List<EMConversation> haveFriendData = new ArrayList<EMConversation>();
 		for (int i = 0; i < objects.size(); i++) {
 			List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{objects.get(i).getUserName()}, null, null, null, null);

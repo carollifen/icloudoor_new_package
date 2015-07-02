@@ -1,12 +1,14 @@
 package com.icloudoor.cloudoor.chat.activity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,13 +20,24 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.BaseActivity;
+import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
+import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
+import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.SearchUserList;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FindDBUtile;
+import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class FriendDetailActivity extends BaseActivity implements OnClickListener , NetworkInterface{
@@ -46,6 +59,7 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	int DistrictId;
 	int ProvinceId;
 	int Sex;
+	int returnChat;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
@@ -63,6 +77,8 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		btn_back.setOnClickListener(this);
 		add_contact_bnt.setOnClickListener(this);
 		
+		returnChat = getIntent().getIntExtra("returnChat",0);
+		
 		CityId = getIntent().getIntExtra("CityId",0);
 		DistrictId = getIntent().getIntExtra("DistrictId",0);
 		ProvinceId = getIntent().getIntExtra("ProvinceId",0);
@@ -70,6 +86,10 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		Nickname = getIntent().getStringExtra("Nickname");
 		PortraitUrl = getIntent().getStringExtra("PortraitUrl");
 		UserId = getIntent().getStringExtra("UserId");
+		
+		if(returnChat==1){
+			add_contact_bnt.setText(R.string.returnChat);
+		}
 		setdata();
 	}
 
@@ -132,11 +152,14 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 			startActivity(reportIntent);
 			break;
 		case R.id.add_contact_bnt:
-			
-			Intent intent = new Intent(this,ChatActivity.class);
-			intent.putExtra("userId", UserId);
-			startActivity(intent);
-			break;
+			if(returnChat==1){
+				finish();
+			}else{
+				Intent intent = new Intent(this,ChatActivity.class);
+				intent.putExtra("userId", UserId);
+				startActivity(intent);
+				break;
+			}
 
 		default:
 			break;
@@ -150,6 +173,8 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 			int code = response.getInt("code");
 			if(code==1){
 				showToast(R.string.removeFriendSuccess);
+				getFriends();
+				
 			}else{
 				showToast(R.string.removeFriendFail);
 			}
@@ -163,5 +188,58 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	public void onFailure(VolleyError error) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	
+	public void getFriends() {
+    	RequestQueue mRequestQueue = Volley.newRequestQueue(this);
+		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid();
+		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
+				url, null, new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						// TODO Auto-generated method stub
+						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
+								response.toString(), MyFriendInfo.class);
+						if (friendInfo != null) {
+							List<MyFriendsEn> data = friendInfo.getData();
+							if (data != null && data.size() > 0) {
+								FriendDaoImpl daoImpl = new FriendDaoImpl(
+										FriendDetailActivity.this);
+								SQLiteDatabase db = daoImpl.getDbHelper()
+										.getWritableDatabase();
+								db.beginTransaction();
+								try {
+									db.execSQL("delete from friends");
+									for (int i = 0; i < data.size(); i++) {
+										MyFriendsEn friendsEn = data.get(i);
+										db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+												new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
+												friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
+									}
+									db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
+								} finally {
+									db.endTransaction();
+									finish();
+								}
+							}
+						} else {
+						}
+
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+
+					}
+				}) {
+
+			@Override
+			protected Map<String, String> getParams() throws AuthFailureError {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+		mRequestQueue.add(mJsonRequest);
 	}
 }

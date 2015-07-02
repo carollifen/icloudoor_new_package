@@ -275,5 +275,7 @@
     <string name="modify_info_success">个人资料修改成功</string>
     <string name="friendquestsuccess">好友申请发送成功</string>
     <string name="notfriend">此人不是你好友，禁止骚扰</string>
+    <string name="msg_tx1">发送好友</string>
+    <string name="msg_tx2">的名片到当前聊天？</string>
 
 </resources>
