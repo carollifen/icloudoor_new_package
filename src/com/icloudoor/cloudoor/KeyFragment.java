@@ -1053,12 +1053,13 @@ public class KeyFragment extends Fragment {
 		// for cars table -- END
 			
 		if (newNum > 0) {
-			SharedPreferences saveNewKeyState = getActivity().getSharedPreferences("SAVESIGN",
-					Context.MODE_PRIVATE);
-			Editor editor = saveNewKeyState.edit();
-			editor.putString("newKeyState", "true");
-			editor.commit();
-			
+			if(getActivity() != null){
+				SharedPreferences saveNewKeyState = getActivity().getSharedPreferences("SAVESIGN", Context.MODE_PRIVATE);
+				Editor editor = saveNewKeyState.edit();
+				editor.putString("newKeyState", "true");
+				editor.commit();
+			}
+				
 			if(getActivity() != null){
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
@@ -2764,33 +2765,35 @@ public class KeyFragment extends Fragment {
 
             if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
                 Log.e("BLE", "UartService.ACTION_GATT_DISCONNECTED");
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        mUartService.close();
-                        if (mOpenDoorState != 0) {
-							if (!mDoorState) {
-								HashMap<String,String> map = new HashMap<String,String>();
-								map.put("TIME", openDoorTime);
-								map.put("UserID", userId);
-								map.put("DoorID",  deviceIdTodoorId(openDoorDevicdId));
-								map.put("MODEL", modelNameAndVersion);
-								map.put("RESULT", String.valueOf(false));
-								MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics", map);
+				if (getActivity() != null) {
+					getActivity().runOnUiThread(new Runnable() {
+						public void run() {
+							mUartService.close();
+							if (mOpenDoorState != 0) {
+								if (!mDoorState) {
+									HashMap<String, String> map = new HashMap<String, String>();
+									map.put("TIME", openDoorTime);
+									map.put("UserID", userId);
+									map.put("DoorID", deviceIdTodoorId(openDoorDevicdId));
+									map.put("MODEL", modelNameAndVersion);
+									map.put("RESULT", String.valueOf(false));
+									MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics", map);
 
-								upLoadUtils.writeOpenInfoToFile(openDoorTime, userId, deviceIdTodoorId(openDoorDevicdId), false, modelNameAndVersion);
-								if(getActivity() != null)
-									Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
-//								toastShow(getString(R.string.open_door_fail));
+									upLoadUtils.writeOpenInfoToFile(openDoorTime, userId, deviceIdTodoorId(openDoorDevicdId), false, modelNameAndVersion);
+									if (getActivity() != null)
+										Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
+									// toastShow(getString(R.string.open_door_fail));
+								}
+								Log.e("test for open door", "Gatt close");
+								// mHandlerReset.getLooper().quit();
+								mHandlerReset.removeCallbacks(mRunnableReset);
+								mOpenDoorState = 0;
+								mDoorState = false;
+								scanStatus.setText(R.string.can_shake_to_open_door);
 							}
-                            Log.e("test for open door", "Gatt close");
-//							mHandlerReset.getLooper().quit();
-							mHandlerReset.removeCallbacks(mRunnableReset);
-							mOpenDoorState = 0;
-							mDoorState = false;
-							scanStatus.setText(R.string.can_shake_to_open_door);
 						}
-                    }
-                });
+					});
+				}
             }
 
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {

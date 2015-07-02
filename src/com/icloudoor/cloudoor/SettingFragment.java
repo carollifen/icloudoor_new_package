@@ -19,6 +19,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,6 +61,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
+import com.umeng.update.UmengDownloadListener;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
@@ -81,6 +84,9 @@ public class SettingFragment extends Fragment {
 	
 	private TextView showName;
 	private String name;
+	
+	private String versionName;
+	private String versionCode;
 
 	private MyOnClickListener myClickListener;
 
@@ -135,6 +141,17 @@ public class SettingFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.set_page, container, false);
 
+		try {
+			PackageManager pm = getActivity().getPackageManager();
+			PackageInfo pi = pm.getPackageInfo(getActivity().getPackageName(), PackageManager.GET_ACTIVITIES);
+			if (pi != null) {
+				versionName = pi.versionName == null ? "null" : pi.versionName;
+				versionCode = pi.versionCode + "";
+			}
+		} catch (PackageManager.NameNotFoundException e) {
+			Log.e(TAG, "an error occured when collect package info", e);
+		}
+		
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
 		share();
@@ -372,7 +389,7 @@ public class SettingFragment extends Fragment {
 				            break;
 				        case UpdateStatus.No: // has no update
 				        	if(getActivity() != null)
-				        		Toast.makeText(getActivity(), R.string.latest_version_now, Toast.LENGTH_SHORT).show();
+				        		Toast.makeText(getActivity(), getString(R.string.latest_version_now) + "(" + versionName + " " + versionCode + ")", Toast.LENGTH_SHORT).show();
 				            break;
 				        case UpdateStatus.NoneWifi: // none wifi
 				        	if(getActivity() != null)
