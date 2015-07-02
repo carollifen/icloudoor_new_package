@@ -52,12 +52,16 @@ public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 	
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.set_detail_reset_pwd);
 
+		version = new Version(getApplicationContext());
+		
 		setupUI(findViewById(R.id.main));
 		
 		mQueue = Volley.newRequestQueue(this);
@@ -90,7 +94,7 @@ public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 			@Override
 			public void onClick(View v) {
 				try {
-					resetPwdURL = new URL(HOST + "/user/manage/changePassword.do" + "?sid=" + sid);
+					resetPwdURL = new URL(HOST + "/user/manage/changePassword.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}

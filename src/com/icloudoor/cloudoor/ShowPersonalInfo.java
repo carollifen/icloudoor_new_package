@@ -119,6 +119,8 @@ public class ShowPersonalInfo extends BaseActivity {
 	DisplayImageOptions options;
 	String tempURL;
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -129,6 +131,8 @@ public class ShowPersonalInfo extends BaseActivity {
 		userStatus = loginStatus.getInt("STATUS", 1);
 		portraitUrl = loginStatus.getString("URL", null);
 		tempURL = portraitUrl;
+		
+		version = new Version(getApplicationContext());
 		
 		mAreaDBHelper = new MyAreaDBHelper(ShowPersonalInfo.this, DATABASE_NAME, null, 1);
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
@@ -231,7 +235,7 @@ public class ShowPersonalInfo extends BaseActivity {
 			mQueue = Volley.newRequestQueue(this);
 			sid = loadSid();
 			try {
-				getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+				getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -536,7 +540,7 @@ public class ShowPersonalInfo extends BaseActivity {
 		mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		try {
-			getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+			getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -65,6 +65,8 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,6 +74,8 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 		setContentView(R.layout.register_complete);
 
 		setupUI(findViewById(R.id.main));
+		
+		version = new Version(getApplicationContext());
 		
 		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		
@@ -137,7 +141,7 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 				if(networkStatus){
 					try {
 						registerURL = new URL(HOST + "/user/manage/createUser.do"
-								+ "?sid=" + sid);
+								+ "?sid=" + sid + "&ver=" + version.getVersionName());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}

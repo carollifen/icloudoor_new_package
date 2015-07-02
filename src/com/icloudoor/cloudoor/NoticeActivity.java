@@ -46,6 +46,8 @@ public class NoticeActivity extends BaseActivity {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	private MyDataBaseHelper mKeyDBHelper;
 	private SQLiteDatabase mKeyDB;
 	private final String DATABASE_NAME = "KeyDB.db";
@@ -63,6 +65,8 @@ public class NoticeActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notice);
 
+		version = new Version(getApplicationContext());
+		
 		mFinishActivityBroadcast=	new Broadcast();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
@@ -103,7 +107,7 @@ public class NoticeActivity extends BaseActivity {
 			noticeUrlEditor.putString("NOTICEURL", null).commit();
 
 		} else {
-			anouncePageWebView.loadUrl(pageurl + "?sid=" + sid);
+			anouncePageWebView.loadUrl(pageurl + "?sid=" + sid + "&ver=" + version.getVersionName());
 		}
 
 		anouncePageWebView.setWebViewClient(new webViewClient());

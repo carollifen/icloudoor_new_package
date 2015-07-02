@@ -48,11 +48,15 @@ public class QueryActivity extends BaseActivity {
 	private final String CAR_TABLE_NAME = "CarKeyTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
 
+		version = new Version(getApplicationContext());
+		
 		mFinishActivityBroadcast = new Broadcast();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
@@ -86,7 +90,7 @@ public class QueryActivity extends BaseActivity {
 
 		if (queryShare.getString("QUERYURL", null) != null) {
 			surveyWebView.loadUrl(HOST + queryShare.getString("QUERYURL", null)
-					+ "?sid=" + sid);
+					+ "?sid=" + sid + "&ver=" + version.getVersionName());
 			queryEditor.putString("QUERYURL", null).commit();
 		} else {
 			surveyWebView.loadUrl(url + "?sid=" + sid);

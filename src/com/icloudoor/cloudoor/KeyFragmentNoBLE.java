@@ -154,6 +154,8 @@ public class KeyFragmentNoBLE extends Fragment {
 
     boolean isDebug = DEBUG.isDebug;
     
+    private Version version;
+    
 	public KeyFragmentNoBLE() {
 		// Required empty public constructor
 	}
@@ -163,6 +165,9 @@ public class KeyFragmentNoBLE extends Fragment {
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.key_page, container, false);
+		
+		if(getActivity() != null)
+			version = new Version(getActivity());
 		
 		// for new UI weather
 		date = (TextView) view.findViewById(R.id.date);
@@ -271,71 +276,71 @@ public class KeyFragmentNoBLE extends Fragment {
 	}
 	
 	// for new UI weather
-	private void toggleGPS() {
-		Intent gpsIntent = new Intent();
-		gpsIntent.setClassName("com.android.settings",
-				"com.android.settings.widget.SettingsAppWidgetProvider");
-		gpsIntent.addCategory("android.intent.category.ALTERNATIVE");
-		gpsIntent.setData(Uri.parse("custom:3"));
-		try {
-			PendingIntent.getBroadcast(getActivity(), 0, gpsIntent, 0).send();
-		} catch (CanceledException e) {
-			e.printStackTrace();
-			locationManager
-					.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-							1000, 0, locationListener);
-			Location location1 = locationManager
-					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			if (location1 != null) {
-				latitude = location1.getLatitude(); 
-				longitude = location1.getLongitude(); 
-			}
-		}
-	}
-	
-	private void getLocation() {
-		Location location = locationManager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		if (location != null) {
-			latitude = location.getLatitude();
-			longitude = location.getLongitude();
-		} else {
-
-			locationManager.requestLocationUpdates(
-					LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
-		}
-	}
-
-	LocationListener locationListener = new LocationListener() {
-		
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-		}
-
-		
-		@Override
-		public void onProviderEnabled(String provider) {
-			
-		}
-
-		
-		@Override
-		public void onProviderDisabled(String provider) {
-			
-		}
-
-		
-		@Override
-		public void onLocationChanged(Location location) {
-			if (location != null) {
-				Log.e("Map",
-						"Location changed : Lat: " + location.getLatitude()
-								+ " Lng: " + location.getLongitude());
-				latitude = location.getLatitude(); 
-				longitude = location.getLongitude(); 
-			}
-		}
-	};
+//	private void toggleGPS() {
+//		Intent gpsIntent = new Intent();
+//		gpsIntent.setClassName("com.android.settings",
+//				"com.android.settings.widget.SettingsAppWidgetProvider");
+//		gpsIntent.addCategory("android.intent.category.ALTERNATIVE");
+//		gpsIntent.setData(Uri.parse("custom:3"));
+//		try {
+//			PendingIntent.getBroadcast(getActivity(), 0, gpsIntent, 0).send();
+//		} catch (CanceledException e) {
+//			e.printStackTrace();
+//			locationManager
+//					.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+//							1000, 0, locationListener);
+//			Location location1 = locationManager
+//					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//			if (location1 != null) {
+//				latitude = location1.getLatitude(); 
+//				longitude = location1.getLongitude(); 
+//			}
+//		}
+//	}
+//	
+//	private void getLocation() {
+//		Location location = locationManager
+//				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//		if (location != null) {
+//			latitude = location.getLatitude();
+//			longitude = location.getLongitude();
+//		} else {
+//
+//			locationManager.requestLocationUpdates(
+//					LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+//		}
+//	}
+//
+//	LocationListener locationListener = new LocationListener() {
+//		
+//		@Override
+//		public void onStatusChanged(String provider, int status, Bundle extras) {
+//		}
+//
+//		
+//		@Override
+//		public void onProviderEnabled(String provider) {
+//			
+//		}
+//
+//		
+//		@Override
+//		public void onProviderDisabled(String provider) {
+//			
+//		}
+//
+//		
+//		@Override
+//		public void onLocationChanged(Location location) {
+//			if (location != null) {
+//				Log.e("Map",
+//						"Location changed : Lat: " + location.getLatitude()
+//								+ " Lng: " + location.getLongitude());
+//				latitude = location.getLatitude(); 
+//				longitude = location.getLongitude(); 
+//			}
+//		}
+//	};
 	
 	public boolean isBigMonth(int m) {
 		if(m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) 
@@ -447,20 +452,20 @@ public class KeyFragmentNoBLE extends Fragment {
 		date.setText(D1);
 		
 		// To get the longitude and latitude
-		locationManager = (LocationManager) getActivity().getSystemService(
-				Context.LOCATION_SERVICE);
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			getLocation();
-		} else {
-			toggleGPS();
-			new Handler() {
-			}.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					getLocation();
-				}
-			}, 2000);
-		}
+//		locationManager = (LocationManager) getActivity().getSystemService(
+//				Context.LOCATION_SERVICE);
+//		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//			getLocation();
+//		} else {
+//			toggleGPS();
+//			new Handler() {
+//			}.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					getLocation();
+//				}
+//			}, 2000);
+//		}
 
 		// INIT
 		Date date = new Date();
@@ -482,49 +487,51 @@ public class KeyFragmentNoBLE extends Fragment {
 		sid = loadSid();
 
 		try {
-			if (latitude != 0.0 || longitude != 0.0) { // can get the location
-														// in time
-				SharedPreferences saveLocation = getActivity()
-						.getSharedPreferences("LOCATION", 0);
-				Editor editor = saveLocation.edit();
-				editor.putString("Latitude", String.valueOf(latitude));
-				editor.putString("Longitude", String.valueOf(longitude));
-				editor.commit();
+//			if (latitude != 0.0 || longitude != 0.0) { // can get the location
+//														// in time
+//				SharedPreferences saveLocation = getActivity()
+//						.getSharedPreferences("LOCATION", 0);
+//				Editor editor = saveLocation.edit();
+//				editor.putString("Latitude", String.valueOf(latitude));
+//				editor.putString("Longitude", String.valueOf(longitude));
+//				editor.commit();
+//
+//				weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
+//						+ ":" + String.valueOf(longitude)
+//						+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+//			} else {
+//				SharedPreferences loadLocation = getActivity()
+//						.getSharedPreferences("LOCATION", 0); // if we can't get
+//																// the location
+//																// in time, use
+//																// the location
+//																// for the last
+//																// usage
+//				latitude = Double.parseDouble(loadLocation.getString(
+//						"Latitude", "0.0"));
+//				longitude = Double.parseDouble(loadLocation.getString(
+//						"Longitude", "0.0"));
+//
+//				if (longitude == 0.0 && latitude == 0.0) // if no location for
+//															// the last usage,
+//															// then use the ip
+//															// address to get
+//															// the weather info
+//															// for better user
+//															// experiences
+//					weatherURL = new URL(HOST + "city=ip"
+//							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+//				else 
+//					weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
+//							+ ":" + String.valueOf(longitude)
+//							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+//					
+//			}
 
-				weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
-						+ ":" + String.valueOf(longitude)
-						+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
-			} else {
-				SharedPreferences loadLocation = getActivity()
-						.getSharedPreferences("LOCATION", 0); // if we can't get
-																// the location
-																// in time, use
-																// the location
-																// for the last
-																// usage
-				latitude = Double.parseDouble(loadLocation.getString(
-						"Latitude", "0.0"));
-				longitude = Double.parseDouble(loadLocation.getString(
-						"Longitude", "0.0"));
-
-				if (longitude == 0.0 && latitude == 0.0) // if no location for
-															// the last usage,
-															// then use the ip
-															// address to get
-															// the weather info
-															// for better user
-															// experiences
-					weatherURL = new URL(HOST + "city=ip"
-							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
-				else 
-					weatherURL = new URL(HOST + "city=" + String.valueOf(latitude)
-							+ ":" + String.valueOf(longitude)
-							+ "&language=zh-chs&unit=c&aqi=city&key=" + Key);
-					
-			}
-
+			weatherURL = new URL(HOST + "city=ip" + "&language=zh-chs&unit=c&aqi=city&key=" + Key);
+			
 			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid="
-					+ sid);
+					+ sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

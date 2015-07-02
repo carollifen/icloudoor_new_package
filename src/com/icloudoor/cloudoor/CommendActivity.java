@@ -43,6 +43,8 @@ public class CommendActivity extends BaseActivity {
 	private final String CAR_TABLE_NAME = "CarKeyTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,6 +55,8 @@ public class CommendActivity extends BaseActivity {
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 		registerReceiver(mFinishActivityBroadcast, intentFilter);
 
+		version = new Version(getApplicationContext());
+		
 		mKeyDBHelper = new MyDataBaseHelper(this, DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
 
@@ -73,7 +77,7 @@ public class CommendActivity extends BaseActivity {
 		webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
 		webSetting.setLoadsImagesAutomatically(true);
 		webSetting.setBuiltInZoomControls(true);
-		praiseWebView.loadUrl(url + "?sid=" + sid + "&type=" + TYPE_GOOD);
+		praiseWebView.loadUrl(url + "?sid=" + sid + "&type=" + TYPE_GOOD + "&ver=" + version.getVersionName());
 		
 		WebChromeClient wcc = new WebChromeClient(){
 			@Override

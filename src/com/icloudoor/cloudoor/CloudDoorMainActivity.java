@@ -152,6 +152,8 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 
 	boolean isDebug = DEBUG.isDebug;
 
+	private Version version;
+	
 	Handler mHandler1 = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
@@ -208,9 +210,10 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 
 		setContentView(R.layout.new_main);
 		EMChat.getInstance().setAppInited();
-		
-		logoutToDo = new Logout(getApplicationContext());
 
+		logoutToDo = new Logout(getApplicationContext());
+		version = new Version(getApplicationContext());
+		
 		UmengUpdateAgent.setDownloadListener(new UmengDownloadListener() {
 
 			@Override
@@ -280,7 +283,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		getFriends();
 		sid = loadSid();
 		JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url
-				+ "?sid=" + sid, null, new Response.Listener<JSONObject>() {
+				+ "?sid=" + sid + "&ver=" + version.getVersionName(), null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
 				Log.e("response", response.toString());

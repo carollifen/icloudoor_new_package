@@ -126,6 +126,8 @@ public class SettingFragment extends Fragment {
 	UMSocialService mController;
 	private SnsPostListener mSnsPostListener;
 
+	private Version version;
+	
 	public SettingFragment() {
 		// Required empty public constructor
 	}
@@ -151,6 +153,9 @@ public class SettingFragment extends Fragment {
 		} catch (PackageManager.NameNotFoundException e) {
 			Log.e(TAG, "an error occured when collect package info", e);
 		}
+		
+		if(getActivity() != null)
+			version = new Version(getActivity());
 		
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
@@ -433,7 +438,7 @@ public class SettingFragment extends Fragment {
 
                     try {
                         logOutURL = new URL(HOST + "/user/manage/logout.do"
-                                + "?sid=" + sid);
+                                + "?sid=" + sid + "&ver=" + version.getVersionName());
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -689,7 +694,7 @@ public class SettingFragment extends Fragment {
 		URL getUserStatusURL = null;
 		sid = loadSid("SID");
 		try {
-			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

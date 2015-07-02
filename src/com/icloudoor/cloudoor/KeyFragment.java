@@ -237,6 +237,8 @@ public class KeyFragment extends Fragment {
 	
 	private UpLoadUtils upLoadUtils;
 	
+	private Version version;
+	
 	private Toast mToast;
 	
 	Handler mHandler = new Handler();
@@ -283,6 +285,9 @@ public class KeyFragment extends Fragment {
         openDoorInfoList = new ArrayList<HashMap<String, String>>();
         
         upLoadUtils = new UpLoadUtils();
+        
+        if(getActivity() != null)
+			version = new Version(getActivity());
         
         SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
 		userId = loginStatus.getString("USERID", null);
@@ -725,7 +730,7 @@ public class KeyFragment extends Fragment {
 		try {
 			downLoadKeyURL = new URL(
 					UrlUtils.HOST + "/user/door/download2.do"
-							+ "?sid=" + sid);
+							+ "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -1078,7 +1083,7 @@ public class KeyFragment extends Fragment {
 		
 		sid2 = loadSid();
 		try {
-			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2);
+			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2 + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -1337,7 +1342,7 @@ public class KeyFragment extends Fragment {
 					
 			weatherURL = new URL(HOST + "city=ip&language=zh-chs&unit=c&aqi=city&key=" + Key);
 
-			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid=" + sid);
+			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -1779,7 +1784,7 @@ public class KeyFragment extends Fragment {
 		sid = loadSid();
 		
 		try {
-			getConfigUrl = new URL(UrlUtils.HOST + "/user/config/default.do" + "?sid=" + sid);
+			getConfigUrl = new URL(UrlUtils.HOST + "/user/config/default.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

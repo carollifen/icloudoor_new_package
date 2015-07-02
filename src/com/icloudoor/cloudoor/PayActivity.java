@@ -39,12 +39,15 @@ public class PayActivity extends BaseActivity {
 	private final String CAR_TABLE_NAME = "CarKeyTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pay);
 		
-	
+		version = new Version(getApplicationContext());
+		
 		mFinishActivityBroadcast = new Broadcast();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
@@ -72,7 +75,7 @@ public class PayActivity extends BaseActivity {
 		
 		payWebView.addJavascriptInterface(new autoLogout(), "cloudoorNative");
 
-		payWebView.loadUrl(url + "?sid=" + sid);
+		payWebView.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName());
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener(){

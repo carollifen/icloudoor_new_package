@@ -31,6 +31,7 @@ import com.icloudoor.cloudoor.BaseActivity;
 import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
+import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.adapter.MyFriendsAdapter;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
@@ -55,11 +56,15 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	private ImageView btn_back;
 	FriendDaoImpl daoImpl;
 	int type;
+	
+	private Version version;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_contact);
+		
+		version = new Version(getApplicationContext());
 		
 		type = getIntent().getExtras().getInt("type",0);
 		
@@ -149,7 +154,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	
 	public void getFriends() {
     	RequestQueue mRequestQueue = Volley.newRequestQueue(this);
-		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid();
+		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName();
 		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
 				url, null, new Response.Listener<JSONObject>() {
 					@Override

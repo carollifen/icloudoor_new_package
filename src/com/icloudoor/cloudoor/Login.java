@@ -108,6 +108,8 @@ public class Login extends Activity implements TextWatcher {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -118,6 +120,8 @@ public class Login extends Activity implements TextWatcher {
 		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		
 		setupUI(findViewById(R.id.main));
+		
+		version = new Version(getApplicationContext());
 		
 		mAreaDBHelper = new MyAreaDBHelper(Login.this, DATABASE_NAME, null, 1);
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
@@ -245,7 +249,7 @@ public class Login extends Activity implements TextWatcher {
 
 					try {
 						loginURL = new URL(HOST + "/user/manage/login.do"
-								+ "?sid=" + sid);
+								+ "?sid=" + sid + "&ver=" + version.getVersionName());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}

@@ -181,6 +181,8 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 	DisplayImageOptions options;
 	String tempURL;
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -188,6 +190,8 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 		setContentView(R.layout.set_person_info_not_certi);
 		
 		setupUI(findViewById(R.id.main));
+		
+		version = new Version(getApplicationContext());
 		
 		String imagePath = PATH + imageName;
 		imageUrl = Scheme.FILE.wrap(imagePath);
@@ -472,7 +476,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 		
 		mQueue = Volley.newRequestQueue(this);
 		try {
-			setInfoURL = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid);
+			setInfoURL = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}		

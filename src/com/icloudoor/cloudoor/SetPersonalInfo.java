@@ -178,6 +178,8 @@ public class SetPersonalInfo extends BaseActivity {
 	DisplayImageOptions options;
 	String tempURL;
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -187,6 +189,8 @@ public class SetPersonalInfo extends BaseActivity {
 
 		setupUI(findViewById(R.id.main));
 
+		version = new Version(getApplicationContext());
+		
 		String imagePath = PATH + imageName;
 		imageUrl = Scheme.FILE.wrap(imagePath);
 		
@@ -490,7 +494,7 @@ public class SetPersonalInfo extends BaseActivity {
 
 		mQueue = Volley.newRequestQueue(this);
 		try {
-			setInfoURL = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid);
+			setInfoURL = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

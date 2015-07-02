@@ -34,6 +34,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 import com.umeng.analytics.MobclickAgent;
 
 public class WuyeWidgeFragment extends Fragment {
@@ -114,8 +121,31 @@ public class WuyeWidgeFragment extends Fragment {
 						File f = new File(PATH + "/" + imageName);
 						Log.e(TAG, "use local");
 
-						Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
-						bgImage.setImageBitmap(bm);
+						ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(getActivity());
+						ImageLoader.getInstance().init(configuration);
+				        
+						DisplayImageOptions options = new DisplayImageOptions.Builder()
+				        .showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
+				        .showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
+				        .showImageOnFail(R.drawable.icon_boy_110) // resource or drawable
+				        .resetViewBeforeLoading(false)  // default
+				        .delayBeforeLoading(10)
+				        .cacheInMemory(false) // default
+				        .cacheOnDisk(false) // default
+				        .considerExifParams(false) // default
+				        .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
+				        .bitmapConfig(Bitmap.Config.ARGB_8888) // default
+				        .displayer(new SimpleBitmapDisplayer()) // default
+				        .handler(new Handler()) // default
+				        .displayer(new RoundedBitmapDisplayer(10))
+				        .build();
+						
+						String imageUrl = Scheme.FILE.wrap(PATH + "/" + imageName);
+						
+						ImageLoader.getInstance().displayImage(imageUrl, bgImage, options);
+						
+//						Bitmap bm = BitmapFactory.decodeFile(PATH + "/" + imageName);
+//						bgImage.setImageBitmap(bm);
 					} else {
 						File f = new File(PATH + "/" + imageName);
 						if (f.exists())

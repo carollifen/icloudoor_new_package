@@ -37,6 +37,8 @@ public class BillActivity extends BaseActivity {
 	private final String CAR_TABLE_NAME = "CarKeyTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class BillActivity extends BaseActivity {
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 		registerReceiver(mFinishActivityBroadcast, intentFilter);
 
+		version = new Version(getApplicationContext());
+		
 		mKeyDBHelper = new MyDataBaseHelper(this, DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
 		
@@ -77,7 +81,7 @@ public class BillActivity extends BaseActivity {
 
 		billWebView.addJavascriptInterface(new autoLogout(), "cloudoorNative");
 		
-		billWebView.loadUrl(url + "?sid=" + sid);
+		billWebView.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName());
 		
 		WebChromeClient wcc = new WebChromeClient(){
 			@Override

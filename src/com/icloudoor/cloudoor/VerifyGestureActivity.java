@@ -58,6 +58,8 @@ public class VerifyGestureActivity extends BaseActivity {
  	
  	boolean isDebug = DEBUG.isDebug;
  	
+ 	private Version version;
+ 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,6 +67,8 @@ public class VerifyGestureActivity extends BaseActivity {
 		setContentView(R.layout.activity_verify_gesture);
         logoutToDo = new Logout(getApplicationContext());
 		
+        version = new Version(getApplicationContext());
+        
 		IntentFilter intentFilter = new IntentFilter();
 	    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 	    mFinishActivityBroadcast = new Broadcast();
@@ -166,7 +170,7 @@ public class VerifyGestureActivity extends BaseActivity {
 
 		                    try {
 		                        logOutURL = new URL(UrlUtils.HOST + "/user/manage/logout.do"
-		                                + "?sid=" + sid);
+		                                + "?sid=" + sid + "&ver=" + version.getVersionName());
 		                    } catch (MalformedURLException e) {
 		                        e.printStackTrace();
 		                    }

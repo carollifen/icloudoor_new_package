@@ -79,6 +79,8 @@ public class WuyeFragment extends Fragment {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	int bannerCount = 2;
 		
 	public WuyeFragment() {
@@ -99,15 +101,20 @@ public class WuyeFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.wuye_page, container, false);
 
+		logoutToDo = new Logout(getActivity());
+
+		mQueue = Volley.newRequestQueue(getActivity());
+		sid = loadSid();
+		
+		if(getActivity() != null)
+			version = new Version(getActivity());
+		
+		getBannerData();
+		
 		if(getActivity() != null){
 			SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
 			bannerCount = banner.getInt("COUNT", 2);
 		}
-		
-        logoutToDo = new Logout(getActivity());
-
-		mQueue = Volley.newRequestQueue(getActivity());
-		sid = loadSid();
 
 		WuyeWidgePush1 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push1);
 		blank1 = (View) view.findViewById(R.id.blankview1);
@@ -284,7 +291,7 @@ public class WuyeFragment extends Fragment {
 		viewPager.startAutoScroll();
 
 		try {
-			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do" + "?sid=" + sid);
+			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -421,7 +428,7 @@ public class WuyeFragment extends Fragment {
 	public void getBannerData(){
 		URL bannerURL = null;
 		try {
-			bannerURL = new URL(UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do" + "?sid=" + sid);
+			bannerURL = new URL(UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -76,6 +76,9 @@ public class FragmentCarEntrance extends Fragment {
 	boolean haveCarNum;
 
 	boolean isDebug = DEBUG.isDebug;
+	
+	private Version version;
+	
 	private final String mPageName = "FragmentCarEntrance";
 	
 	@Override
@@ -85,6 +88,9 @@ public class FragmentCarEntrance extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_car_entrance, container,
 				false);
 
+		if(getActivity() != null)
+			version = new Version(getActivity());
+		
 		//
 		havePhone = false;
 		haveCarNum = false;
@@ -236,7 +242,7 @@ public class FragmentCarEntrance extends Fragment {
 		mQueue = Volley.newRequestQueue(getActivity());
 
 		MyJsonObjectRequest mjsonobjrequest = new MyJsonObjectRequest(
-				Method.POST, HOST + "?sid=" + sid, null,
+				Method.POST, HOST + "?sid=" + sid + "&ver=" + version.getVersionName(), null,
 				new Response.Listener<JSONObject>() {
 
 					@Override

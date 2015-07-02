@@ -28,10 +28,13 @@ public class BaseActivity extends Activity{
 	private RequestQueue mQueue;
 	public NetworkInterface networkInterface;
 	public MyProgressDialog dialog;
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
+		version = new Version(getApplicationContext());
 		mQueue = Volley.newRequestQueue(this);
 	}
 	
@@ -90,7 +93,7 @@ public class BaseActivity extends Activity{
 	
 	public void getNetworkData(NetworkInterface networkInterface,String httpurl, final Map<String, String> map){
 	this.networkInterface = networkInterface;
-		String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid();
+		String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid() + "&ver=" + version.getVersionName();
 		loading();
 		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
 				url, null, new Response.Listener<JSONObject>() {

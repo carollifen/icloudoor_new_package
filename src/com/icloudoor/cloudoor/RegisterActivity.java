@@ -96,6 +96,8 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 	
 	boolean isDebug = DEBUG.isDebug;
 
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -108,6 +110,8 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 		
 		Log.e(TAG, "oncreate");
 
+		version = new Version(getApplicationContext());
+		
 		isBackKey = false;
 		mQueue = Volley.newRequestQueue(this);
 
@@ -239,7 +243,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 	                    }
 	                    counter.start();
 	                    try {
-	                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid);
+	                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 	                    } catch (MalformedURLException e) {
 	                        e.printStackTrace();
 	                    }
@@ -305,7 +309,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 				
 				if(networkStatus){
 					try {
-						verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid);
+						verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}

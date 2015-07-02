@@ -33,6 +33,8 @@ public class UpLoadUtils {
 	private String foldPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cloudoor/";
 	private String fileName = "cacheTrace.txt";
 	
+	private Version version;
+	
 	public void writeOpenInfoToFile(String time, String userId, String doorId, boolean successOrNot, String modelNameAndVersion) {
 
 		String content = null;
@@ -139,7 +141,7 @@ public class UpLoadUtils {
 			URL upLoadURL = null;
 			try {
 				upLoadURL = new URL(UrlUtils.HOST + "/user/stat/add.do"
-						+ "?sid=" + sid);
+						+ "?sid=" + sid + "&ver=" + version.getVersionName());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}

@@ -49,6 +49,8 @@ public class ContactWuyeActivity extends BaseActivity {
 	private final String CAR_TABLE_NAME = "CarKeyTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +62,8 @@ public class ContactWuyeActivity extends BaseActivity {
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 		registerReceiver(mFinishActivityBroadcast, intentFilter);
 
+		version = new Version(getApplicationContext());
+		
 		mKeyDBHelper = new MyDataBaseHelper(this, DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
 		    
@@ -81,7 +85,7 @@ public class ContactWuyeActivity extends BaseActivity {
 
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.addJavascriptInterface(new Contact(), "cloudoorNative");
-		webview.loadUrl(url + "?sid=" + sid);
+		webview.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName());
 
 		webview.setWebChromeClient(new WebChromeClient() {
 			@Override

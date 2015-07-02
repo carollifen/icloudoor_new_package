@@ -94,6 +94,8 @@ public class KeyListListFragment extends Fragment {
 	
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	public KeyListListFragment() {
 		// Required empty public constructor
 	}
@@ -102,6 +104,9 @@ public class KeyListListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_key_list_list, container, false);
+		
+		if(getActivity() != null)
+			version = new Version(getActivity());
 		
 		carNumAndPhoneNumShare = getActivity().getSharedPreferences("carNumAndPhoneNum", 0);
 		
@@ -240,7 +245,7 @@ public class KeyListListFragment extends Fragment {
 
 		try {
 //			downLoadKeyURL = new URL(HOST + "/user/door/download.do" + "?sid=" + sid);
-			downLoadKeyURL = new URL(HOST + "/user/door/download2.do" + "?sid=" + sid);         //new key download interface
+			downLoadKeyURL = new URL(HOST + "/user/door/download2.do" + "?sid=" + sid + "&ver=" + version.getVersionName());         //new key download interface
 			Log.e(TAG, String.valueOf(downLoadKeyURL));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -567,7 +572,7 @@ public class KeyListListFragment extends Fragment {
 		
 		sid2 = loadSid();
 		try {
-			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2);
+			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2 + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -748,7 +753,7 @@ public class KeyListListFragment extends Fragment {
 			final String posstatus = tempDoorNameList.get(position).get("POSSTATUS");
 			
 			try {
-				returnCarKeyURL = new URL(HOST + "/user/api/returnTempAuthCar.do" + "?sid=" + sid);
+				returnCarKeyURL = new URL(HOST + "/user/api/returnTempAuthCar.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			}

@@ -121,6 +121,8 @@ public class KeyListAuthFragment extends Fragment {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	public KeyListAuthFragment() {
 		// Required empty public constructor
 	}
@@ -131,6 +133,9 @@ public class KeyListAuthFragment extends Fragment {
 		final View view = inflater.inflate(R.layout.fragment_key_list_auth,
 				container, false);
 
+		if(getActivity() != null)
+			version = new Version(getActivity());
+		
 		mQueue = Volley.newRequestQueue(getActivity());
 
 		dateAndPhoneShare = getActivity().getSharedPreferences("DATEANDPHONESHARE", 0);
@@ -327,7 +332,7 @@ public class KeyListAuthFragment extends Fragment {
 					
 					sid = loadSid();
 					MyJsonObjectRequest carAndPhoneRequest = new MyJsonObjectRequest(
-							Method.POST, postKerUrl + "?sid=" + sid, null,
+							Method.POST, postKerUrl + "?sid=" + sid + "&ver=" + version.getVersionName(), null,
 							new Response.Listener<JSONObject>() {
 
 								@Override
@@ -395,7 +400,7 @@ public class KeyListAuthFragment extends Fragment {
 				} else {
 					sid = loadSid();
 					MyJsonObjectRequest postMankeyRequest = new MyJsonObjectRequest(
-							Method.POST, postNomalKeyUrl + "?sid=" + sid, null,
+							Method.POST, postNomalKeyUrl + "?sid=" + sid + "&ver=" + version.getVersionName(), null,
 							new Response.Listener<JSONObject>() {
 
 								@Override
@@ -474,7 +479,7 @@ public class KeyListAuthFragment extends Fragment {
 
 		Zonekeylist = new ArrayList<Map<String, String>>();
 		JsonObjectRequest mjsonobjrequest = new JsonObjectRequest(HOST
-				+ "?sid=" + sid, null, new Response.Listener<JSONObject>() {
+				+ "?sid=" + sid + "&ver=" + version.getVersionName(), null, new Response.Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject response) {

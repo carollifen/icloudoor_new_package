@@ -53,6 +53,7 @@ import com.icloudoor.cloudoor.CloudDoorMainActivity;
 import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
+import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
@@ -83,6 +84,8 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 	private Map<String, User> contactList;
 	private CallReceiver callReceiver;
 
+	private Version version;
+	
 	/**
 	 * 用来记录foreground Activity
 	 */
@@ -132,7 +135,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 	public void getFriends() {
 		RequestQueue mRequestQueue = Volley.newRequestQueue(appContext);
 		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid="
-				+ loadSid();
+				+ loadSid() + "&ver=" + version.getVersionName();
 		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
 				url, null, new Response.Listener<JSONObject>() {
 					@Override

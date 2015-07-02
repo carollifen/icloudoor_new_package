@@ -106,6 +106,8 @@ public class ReportToRepairActivity extends BaseActivity {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	private MyDataBaseHelper mKeyDBHelper;
 	private SQLiteDatabase mKeyDB;
 	private final String DATABASE_NAME = "KeyDB.db";
@@ -123,6 +125,8 @@ public class ReportToRepairActivity extends BaseActivity {
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 		registerReceiver(mFinishActivityBroadcast, intentFilter);
 
+		version = new Version(getApplicationContext());
+		
 		mKeyDBHelper = new MyDataBaseHelper(this, DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
 
@@ -156,7 +160,7 @@ public class ReportToRepairActivity extends BaseActivity {
 		sid = loadSid();
 
 		fixwebview.addJavascriptInterface(new Camera(), "cloudoorNative");
-		fixwebview.loadUrl(url + "?sid=" + sid);
+		fixwebview.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName());
 		sid = loadSid();
 		
 		WebChromeClient wcc = new WebChromeClient(){
@@ -248,7 +252,7 @@ public class ReportToRepairActivity extends BaseActivity {
 			super.handleMessage(msg);
 			requestQueue = Volley.newRequestQueue(ReportToRepairActivity.this);
 			upRequest = new JsonObjectRequest(resultForup + "?sid=" + loadSid()
-					+ "&type=" + "1" + "&ext=" + "jpeg", null,
+					+ "&type=" + "1" + "&ext=" + "jpeg" + "&ver=" + version.getVersionName(), null,
 					new Response.Listener<JSONObject>() {
 						@Override
 						public void onResponse(JSONObject obj) {

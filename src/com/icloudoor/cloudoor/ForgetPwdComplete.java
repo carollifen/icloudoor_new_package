@@ -65,12 +65,16 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// getActionBar().hide();
 		setContentView(R.layout.find_pwd_complete);
 
+		version = new Version(getApplicationContext());
+		
 		setupUI(findViewById(R.id.main));
 
 		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -140,7 +144,7 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 				if(networkStatus){
 					try {
 						registerURL = new URL(HOST
-								+ "/user/manage/changePassword2.do" + "?sid=" + sid);
+								+ "/user/manage/changePassword2.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}

@@ -103,11 +103,15 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 	
 	boolean isDebug = DEBUG.isDebug;
 	
+	private Version version;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getActionBar().hide();
 		setContentView(R.layout.find_pwd);
+		
+		version = new Version(getApplicationContext());
 		
 		setupUI(findViewById(R.id.main));
 		
@@ -191,7 +195,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 					counter.start();
 					
 					try {
-						requestCertiCodeURL = new URL(HOST+"/user/manage/sendVerifyCode.do"+"?sid="+sid);
+						requestCertiCodeURL = new URL(HOST+"/user/manage/sendVerifyCode.do"+"?sid="+sid + "&ver=" + version.getVersionName());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}
@@ -254,7 +258,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 					try {
 						verifyCertiCodeURL = new URL(HOST
 								+ "/user/manage/confirmVerifyCode.do" + "?sid="
-								+ sid);
+								+ sid + "&ver=" + version.getVersionName());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}
@@ -342,7 +346,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 		sid = loadSid();
 
 		try {
-			loginURL = new URL(HOST + "/user/manage/login.do" + "?sid=" + sid);
+			loginURL = new URL(HOST + "/user/manage/login.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -353,7 +357,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 
 			try {
 				loginURL = new URL(HOST + "/user/manage/login.do"
-						+ "?sid=" + sid);
+						+ "?sid=" + sid + "&ver=" + version.getVersionName());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
