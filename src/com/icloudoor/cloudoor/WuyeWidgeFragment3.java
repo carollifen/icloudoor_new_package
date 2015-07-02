@@ -130,9 +130,6 @@ public class WuyeWidgeFragment3 extends Fragment {
 						ImageLoader.getInstance().init(configuration);
 				        
 						DisplayImageOptions options = new DisplayImageOptions.Builder()
-				        .showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
-				        .showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
-				        .showImageOnFail(R.drawable.icon_boy_110) // resource or drawable
 				        .resetViewBeforeLoading(false)  // default
 				        .delayBeforeLoading(10)
 				        .cacheInMemory(false) // default
@@ -142,7 +139,6 @@ public class WuyeWidgeFragment3 extends Fragment {
 				        .bitmapConfig(Bitmap.Config.ARGB_8888) // default
 				        .displayer(new SimpleBitmapDisplayer()) // default
 				        .handler(new Handler()) // default
-				        .displayer(new RoundedBitmapDisplayer(10))
 				        .build();
 						
 						String imageUrl = Scheme.FILE.wrap(PATH + "/" + imageName);
