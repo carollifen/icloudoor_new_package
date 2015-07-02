@@ -746,7 +746,7 @@ public class KeyFragment extends Fragment {
 
 //								parseKeyData(response);
 //
-//								Log.e(TAG, response.toString());
+								Log.e(TAG, response.toString());
 //
 //								if (response.getString("sid") != null)
 //									saveSid(response.getString("sid"));
@@ -913,11 +913,12 @@ public class KeyFragment extends Fragment {
 			if (DBCount() > 0) {
 				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
 				if (mCursor.moveToFirst()) {
-					boolean keepKey = false;
+					boolean keepKey;
 					int deviceIdIndex = mCursor.getColumnIndex("deviceId");
-					String deviceId = mCursor.getString(deviceIdIndex);
-		
+					
 					do{
+						keepKey = false;
+						String deviceId = mCursor.getString(deviceIdIndex);
 						for (int index = 0; index < doorAuths.length(); index++) {
 							JSONObject doorData = (JSONObject) doorAuths.get(index);
 							
@@ -963,11 +964,12 @@ public class KeyFragment extends Fragment {
 			if (DBCountZone() > 0) {
 				Cursor mCursor = mKeyDB.rawQuery("select * from " + ZONE_TABLE_NAME, null);
 				if (mCursor.moveToFirst()) {
-					boolean keepKey = false;
+					boolean keepKey;
 					int zoneidIndex = mCursor.getColumnIndex("zoneid");
-					String zoneid = mCursor.getString(zoneidIndex);
 					
 					do{
+						keepKey = false;
+						String zoneid = mCursor.getString(zoneidIndex);
 						for (int index = 0; index < zones.length(); index++) {
 							JSONObject zoneData = (JSONObject) zones.get(index);
 							
@@ -1027,14 +1029,14 @@ public class KeyFragment extends Fragment {
 				if(DBCountCar() > 0){
 					Cursor mCursor = mKeyDB.rawQuery("select * from " + "CarKeyTable", null);
 					if(mCursor.moveToFirst()){
-						boolean keepKey = false;
+						boolean keepKey;
 						int l1ZoneIdIndex = mCursor.getColumnIndex("l1ZoneId");
 						int plateNumIndex = mCursor.getColumnIndex("plateNum");
-						
-						String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
-						String plateNum = mCursor.getString(plateNumIndex);
-						
+
 						do{
+							keepKey = false;
+							String l1ZoneId = mCursor.getString(l1ZoneIdIndex);
+							String plateNum = mCursor.getString(plateNumIndex);
 							for (int index = 0; index < cars.length(); index++) {
 								JSONObject carData = (JSONObject) cars.get(index);
 								
@@ -3109,7 +3111,7 @@ public class KeyFragment extends Fragment {
 		URL getUserStatusURL = null;
 		sid = loadSid();
 		try {
-			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid);
+			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

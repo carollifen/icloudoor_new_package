@@ -444,12 +444,15 @@ public class WuyeFragment extends Fragment {
 
 							if (response.getInt("code") == 1) {
 								
-								SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
-								Editor editor = banner.edit();
+								if(getActivity() != null){
+									SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
+									Editor editor = banner.edit();
 
-								JSONArray data = response.getJSONArray("data");
-								Log.e(TAG, "banner count = " + String.valueOf(data.length()));
-								editor.putInt("COUNT", data.length());
+									JSONArray data = response.getJSONArray("data");
+									Log.e(TAG, "banner count = " + String.valueOf(data.length()));
+									editor.putInt("COUNT", data.length());
+								
+								
 								if (data.length() == 1) {
 									if (data.getJSONObject(0).getString("type").equals("1")) {
 										String bg = data.getJSONObject(0).getString("bgColor");
@@ -570,7 +573,7 @@ public class WuyeFragment extends Fragment {
 									}
 								}
 								editor.commit();
-								
+								}
 							} else if (response.getInt("code") == -2) {
 								
                                 logoutToDo.logoutDoing();
