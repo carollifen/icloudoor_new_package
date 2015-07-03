@@ -17,11 +17,14 @@ public class Version {
 	public String getVersionName() {
 		String versionName = null;
 		try {
-			PackageManager pm = context.getPackageManager();
-			PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
-			if (pi != null) {
-				versionName = pi.versionName == null ? "null" : pi.versionName;
+			if(context != null){
+				PackageManager pm = context.getApplicationContext().getPackageManager();
+				PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+				if (pi != null) {
+					versionName = pi.versionName == null ? "null" : pi.versionName;
+				}
 			}
+			
 		} catch (PackageManager.NameNotFoundException e) {
 			Log.e(TAG, "an error occured when collect package info", e);
 		}

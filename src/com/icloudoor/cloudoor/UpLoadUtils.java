@@ -23,17 +23,20 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
 public class UpLoadUtils {
+	
+	private Context context;
 	
 	private String TAG = this.getClass().getSimpleName();
 	
 	private String foldPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cloudoor/";
 	private String fileName = "cacheTrace.txt";
 	
-	private Version version;
+	private Version version = new Version(context);
 	
 	public void writeOpenInfoToFile(String time, String userId, String doorId, boolean successOrNot, String modelNameAndVersion) {
 
@@ -140,8 +143,7 @@ public class UpLoadUtils {
 
 			URL upLoadURL = null;
 			try {
-				upLoadURL = new URL(UrlUtils.HOST + "/user/stat/add.do"
-						+ "?sid=" + sid + "&ver=" + version.getVersionName());
+				upLoadURL = new URL(UrlUtils.HOST + "/user/stat/add.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
