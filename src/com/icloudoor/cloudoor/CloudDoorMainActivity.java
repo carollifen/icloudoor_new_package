@@ -129,7 +129,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 	private int lockScreenBefore = 0;
 	
 	private int currentVersion;
-
+    private boolean mInKeyFragment;
 
 	public MyThread  myThread = null;
 	
@@ -187,10 +187,12 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		@Override
 		public void run() {
 			while (!Thread.currentThread().isInterrupted() && !mStopThread) {
-				Message msg = new Message();
-				msg.what = 10;
-				mHandler1.sendMessage(msg);
-				Log.i("ThreadTest", Thread.currentThread().getId() + "myThread");
+                if (mInKeyFragment) {
+                	Message msg = new Message();
+                	msg.what = 10;
+                	mHandler1.sendMessage(msg);
+                }	
+				MyDebugLog.i("ThreadTest", Thread.currentThread().getId() + "myThread");
 				try {
 					Thread.sleep(mScanningProidShort);
 					if (mKeyFindState == true){
@@ -425,6 +427,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
                 mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE).commit();
             }else {
                 mFragmenetTransaction.replace(R.id.id_content, mKeyFragment).commit();
+                mInKeyFragment = true;
             }
 		}else{
 			mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE).commit();
@@ -590,6 +593,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 	public void BottomColorChange(int index) {
 		mFragmentManager = getSupportFragmentManager();
 		mFragmenetTransaction = mFragmentManager.beginTransaction();
+        mInKeyFragment = false;
 		switch (index) {
 		case R.id.bottom_wuye_layout:
 	
@@ -678,7 +682,13 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 			bottomIvWuye.setImageResource(R.drawable.wuye_normal);
 
 			if(currentVersion >= 18){
-				mFragmenetTransaction.replace(R.id.id_content, mKeyFragment);
+				// BLE
+				if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+					mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE);
+				}else {
+					mFragmenetTransaction.replace(R.id.id_content, mKeyFragment);
+					mInKeyFragment = true;
+				}
 			}else{
 				mFragmenetTransaction.replace(R.id.id_content, mKeyFragmentNoBLE);
 			}
