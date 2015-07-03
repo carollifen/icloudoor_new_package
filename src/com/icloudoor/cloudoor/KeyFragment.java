@@ -418,9 +418,26 @@ public class KeyFragment extends Fragment {
 		animation1.setInterpolator(lin1);
 
 		BtnOpenDoor = (ImageView) view.findViewById(R.id.btn_open_door);
-		BtnOpenDoor.setImageResource(R.drawable.door_normalll_new);
+		BtnOpenDoor.setImageResource(R.drawable.door_normalll_v2);
 		BtnOpenDoor.setEnabled(false);
 
+		LayoutParams para = BtnOpenDoor.getLayoutParams();
+		if(screenWidth > 1080 && screenWidth <= 1440){
+			para.width = screenWidth - 246*2;
+			para.height = screenWidth - 246*2;
+		} else if(screenWidth > 720 && screenWidth <= 1080){
+			para.width = screenWidth - 206*2;
+			para.height = screenWidth - 206*2;
+		} else if(screenWidth > 480 && screenWidth <= 720){
+			para.width = screenWidth - 156*2;
+			para.height = screenWidth - 156*2;
+		} else {
+			para.width = screenWidth - 98*2;
+			para.height = screenWidth - 98*2;
+		}
+		
+		BtnOpenDoor.setLayoutParams(para);
+		
 		BtnOpenDoor.setOnClickListener(new OnClickListener(){
 
 			@Override
