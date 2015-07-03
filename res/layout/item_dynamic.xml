@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+   
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+         >
+
+        <android.support.v4.widget.CircleImageView
+            android:id="@+id/head_img"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_boy_110" >
+        </android.support.v4.widget.CircleImageView>
+
+        <TextView
+            android:id="@id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/head_img"
+            android:text="我看我的世界你看你的"
+            android:textColor="#333333"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/content_ioc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_boy_110"
+            android:visibility="gone" />
+
+        <com.icloudoor.cloudoor.widget.GridViewForScrollview
+            android:id="@+id/gridview1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="2" >
+        </com.icloudoor.cloudoor.widget.GridViewForScrollview>
+
+        <com.icloudoor.cloudoor.widget.GridViewForScrollview
+            android:id="@+id/gridview2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="3" >
+        </com.icloudoor.cloudoor.widget.GridViewForScrollview>
+    </RelativeLayout>
+    
+    
+     <com.icloudoor.cloudoor.widget.MultipleTextView
+        xmlns:my="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_rl"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+    	android:layout_height="wrap_content"
+    	my:textSize="12sp"
+    	my:textWordMargin="10dp"
+    	my:textLineMargin="10dp"
+    	my:textColor="#ff0000"
+    	my:textPaddingLeft="10dp"
+    	my:textPaddingRight="10dp"
+    	my:textPaddingTop="10dp"
+    	my:textPaddingBottom="10dp"
+    	/>
+
+</LinearLayout>

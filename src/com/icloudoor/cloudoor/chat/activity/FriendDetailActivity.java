@@ -222,7 +222,7 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 												new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
 												friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
 									}
-									db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
+									db.setTransactionSuccessful();// 璋冪敤姝ゆ柟娉曚細鍦ㄦ墽琛屽埌endTransaction()
 								} finally {
 									db.endTransaction();
 									finish();

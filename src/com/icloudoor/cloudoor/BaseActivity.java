@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
+import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.widget.MyProgressDialog;
 import com.umeng.analytics.MobclickAgent;
 
@@ -103,7 +104,6 @@ public class BaseActivity extends Activity{
 						// TODO Auto-generated method stub
 						BaseActivity.this.networkInterface.onSuccess(response);
 						destroyDialog();
-						System.out.println(response);
 					}
 				}, new Response.ErrorListener() {
 					@Override
@@ -122,6 +122,36 @@ public class BaseActivity extends Activity{
 		};
 		mQueue.add(mJsonRequest);
 	}
+	
+	
+	public void getNetworkDataJSONType(NetworkInterface networkInterface,String httpurl, String josn,boolean isShowLoadin){
+		this.networkInterface = networkInterface;
+			String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid();
+			if(isShowLoadin)
+			loading();
+			
+			MyRequestBody requestBody = new MyRequestBody( url, josn,new Response.Listener<JSONObject>() {
+				
+				@Override
+				public void onResponse(JSONObject response) {
+					// TODO Auto-generated method stub
+					BaseActivity.this.networkInterface.onSuccess(response);
+					destroyDialog();
+				}
+				
+			},new Response.ErrorListener() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					// TODO Auto-generated method stub
+					BaseActivity.this.networkInterface.onFailure(error);
+					destroyDialog();
+				}
+			});
+			mQueue.add(requestBody);
+			
+	}
+	
 	
 	
 	public void destroyDialog() {

@@ -722,7 +722,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			Intent intent = new Intent(ChatActivity.this, ImageGridActivity.class);
 			startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
 		} else if (id == R.id.btn_file) { 
-//			selectFileFromLocal();√˚∆¨
+//			selectFileFromLocal();ÂêçÁâá
 			Intent intent = new Intent(this, ContactActivity.class);
 			intent.putExtra("type", 1);
 			startActivityForResult(intent, REQUEST_CODE_CONTACT);
@@ -1247,6 +1247,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		}
 		list.add("delete_expression");
 		final ExpressionAdapter expressionAdapter = new ExpressionAdapter(this, 1, list);
+		
 		gv.setAdapter(expressionAdapter);
 		gv.setOnItemClickListener(new OnItemClickListener() {
 
@@ -1257,7 +1258,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 					if (buttonSetModeKeyboard.getVisibility() != View.VISIBLE) {
 
 						if (filename != "delete_expression") { 
-							Class clz = Class.forName("com.easemob.chatuidemo.utils.SmileUtils");
+							Class clz = Class.forName("com.icloudoor.cloudoor.chat.SmileUtils");
 							Field field = clz.getField(filename);
 							mEditTextContent.append(SmileUtils.getSmiledText(ChatActivity.this,
 									(String) field.get(null)));

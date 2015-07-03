@@ -246,7 +246,7 @@
     <string name="delete_video">删除视频</string>
     <string name="delete">删除</string>
     <string name="Send_the_following_pictures">发送以下图片？</string>
-    <string name="group_msg_name">聊天室</string>
+    <string name="group_msg_name">动态</string>
     <string name="imError">获取IM账号失败</string>
     <string name="contact">小区通讯录</string>
     <string name="jsonerror">解析异常</string>

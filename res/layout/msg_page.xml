@@ -68,7 +68,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/msg_image"
-                    android:text="消息宝典"
+                    android:text="拼车"
                     android:textColor="#333333"
                     android:textSize="17sp" />
                 

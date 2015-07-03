@@ -34,6 +34,7 @@ import com.icloudoor.cloudoor.adapter.ChatAllHistoryAdapter1;
 import com.icloudoor.cloudoor.chat.ChatAllHistoryAdapter;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.activity.ContactActivity;
+import com.icloudoor.cloudoor.chat.activity.DynamicActivity;
 import com.icloudoor.cloudoor.chat.activity.MipcaActivityCapture;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.umeng.analytics.MobclickAgent;
@@ -267,7 +268,8 @@ public class MsgFragment extends Fragment implements OnItemClickListener, OnClic
 			Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.group_layout:
-			
+			Intent intent = new Intent(getActivity(), DynamicActivity.class);
+			startActivity(intent);
 			break;
 		
 		case R.id.add_friends:

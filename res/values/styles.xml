@@ -141,6 +141,18 @@
         <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->  
     </style> 
 	
+     <declare-styleable name="MyView">  
+        <attr name="textColor" format="color"/>  
+        <attr name="textSize"  format="dimension"/>
+        <attr name="textWordMargin"  format="dimension"/>
+        <attr name="textLineMargin"  format="dimension"/>
+        <attr name="textBackground" format="integer" />
+        
+        <attr name="textPaddingLeft"  format="dimension"/>
+        <attr name="textPaddingRight"  format="dimension"/>
+        <attr name="textPaddingTop"  format="dimension"/>
+        <attr name="textPaddingBottom"  format="dimension"/>
+    </declare-styleable>
 	
 
 </resources>
