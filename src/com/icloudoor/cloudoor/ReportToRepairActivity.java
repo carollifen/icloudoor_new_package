@@ -26,8 +26,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,8 +37,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
@@ -45,6 +49,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -96,6 +101,7 @@ public class ReportToRepairActivity extends BaseActivity {
 
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int PICTURE_REQUEST_CODE = 2;
+	private static final int RESULT_REQUEST_CODE = 11;
 
 	private JSONObject fromUPjson;
 
@@ -114,6 +120,8 @@ public class ReportToRepairActivity extends BaseActivity {
 	private final String TABLE_NAME = "KeyInfoTable";
 	private final String CAR_TABLE_NAME = "CarKeyTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
+	
+	private SelectPicPopupWindow menuWindow;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -188,31 +196,61 @@ public class ReportToRepairActivity extends BaseActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_REQUEST_CODE
-				&& resultCode == Activity.RESULT_OK && data != null) {
-			Bitmap bitmap = data.getParcelableExtra("data");
-			FixPictrueFileUtil.getInstance().saveBitmap(bitmap);
-
-			Log.e(TAG, "保存");
-
-			mList = new ArrayList<File>();
-			String url = Environment.getExternalStorageDirectory().toString()
-					+ "/Cloudoor/FixImage";
-			File albumdir = new File(url);
-			File[] imgfile = albumdir.listFiles(filefiter);
-			int len = imgfile.length;
-			for (int i = 0; i < len; i++) {
-				mList.add(imgfile[i]);
+//		if (requestCode == CAMERA_REQUEST_CODE
+//				&& resultCode == Activity.RESULT_OK && data != null) {
+//			Bitmap bitmap = data.getParcelableExtra("data");
+//			FixPictrueFileUtil.getInstance().saveBitmap(bitmap);
+//
+//			MyDebugLog.e(TAG, "onActivityResult CAMERA_REQUEST_CODE");
+//
+//			mList = new ArrayList<File>();
+//			String url = Environment.getExternalStorageDirectory().toString()
+//					+ "/Cloudoor/FixImage";
+//			File albumdir = new File(url);
+//			File[] imgfile = albumdir.listFiles(filefiter);
+//			int len = imgfile.length;
+//			for (int i = 0; i < len; i++) {
+//				mList.add(imgfile[i]);
+//			}
+//
+//			// Collections.sort(mList, new FileComparator());
+//
+//			MyAsyncTask myAsyncTask = new MyAsyncTask();
+//			myAsyncTask.execute(upsubmitUrl);
+//
+//		}
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case 1:
+				if (cameraFile != null) {
+					Log.e(TAG, "1");
+					startPhotoZoom(Uri.fromFile(cameraFile));
+				}
+				break;
+			case 0:
+				if (data != null) {
+					Log.e(TAG, "0");
+					startPhotoZoom(data.getData());
+				}
+				break;
+			case RESULT_REQUEST_CODE:
+				Log.e(TAG, "3");
+				if (data != null){
+					Bundle bundle = data.getExtras();
+					
+					cameraFile = new File(Environment.getExternalStorageDirectory()
+							.getAbsolutePath() + "/Cloudoor/FixImage/repair.jpg");
+					cameraFile.getParentFile().mkdirs();
+					Bitmap photo = bundle.getParcelable("data");
+					
+					Bitmap bitmap = data.getParcelableExtra("data");
+					FixPictrueFileUtil.getInstance().saveBitmap(bitmap);
+					
+					MyAsyncTask myAsyncTask = new MyAsyncTask();
+					myAsyncTask.execute(upsubmitUrl);	
+				}		
+				break;
 			}
-			Log.e(TAG, "读取" + "dsijkl");
-
-			// Collections.sort(mList, new FileComparator());
-
-			Log.e(TAG, "读取" + "排序");
-
-			MyAsyncTask myAsyncTask = new MyAsyncTask();
-			myAsyncTask.execute(upsubmitUrl);
-
 		}
 
 	}
@@ -325,12 +363,12 @@ public class ReportToRepairActivity extends BaseActivity {
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpPost postRequest = new HttpPost(params[0]);
 
-			File file = null;
-			if (URLUtil.isFileUrl(mList.get(0).getAbsolutePath())) {
-				file = new File(URI.create(mList.get(0).getAbsolutePath()));
-			} else {
-				file = new File(mList.get(0).getAbsolutePath());
-			}
+//			File file = null;
+//			if (URLUtil.isFileUrl(mList.get(0).getAbsolutePath())) {
+//				file = new File(URI.create(mList.get(0).getAbsolutePath()));
+//			} else {
+//				file = new File(mList.get(0).getAbsolutePath());
+//			}
 
 			// MultipartEntity myMul=new MultipartEntity();
 
@@ -403,7 +441,7 @@ public class ReportToRepairActivity extends BaseActivity {
 		}
 		
 		@JavascriptInterface
-		public void takePhoto(final String str) {
+		public void showImagePicker(final String str) {
 
 			runOnUiThread(new Runnable() {
 				public void run() {
@@ -418,9 +456,17 @@ public class ReportToRepairActivity extends BaseActivity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					startActivityForResult(new Intent(
-							MediaStore.ACTION_IMAGE_CAPTURE), 1);
-
+//					startActivityForResult(new Intent(
+//							MediaStore.ACTION_IMAGE_CAPTURE), 1);
+					menuWindow = new SelectPicPopupWindow(ReportToRepairActivity.this, itemsOnClick); 
+					menuWindow.showAtLocation(ReportToRepairActivity.this.findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+					
+					View view = getWindow().peekDecorView();
+			        if (view != null) {
+			            InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			            inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
+			        }
+					
 				}
 			});
 
@@ -489,4 +535,63 @@ public class ReportToRepairActivity extends BaseActivity {
 		
 	}
 	
+	File cameraFile;
+
+	private OnClickListener itemsOnClick = new OnClickListener() {
+
+		public void onClick(View v) {
+			menuWindow.dismiss();
+			switch (v.getId()) {
+			case R.id.btn_take_photo:
+
+				if (!isExitsSdcard()) {
+					Toast.makeText(getApplicationContext(), "SD卡不可用", 0).show();
+					return;
+				}
+				cameraFile = new File(Environment.getExternalStorageDirectory()
+						.getAbsolutePath() + "/Cloudoor/FixImage",
+						+System.currentTimeMillis() + ".jpg");
+				cameraFile.getParentFile().mkdirs();
+				startActivityForResult(new Intent(
+						MediaStore.ACTION_IMAGE_CAPTURE).putExtra(
+						MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)), 1);
+
+				break;
+			case R.id.btn_pick_photo:
+
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_PICK);
+				intent.setType("image/*");
+				startActivityForResult(intent, 0);
+				break;
+			default:
+				menuWindow.dismiss();
+				break;
+			}
+
+		}
+
+	};
+	
+	public boolean isExitsSdcard() {
+		if (android.os.Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED))
+			return true;
+		else
+			return false;
+	}
+	
+	public void startPhotoZoom(Uri uri) {
+
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("aspectX", 1);
+		intent.putExtra("aspectY", 1);
+		intent.putExtra("outputX", 300);
+		intent.putExtra("outputY", 300);
+		intent.putExtra("return-data", true);
+		intent.putExtra("noFaceDetection", true);
+		startActivityForResult(intent, RESULT_REQUEST_CODE);
+	}
 }
