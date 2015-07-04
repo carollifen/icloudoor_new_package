@@ -398,8 +398,12 @@ public class KeyListAuthFragment extends Fragment {
 						mQueue.add(carAndPhoneRequest);
 					}				
 				} else {
-					sid = loadSid();
-					MyJsonObjectRequest postMankeyRequest = new MyJsonObjectRequest(
+					SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+					if(dateAndPhoneShare.getString("PHONENUM", null).equals(loginStatus.getString("PHONENUM", null))){
+						Toast.makeText(getActivity(), R.string.cannot_auth_to_self, Toast.LENGTH_SHORT).show();
+					} else {
+						sid = loadSid();
+						MyJsonObjectRequest postMankeyRequest = new MyJsonObjectRequest(
 							Method.POST, postNomalKeyUrl + "?sid=" + sid + "&ver=" + version.getVersionName(), null,
 							new Response.Listener<JSONObject>() {
 
@@ -445,24 +449,24 @@ public class KeyListAuthFragment extends Fragment {
 										Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
 								}
 							}) {
-						@Override
-						protected Map<String, String> getParams()
-								throws AuthFailureError {
-							Map<String, String> map = new HashMap<String, String>();
+							@Override
+							protected Map<String, String> getParams()
+									throws AuthFailureError {
+								Map<String, String> map = new HashMap<String, String>();
 
-							map.put("zoneUserId", zoneIdShare.getString("ZONEID", null));
-							map.put("authDate", dateAndPhoneShare.getString("DATE", null));
-							map.put("toMobile", dateAndPhoneShare.getString("PHONENUM", null));
+								map.put("zoneUserId", zoneIdShare.getString("ZONEID", null));
+								map.put("authDate", dateAndPhoneShare.getString("DATE", null));
+								map.put("toMobile", dateAndPhoneShare.getString("PHONENUM", null));
 
-							return map;
+								return map;
+							}
+						};
+						if(status.getBoolean("ManPhone", false) && status.getBoolean("ManDate", false) && TVkeyname.length() > 0){
+							mQueue.add(postMankeyRequest);
 						}
-					};
-					if(status.getBoolean("ManPhone", false) && status.getBoolean("ManDate", false) && TVkeyname.length() > 0){
-						mQueue.add(postMankeyRequest);
-					}
+					}	
 				}
 			}
-
 		});
 		//
 
