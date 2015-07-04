@@ -605,7 +605,7 @@ public class SettingFragment extends Fragment {
 		weiXinleMedia.setTitle(getActivity().getResources().getString(R.string.shareTitle));
 		weiXinleMedia.setShareImage(new UMImage(getActivity(),
 				R.drawable.logo_deep144));
-		weiXinleMedia.setTargetUrl("http://m.70c.com/w/SZQQSC");
+		weiXinleMedia.setTargetUrl("http://m.70c.com/w/CCCQYZS?from=singlemessage&isappinstalled=0");
 		mController.setShareMedia(weiXinleMedia);
 		
 		
