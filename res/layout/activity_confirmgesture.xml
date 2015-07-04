@@ -35,7 +35,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
         android:layout_alignParentBottom="true"
-         android:text="验证登陆密码"
+         android:text="验证登录密码"
           android:textColor="#333333"
         android:textSize="18sp"
         

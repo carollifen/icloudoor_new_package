@@ -102,7 +102,7 @@
 <!--             android:layout_width="wrap_content" -->
 <!--             android:layout_height="wrap_content" -->
 <!--             android:layout_alignParentRight="true" -->
-<!--             android:text="账号登陆" -->
+<!--             android:text="账号登录" -->
 <!--             android:textSize="16sp" -->
 <!--             android:textColor="@drawable/selector_sign_setting_page" -->
 <!--             />" -->

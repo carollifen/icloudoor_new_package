@@ -52,9 +52,9 @@
     <string name="open_door_fail">开门失败，请靠近重新连接</string>
     <string name="low_android_version">系统版本过低，无法使用云门</string>
     <string name="reset_the_gesture_pwd">请重设手势密码</string>
-    <string name="login_pwd">登陆密码</string>
+    <string name="login_pwd">登录密码</string>
     <string name="get_certi_code_again">重新验证</string>
-    <string name="have_send">已发验证</string>
+    <string name="have_send">已发送</string>
     <string name="male">男</string>
     <string name="female">女</string>
     <string name="wrong_pwd">密码输入有误</string>
@@ -282,5 +282,4 @@
     <string name="time1">小时前</string>
     <string name="time2">天前</string>
     
-
 </resources>
