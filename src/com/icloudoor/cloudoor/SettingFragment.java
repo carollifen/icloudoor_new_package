@@ -52,6 +52,7 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.fb.model.UserInfo;
+import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.UMServiceFactory;
@@ -138,6 +139,9 @@ public class SettingFragment extends Fragment {
 
 	boolean isDebug = DEBUG.isDebug;
 
+	private String share_link = null;
+	private String defaultLink = "http://www.icloudoor.com/d";
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -560,7 +564,22 @@ public class SettingFragment extends Fragment {
     }
 
 	public void share() {
-
+		
+		if(getActivity() != null){
+			share_link = OnlineConfigAgent.getInstance().getConfigParams(getActivity(), "share_link");
+			
+			SharedPreferences link = getActivity().getSharedPreferences("LINK", 0);
+			Editor editor = link.edit();
+			editor.putString("SHARELINK", share_link);
+			editor.commit();
+		}
+		
+		if(share_link.equals(null))
+			share_link = defaultLink;
+		
+		MyDebugLog.e(TAG, share_link);
+		
+		// ÃŒÃ­Â¼Ã“ÃŽÂ¢ÃÃ…Ã†Â½ÃŒÂ¨
 		wxHandler = new UMWXHandler(getActivity(), appID, appSecret);
 		wxHandler.addToSocialSDK();
 		wxCircleHandler = new UMWXHandler(getActivity(), appID, appSecret);
@@ -594,7 +613,8 @@ public class SettingFragment extends Fragment {
 		circleMedia.setTitle(getActivity().getResources().getString(R.string.shareTitle));
 		circleMedia.setShareImage(new UMImage(getActivity(),
 				R.drawable.logo_deep144));
-		circleMedia.setTargetUrl("http://m.70c.com/w/SZQQSC");
+		circleMedia.setTargetUrl(share_link);
+		
 		mController.setShareMedia(circleMedia);
 		
 		
@@ -605,7 +625,7 @@ public class SettingFragment extends Fragment {
 		weiXinleMedia.setTitle(getActivity().getResources().getString(R.string.shareTitle));
 		weiXinleMedia.setShareImage(new UMImage(getActivity(),
 				R.drawable.logo_deep144));
-		weiXinleMedia.setTargetUrl("http://m.70c.com/w/CCCQYZS?from=singlemessage&isappinstalled=0");
+		weiXinleMedia.setTargetUrl(share_link);
 		mController.setShareMedia(weiXinleMedia);
 		
 		
