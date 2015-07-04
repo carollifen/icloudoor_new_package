@@ -2,7 +2,6 @@ package com.icloudoor.cloudoor.utli;
 
 import android.content.Context;
 
-import com.icloudoor.cloudoor.chat.activity.FriendDetailActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.db.MyDBHelper;

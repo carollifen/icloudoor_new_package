@@ -43,13 +43,13 @@ public class MyRequestBody extends JsonRequest<JSONObject> {
 	public void deliverError(VolleyError error) {
 		// TODO Auto-generated method stub
 		super.deliverError(error);
-		errorListener.onErrorResponse(error);
+//		errorListener.onErrorResponse(error);
 	}
 	@Override
 	protected void deliverResponse(JSONObject response) {
 		// TODO Auto-generated method stub
 		super.deliverResponse(response);
-		listener.onResponse(response);
+//		listener.onResponse(response);
 	}
 
 }

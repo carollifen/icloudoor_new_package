@@ -291,5 +291,6 @@
     <string name= "removeFriendFail">删除好友 失败</string>
     <string name= "auth_key">授权钥匙</string>
     <string name= "returnChat">返回聊天</string>
+    <string name= "qr_hint">扫一扫下面的二维图案，添加我为云门好友</string>
 
 </resources>

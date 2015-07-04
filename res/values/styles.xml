@@ -16,32 +16,38 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    
-    
-      <style name="add_dialog" parent="@android:style/Theme.Dialog">  
-        <item name="android:windowFrame">@null</item><!-- 边框 -->  
-        <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->  
-        <item name="android:windowIsTranslucent">false</item><!-- 半透明 -->  
-        <item name="android:windowNoTitle">true</item><!-- 无标题 -->  
-        <item name="android:windowBackground">@drawable/dialog_bg</item><!-- 自己想要的背景 -->  
-        <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->  
-    </style>  
-    
-      <style name="umeng_fb_speech_dialog_style" parent="@android:style/Theme.Dialog">
+
+    <style name="add_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+ <!-- 边框 -->
+        <item name="android:windowIsFloating">true</item>
+ <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">false</item>
+ <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+ <!-- 无标题 -->
+        <item name="android:windowBackground">@drawable/dialog_bg</item>
+ <!-- 自己想要的背景 -->
+        <item name="android:backgroundDimEnabled">false</item>
+ <!-- 模糊 -->
+    </style>
+
+    <style name="umeng_fb_speech_dialog_style" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground"> @android:color/transparent </item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
     <style name="umeng_fb_image_dialog_anim">
         <item name="android:windowEnterAnimation">@anim/umeng_fb_dialog_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/umeng_fb_dialog_exit_anim</item>
     </style>
-    
-    <style name="translucent">
-    <item name="android:windowBackground">@color/translucent_background</item>
-    <item name="android:windowIsTranslucent">true</item>
-</style>
 
-     <style name="DashboardButton">
+    <style name="translucent">
+        <item name="android:windowBackground">@color/translucent_background</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="DashboardButton">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:width">100dp</item>
         <item name="android:height">100dp</item>
@@ -60,22 +66,25 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@drawable/actionbar_background</item>
     </style>
+
     <style name="ActionBarItem">
         <item name="android:layout_width">@dimen/actionbar_item_width</item>
         <item name="android:layout_height">@dimen/actionbar_height</item>
         <item name="android:padding">5dp</item>
         <item name="android:layout_marginLeft">1px</item>
     </style>
+
     <style name="ActionBarHomeItem" parent="ActionBarItem">
         <item name="android:layout_marginRight">1px</item>
         <item name="android:layout_marginLeft">0px</item>
     </style>
+
     <style name="ActionBarHomeLogo">
         <item name="android:layout_marginRight">1px</item>
         <item name="android:layout_marginLeft">0px</item>
     </style>
-    <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small">
-    </style>
+
+    <style name="ActionBarProgressBar" parent="@android:style/Widget.ProgressBar.Small"></style>
 
     <style name="chat_text_date_style">
         <item name="android:padding">2dp</item>
@@ -87,7 +96,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:background">@drawable/timestampe_bg</item>
     </style>
-    
+
     <style name="chat_content_date_style">
         <item name="android:minHeight">50dp</item>
         <item name="android:gravity">center</item>
@@ -98,13 +107,13 @@
         <item name="android:focusable">true</item>
         <item name="android:background">#bfbfbf</item>
     </style>
-    
+
     <style name="chat_text_name_style">
         <item name="android:textColor">#818181</item>
         <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>
     </style>
-    
+
     <style name="MyDialogStyle">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item>
@@ -115,7 +124,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
-    
+
     <style name="mydialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <!-- 边框 -->
@@ -131,28 +140,48 @@
         <!-- 模糊 -->
 
     </style>
-    
-     <style name="card_dialog" parent="@android:style/Theme.Dialog">  
-        <item name="android:windowFrame">@null</item><!-- 边框 -->  
-        <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->  
-        <item name="android:windowIsTranslucent">false</item><!-- 半透明 -->  
-        <item name="android:windowNoTitle">true</item><!-- 无标题 -->  
-        <item name="android:windowBackground">@android:color/transparent</item><!-- 自己想要的背景 -->  
-        <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->  
-    </style> 
-	
-     <declare-styleable name="MyView">  
-        <attr name="textColor" format="color"/>  
-        <attr name="textSize"  format="dimension"/>
-        <attr name="textWordMargin"  format="dimension"/>
-        <attr name="textLineMargin"  format="dimension"/>
+
+    <style name="card_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+ <!-- 边框 -->
+        <item name="android:windowIsFloating">true</item>
+ <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">false</item>
+ <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+ <!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+ <!-- 自己想要的背景 -->
+        <item name="android:backgroundDimEnabled">false</item>
+ <!-- 模糊 -->
+    </style>
+
+    <declare-styleable name="MyView">
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textWordMargin" format="dimension" />
+        <attr name="textLineMargin" format="dimension" />
         <attr name="textBackground" format="integer" />
-        
-        <attr name="textPaddingLeft"  format="dimension"/>
-        <attr name="textPaddingRight"  format="dimension"/>
-        <attr name="textPaddingTop"  format="dimension"/>
-        <attr name="textPaddingBottom"  format="dimension"/>
+        <attr name="textPaddingLeft" format="dimension" />
+        <attr name="textPaddingRight" format="dimension" />
+        <attr name="textPaddingTop" format="dimension" />
+        <attr name="textPaddingBottom" format="dimension" />
     </declare-styleable>
-	
+
+    <style name="QRCode_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    
+    
+
+    <style name="dialogWindowAnim" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit_anim</item>
+    </style>
 
 </resources>

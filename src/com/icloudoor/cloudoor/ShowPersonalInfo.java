@@ -40,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.icloudoor.cloudoor.widget.QRCodeCreateDialog;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -57,7 +59,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 
-public class ShowPersonalInfo extends BaseActivity {
+public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 	
 	private String TAG = this.getClass().getSimpleName();
 
@@ -118,7 +120,7 @@ public class ShowPersonalInfo extends BaseActivity {
 	String imageUrl;
 	DisplayImageOptions options;
 	String tempURL;
-	
+	LinearLayout QRcode_layout;
 	private Version version;
 	
 	@Override
@@ -126,7 +128,8 @@ public class ShowPersonalInfo extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.show_personal_info);
-		
+		QRcode_layout = (LinearLayout) findViewById(R.id.QRcode_layout);
+		QRcode_layout.setOnClickListener(this);
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 		userStatus = loginStatus.getInt("STATUS", 1);
 		portraitUrl = loginStatus.getString("URL", null);
@@ -753,5 +756,25 @@ public class ShowPersonalInfo extends BaseActivity {
 	public String loadSid() {
 		SharedPreferences loadSid = getSharedPreferences("SAVEDSID", 0);
 		return loadSid.getString("SID", null);
+	}
+
+	QRCodeCreateDialog dialog;
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.QRcode_layout:
+			dialog = new QRCodeCreateDialog(this, R.style.QRCode_dialog);
+			dialog.show();
+			dialog.windowDeploy();
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+			String PHONENUM = loginStatus.getString("PHONENUM", "");
+			String url = UrlUtils.HOST + "/user/im/searchUser.do"+ "?sid=" + loadSid()+"&searchValue="+PHONENUM;
+			dialog.createQRImage(url);
+			break;
+
+		default:
+			break;
+		}
 	}	
 }

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.icloudoor.cloudoor.BaseActivity;
 import com.icloudoor.cloudoor.R;
@@ -77,7 +78,6 @@ public class SearchFriendActivity extends BaseActivity implements OnClickListene
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.search_layout:
-			
 			String search = search_tx.getText().toString().trim();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("searchValue", search);

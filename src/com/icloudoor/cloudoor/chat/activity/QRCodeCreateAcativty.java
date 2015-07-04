@@ -29,11 +29,8 @@ public class QRCodeCreateAcativty extends BaseActivity {
 		qrcode_img = (ImageView) findViewById(R.id.qrcode_img);
 		QR_HEIGHT = QR_WIDTH = dip2px(200);
 		
-		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-		String PHONENUM = loginStatus.getString("PHONENUM", "");
-		String url = UrlUtils.HOST + ""+ "?sid=" + loadSid()+"& searchValue="+PHONENUM;
 		
-		createQRImage(url);
+//		createQRImage(url);
 	}
 
 	public void createQRImage(String url) {

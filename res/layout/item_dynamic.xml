@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="60dp" >
 
-        <com.icloudoor.cloudoor.widgetCircleImageView
+        <com.icloudoor.cloudoor.widget.CircleImageView
             android:id="@+id/head_img"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -34,7 +34,9 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/content_ioc_layout"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content" >
 
         <ImageView
@@ -48,6 +50,7 @@
         <com.icloudoor.cloudoor.widget.GridViewForScrollview
             android:id="@+id/gridview1"
             android:layout_width="match_parent"
+             android:visibility="gone"
             android:layout_height="wrap_content"
             android:numColumns="2" >
         </com.icloudoor.cloudoor.widget.GridViewForScrollview>
@@ -56,6 +59,7 @@
             android:id="@+id/gridview2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+             android:visibility="gone"
             android:numColumns="3" >
         </com.icloudoor.cloudoor.widget.GridViewForScrollview>
     </RelativeLayout>
@@ -102,6 +106,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             android:maxLines="4"
             android:text="删除"
             android:textColor="#4779AC"

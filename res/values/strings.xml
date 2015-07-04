@@ -277,5 +277,10 @@
     <string name="notfriend">此人不是你好友，禁止骚扰</string>
     <string name="msg_tx1">发送好友</string>
     <string name="msg_tx2">的名片到当前聊天？</string>
+    <string name="notData">暂无数据</string>
+    <string name="time">分钟前</string>
+    <string name="time1">小时前</string>
+    <string name="time2">天前</string>
+    
 
 </resources>

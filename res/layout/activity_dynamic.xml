@@ -2,14 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   	android:background="#f8f8f8"
+    android:background="#f8f8f8"
     android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#0065a1" >
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:src="@drawable/new_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/group_msg_name"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+        
+        
+        <TextView 
+            android:id="@+id/dynami_editing"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:background="@drawable/dynami_editing"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            />
+    </RelativeLayout>
 
     <com.icloudoor.cloudoor.widget.RefreshListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="5dp"
         android:listSelector="@android:color/transparent"
-        android:layout_height="match_parent" >
+        android:scrollbarStyle="outsideOverlay"
+        android:transcriptMode="normal" >
     </com.icloudoor.cloudoor.widget.RefreshListView>
 
 </LinearLayout>
