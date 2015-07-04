@@ -9,6 +9,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -483,25 +486,55 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		}
 		mEditor.putBoolean("FIRSTLOGIN", false).commit();
 		// save image to file		
-//		SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
-//		if (downPic.getInt("PIC", 0) == 0) {
 
-			File f = new File(PATH + "/" + jpegName);
-			if (f.exists())
-				f.delete();
+			
+		File f = new File(PATH + "/" + jpegName);
+		if (f.exists())
+			f.delete();
 
-			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-			imageURL = loginStatus.getString("URL", null);
-			if (imageURL != null) {
-				Log.e(TAG, imageURL + "  downloading");
-				if (mThread == null) {
-					mThread = new Thread(runnable);
-					mThread.start();
-				}
-			}
-//		}
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+		imageURL = loginStatus.getString("URL", null);
+		if (imageURL != null) {
+			MyDebugLog.e(TAG, imageURL + "  downloading");
+//			if (mThread == null) {
+//				mThread = new Thread(runnable);
+//				mThread.start();
+//			}
+			downLoadImage();
+		}
 	}
 
+	public void downLoadImage() {
+		String imagePath = PATH + "/" + jpegName;
+		File f = new File(imagePath);
+    	if(f.exists())
+    		f.delete();
+    	
+    	FinalHttp fh = new FinalHttp();
+    	fh.download(imageURL, imagePath, new AjaxCallBack<File>() {
+    		public void onStart() {
+    			super.onStart();
+    			MyDebugLog.e(TAG, "download image start");
+    		}
+    		
+    		public void onLoading(long count, long current) {
+    			super.onLoading(count, current);
+    			MyDebugLog.e(TAG, "downloading image");
+    		}
+    		
+    		public void onSuccess(File t) {
+    			super.onSuccess(t);
+    			MyDebugLog.e(TAG, "download image success");
+    		}
+    		
+    		@SuppressWarnings("unused")
+			public void onFailure(Throwable t, int errorNo, String strMsg) {
+    			super.onFailure(t, strMsg);
+    			MyDebugLog.e(TAG, "download image fail");
+    		}
+    	});
+	}
+	
 	private Handler mHandler = new Handler() {
 
 		@Override
@@ -952,7 +985,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 	public void getBannerData(){
 		URL bannerURL = null;
 		try {
-			bannerURL = new URL(UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do" + "?sid=" + sid);
+			bannerURL = new URL(UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
