@@ -1,13 +1,8 @@
 package com.icloudoor.cloudoor.chat.activity;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,33 +12,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
-import com.android.volley.toolbox.Volley;
-import com.easemob.EMCallBack;
-import com.easemob.chat.CmdMessageBody;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMMessage;
 import com.icloudoor.cloudoor.BaseActivity;
-import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
-import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
-import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
-import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
-import com.icloudoor.cloudoor.utli.GsonUtli;
 
-public class RequestFriendActivity extends BaseActivity implements OnClickListener,NetworkInterface{
-	
+public class RequestFriendActivity extends BaseActivity implements
+		OnClickListener, NetworkInterface {
+
 	TextView right_send;
 	EditText msg_edit;
 	ImageView delete_msg;
 	ImageView btn_back;
 	String trgUserId;
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
@@ -58,23 +40,28 @@ public class RequestFriendActivity extends BaseActivity implements OnClickListen
 		right_send.setOnClickListener(this);
 		delete_msg.setOnClickListener(this);
 		btn_back.setOnClickListener(this);
-		
+
 	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.right_send:
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("trgUserId", trgUserId);
+			JSONObject jsonObject = new JSONObject();
 			String comment = msg_edit.getText().toString();
-			if(TextUtils.isEmpty(comment)){
-				map.put("comment", "");
-			}else{
-				map.put("comment", comment);
+			try {
+				if (TextUtils.isEmpty(comment)) {
+					jsonObject.put("comment", "");
+				} else {
+					jsonObject.put("comment", comment);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
-			getNetworkData(this, "/user/im/invite.do", map);
+			getNetworkData(this, "/user/im/invite.do", jsonObject.toString(),
+					true);
 			break;
 		case R.id.delete_msg:
 			msg_edit.setText("");
@@ -87,24 +74,27 @@ public class RequestFriendActivity extends BaseActivity implements OnClickListen
 			break;
 		}
 	}
+
 	@Override
 	public void onSuccess(JSONObject response) {
 		// TODO Auto-generated method stub
 		try {
-			if(response.getInt("code")==1){
-				Toast.makeText(this, R.string.friendquestsuccess, Toast.LENGTH_LONG).show();
+			if (response.getInt("code") == 1) {
+				Toast.makeText(this, R.string.friendquestsuccess,
+						Toast.LENGTH_LONG).show();
 				finish();
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
+
 	@Override
 	public void onFailure(VolleyError error) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

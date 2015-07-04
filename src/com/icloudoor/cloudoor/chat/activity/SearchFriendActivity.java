@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -79,9 +80,14 @@ public class SearchFriendActivity extends BaseActivity implements OnClickListene
 		switch (v.getId()) {
 		case R.id.search_layout:
 			String search = search_tx.getText().toString().trim();
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("searchValue", search);
-			getNetworkData(this, "/user/im/searchUser.do", map);
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put("searchValue", search);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			getNetworkData(this, "/user/im/searchUser.do", jsonObject.toString(),true);
 			break;
 		case R.id.btn_back:
 			

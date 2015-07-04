@@ -70,7 +70,7 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 		try {
 			parm.put("num", 20);
 			parm.put("beforeActId", beforeActId);
-			getNetworkDataJSONType(this, "/user/im/act/get.do", parm.toString(), true);
+			getNetworkData(this, "/user/im/act/get.do", parm.toString(), true);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,7 +81,7 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 		JSONObject parm = new JSONObject();
 		try {
 			parm.put("num", 20);
-			getNetworkDataJSONType(this, "/user/im/act/get.do", parm.toString(), true);
+			getNetworkData(this, "/user/im/act/get.do", parm.toString(), true);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

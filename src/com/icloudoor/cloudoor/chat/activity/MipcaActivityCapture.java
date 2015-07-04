@@ -2,7 +2,6 @@ package com.icloudoor.cloudoor.chat.activity;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import org.json.JSONObject;
@@ -24,17 +23,15 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.icloudoor.cloudoor.BaseActivity;
-import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.UrlUtils;
+import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.entity.SearchUserInfo;
 import com.icloudoor.cloudoor.chat.entity.SearchUserList;
 import com.icloudoor.cloudoor.utli.GsonUtli;
@@ -46,7 +43,7 @@ import com.mining.app.zxing.view.ViewfinderView;
  * Initial the camera
  * @author Ryan.Tang
  */
-public class MipcaActivityCapture extends BaseActivity implements Callback {
+public class MipcaActivityCapture extends BaseActivity implements Callback ,NetworkInterface{
 
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -81,6 +78,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback {
 		});
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
+		
 	}
 
 	@Override
@@ -131,76 +129,15 @@ public class MipcaActivityCapture extends BaseActivity implements Callback {
 		if (resultString.equals("")) {
 			Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
 		}else {
-			searchFriend(resultString);
+			String url = UrlUtils.HOST + "/user/im/searchUser.do"+ "?sid=" + loadSid()+resultString;
+			
+			getNetworkData(this, url, "{}", true);
 //			Intent resultIntent = new Intent();
 //			Bundle bundle = new Bundle();
 //			bundle.putString("result", resultString);
 //			bundle.putParcelable("bitmap", barcode);
 //			resultIntent.putExtras(bundle);
 		}
-		
-	}
-	
-	
-	public void searchFriend(String url){
-		
-		
-		loading();
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
-				url, null, new Response.Listener<JSONObject>() {
-
-					@Override
-					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
-						destroyDialog();
-						SearchUserInfo searchUserInfo = GsonUtli.jsonToObject(response.toString(), SearchUserInfo.class);
-						if(searchUserInfo!=null){
-							List<SearchUserList> data = searchUserInfo.getData();
-							if(data!=null && data.size()>0){
-								SearchUserList searchUserList = data.get(0);
-								Boolean isFirend = searchUserList.getIsFriend();
-								if(isFirend){
-									Intent intent = new Intent(MipcaActivityCapture.this,FriendDetailActivity.class);
-									intent.putExtra("CityId", searchUserList.getCityId());
-									intent.putExtra("DistrictId", searchUserList.getDistrictId());
-									intent.putExtra("ProvinceId", searchUserList.getProvinceId());
-									intent.putExtra("Nickname", searchUserList.getNickname());
-									intent.putExtra("PortraitUrl", searchUserList.getPortraitUrl());
-									intent.putExtra("Sex", searchUserList.getSex());
-									intent.putExtra("UserId", searchUserList.getUserId());
-									startActivity(intent);
-								}else{
-									Intent intent = new Intent(MipcaActivityCapture.this,UsersDetailActivity.class);
-									intent.putExtra("CityId", searchUserList.getCityId());
-									intent.putExtra("DistrictId", searchUserList.getDistrictId());
-									intent.putExtra("ProvinceId", searchUserList.getProvinceId());
-									intent.putExtra("Nickname", searchUserList.getNickname());
-									intent.putExtra("PortraitUrl", searchUserList.getPortraitUrl());
-									intent.putExtra("Sex", searchUserList.getSex());
-									intent.putExtra("UserId", searchUserList.getUserId());
-									startActivity(intent);
-								}
-								MipcaActivityCapture.this.finish();
-							}else{
-								showToast(R.string.search_result);
-							}
-						}
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						destroyDialog();
-					}
-				}){
-			 
-			@Override
-			protected Map<String, String> getParams()
-					throws AuthFailureError {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-		mQueue.add(mJsonRequest);
 		
 	}
 	
@@ -297,5 +234,49 @@ public class MipcaActivityCapture extends BaseActivity implements Callback {
 			mediaPlayer.seekTo(0);
 		}
 	};
+
+	@Override
+	public void onSuccess(JSONObject response) {
+		// TODO Auto-generated method stub
+		SearchUserInfo searchUserInfo = GsonUtli.jsonToObject(response.toString(), SearchUserInfo.class);
+		if(searchUserInfo!=null){
+			List<SearchUserList> data = searchUserInfo.getData();
+			if(data!=null && data.size()>0){
+				SearchUserList searchUserList = data.get(0);
+				Boolean isFirend = searchUserList.getIsFriend();
+				if(isFirend){
+					Intent intent = new Intent(MipcaActivityCapture.this,FriendDetailActivity.class);
+					intent.putExtra("CityId", searchUserList.getCityId());
+					intent.putExtra("DistrictId", searchUserList.getDistrictId());
+					intent.putExtra("ProvinceId", searchUserList.getProvinceId());
+					intent.putExtra("Nickname", searchUserList.getNickname());
+					intent.putExtra("PortraitUrl", searchUserList.getPortraitUrl());
+					intent.putExtra("Sex", searchUserList.getSex());
+					intent.putExtra("UserId", searchUserList.getUserId());
+					startActivity(intent);
+				}else{
+					Intent intent = new Intent(MipcaActivityCapture.this,UsersDetailActivity.class);
+					intent.putExtra("CityId", searchUserList.getCityId());
+					intent.putExtra("DistrictId", searchUserList.getDistrictId());
+					intent.putExtra("ProvinceId", searchUserList.getProvinceId());
+					intent.putExtra("Nickname", searchUserList.getNickname());
+					intent.putExtra("PortraitUrl", searchUserList.getPortraitUrl());
+					intent.putExtra("Sex", searchUserList.getSex());
+					intent.putExtra("UserId", searchUserList.getUserId());
+					startActivity(intent);
+				}
+				MipcaActivityCapture.this.finish();
+			}else{
+				MipcaActivityCapture.this.finish();
+				showToast(R.string.search_result);
+			}
+		}
+	}
+
+	@Override
+	public void onFailure(VolleyError error) {
+		// TODO Auto-generated method stub
+		finish();
+	}
 
 }

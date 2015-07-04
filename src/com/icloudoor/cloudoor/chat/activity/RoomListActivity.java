@@ -37,20 +37,20 @@ public class RoomListActivity extends BaseActivity implements NetworkInterface ,
 		adapter = new RoomListAdapter(this);
 		room_listView.setAdapter(adapter);
 		btn_back.setOnClickListener(this);
-		getNetworkData(this, "/user/im/getChatrooms.do", null);
-		room_listView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				ChatRoomList roomList = (ChatRoomList) adapter.getItem(position);
-				Intent intent = new Intent(RoomListActivity.this, ChatActivity.class);
-				intent.putExtra("chatType", ChatActivity.CHATTYPE_CHATROOM);
-				intent.putExtra("groupId", roomList.getChatroomId());
-				startActivity(intent);
-			}
-		});
+//		getNetworkData(this, "/user/im/getChatrooms.do", null);
+//		room_listView.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				// TODO Auto-generated method stub
+//				ChatRoomList roomList = (ChatRoomList) adapter.getItem(position);
+//				Intent intent = new Intent(RoomListActivity.this, ChatActivity.class);
+//				intent.putExtra("chatType", ChatActivity.CHATTYPE_CHATROOM);
+//				intent.putExtra("groupId", roomList.getChatroomId());
+//				startActivity(intent);
+//			}
+//		});
 		
 		
 	}

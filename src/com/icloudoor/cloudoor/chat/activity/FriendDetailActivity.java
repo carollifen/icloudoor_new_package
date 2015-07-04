@@ -1,8 +1,6 @@
 package com.icloudoor.cloudoor.chat.activity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,21 +18,18 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.BaseActivity;
-import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
-import com.icloudoor.cloudoor.chat.entity.SearchUserList;
+import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FindDBUtile;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
@@ -146,9 +141,14 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 			break;
 		case R.id.delete_layout:
 			pw.dismiss();
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("friendUserId", UserId);
-			getNetworkData(this, "/user/im/removeFriend.do", map);
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put("friendUserId", UserId);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			getNetworkData(this, "/user/im/removeFriend.do", jsonObject.toString(),true);
 			break;
 		case R.id.report_layout:
 			pw.dismiss();
@@ -199,52 +199,47 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	public void getFriends() {
     	RequestQueue mRequestQueue = Volley.newRequestQueue(this);
 		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName();
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
-				url, null, new Response.Listener<JSONObject>() {
-					@Override
-					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
-						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
-								response.toString(), MyFriendInfo.class);
-						if (friendInfo != null) {
-							List<MyFriendsEn> data = friendInfo.getData();
-							if (data != null && data.size() > 0) {
-								FriendDaoImpl daoImpl = new FriendDaoImpl(
-										FriendDetailActivity.this);
-								SQLiteDatabase db = daoImpl.getDbHelper()
-										.getWritableDatabase();
-								db.beginTransaction();
-								try {
-									db.execSQL("delete from friends");
-									for (int i = 0; i < data.size(); i++) {
-										MyFriendsEn friendsEn = data.get(i);
-										db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-												new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
-												friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
-									}
-									db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
-								} finally {
-									db.endTransaction();
-									finish();
-								}
-							}
-						} else {
-						}
-
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-
-					}
-				}) {
-
+		MyRequestBody requestBody = new MyRequestBody( url, "{}",new Response.Listener<JSONObject>() {
 			@Override
-			protected Map<String, String> getParams() throws AuthFailureError {
+			public void onResponse(JSONObject response) {
 				// TODO Auto-generated method stub
-				return null;
+				MyFriendInfo friendInfo = GsonUtli.jsonToObject(
+						response.toString(), MyFriendInfo.class);
+				if (friendInfo != null) {
+					List<MyFriendsEn> data = friendInfo.getData();
+					if (data != null && data.size() > 0) {
+						FriendDaoImpl daoImpl = new FriendDaoImpl(
+								FriendDetailActivity.this);
+						SQLiteDatabase db = daoImpl.getDbHelper()
+								.getWritableDatabase();
+						db.beginTransaction();
+						try {
+							db.execSQL("delete from friends");
+							for (int i = 0; i < data.size(); i++) {
+								MyFriendsEn friendsEn = data.get(i);
+								db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
+										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
+							}
+							db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
+						} finally {
+							db.endTransaction();
+							finish();
+						}
+					}
+				} else {
+				}
 			}
-		};
-		mRequestQueue.add(mJsonRequest);
+			
+		},new Response.ErrorListener() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		mRequestQueue.add(requestBody);
 	}
 }

@@ -561,10 +561,8 @@ public class SettingFragment extends Fragment {
 
 	public void share() {
 
-		// Ìí¼ÓÎ¢ÐÅÆ½Ì¨
 		wxHandler = new UMWXHandler(getActivity(), appID, appSecret);
 		wxHandler.addToSocialSDK();
-		// Ìí¼ÓÎ¢ÐÅÅóÓÑÈ¦
 		wxCircleHandler = new UMWXHandler(getActivity(), appID, appSecret);
 		wxCircleHandler.setToCircle(true);
 		wxCircleHandler.addToSocialSDK();
@@ -593,12 +591,10 @@ public class SettingFragment extends Fragment {
 		CircleShareContent circleMedia = new CircleShareContent();
 		circleMedia.setShareContent(getActivity().getResources().getString(
 				R.string.shareContent));
-		// ÉèÖÃÅóÓÑÈ¦title
 		circleMedia.setTitle(getActivity().getResources().getString(R.string.shareTitle));
 		circleMedia.setShareImage(new UMImage(getActivity(),
 				R.drawable.logo_deep144));
 		circleMedia.setTargetUrl("http://m.70c.com/w/SZQQSC");
-		
 		mController.setShareMedia(circleMedia);
 		
 		
@@ -606,88 +602,19 @@ public class SettingFragment extends Fragment {
 		
 		weiXinleMedia.setShareContent(getActivity().getResources().getString(
 				R.string.shareContent));
-		// ÉèÖÃÅóÓÑÈ¦title
 		weiXinleMedia.setTitle(getActivity().getResources().getString(R.string.shareTitle));
 		weiXinleMedia.setShareImage(new UMImage(getActivity(),
 				R.drawable.logo_deep144));
 		weiXinleMedia.setTargetUrl("http://m.70c.com/w/SZQQSC");
 		mController.setShareMedia(weiXinleMedia);
 		
+		
 		mController.getConfig().removePlatform(SHARE_MEDIA.SINA,
 				SHARE_MEDIA.TENCENT);
 
 	}
 
-//	UpdateManager.UpdateCallback appUpdateCb = new UpdateManager.UpdateCallback() {
-//		@Override
-//		public void checkUpdateCompleted(Boolean hasUpdate,
-//				CharSequence updateInfo) {
-//			if (hasUpdate) {
-//				DialogHelper.Confirm(
-//						getActivity(),
-//						getText(R.string.dialog_update_title),
-//						getText(R.string.dialog_update_msg).toString()
-//								+ updateInfo
-//								+ getText(R.string.dialog_update_msg2)
-//										.toString(),
-//						getText(R.string.dialog_update_btnupdate),
-//						new DialogInterface.OnClickListener() {
-//							public void onClick(DialogInterface dialog,
-//									int which) {
-//
-//                                updateProgressDialog = new ProgressDialog(getActivity());
-//                                updateProgressDialog
-//                                        .setMessage(getText(R.string.dialog_downloading_msg));
-//                                updateProgressDialog.setIndeterminate(false);
-//                                updateProgressDialog
-//                                        .setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//                                updateProgressDialog.setMax(100);
-//                                updateProgressDialog.setProgress(0);
-//                                updateProgressDialog.show();
-//
-//                                updateMan.downloadPackage();
-//                            }
-//                        },getText( R.string.dialog_update_btnnext), null);
-//            }
-//        }
-//
-//        @Override
-//        public void downloadProgressChanged(int progress) {
-//            if (updateProgressDialog != null
-//                    && updateProgressDialog.isShowing()) {
-//                updateProgressDialog.setProgress(progress);
-//            }
-//        }
-//
-//        @Override
-//        public void downloadCanceled() {
-//
-//        }
-//
-//        @Override
-//        public void downloadCompleted(Boolean sucess, CharSequence errorMsg) {
-//            if (updateProgressDialog != null
-//                    && updateProgressDialog.isShowing()) {
-//                updateProgressDialog.dismiss();
-//            }
-//            if (sucess) {
-//                updateMan.update();
-//            } else {
-//                DialogHelper.Confirm(getActivity(),
-//                        R.string.dialog_error_title,
-//                        R.string.dialog_downfailed_msg,
-//                        R.string.dialog_downfailed_btnnext,
-//                        new DialogInterface.OnClickListener() {
-//
-//                            public void onClick(DialogInterface dialog,
-//                                                int which) {
-//                                updateMan.downloadPackage();
-//
-//                            }
-//                        }, R.string.dialog_update_btnnext, null);
-//            }
-//        }
-//    };
+
     
     public void checkForUserStatus() {
 		Log.e(TAG, "checkForUserStatus()");

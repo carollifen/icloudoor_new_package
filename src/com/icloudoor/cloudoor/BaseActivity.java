@@ -92,41 +92,9 @@ public class BaseActivity extends Activity{
 	}
 	
 	
-	public void getNetworkData(NetworkInterface networkInterface,String httpurl, final Map<String, String> map){
-	this.networkInterface = networkInterface;
-		String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid() + "&ver=" + version.getVersionName();
-		loading();
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
-				url, null, new Response.Listener<JSONObject>() {
-
-					@Override
-					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
-						BaseActivity.this.networkInterface.onSuccess(response);
-						destroyDialog();
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						BaseActivity.this.networkInterface.onFailure(error);
-						destroyDialog();
-					}
-				}){
-			 
-			@Override
-			protected Map<String, String> getParams()
-					throws AuthFailureError {
-				// TODO Auto-generated method stub
-				return map;
-			}
-		};
-		mQueue.add(mJsonRequest);
-	}
-	
-	
-	public void getNetworkDataJSONType(NetworkInterface networkInterface,String httpurl, String josn,boolean isShowLoadin){
+	public void getNetworkData(NetworkInterface networkInterface,String httpurl, String josn,boolean isShowLoadin){
 		this.networkInterface = networkInterface;
-			String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid();
+			String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid()+"&ver=" + version.getVersionName();
 			if(isShowLoadin)
 			loading();
 			

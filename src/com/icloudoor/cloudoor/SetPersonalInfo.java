@@ -309,6 +309,7 @@ public class SetPersonalInfo extends BaseActivity {
 						}
 
 						cityAdapter = new ArrayAdapter<String>(SetPersonalInfo.this, android.R.layout.simple_spinner_item, tempCitySet);
+						cityAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 						citySpinner.setAdapter(cityAdapter);
 						provincePosition = position;
 
@@ -360,6 +361,7 @@ public class SetPersonalInfo extends BaseActivity {
 						}
 
 						districtAdapter = new ArrayAdapter<String>(SetPersonalInfo.this, android.R.layout.simple_spinner_item, tempDistrictSet);
+						districtAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 						districtSpinner.setAdapter(districtAdapter);
 						cityPosition = position;
 
@@ -915,6 +917,7 @@ public class SetPersonalInfo extends BaseActivity {
 		districtSpinner = (Spinner) findViewById(R.id.Addr_disctrict);
 
 		provinceAdapter = new ArrayAdapter<String>(SetPersonalInfo.this, android.R.layout.simple_spinner_item, provinceSet);
+		provinceAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		provinceSpinner.setAdapter(provinceAdapter);
 
 		// some items in the array may be null, so it will cause the NPE.

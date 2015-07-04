@@ -30,11 +30,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
 import com.easemob.EMCallBack;
 import com.easemob.EMChatRoomChangeListener;
@@ -50,8 +48,6 @@ import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
 import com.icloudoor.cloudoor.CloudDoorMainActivity;
-import com.icloudoor.cloudoor.MyJsonObjectRequest;
-import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
@@ -59,6 +55,7 @@ import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
+import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.icloudoor.cloudoor.utli.VFDaoImpl;
@@ -85,7 +82,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 	private CallReceiver callReceiver;
 
 	private Version version;
-	
+
 	/**
 	 * 用来记录foreground Activity
 	 */
@@ -136,8 +133,9 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 		RequestQueue mRequestQueue = Volley.newRequestQueue(appContext);
 		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid="
 				+ loadSid() + "&ver=" + version.getVersionName();
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
-				url, null, new Response.Listener<JSONObject>() {
+
+		MyRequestBody requestBody = new MyRequestBody(url, "{}",
+				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
@@ -184,15 +182,9 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 					public void onErrorResponse(VolleyError error) {
 
 					}
-				}) {
+				});
 
-			@Override
-			protected Map<String, String> getParams() throws AuthFailureError {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-		mRequestQueue.add(mJsonRequest);
+		mRequestQueue.add(requestBody);
 	}
 
 	/**
@@ -233,7 +225,8 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 				// should not follow this
 				// so be careful of this
 				case EventNewCMDMessage: {
-					CmdMessageBody cmdMsgBody = (CmdMessageBody) message.getBody();
+					CmdMessageBody cmdMsgBody = (CmdMessageBody) message
+							.getBody();
 					String action = cmdMsgBody.action;
 					if (action.equals("invite")) {
 						try {
@@ -242,7 +235,8 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 							VFDaoImpl daoImpl = new VFDaoImpl(appContext);
 
 							List<VerificationFrientsList> vfData = daoImpl
-									.find(null, "invitationId = ?",
+									.find(null,
+											"invitationId = ?",
 											new String[] { vfoj
 													.getString("invitationId") },
 											null, null, null, null);
@@ -252,7 +246,8 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 								vf.setComment(vfoj.getString("comment"));
 								vf.setNickname(vfoj.getString("nickname"));
 								vf.setUserId(vfoj.getString("userId"));
-								vf.setInvitationId(vfoj.getString("invitationId"));
+								vf.setInvitationId(vfoj
+										.getString("invitationId"));
 								vf.setStatus("0");
 								daoImpl.insert(vf);
 							}
@@ -267,7 +262,6 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 					} else {
 						getFriends();
 					}
-					
 
 					// daoImpl.insert(entity);
 

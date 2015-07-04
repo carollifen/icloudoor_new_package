@@ -1,14 +1,10 @@
 package com.icloudoor.cloudoor.adapter;
 
 import java.util.List;
-import java.util.Map;
-
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -16,15 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
-import com.icloudoor.cloudoor.BaseActivity;
-import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
-import com.icloudoor.cloudoor.UrlUtils;
-import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.nostra13.universalimageloader.core.ImageLoader;

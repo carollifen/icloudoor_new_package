@@ -1,8 +1,6 @@
 package com.icloudoor.cloudoor.adapter;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +8,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,21 +17,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
+import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
-import com.icloudoor.cloudoor.chat.activity.RequestFriendActivity;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
+import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
@@ -46,11 +41,12 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 	private Context context;
 	List<VerificationFrientsList> data;
 	private VerificationFrientsActivity activity;
-	
+	private Version version;
 	public VerificationFrientsAdapter(Context context) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		this.activity = (VerificationFrientsActivity) context;
+		version = new Version(context.getApplicationContext());
 	}
 	@Override
 	public int getCount() {
@@ -102,8 +98,15 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("invitationId", frientsList.getInvitationId());
+					
+					JSONObject jsonObject = new JSONObject();
+					try {
+						jsonObject.put("invitationId", frientsList.getInvitationId());
+					} catch (JSONException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
 					activity.getNetworkData(new NetworkInterface() {
 						
 						@Override
@@ -131,7 +134,7 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 							// TODO Auto-generated method stub
 							
 						}
-					}, "/user/im/acceptInvitation.do", map);
+					}, "/user/im/acceptInvitation.do", jsonObject.toString(),true);
 				}
 			});
 		}else{
@@ -151,55 +154,54 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 		return loadSid.getString("SID", null);
 	}
 	public void getFriends() {
+		
     	RequestQueue mRequestQueue = Volley.newRequestQueue(context);
-		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid();
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
-				url, null, new Response.Listener<JSONObject>() {
-					@Override
-					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
-						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
-								response.toString(), MyFriendInfo.class);
-						if (friendInfo != null) {
-							List<MyFriendsEn> data = friendInfo.getData();
-							if (data != null && data.size() > 0) {
-								FriendDaoImpl daoImpl = new FriendDaoImpl(
-										context);
-								SQLiteDatabase db = daoImpl.getDbHelper()
-										.getWritableDatabase();
-								db.beginTransaction();
-								try {
-									db.execSQL("delete from friends");
-									for (int i = 0; i < data.size(); i++) {
-										MyFriendsEn friendsEn = data.get(i);
-										db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-												new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
-												friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
-									}
-									db.setTransactionSuccessful();// µ÷ÓÃ´Ë·½·¨»áÔÚÖ´ÐÐµ½endTransaction()
-								} finally {
-									db.endTransaction();
-
-								}
-							}
-						} else {
-						}
-
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-
-					}
-				}) {
-
+		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid()+"&ver=" + version.getVersionName();
+		
+		MyRequestBody requestBody = new MyRequestBody( url, "{}",new Response.Listener<JSONObject>() {
+			
 			@Override
-			protected Map<String, String> getParams() throws AuthFailureError {
+			public void onResponse(JSONObject response) {
 				// TODO Auto-generated method stub
-				return null;
+				
+				MyFriendInfo friendInfo = GsonUtli.jsonToObject(
+						response.toString(), MyFriendInfo.class);
+				if (friendInfo != null) {
+					List<MyFriendsEn> data = friendInfo.getData();
+					if (data != null && data.size() > 0) {
+						FriendDaoImpl daoImpl = new FriendDaoImpl(
+								context);
+						SQLiteDatabase db = daoImpl.getDbHelper()
+								.getWritableDatabase();
+						db.beginTransaction();
+						try {
+							db.execSQL("delete from friends");
+							for (int i = 0; i < data.size(); i++) {
+								MyFriendsEn friendsEn = data.get(i);
+								db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
+										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
+							}
+							db.setTransactionSuccessful();
+						} finally {
+							db.endTransaction();
+
+						}
+					}
+				} else {
+				}
+
 			}
-		};
-		mRequestQueue.add(mJsonRequest);
+			
+		},new Response.ErrorListener() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// TODO Auto-generated method stub
+			}
+		});
+		mRequestQueue.add(requestBody);
+		
 	}
 	
 	

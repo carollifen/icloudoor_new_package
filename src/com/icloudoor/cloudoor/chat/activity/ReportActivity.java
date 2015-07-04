@@ -85,10 +85,15 @@ public class ReportActivity extends BaseActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.submit:
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("trgUserId", trgUserId);
-			map.put("type", type+"");
-			getNetworkData(this, "/user/im/complain.do", map);
+			JSONObject jsonObject = new JSONObject();
+			try {
+				jsonObject.put("trgUserId", trgUserId);
+				jsonObject.put("type", type+"");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			getNetworkData(this, "/user/im/complain.do", jsonObject.toString(),true);
 			break;
 		case R.id.btn_back:
 			finish();

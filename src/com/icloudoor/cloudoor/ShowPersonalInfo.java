@@ -769,7 +769,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 			dialog.windowDeploy();
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 			String PHONENUM = loginStatus.getString("PHONENUM", "");
-			String url = UrlUtils.HOST + "/user/im/searchUser.do"+ "?sid=" + loadSid()+"&searchValue="+PHONENUM;
+			String url = "&searchValue="+PHONENUM;
 			dialog.createQRImage(url);
 			break;
 

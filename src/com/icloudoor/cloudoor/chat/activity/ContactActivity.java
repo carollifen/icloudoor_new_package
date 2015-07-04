@@ -2,14 +2,12 @@ package com.icloudoor.cloudoor.chat.activity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.BaseActivity;
-import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
-import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.adapter.MyFriendsAdapter;
@@ -121,8 +112,6 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		
 		
 		
-//		getFriends();
-//		getNetworkData(this, "/user/im/getFriends.do", null);
 	}
 	
 	
@@ -152,60 +141,6 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	}
 	
 	
-	public void getFriends() {
-    	RequestQueue mRequestQueue = Volley.newRequestQueue(this);
-		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName();
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
-				url, null, new Response.Listener<JSONObject>() {
-					@Override
-					public void onResponse(JSONObject response) {
-						// TODO Auto-generated method stub
-						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
-								response.toString(), MyFriendInfo.class);
-						if (friendInfo != null) {
-							List<MyFriendsEn> data = friendInfo.getData();
-							if (data != null && data.size() > 0) {
-								FriendDaoImpl daoImpl = new FriendDaoImpl(
-										ContactActivity.this);
-								SQLiteDatabase db = daoImpl.getDbHelper()
-										.getWritableDatabase();
-								db.beginTransaction();
-								try {
-									db.execSQL("delete from friends");
-									for (int i = 0; i < data.size(); i++) {
-										MyFriendsEn friendsEn = data.get(i);
-										db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-												new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
-												friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
-									}
-									db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
-								} finally {
-									db.endTransaction();
-								}
-							}
-						} else {
-						}
-						
-						daoImpl = new FriendDaoImpl(ContactActivity.this);
-						List<MyFriendsEn> data = daoImpl.find();
-						adapter.updateListView(filledData(data));
-
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-
-					}
-				}) {
-
-			@Override
-			protected Map<String, String> getParams() throws AuthFailureError {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-		mRequestQueue.add(mJsonRequest);
-	}
 
 
 	private List<MyFriendsEn> filledData(List<MyFriendsEn> data) {
