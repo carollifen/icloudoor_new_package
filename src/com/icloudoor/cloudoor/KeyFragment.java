@@ -250,7 +250,7 @@ public class KeyFragment extends Fragment {
 	private Runnable mRunnableReset = new Runnable() {
 		@Override
 		public void run() {
-			Log.e("test616", "car door fail1");
+			MyDebugLog.e("test616", "car door fail1");
 			if (mOpenDoorState > 1) {
 				HashMap<String,String> map = new HashMap<String,String>();
 				map.put("TIME", openDoorTime);
@@ -262,7 +262,7 @@ public class KeyFragment extends Fragment {
 
 				upLoadUtils.writeOpenInfoToFile(openDoorTime, userId, deviceIdTodoorId(openDoorDevicdId), false, modelNameAndVersion);
 				
-				Log.e("test616", "car door fail");
+				MyDebugLog.e("test616", "car door fail");
 				scanStatus.setText(R.string.can_shake_to_open_door);
 				mOpenDoorState = 0;
 			}
@@ -355,10 +355,10 @@ public class KeyFragment extends Fragment {
 		switchBtn = (SwitchButton) view.findViewById(R.id.btn_switch);
 		if(isChooseCarChannel == 1){
 			switchBtn.setSwitch(false, 0);
-			Log.e(TAG, String.valueOf(isChooseCarChannel));
+			MyDebugLog.e(TAG, String.valueOf(isChooseCarChannel));
 		}else{
 			switchBtn.setSwitch(true, 0);
-			Log.e(TAG, String.valueOf(isChooseCarChannel));
+			MyDebugLog.e(TAG, String.valueOf(isChooseCarChannel));
 		}
 			
 		switchBtn.setOnSwitchListener(new OnSwitchListener() {
@@ -374,7 +374,7 @@ public class KeyFragment extends Fragment {
 					mBTScanning = false;
 				}
 				populateDeviceList(mBtStateOpen);
-				Log.e(TAG, "start scanning : " + String.valueOf(isChooseCarChannel));
+				MyDebugLog.e(TAG, "start scanning : " + String.valueOf(isChooseCarChannel));
 				return false;
 			}
 		});
@@ -465,9 +465,9 @@ public class KeyFragment extends Fragment {
 
 			                    doOpenDoor(mBtStateOpen); //ONLY FOR TEST
 			                    
-			                    Log.e(TAG, "reloadTimes before open: " + String.valueOf(reloadTimes));			                    
+			                    MyDebugLog.e(TAG, "reloadTimes before open: " + String.valueOf(reloadTimes));			                    
 			                    reloadTimes--;
-			                    Log.e(TAG, "reloadTimes after open: " + String.valueOf(reloadTimes));	
+			                    MyDebugLog.e(TAG, "reloadTimes after open: " + String.valueOf(reloadTimes));	
 			                    editor.putInt("TIMES", reloadTimes);
 			                    editor.commit();
 						 	} else {
@@ -574,9 +574,9 @@ public class KeyFragment extends Fragment {
 			nowMonth = now.month + 1;
 			nowDay = now.monthDay;
 			
-			Log.e(TAG, "nowYear: " + String.valueOf(nowYear));
-			Log.e(TAG, "nowMonth: " + String.valueOf(nowMonth));
-			Log.e(TAG, "nowDay: " + String.valueOf(nowDay));
+			MyDebugLog.e(TAG, "nowYear: " + String.valueOf(nowYear));
+			MyDebugLog.e(TAG, "nowMonth: " + String.valueOf(nowMonth));
+			MyDebugLog.e(TAG, "nowDay: " + String.valueOf(nowDay));
 			
 			// check start
 			if(nowYear == previousYear && nowMonth == previousMonth && nowDay == previousDay){  // in the same day, same month, same year
@@ -659,7 +659,7 @@ public class KeyFragment extends Fragment {
 				Log.e("error", "There is a error");
 			}
 
-//			Log.e(TAG, response.toString());
+//			MyDebugLog.e(TAG, response.toString());
 
 			if(carDoorList != null){
 				carDoorList.clear();
@@ -706,21 +706,21 @@ public class KeyFragment extends Fragment {
 												 *  and all the man doors
 												 */
 							if (doorType.equals("2")) {
-								Log.e(TAG, "add a car key");
+								MyDebugLog.e(TAG, "add a car key");
 								temp.put("CDdeviceid", deviceId);
 								temp.put("CDdoorName", doorName);
 								temp.put("CDdoorType", doorType);
 								temp.put("CDDirection", direction);
 								carDoorList.add(temp);
 							} else if (doorType.equals("1")) {
-								Log.e(TAG, "add man key");
+								MyDebugLog.e(TAG, "add man key");
 								temp.put("MDdeviceid", deviceId);
 								temp.put("MDdoorName", doorName);
 								temp.put("MDdoorType", doorType);
 								temp.put("MDDirection", direction);
 								manDoorList.add(temp);
 							} else if (doorType.equals("3")) {
-								Log.e(TAG, "add office key");
+								MyDebugLog.e(TAG, "add office key");
 								temp.put("ODdeviceid", deviceId);
 								temp.put("ODdoorName", doorName);
 								temp.put("ODdoorType", doorType);
@@ -763,7 +763,7 @@ public class KeyFragment extends Fragment {
 
 //								parseKeyData(response);
 //
-								Log.e(TAG, response.toString());
+								MyDebugLog.e(TAG, response.toString());
 //
 //								if (response.getString("sid") != null)
 //									saveSid(response.getString("sid"));
@@ -813,21 +813,21 @@ public class KeyFragment extends Fragment {
 //												 *  and all the man doors
 //												 */
 //												if (doorType.equals("2")) {						
-//													Log.e(TAG, "add a car key");
+//													MyDebugLog.e(TAG, "add a car key");
 //													temp.put("CDdeviceid", deviceId);
 //													temp.put("CDdoorName", doorName);
 //													temp.put("CDdoorType", doorType);
 //													temp.put("CDDirection", direction);
 //													carDoorList.add(temp);		
 //												} else if (doorType.equals("1")) {
-//													Log.e(TAG, "add man key");
+//													MyDebugLog.e(TAG, "add man key");
 //													temp.put("MDdeviceid", deviceId);
 //													temp.put("MDdoorName", doorName);
 //													temp.put("MDdoorType", doorType);
 //													temp.put("MDDirection", direction);
 //													manDoorList.add(temp);
 //												} else if (doorType.equals("3")) {
-//													Log.e(TAG, "add office key");
+//													MyDebugLog.e(TAG, "add office key");
 //													temp.put("ODdeviceid", deviceId);
 //													temp.put("ODdoorName", doorName);
 //													temp.put("ODdoorType", doorType);
@@ -875,7 +875,7 @@ public class KeyFragment extends Fragment {
 	}
 	
 	public void parseKeyData(JSONObject response) throws JSONException {
-		Log.e("test for new interface", "parseKeyData func");
+		MyDebugLog.e("test for new interface", "parseKeyData func");
 		
 		// for new key download interface
 		JSONObject data = response.getJSONObject("data");
@@ -903,17 +903,17 @@ public class KeyFragment extends Fragment {
 					value.put("authTo", doorData.getString("authTo"));
 					
 					if (!doorData.getString("doorType").equals("2")) {
-						Log.e(TAG, "add a 1");
+						MyDebugLog.e(TAG, "add a 1");
 						value.put("direction", "none");
 						value.put("plateNum", "none");
 						mKeyDB.insert(TABLE_NAME, null, value);
 					} else if (doorData.getString("doorType").equals("2")){
-						Log.e(TAG, "add a 2");
+						MyDebugLog.e(TAG, "add a 2");
 								value.put("plateNum", doorData.getString("plateNum"));
 								value.put("direction", doorData.getString("direction"));
 								mKeyDB.insert(TABLE_NAME, null, value);
 					}
-					Log.e(TAG, "after parse: " + String.valueOf(DBCount()));
+					MyDebugLog.e(TAG, "after parse: " + String.valueOf(DBCount()));
 				} else {            // update the old key status
 						ContentValues valueTemp = new ContentValues();
 						valueTemp.put("doorName", doorData.getString("doorName"));
@@ -948,7 +948,7 @@ public class KeyFragment extends Fragment {
 						}	
 						
 						if(!keepKey){
-							Log.e(TAG, "delete a");
+							MyDebugLog.e(TAG, "delete a");
 							//delete in the table
 							mKeyDB.delete("KeyInfoTable", "deviceId = ?", new String[] {deviceId});
 						}
@@ -967,7 +967,7 @@ public class KeyFragment extends Fragment {
 			
 			if(zoneData.getString("zoneId").length() > 0){
 				if(!hasZoneData(mKeyDB, zoneData.getString("zoneId"))){   // insert new
-					Log.e(TAG, "add a zone");
+					MyDebugLog.e(TAG, "add a zone");
 					value.put("zoneid", zoneData.getString("zoneId"));		
 					value.put("zonename", zoneData.getString("zoneName"));
 					value.put("parentzoneid", zoneData.getString("parentZoneId"));
@@ -999,7 +999,7 @@ public class KeyFragment extends Fragment {
 						}		
 						
 						if(!keepKey){
-							Log.e(TAG, "delete a zone");
+							MyDebugLog.e(TAG, "delete a zone");
 							mKeyDB.delete("ZoneTable", "zoneId = ?", new String[] {zoneid});
 						}
 					}while(mCursor.moveToNext());
@@ -1015,7 +1015,7 @@ public class KeyFragment extends Fragment {
 			
 			if(carData.getString("l1ZoneId").length() > 0){
 				if(!hasCarData(mKeyDB, carData.getString("l1ZoneId"), carData.getString("plateNum"))){   // insert new
-					Log.e(TAG, "add a car");
+					MyDebugLog.e(TAG, "add a car");
 					ContentValues value = new ContentValues();
 					value.put("l1ZoneId", carData.getString("l1ZoneId"));
 					value.put("plateNum", carData.getString("plateNum"));
@@ -1065,7 +1065,7 @@ public class KeyFragment extends Fragment {
 								}
 							}
 							if(!keepKey){
-								Log.e(TAG, "delete a car");
+								MyDebugLog.e(TAG, "delete a car");
 								mKeyDB.delete("CarKeyTable", "l1ZoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
 								mKeyDB.delete("KeyInfoTable", "zoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
 							}
@@ -1113,7 +1113,7 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e(TAG, "test " + response.toString());
+						MyDebugLog.e(TAG, "test " + response.toString());
 					}
 				}, new Response.ErrorListener() {
 
@@ -1318,7 +1318,7 @@ public class KeyFragment extends Fragment {
 			}
 		}	
 		
-		Log.e(TAG, D1 + " " + D2 + " " + D3);
+		MyDebugLog.e(TAG, D1 + " " + D2 + " " + D3);
 		
 		date.setText(D1);
 		
@@ -1371,7 +1371,7 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e(TAG, response.toString());
+						MyDebugLog.e(TAG, response.toString());
 						
 						try {
 							if (response.getString("sid") != null) {
@@ -1447,7 +1447,7 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e(TAG, response.toString());
+						MyDebugLog.e(TAG, response.toString());
 						
 						try {
 							if(response.getString("status").equals("OK")){
@@ -1627,7 +1627,7 @@ public class KeyFragment extends Fragment {
 	
 	@Override
 	public void onStart() {
-        Log.e("TEST63", "keyFragment onStart()");
+		MyDebugLog.e("TEST63", "keyFragment onStart()");
 		super.onStart();
 		mThisFragment = true;
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -1717,7 +1717,7 @@ public class KeyFragment extends Fragment {
 
 		getUserConfig();
 		
-		Log.e("TEST", "keyFragment onResume()");
+		MyDebugLog.e("TEST", "keyFragment onResume()");
         mOpenDoorState = 0;
 //		checkBlueToothState();
 
@@ -1766,21 +1766,21 @@ public class KeyFragment extends Fragment {
 						 *  and all the man doors
 						 */
 						if (doorType.equals("2")) {						
-							Log.e(TAG, "add a car key");
+							MyDebugLog.e(TAG, "add a car key");
 							temp.put("CDdeviceid", deviceId);
 							temp.put("CDdoorName", doorName);
 							temp.put("CDdoorType", doorType);
 							temp.put("CDDirection", direction);
 							carDoorList.add(temp);		
 						} else if (doorType.equals("1")) {
-							Log.e(TAG, "add man key");
+							MyDebugLog.e(TAG, "add man key");
 							temp.put("MDdeviceid", deviceId);
 							temp.put("MDdoorName", doorName);
 							temp.put("MDdoorType", doorType);
 							temp.put("MDDirection", direction);
 							manDoorList.add(temp);
 						} else if (doorType.equals("3")) {
-							Log.e(TAG, "add office key");
+							MyDebugLog.e(TAG, "add office key");
 							temp.put("ODdeviceid", deviceId);
 							temp.put("ODdoorName", doorName);
 							temp.put("ODdoorType", doorType);
@@ -1824,8 +1824,8 @@ public class KeyFragment extends Fragment {
 								reloadTimes = data.getInt("reloadTimes");
 								reloadDays = data.getInt("reloadDays");
 								
-								Log.e(TAG, "reloadTimes: " + String.valueOf(reloadTimes));
-								Log.e(TAG, "reloadDays: " + String.valueOf(reloadDays));
+								MyDebugLog.e(TAG, "reloadTimes: " + String.valueOf(reloadTimes));
+								MyDebugLog.e(TAG, "reloadDays: " + String.valueOf(reloadDays));
 
 								Time t = new Time();
 								t.setToNow();
@@ -1833,9 +1833,9 @@ public class KeyFragment extends Fragment {
 								int month = t.month + 1;
 								int day = t.monthDay;
 								
-								Log.e(TAG, "year: " + String.valueOf(year));
-								Log.e(TAG, "month: " + String.valueOf(month));
-								Log.e(TAG, "day: " + String.valueOf(day));
+								MyDebugLog.e(TAG, "year: " + String.valueOf(year));
+								MyDebugLog.e(TAG, "month: " + String.valueOf(month));
+								MyDebugLog.e(TAG, "day: " + String.valueOf(day));
 								
 								if(getActivity() != null){
 									SharedPreferences userConfig = getActivity().getSharedPreferences("Config", 0);
@@ -1857,7 +1857,7 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
-							Log.e(TAG, error.toString());
+						MyDebugLog.e(TAG, error.toString());
 					}
 				});
 		mQueue.add(mJsonRequest);
@@ -1866,7 +1866,7 @@ public class KeyFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("test63", "onActivityResult ");
+        MyDebugLog.e("test63", "onActivityResult ");
         if (requestCode == REQUEST_ENABLE_BT && resultCode == 1){
             if (mBluetoothAdapter.isEnabled()) {
                 if (mBluetoothAdapter.isDiscovering()) {
@@ -1954,9 +1954,9 @@ public class KeyFragment extends Fragment {
 	}
 
 	public void populateDeviceList(final boolean btStateOpen) {
-		Log.e("BLE", "populateDeviceList");
+		MyDebugLog.e("BLE", "populateDeviceList");
 		if (btStateOpen && mThisFragment) {
-            BtnOpenDoor.setImageResource(R.drawable.door_normalll_new);
+            BtnOpenDoor.setImageResource(R.drawable.door_normalll_v2);
             BtnOpenDoor.setEnabled(false);
 
             mLogicScanning = true;
@@ -2006,7 +2006,7 @@ public class KeyFragment extends Fragment {
 	}
 
 	private void scanLeDevice(final boolean enable) {
-		Log.e("BLE", "scanLeDevice");
+		MyDebugLog.e("BLE", "scanLeDevice");
 		if (enable) {
 			// Stops scanning after a pre-defined scan period.
 			new Handler().postDelayed(new Runnable() {
@@ -2020,11 +2020,11 @@ public class KeyFragment extends Fragment {
 						mBTScanning = false;
 					}
 
-					Log.e(TAG, "mDeviceList.size() =" + String.valueOf(mDeviceList.size()));
+					MyDebugLog.e(TAG, "mDeviceList.size() =" + String.valueOf(mDeviceList.size()));
 				
 						//for office door		
 						for (int i = 0; i < officeDoorList.size(); i++) {
-							Log.e(TAG, "office door here");
+							MyDebugLog.e(TAG, "office door here");
 							String tempDID = officeDoorList.get(i).get("ODdeviceid");
 							tempDID = tempDID.toUpperCase();
 							char[] data = tempDID.toCharArray();
@@ -2036,10 +2036,10 @@ public class KeyFragment extends Fragment {
 									+ String.valueOf(data[10]) + String.valueOf(data[11]);
 							
 							for(int index = 0; index < mDeviceList.size(); index++){
-								Log.e(TAG, "check mDeviceList uuid");
-								Log.e(TAG, mDeviceList.get(index).getAddress() + " : " + formatDeviceId);
+								MyDebugLog.e(TAG, "check mDeviceList uuid");
+								MyDebugLog.e(TAG, mDeviceList.get(index).getAddress() + " : " + formatDeviceId);
 								if (mDeviceList.get(index).getAddress().equals(formatDeviceId)) {
-									Log.e(TAG, "add tempoffice");
+									MyDebugLog.e(TAG, "add tempoffice");
 									tempOfficeDoorList.add(mDeviceList.get(index));
 									findKey = true;
 									break;
@@ -2056,7 +2056,7 @@ public class KeyFragment extends Fragment {
 								int maxRssiForOfficeDoor = -128;
 
 								for (int i = 0; i < tempOfficeDoorList.size(); i++) {
-									Log.e("TEST", "checking rssi");
+									MyDebugLog.e("TEST", "checking rssi");
 									String tempAdd = tempOfficeDoorList.get(i).getAddress();
 									int tempRssi = mDevRssiValues.get(tempAdd);
 									if (tempRssi > maxRssiForOfficeDoor) {
@@ -2078,7 +2078,7 @@ public class KeyFragment extends Fragment {
 										+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 										+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 										+ String.valueOf(data[10]) + String.valueOf(data[11]);
-								Log.e("TEST", "ODdeviceID:" + formatDeviceId);
+								MyDebugLog.e("TEST", "ODdeviceID:" + formatDeviceId);
 
 								if (tempOfficeDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {							
 									bValidKey = true;
@@ -2144,7 +2144,7 @@ public class KeyFragment extends Fragment {
 											+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 											+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 											+ String.valueOf(data[10]) + String.valueOf(data[11]);
-									Log.e("TEST", "MDdeviceID:" + formatDeviceId);
+									MyDebugLog.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 									if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// one man door
 										if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-85)) {
@@ -2224,7 +2224,7 @@ public class KeyFragment extends Fragment {
 											int maxRssi = -128;
 
 											for (int i = 0; i < tempCarDoorList.size(); i++) {
-												Log.e("TEST", "checking rssi");
+												MyDebugLog.e("TEST", "checking rssi");
 												String tempAdd = tempCarDoorList.get(i).getAddress();
 												int tempRssi = mDevRssiValues.get(tempAdd);
 												if (tempRssi > maxRssi) {
@@ -2244,7 +2244,7 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 													+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
-//											Log.e("TEST", "CDdeviceID:" + formatDeviceId);
+//											MyDebugLog.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 											if (tempCarDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
 												if (mDevRssiValues.get(tempCarDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-80)) {
@@ -2291,10 +2291,10 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 													+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
-//											Log.e("TEST", "MDdeviceID:" + formatDeviceId);
+//											MyDebugLog.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 											if (tempManDoorList.get(0).getAddress().equals(formatDeviceId)) {
-//												Log.e("TEST69", "man rssi:"+String.valueOf(mDevRssiValues.get(tempManDoorList.get(0).getAddress())));
+//												MyDebugLog.e("TEST69", "man rssi:"+String.valueOf(mDevRssiValues.get(tempManDoorList.get(0).getAddress())));
 												if (mDevRssiValues.get(tempManDoorList.get(0).getAddress()) > (int)(-85)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
@@ -2313,7 +2313,7 @@ public class KeyFragment extends Fragment {
 										int maxRssi = -128;
 
 										for (int i = 0; i < tempManDoorList.size(); i++) {
-											Log.e("TEST", "checking rssi");
+											MyDebugLog.e("TEST", "checking rssi");
 											String tempAdd = tempManDoorList.get(i).getAddress();
 											int tempRssi = mDevRssiValues.get(tempAdd);
 											if (tempRssi > maxRssi) {
@@ -2333,7 +2333,7 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 													+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
-											Log.e("TEST", "MDdeviceID:" + formatDeviceId);
+											MyDebugLog.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 											if (tempManDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
 												if (mDevRssiValues.get(tempManDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-85)) {
@@ -2341,7 +2341,7 @@ public class KeyFragment extends Fragment {
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);
 													doorName.setText(manDoorList.get(i).get("MDdoorName"));
-//													Log.e("TEST", manDoorList.get(i).get("MDdoorName") + ",i = " + String.valueOf(i));
+//													MyDebugLog.e("TEST", manDoorList.get(i).get("MDdoorName") + ",i = " + String.valueOf(i));
 													doorNameFlag.setVisibility(View.VISIBLE);
 													
 													switchBtn.setVisibility(View.VISIBLE);
@@ -2385,7 +2385,7 @@ public class KeyFragment extends Fragment {
 	}
 
 	private void addDevice(BluetoothDevice device, int rssi) {
-		Log.e("BLE", "addDevice");
+		MyDebugLog.e("BLE", "addDevice");
 		boolean deviceFound = false;
 		boolean bFindKey = false;
 
@@ -2407,7 +2407,7 @@ public class KeyFragment extends Fragment {
 						+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 						+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 						+ String.valueOf(data[10]) + String.valueOf(data[11]);
-//				Log.e("TEST", "CDdeviceID:" + formatDeviceId);
+//				MyDebugLog.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 				if (device.getAddress().equals(formatDeviceId)) {
 					mDevRssiValues.put(device.getAddress(), rssi);
@@ -2429,11 +2429,11 @@ public class KeyFragment extends Fragment {
 							+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 							+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 							+ String.valueOf(data[10]) + String.valueOf(data[11]);
-//					Log.e("TEST", "CDdeviceID:" + formatDeviceId);
+//					MyDebugLog.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 					if (device.getAddress().equals(formatDeviceId)) {
 						mDevRssiValues.put(device.getAddress(), rssi);
-//						Log.e("TEST69", "add a car door, rssi = " + String.valueOf(rssi));
+//						MyDebugLog.e("TEST69", "add a car door, rssi = " + String.valueOf(rssi));
 						mDeviceList.add(device);
 						bFindKey = true;
 						break;
@@ -2453,11 +2453,11 @@ public class KeyFragment extends Fragment {
 								+ String.valueOf(data[6]) + String.valueOf(data[7]) + ":"
 								+ String.valueOf(data[8]) + String.valueOf(data[9]) + ":"
 								+ String.valueOf(data[10]) + String.valueOf(data[11]);
-//					Log.e("TEST", "MDdeviceID:" + formatDeviceId);
+//					MyDebugLog.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 						if (device.getAddress().equals(formatDeviceId)) {
 							mDevRssiValues.put(device.getAddress(), rssi);
-							Log.e("TEST", "add a man door");
+							MyDebugLog.e("TEST", "add a man door");
 							mDeviceList.add(device);
 							break;
 						}
@@ -2467,7 +2467,7 @@ public class KeyFragment extends Fragment {
 	}
 	
 	private void doOpenDoor(final boolean btStateOpen) {
-        Log.e("BLE", "doOpenDoor");
+		MyDebugLog.e("BLE", "doOpenDoor");
        	if (btStateOpen) {
 			onlyOneDoor = !onlyOneDoor;
 			//TODO
@@ -2556,7 +2556,7 @@ public class KeyFragment extends Fragment {
 												} else {
 													// can not open
 													if (getActivity() != null) {
-														Log.e(TAG, "sorry, cannot open");
+														MyDebugLog.e(TAG, "sorry, cannot open");
 														toastShow(getString(R.string.sorry_you_are_in_the_zone));
 //														Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
 													}
@@ -2614,7 +2614,7 @@ public class KeyFragment extends Fragment {
 													mOpenDoorState = 3;
 													// can not open
 													if (getActivity() != null) {
-														Log.e(TAG, "sorry, cannot open");
+														MyDebugLog.e(TAG, "sorry, cannot open");
 														toastShow(getString(R.string.sorry_you_are_out_the_zone));
 //														Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
 													}
@@ -2674,7 +2674,7 @@ public class KeyFragment extends Fragment {
 		@Override
 		public void onLeScan(final BluetoothDevice device, final int rssi,
 				byte[] scanRecord) {
-			Log.e("BLE", "onLeScan");
+			MyDebugLog.e("BLE", "onLeScan");
 			if(getActivity() != null) {
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
@@ -2707,7 +2707,7 @@ public class KeyFragment extends Fragment {
 	private final BroadcastReceiver mBluetoothStateReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.e("BLE", "mBluetoothStateReceiver");
+			MyDebugLog.e("BLE", "mBluetoothStateReceiver");
 			final String action = intent.getAction();
 			if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
 				final int state = intent.getIntExtra(
@@ -2715,17 +2715,17 @@ public class KeyFragment extends Fragment {
 
 				switch (state) {
 				case BluetoothAdapter.STATE_OFF:
-					Log.e("BLE", "BluetoothAdapter.STATE_OFF");
+					MyDebugLog.e("BLE", "BluetoothAdapter.STATE_OFF");
                     mBtStateOpen = false;
 //					if (myThread != null) {
-//						Log.e("ThreadTest", "BluetoothAdapter.STATE_OFF1");
+//						MyDebugLog.e("ThreadTest", "BluetoothAdapter.STATE_OFF1");
 //						myThread.stopThread();
 //						myThread = null;
 //					}
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_OFF:
-					Log.e("ThreadTest", "BluetoothAdapter.STATE_TURNING_OFF");
+					MyDebugLog.e("ThreadTest", "BluetoothAdapter.STATE_TURNING_OFF");
 					if (mBTScanning){
 						mBluetoothAdapter.stopLeScan(mLeScanCallback);
 						mBTScanning = false;
@@ -2733,10 +2733,10 @@ public class KeyFragment extends Fragment {
 					break;
 
 				case BluetoothAdapter.STATE_ON:
-					Log.e("BLE", "BluetoothAdapter.STATE_ON");
+					MyDebugLog.e("BLE", "BluetoothAdapter.STATE_ON");
                     mBtStateOpen = true;
 					service_init();
-                    Log.i("ThreadTest", "myThread111 STATE_ON");
+					MyDebugLog.i("ThreadTest", "myThread111 STATE_ON");
 //					if (myThread == null) {
 //						myThread = new MyThread();
 //						myThread.start();
@@ -2747,7 +2747,7 @@ public class KeyFragment extends Fragment {
 					break;
 
 				case BluetoothAdapter.STATE_TURNING_ON:
-					Log.e("BLE", "BluetoothAdapter.STATE_TURNING_ON");
+					MyDebugLog.e("BLE", "BluetoothAdapter.STATE_TURNING_ON");
 					break;
 				}
 			}
@@ -2755,7 +2755,7 @@ public class KeyFragment extends Fragment {
 	};
 
 	private static IntentFilter makeGattUpdateIntentFilter() {
-		Log.e("BLE", "makeGattUpdateIntentFilter");
+		MyDebugLog.e("BLE", "makeGattUpdateIntentFilter");
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(UartService.ACTION_GATT_CONNECTED);
 		intentFilter.addAction(UartService.ACTION_GATT_DISCONNECTED);
@@ -2769,15 +2769,15 @@ public class KeyFragment extends Fragment {
 	private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
-			Log.e("BLE", "UARTStatusChangeReceiver");
+			MyDebugLog.e("BLE", "UARTStatusChangeReceiver");
 			String action = intent.getAction();
 
 			if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
-				Log.e("test", "UartService.ACTION_GATT_CONNECTED");
+				MyDebugLog.e("test", "UartService.ACTION_GATT_CONNECTED");
 			}
 
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
-                Log.e("test", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
+            	MyDebugLog.e("test", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         if (mUartService != null) {
@@ -2788,7 +2788,7 @@ public class KeyFragment extends Fragment {
             }
 
             if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
-                Log.e("BLE", "UartService.ACTION_GATT_DISCONNECTED");
+            	MyDebugLog.e("BLE", "UartService.ACTION_GATT_DISCONNECTED");
 				if (getActivity() != null) {
 					getActivity().runOnUiThread(new Runnable() {
 						public void run() {
@@ -2808,7 +2808,7 @@ public class KeyFragment extends Fragment {
 										Toast.makeText(getActivity(), R.string.open_door_fail, Toast.LENGTH_SHORT).show();
 									// toastShow(getString(R.string.open_door_fail));
 								}
-								Log.e("test for open door", "Gatt close");
+								MyDebugLog.e("test for open door", "Gatt close");
 								// mHandlerReset.getLooper().quit();
 								mHandlerReset.removeCallbacks(mRunnableReset);
 								mOpenDoorState = 0;
@@ -2821,12 +2821,12 @@ public class KeyFragment extends Fragment {
             }
 
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
-                Log.e("test", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
+            	MyDebugLog.e("test", "UartService.ACTION_GATT_SERVICES_DISCOVERED");
                 mUartService.enableTXNotification();
             }
 
             if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
-                Log.e("test", "UartService.ACTION_DATA_AVAILABLE");
+            	MyDebugLog.e("test", "UartService.ACTION_DATA_AVAILABLE");
 
                 @SuppressWarnings("unused")
                 final byte[] txValue = intent
@@ -2848,11 +2848,14 @@ public class KeyFragment extends Fragment {
             }
 
             if (action.equals(UartService.ACTION_MAKESURE_DOOROPENED)) {//new add for response
-                Log.e("test", "UartService.ACTION_MAKESURE_DOOROPENED");
+            	MyDebugLog.e("test", "UartService.ACTION_MAKESURE_DOOROPENED");
                 final byte[] txValue = intent
                         .getByteArrayExtra(UartService.EXTRA_DATA);
 
                 if (txValue[0] == 0x10) {
+                	
+                	MyDebugLog.e(TAG, "**************receive feedback from bt");
+                	
                     vibrator.vibrate(500);
                     // door had opened. go on ...
                     if(getActivity() != null)
@@ -2873,7 +2876,7 @@ public class KeyFragment extends Fragment {
             }
 
             if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
-                Log.e("BLE", "UartService.DEVICE_DOES_NOT_SUPPORT_UART");
+            	MyDebugLog.e("BLE", "UartService.DEVICE_DOES_NOT_SUPPORT_UART");
                 mUartService.disconnect();
             }
 		}
@@ -2881,17 +2884,18 @@ public class KeyFragment extends Fragment {
 
     @Override
     public void onStop() {
-		Log.e("TEST63", "onStop");
+    	MyDebugLog.e("TEST63", "onStop");
 		super.onStop();
 		mOpenDoorState = 5;
 		mThisFragment = false;
         vibrator.cancel();
+
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className,
 				IBinder rawBinder) {
-			Log.e("BLE", "onServiceConnected");
+			MyDebugLog.e("BLE", "onServiceConnected");
 			mUartService = ((UartService.LocalBinder) rawBinder).getService();
 			if (!mUartService.initialize()) {
 				getActivity().finish();
@@ -2899,7 +2903,7 @@ public class KeyFragment extends Fragment {
 		}
 
 		public void onServiceDisconnected(ComponentName classname) {
-			Log.e("BLE", "onServiceDisconnected");
+			MyDebugLog.e("BLE", "onServiceDisconnected");
 			mUartService = null;
 			scanStatus.setText(R.string.can_not_use_open_door);
 		}
@@ -2941,7 +2945,7 @@ public class KeyFragment extends Fragment {
 	}
 
 	public void playOpenDoorSound() {
-		Log.e(TAG, "play open door sound");
+		MyDebugLog.e(TAG, "play open door sound");
 
 		if (getActivity() != null) {
 			getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -2956,7 +2960,7 @@ public class KeyFragment extends Fragment {
 				@Override
 				public void onLoadComplete(SoundPool arg0, int arg1, int arg2) {
 					// TODO Auto-generated method stub
-					Log.e(TAG, "load open door sound complete");
+					MyDebugLog.e(TAG, "load open door sound complete");
 					mSoundPool.play(soundID, volume, volume, 0, 0, 1);
 				}
 
@@ -3125,6 +3129,7 @@ public class KeyFragment extends Fragment {
     }
 	
 	public void checkForUserStatus() {
+		MyDebugLog.e(TAG, "checkForUserStatus()");
 		URL getUserStatusURL = null;
 		sid = loadSid();
 		try {
@@ -3138,7 +3143,7 @@ public class KeyFragment extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e(TAG, "checkForUserStatus: " + response.toString());
+						MyDebugLog.e(TAG, "checkForUserStatus: " + response.toString());
 						try {
 							if(response.getInt("code") == 1){
 								if(response.getString("sid") != null)
@@ -3156,6 +3161,9 @@ public class KeyFragment extends Fragment {
 									edit.putInt("userStatus", response.getJSONObject("data").getInt("userStatus"));
 									edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
 									edit.commit();
+									
+									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getInt("userStatus")) + "in KeyFragment***********");
+									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getBoolean("isHasPropServ")) + "in KeyFragment***********");
 								}
 								
 							}
