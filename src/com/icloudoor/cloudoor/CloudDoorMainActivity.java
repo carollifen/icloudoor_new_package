@@ -451,6 +451,8 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		super.onResume();
 		Log.e(TAG, "onResume");
 		
+		OnlineConfigAgent.getInstance().updateOnlineConfig(this);
+		
 		getBannerData();
 		
 		EMChatManager.getInstance().registerEventListener(

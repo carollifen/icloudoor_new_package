@@ -100,6 +100,7 @@ import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.cloudoor.ShakeEventManager.OnShakeListener;
 import com.icloudoor.cloudoor.SwitchButton.OnSwitchListener;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.onlineconfig.OnlineConfigAgent;
 
 @SuppressLint("NewApi")
 public class KeyFragment extends Fragment {
@@ -240,6 +241,13 @@ public class KeyFragment extends Fragment {
 	private Version version;
 	
 	private Toast mToast;
+	
+	private String manRssi = null;
+	private String carRssi = null;
+	private String officeRssi = null;
+	private String mandefault = "-85";
+	private String cardefault = "-80";
+	private String officedefault = "-100";
 	
 	Handler mHandler = new Handler();
 	
@@ -549,7 +557,48 @@ public class KeyFragment extends Fragment {
 			}
 		});
 
+		if(getActivity() != null)
+			configRssiData();
+		
 		return view;
+	}
+	
+	public void configRssiData() {
+		manRssi = OnlineConfigAgent.getInstance().getConfigParams(getActivity(), "manDoorRssi");
+		carRssi = OnlineConfigAgent.getInstance().getConfigParams(getActivity(), "carDoorRssi");
+		officeRssi = OnlineConfigAgent.getInstance().getConfigParams(getActivity(), "officeDoorRssi");
+		
+		SharedPreferences rssi = getActivity().getSharedPreferences("RSSI", 0);
+		Editor editor = rssi.edit();
+		
+		if(manRssi == null) {
+			manRssi = rssi.getString("mrssi", null);
+			
+			if(manRssi == null)
+				manRssi = mandefault;
+		} else {
+			editor.putString("mrssi", manRssi);
+		}
+			
+		if(carRssi == null) {
+			carRssi = rssi.getString("crssi", null);
+			
+			if(carRssi == null)
+				carRssi = cardefault;
+		} else {
+			editor.putString("crssi", carRssi);
+		}
+		
+		if(officeRssi == null) {
+			officeRssi = rssi.getString("orssi", null);
+			
+			if(officeRssi == null)
+				officeRssi = officedefault;
+		} else {
+			editor.putString("orssi", officeRssi);
+		}
+
+		Log.e("********", manRssi + " " + carRssi + " " + officeRssi);
 	}
 	
 	public boolean checkWithin7DaysOrNot(){
@@ -2039,10 +2088,12 @@ public class KeyFragment extends Fragment {
 								MyDebugLog.e(TAG, "check mDeviceList uuid");
 								MyDebugLog.e(TAG, mDeviceList.get(index).getAddress() + " : " + formatDeviceId);
 								if (mDeviceList.get(index).getAddress().equals(formatDeviceId)) {
-									MyDebugLog.e(TAG, "add tempoffice");
-									tempOfficeDoorList.add(mDeviceList.get(index));
-									findKey = true;
-									break;
+									if(mDevRssiValues.get(mDeviceList.get(index).getAddress()) > Integer.parseInt(officeRssi)){
+										MyDebugLog.e(TAG, "add tempoffice");
+										tempOfficeDoorList.add(mDeviceList.get(index));
+										findKey = true;
+										break;
+									}
 								}
 							}
 						}
@@ -2113,7 +2164,7 @@ public class KeyFragment extends Fragment {
 										+ String.valueOf(data[10]) + String.valueOf(data[11]);
 
 								if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// 2.one car door
-									if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-80)) {
+									if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > Integer.parseInt(carRssi)) {
 										bValidKey = true;
 										tempCarDoorList.add(mDeviceList.get(0));
 										BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
@@ -2147,7 +2198,7 @@ public class KeyFragment extends Fragment {
 									MyDebugLog.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 									if (mDeviceList.get(0).getAddress().equals(formatDeviceId)) {// one man door
-										if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > (int)(-85)) {
+										if (mDevRssiValues.get(mDeviceList.get(0).getAddress()) > Integer.parseInt(manRssi)) {
 											bValidKey = true;
 											tempManDoorList.add(mDeviceList.get(0));
 											BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
@@ -2206,7 +2257,7 @@ public class KeyFragment extends Fragment {
 													+ String.valueOf(data[10]) + String.valueOf(data[11]);
 
 											if (tempCarDoorList.get(0).getAddress().equals(formatDeviceId)) {
-												if (mDevRssiValues.get(tempCarDoorList.get(0).getAddress()) > (int)(-80)) {
+												if (mDevRssiValues.get(tempCarDoorList.get(0).getAddress()) > Integer.parseInt(carRssi)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);
@@ -2247,7 +2298,7 @@ public class KeyFragment extends Fragment {
 //											MyDebugLog.e("TEST", "CDdeviceID:" + formatDeviceId);
 
 											if (tempCarDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
-												if (mDevRssiValues.get(tempCarDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-80)) {
+												if (mDevRssiValues.get(tempCarDoorList.get(deviceIndexToOpen).getAddress()) > Integer.parseInt(carRssi)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);
@@ -2295,7 +2346,7 @@ public class KeyFragment extends Fragment {
 
 											if (tempManDoorList.get(0).getAddress().equals(formatDeviceId)) {
 //												MyDebugLog.e("TEST69", "man rssi:"+String.valueOf(mDevRssiValues.get(tempManDoorList.get(0).getAddress())));
-												if (mDevRssiValues.get(tempManDoorList.get(0).getAddress()) > (int)(-85)) {
+												if (mDevRssiValues.get(tempManDoorList.get(0).getAddress()) > Integer.parseInt(manRssi)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);
@@ -2336,7 +2387,7 @@ public class KeyFragment extends Fragment {
 											MyDebugLog.e("TEST", "MDdeviceID:" + formatDeviceId);
 
 											if (tempManDoorList.get(deviceIndexToOpen).getAddress().equals(formatDeviceId)) {
-												if (mDevRssiValues.get(tempManDoorList.get(deviceIndexToOpen).getAddress()) > (int)(-85)) {
+												if (mDevRssiValues.get(tempManDoorList.get(deviceIndexToOpen).getAddress()) > Integer.parseInt(manRssi)) {
 													bValidKey = true;
 													BtnOpenDoor.setImageResource(R.drawable.selector_open_door);
 													BtnOpenDoor.setEnabled(true);

@@ -564,20 +564,22 @@ public class SettingFragment extends Fragment {
     }
 
 	public void share() {
+
+		share_link = OnlineConfigAgent.getInstance().getConfigParams(getActivity(), "share_link");
+
+		SharedPreferences link = getActivity().getSharedPreferences("LINK", 0);
+		Editor editor = link.edit();
+		editor.putString("SHARELINK", share_link);
+		editor.commit();
 		
-		if(getActivity() != null){
-			share_link = OnlineConfigAgent.getInstance().getConfigParams(getActivity(), "share_link");
-			
-			SharedPreferences link = getActivity().getSharedPreferences("LINK", 0);
-			Editor editor = link.edit();
-			editor.putString("SHARELINK", share_link);
-			editor.commit();
+		if(share_link == null){
+			share_link = defaultLink;
+			MyDebugLog.e(TAG, "get default:" + share_link);
+		}else {
+			MyDebugLog.e(TAG, "share_link:" + share_link);
 		}
 		
-		if(share_link.equals(null))
-			share_link = defaultLink;
 		
-		MyDebugLog.e(TAG, share_link);
 		
 		// ÃŒÃ­Â¼Ã“ÃŽÂ¢ÃÃ…Ã†Â½ÃŒÂ¨
 		wxHandler = new UMWXHandler(getActivity(), appID, appSecret);
