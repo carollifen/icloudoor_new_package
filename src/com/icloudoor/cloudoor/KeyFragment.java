@@ -570,31 +570,51 @@ public class KeyFragment extends Fragment {
 		
 		SharedPreferences rssi = getActivity().getSharedPreferences("RSSI", 0);
 		Editor editor = rssi.edit();
-		
-		if(manRssi == null) {
-			manRssi = rssi.getString("mrssi", null);
-			
-			if(manRssi == null)
-				manRssi = mandefault;
+
+		if(manRssi.length() > 0 && carRssi.length() > 0 && officeRssi.length() > 0){
+			File f = new File(
+					"/data/data/com.icloudoor.cloudoor/shared_prefs/RSSI.xml");
+			if (f.exists()) {
+				if (rssi.contains("mrssi")) {
+					if (manRssi.equals(rssi.getString("mrssi", null))) {
+
+					} else {
+						editor.putString("mrssi", manRssi);
+					}
+				} else {
+					editor.putString("mrssi", manRssi);
+				}
+
+				if (rssi.contains("crssi")) {
+					if (carRssi.equals(rssi.getString("crssi", null))) {
+
+					} else {
+						editor.putString("crssi", carRssi);
+					}
+				} else {
+					editor.putString("crssi", carRssi);
+				}
+
+				if (rssi.contains("orssi")) {
+					if (officeRssi.equals(rssi.getString("orssi", null))) {
+
+					} else {
+						editor.putString("orssi", officeRssi);
+					}
+				} else {
+					editor.putString("orssi", officeRssi);
+				}
+			} else {
+				editor.putString("mrssi", manRssi);
+				editor.putString("crssi", carRssi);
+				editor.putString("orssi", officeRssi);
+			}
 		} else {
+			manRssi = mandefault;
+			carRssi = cardefault;
+			officeRssi = officedefault;
 			editor.putString("mrssi", manRssi);
-		}
-			
-		if(carRssi == null) {
-			carRssi = rssi.getString("crssi", null);
-			
-			if(carRssi == null)
-				carRssi = cardefault;
-		} else {
 			editor.putString("crssi", carRssi);
-		}
-		
-		if(officeRssi == null) {
-			officeRssi = rssi.getString("orssi", null);
-			
-			if(officeRssi == null)
-				officeRssi = officedefault;
-		} else {
 			editor.putString("orssi", officeRssi);
 		}
 
