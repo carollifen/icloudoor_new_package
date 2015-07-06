@@ -569,8 +569,8 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 					Toast.makeText(getApplicationContext(), R.string.plz_input_name, Toast.LENGTH_SHORT).show();
 				}else if(Nickname.equals(null)){
 					Toast.makeText(getApplicationContext(), R.string.plz_input_nickname, Toast.LENGTH_SHORT).show();
-				}else if(PersonalID.equals(null)){
-					Toast.makeText(getApplicationContext(), R.string.plz_input_id, Toast.LENGTH_SHORT).show();
+				}else if(PersonalID.length() != 15 || PersonalID.length() != 18){
+					Toast.makeText(getApplicationContext(), R.string.input_correct_num, Toast.LENGTH_SHORT).show();
 				}else if(BirthDay.length() < 9){
 					Toast.makeText(getApplicationContext(), R.string.plz_input_birthday, Toast.LENGTH_SHORT).show();
 				}else if(portraitUrl.equals(null)){

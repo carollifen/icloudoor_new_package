@@ -42,6 +42,7 @@
     <string name="plz_input_name">请输入姓名</string>
     <string name="plz_input_nickname">请输入昵称</string>
     <string name="plz_input_id">请输入身份证号码</string>
+    <string name="input_correct_num">请输入15或18位身份证号码</string>
     <string name="plz_input_birthday">请输入生日信息</string>
     <string name="title_activity_show_personal_info">ShowPersonalInfo</string>
     <string name="dot">&#183;</string>
