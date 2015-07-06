@@ -375,7 +375,7 @@ public class ReportToRepairActivity extends BaseActivity {
 			Part[] parts = null;
 			FilePart photoPart;
 			try {
-				photoPart = new FilePart("file", file);
+				photoPart = new FilePart("file", cameraFile);
 				StringPart policyPart = new StringPart("policy", upPolicy);
 				StringPart signaturePart = new StringPart("signature",
 						upSignature);
