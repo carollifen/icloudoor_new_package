@@ -282,5 +282,9 @@
     <string name="time">分钟前</string>
     <string name="time1">小时前</string>
     <string name="time2">天前</string>
+    <string name="not_content">总得说点什么吧！</string>
+    <string name="Word1">还可以输入</string>
+    <string name="Word2">子</string>
     
+
 </resources>

@@ -590,6 +590,18 @@
             android:exported="true"
             android:screenOrientation="portrait"
              />
+        <activity
+            android:name=".chat.activity.SendDynamicActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+             />
+        <activity
+            android:name="com.icloudoor.cloudoor.widget.PicSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+             />
         
         
         <!-- 开机自启动服务 -->

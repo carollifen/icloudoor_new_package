@@ -26,10 +26,10 @@ import com.umeng.analytics.MobclickAgent;
 public class BaseActivity extends Activity{
 	
 	private final  String mPageName = "BesaActivity";
-	private RequestQueue mQueue;
+	public RequestQueue mQueue;
 	public NetworkInterface networkInterface;
 	public MyProgressDialog dialog;
-	private Version version;
+	public Version version;
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -114,6 +114,7 @@ public class BaseActivity extends Activity{
 					// TODO Auto-generated method stub
 					BaseActivity.this.networkInterface.onFailure(error);
 					destroyDialog();
+					showToast(R.string.network_error);
 				}
 			});
 			mQueue.add(requestBody);

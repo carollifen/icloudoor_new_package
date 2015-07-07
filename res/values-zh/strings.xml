@@ -292,5 +292,7 @@
     <string name= "auth_key">授权钥匙</string>
     <string name= "returnChat">返回聊天</string>
     <string name= "qr_hint">扫一扫下面的二维图案，添加我为云门好友</string>
+    <string name= "send_dunamic_success">发布成功</string>
+    <string name= "send_dunamic_Fail">发布失败</string>
 
 </resources>

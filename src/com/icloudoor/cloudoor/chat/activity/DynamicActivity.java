@@ -21,7 +21,6 @@ import com.icloudoor.cloudoor.adapter.DynamicAdapter;
 import com.icloudoor.cloudoor.chat.entity.DynamicEn;
 import com.icloudoor.cloudoor.chat.entity.DynamicInfo;
 import com.icloudoor.cloudoor.utli.GsonUtli;
-import com.icloudoor.cloudoor.widget.PicSelectActivity;
 import com.icloudoor.cloudoor.widget.RefreshListView;
 import com.icloudoor.cloudoor.widget.RefreshListView.IOnLoadMoreListener;
 import com.icloudoor.cloudoor.widget.RefreshListView.IOnRefreshListener;
@@ -122,8 +121,8 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.dynami_editing:
-			Intent intent = new Intent(this, PicSelectActivity.class);
-			startActivityForResult(intent, 2);
+			Intent intent = new Intent(this, SendDynamicActivity.class);
+			startActivity(intent);
 			break;
 
 		default:

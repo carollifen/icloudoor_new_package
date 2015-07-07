@@ -19,6 +19,7 @@ import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.entity.DynamicInfo;
 import com.icloudoor.cloudoor.utli.DateUtli;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
+import com.icloudoor.cloudoor.utli.Uitls;
 import com.icloudoor.cloudoor.widget.CircleImageView;
 import com.icloudoor.cloudoor.widget.GridViewForScrollview;
 import com.icloudoor.cloudoor.widget.MultipleTextView;
@@ -28,10 +29,16 @@ public class DynamicAdapter extends BaseAdapter{
 	
 	private Context context;
 	List<DynamicInfo> data;
-	
+	int[] w_h;
+	int width;
+	int poorW;
 	public DynamicAdapter(Context context) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
+		w_h = Uitls.getWH(context);
+		width = w_h [0];
+		poorW = Uitls.dip2px(context, 10);
+		width = width - poorW;
 	}
 
 	@Override
@@ -89,15 +96,19 @@ public class DynamicAdapter extends BaseAdapter{
 				hodler.content_ioc.setVisibility(View.VISIBLE);
 				hodler.gridview1.setVisibility(View.GONE);
 				hodler.gridview2.setVisibility(View.GONE);
-				ImageLoader.getInstance().displayImage(info.getPortaitUrl(), hodler.content_ioc, DisplayImageOptionsUtli.options);
+				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width*3/4);
+				hodler.content_ioc.setLayoutParams(params);
+				ImageLoader.getInstance().displayImage(photoUrls.get(0), hodler.content_ioc, DisplayImageOptionsUtli.options);
 			}else if (photoUrls.size()==2){
 				hodler.content_ioc.setVisibility(View.GONE);
 				hodler.gridview1.setVisibility(View.VISIBLE);
 				hodler.gridview2.setVisibility(View.GONE);
+				hodler.gridview1.setAdapter(new TwoAdapter(context, photoUrls));
 			}else{
 				hodler.content_ioc.setVisibility(View.GONE);
 				hodler.gridview1.setVisibility(View.GONE);
 				hodler.gridview2.setVisibility(View.VISIBLE);
+				hodler.gridview2.setAdapter(new ThreeAdapter(context, photoUrls));
 			}
 		}else{
 			hodler.content_ioc_layout.setVisibility(View.GONE);

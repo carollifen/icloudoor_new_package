@@ -11,7 +11,7 @@ public class Config {
 	static String savePathString;
 
 	static {
-		limit = 4;
+		limit = 3;
 		savePathString = "/temp";
 	}
 

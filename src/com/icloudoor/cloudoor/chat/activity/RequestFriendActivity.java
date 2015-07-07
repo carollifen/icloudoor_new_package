@@ -56,6 +56,7 @@ public class RequestFriendActivity extends BaseActivity implements
 				} else {
 					jsonObject.put("comment", comment);
 				}
+				jsonObject.put("trgUserId", trgUserId);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -83,6 +84,9 @@ public class RequestFriendActivity extends BaseActivity implements
 				Toast.makeText(this, R.string.friendquestsuccess,
 						Toast.LENGTH_LONG).show();
 				finish();
+			}else{
+				Toast.makeText(this, R.string.network_error,
+						Toast.LENGTH_LONG).show();
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
