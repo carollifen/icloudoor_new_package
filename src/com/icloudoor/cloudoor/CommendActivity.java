@@ -147,7 +147,7 @@ public class CommendActivity extends BaseActivity {
             
             String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
             mKeyDB.execSQL(sq3);
-            
+
             Intent intentKill = new Intent();
 			intentKill.setAction("com.icloudoor.cloudoor.ACTION_FINISH");
 			sendBroadcast(intentKill);

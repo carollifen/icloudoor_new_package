@@ -2,6 +2,7 @@ package com.icloudoor.cloudoor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -31,6 +32,11 @@ public class Logout {
         editor1.putInt("LOGIN", 0);
         editor1.commit();
 
+        SharedPreferences savedSid = context.getSharedPreferences("SAVEDSID", 0);
+		Editor editor = savedSid.edit();
+		editor.putString("SID", null);
+		editor.commit();
+        
         String sql = "DELETE FROM " + TABLE_NAME +";";
         mKeyDB.execSQL(sql);
 

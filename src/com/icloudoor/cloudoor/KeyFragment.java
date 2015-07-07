@@ -617,6 +617,8 @@ public class KeyFragment extends Fragment {
 			editor.putString("crssi", carRssi);
 			editor.putString("orssi", officeRssi);
 		}
+		
+		editor.commit();
 
 		Log.e("********", manRssi + " " + carRssi + " " + officeRssi);
 	}
