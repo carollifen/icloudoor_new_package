@@ -1,5 +1,6 @@
 package com.icloudoor.cloudoor;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -110,6 +111,13 @@ public class Login extends Activity implements TextWatcher {
 	
 	private Version version;
 	
+	private MyDataBaseHelper mKeyDBHelper;
+	private SQLiteDatabase mKeyDB;
+	private final String KEY_DATABASE_NAME = "KeyDB.db";
+	private final String KEY_TABLE_NAME = "KeyInfoTable";
+	private final String CAR_TABLE_NAME = "CarKeyTable";
+	private final String ZONE_TABLE_NAME = "ZoneTable";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -125,6 +133,9 @@ public class Login extends Activity implements TextWatcher {
 		
 		mAreaDBHelper = new MyAreaDBHelper(Login.this, DATABASE_NAME, null, 1);
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
+		
+		mKeyDBHelper = new MyDataBaseHelper(Login.this, KEY_DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
 		
 		mQueue = Volley.newRequestQueue(this);
 
@@ -283,6 +294,21 @@ public class Login extends Activity implements TextWatcher {
 										editor.putString("PASSWARD", password);
 //										editor.commit();
 
+										File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PREVIOUSNUM.xml");
+										if(f.exists()){
+											if(!getSharedPreferences("PREVIOUSNUM", 0).getString("NUM", null).equals(phoneNum)){
+												String sql = "DELETE FROM " + KEY_TABLE_NAME +";";
+												mKeyDB.execSQL(sql);
+	                                        
+												String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+												mKeyDB.execSQL(sq2);
+	                                        
+												String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+												mKeyDB.execSQL(sq3);  
+											}
+										}
+										
+										
 										SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
 										Editor mEditor=firstLoginShare.edit();
 										mEditor.putBoolean("FIRSTLOGIN", true).commit();

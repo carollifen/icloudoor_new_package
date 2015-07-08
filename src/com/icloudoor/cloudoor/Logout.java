@@ -37,6 +37,9 @@ public class Logout {
 		editor.putString("SID", null);
 		editor.commit();
         
+		SharedPreferences previousNum = context.getSharedPreferences("PREVIOUSNUM", 0);
+    	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
+		
         String sql = "DELETE FROM " + TABLE_NAME +";";
         mKeyDB.execSQL(sql);
 

@@ -461,27 +461,30 @@ public class SettingFragment extends Fragment {
                                         isLogin = 0;
                                         if(getActivity() != null){
                                         	SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
-                                        Editor editor1 = loginStatus.edit();
-                                        editor1.putInt("LOGIN", isLogin);
-                                        editor1.commit();
+                                        	Editor editor1 = loginStatus.edit();
+                                        	editor1.putInt("LOGIN", isLogin);
+                                        	editor1.commit();
+                                        	
+                                        	SharedPreferences previousNum = getActivity().getSharedPreferences("PREVIOUSNUM", 0);
+                                        	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
                                         
-                                        Intent intent3 = new Intent();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
-                                        intent3.putExtras(bundle);
-                                        intent3.setClass(getActivity(), Login.class);
-                                        startActivity(intent3);
+                                        	Intent intent3 = new Intent();
+                                        	Bundle bundle = new Bundle();
+                                        	bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
+                                        	intent3.putExtras(bundle);
+                                        	intent3.setClass(getActivity(), Login.class);
+                                        	startActivity(intent3);
                                         }
                                         
                                         
-                                        String sql = "DELETE FROM " + TABLE_NAME +";";
-                                        mKeyDB.execSQL(sql);
-                                        
-                                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
-                                        mKeyDB.execSQL(sq2);
-                                        
-                                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
-                                        mKeyDB.execSQL(sq3);                                        
+//                                        String sql = "DELETE FROM " + TABLE_NAME +";";
+//                                        mKeyDB.execSQL(sql);
+//                                        
+//                                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+//                                        mKeyDB.execSQL(sq2);
+//                                        
+//                                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+//                                        mKeyDB.execSQL(sq3);                                        
                                                                   
                                         CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
                                         mainActivity.finish();
@@ -507,14 +510,17 @@ public class SettingFragment extends Fragment {
                         
                         saveSid("SID", null);
                         
-                        String sql = "DELETE FROM " + TABLE_NAME +";";
-                        mKeyDB.execSQL(sql);
+                        SharedPreferences previousNum = getActivity().getSharedPreferences("PREVIOUSNUM", 0);
+                    	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
                         
-                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
-                        mKeyDB.execSQL(sq2);
-                        
-                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
-                        mKeyDB.execSQL(sq3);
+//                        String sql = "DELETE FROM " + TABLE_NAME +";";
+//                        mKeyDB.execSQL(sql);
+//                        
+//                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+//                        mKeyDB.execSQL(sq2);
+//                        
+//                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+//                        mKeyDB.execSQL(sq3);
                         
                         Intent intent4 = new Intent();
                         Bundle bundle = new Bundle();

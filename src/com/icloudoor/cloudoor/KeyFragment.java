@@ -490,14 +490,17 @@ public class KeyFragment extends Fragment {
                                     
                                     saveSid(null);
                                     
-                                    String sql = "DELETE FROM " + TABLE_NAME +";";
-                                    mKeyDB.execSQL(sql);
+                                    SharedPreferences previousNum = getActivity().getSharedPreferences("PREVIOUSNUM", 0);
+                                	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
                                     
-                                    String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
-                                    mKeyDB.execSQL(sq2);
-                                    
-                                    String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
-                                    mKeyDB.execSQL(sq3);
+//                                    String sql = "DELETE FROM " + TABLE_NAME +";";
+//                                    mKeyDB.execSQL(sql);
+//                                    
+//                                    String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+//                                    mKeyDB.execSQL(sq2);
+//                                    
+//                                    String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+//                                    mKeyDB.execSQL(sq3);
                                     
                                     Intent intent = new Intent();
                                     intent.setClass(getActivity(), Login.class);
