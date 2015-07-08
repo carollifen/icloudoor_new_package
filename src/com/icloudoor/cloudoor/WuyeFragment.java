@@ -45,15 +45,6 @@ public class WuyeFragment extends Fragment {
 	private View blank2;
 	private ImageView WuyeWidgePush3;
 
-	private ImageView BtnLianxiwuye;
-	private ImageView BtnNotice;
-	private ImageView BtnFix;
-	private ImageView BtnBad;
-	private ImageView BtnGood;
-	private ImageView BtnQuery;
-	private ImageView BtnBill;
-	private ImageView BtnPay;
-
 	private RelativeLayout unreadNoticeLayout;
 	private RelativeLayout unreadQueryLayout;
 	private ImageView unreadNoticeDot;
@@ -244,7 +235,7 @@ public class WuyeFragment extends Fragment {
 
 		@Override
 		public void onPageSelected(int position) {
-			Log.e(TAG, String.valueOf(position));
+			MyDebugLog.e(TAG, String.valueOf(position));
 		
 			if(bannerCount == 2){
 				if (position == 0) {
@@ -285,7 +276,7 @@ public class WuyeFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		MobclickAgent.onPageStart(mPageName);
-		Log.e(TAG, "test");
+		MyDebugLog.e(TAG, "test");
 		
 		// start auto scroll when onResume
 		viewPager.startAutoScroll();
@@ -301,7 +292,7 @@ public class WuyeFragment extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e(TAG, response.toString());
+						MyDebugLog.e(TAG, response.toString());
 
 						try {
 							JSONArray data = response.getJSONArray("data");
@@ -437,10 +428,10 @@ public class WuyeFragment extends Fragment {
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e("response", response.toString());
+						MyDebugLog.e("response", response.toString());
 						try {
 
-							Log.e(TAG, "banner data request in wuye: " + response.toString());
+							MyDebugLog.e(TAG, "banner data request in wuye: " + response.toString());
 
 							if (response.getInt("code") == 1) {
 								
@@ -449,7 +440,7 @@ public class WuyeFragment extends Fragment {
 									Editor editor = banner.edit();
 
 									JSONArray data = response.getJSONArray("data");
-									Log.e(TAG, "banner count = " + String.valueOf(data.length()));
+									MyDebugLog.e(TAG, "banner count = " + String.valueOf(data.length()));
 									editor.putInt("COUNT", data.length());
 								
 								
@@ -513,7 +504,7 @@ public class WuyeFragment extends Fragment {
 
 								} else if (data.length() == 3) {
 
-									Log.e(TAG, "here");
+									MyDebugLog.e(TAG, "here");
 
 									if (data.getJSONObject(0).getString("type").equals("1")) {
 										String bg = data.getJSONObject(0).getString("bgColor");

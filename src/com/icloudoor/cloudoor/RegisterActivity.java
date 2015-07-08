@@ -175,14 +175,14 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 					nextLayout.setEnabled(true);
 					TVNextStep.setTextColor(0xFF0065a1);
 					nextLayout.setBackgroundResource(R.drawable.selector_next_step);
-					Log.e(TAG, "checked!");
+					MyDebugLog.e(TAG, "checked!");
 				}else{
 					checkXieyi = false;
 					
 					nextLayout.setEnabled(false);
 					TVNextStep.setTextColor(0xFF999999);
 					nextLayout.setBackgroundResource(R.drawable.shape_next_disable);
-					Log.e(TAG, "unchecked!");
+					MyDebugLog.e(TAG, "unchecked!");
 				}
 			}
 			
@@ -262,7 +262,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 	                                        e.printStackTrace();
 	                                    }
 
-	                                    Log.e("TEST", "response:" + response.toString());
+	                                    MyDebugLog.e("TEST", "response:" + response.toString());
 
 	                                    if (RequestCertiStatusCode == -20) {
 	                                        Toast.makeText(getApplicationContext(),
@@ -504,7 +504,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 		Log.e(TAG, String.valueOf(isBackKey));
 		
 		if (isBackKey == false) {
-			Log.e(TAG, "saving");
+			MyDebugLog.e(TAG, "saving");
 			SharedPreferences tempInfo = getSharedPreferences("tempInfo", 0);
 			Editor editor = tempInfo.edit();
 			editor.putString("phone", ETInputPhoneNum.getText().toString());

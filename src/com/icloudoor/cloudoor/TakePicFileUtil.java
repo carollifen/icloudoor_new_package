@@ -55,7 +55,7 @@ public class TakePicFileUtil {
 		String jpegName = path + "/" + "myImage.jpg";
 
 		try {
-			Log.e(TAG, "save pic");
+			MyDebugLog.e(TAG, "save pic");
 			
 			FileOutputStream fout = new FileOutputStream(jpegName);
 			BufferedOutputStream bos = new BufferedOutputStream(fout);
@@ -68,7 +68,7 @@ public class TakePicFileUtil {
 		}
 
 		
-		Log.e("camera", "pic saved jpegName: " + jpegName);
+		MyDebugLog.e("camera", "pic saved jpegName: " + jpegName);
 	}
 
 }

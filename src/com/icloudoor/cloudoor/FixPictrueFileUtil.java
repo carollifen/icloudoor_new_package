@@ -62,7 +62,7 @@ public class FixPictrueFileUtil {
 		}
 
 		
-		Log.e("camera", "pic saved jpegName: " + jpegName);
+		MyDebugLog.e("camera", "pic saved jpegName: " + jpegName);
 	}
 
 	

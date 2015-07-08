@@ -261,6 +261,8 @@ public class Login extends Activity implements TextWatcher {
 					try {
 						loginURL = new URL(HOST + "/user/manage/login.do"
 								+ "?sid=" + sid + "&ver=" + version.getVersionName());
+						
+						MyDebugLog.e(TAG, loginURL.toString());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}
@@ -282,7 +284,7 @@ public class Login extends Activity implements TextWatcher {
 									} catch (JSONException e) {
 										e.printStackTrace();
 									}
-									Log.e("TEST", response.toString());
+									MyDebugLog.e("TEST", response.toString());
 
                                     pbLoginBar.setVisibility(View.INVISIBLE);
 									if (loginStatusCode == 1) {
@@ -425,6 +427,8 @@ public class Login extends Activity implements TextWatcher {
 										editor1.putInt("PIC", 0);
 										editor1.commit();
 										
+										
+										
 									} else if (loginStatusCode == -71) {
 										Toast.makeText(getApplicationContext(),
 												R.string.login_fail,
@@ -439,7 +443,7 @@ public class Login extends Activity implements TextWatcher {
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
-										Toast.makeText(Login.this, R.string.network_error, Toast.LENGTH_SHORT).show();
+								
 								}
 							}) {
 						@Override
@@ -533,7 +537,7 @@ public class Login extends Activity implements TextWatcher {
 				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
 						cloudApplication.currentUserNick.trim());
 				if (!updatenick) {
-					Log.e("LoginActivity", "update current user nick fail");
+					MyDebugLog.e("LoginActivity", "update current user nick fail");
 				}
 				if (!Login.this.isFinishing())
 					pd.dismiss();

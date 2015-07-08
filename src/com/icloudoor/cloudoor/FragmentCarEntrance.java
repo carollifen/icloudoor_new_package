@@ -187,7 +187,7 @@ public class FragmentCarEntrance extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				Log.e("carresponse", "sadkjlfk;s;");
+				MyDebugLog.e("carresponse", "sadkjlfk;s;");
 				if (!isShowPhoneNum) {
 					IVshowPhoneNum
 							.setImageResource(R.drawable.common_hide_list);

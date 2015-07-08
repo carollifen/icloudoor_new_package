@@ -198,22 +198,16 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 			@Override
 			public void onClick(View v) {
-				
-				Log.e(TAG, "onClick");
-				
+
 				Intent intent = new Intent();
 				
 //				SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
 //				if(personalInfo.getInt("SETINFO", 1) == 1){
-					
-				Log.e(TAG, "onClick1");
 
 				if (userStatus == 1) {
-					Log.e(TAG, "onClick2");
 					intent.setClass(ShowPersonalInfo.this, SetPersonalInfoNotCerti.class);
 					startActivityForResult(intent, 0);
 				} else if (userStatus == 2) {
-					Log.e(TAG, "onClick3");
 					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
 					intent.putExtra("Whereis", "settingFace");
 					startActivityForResult(intent, 0);
@@ -258,7 +252,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 								e.printStackTrace();
 							}
 
-							Log.e("TEST", response.toString());
+							MyDebugLog.e("TEST", response.toString());
 
 							if (statusCode == 1) {
 								try {
@@ -302,12 +296,12 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 									editor.commit();
 
 									File f = new File(PATH + imageName);
-									Log.e(TAG, PATH + imageName);
+									MyDebugLog.e(TAG, PATH + imageName);
 									if (f.exists() && !tempURL.equals(portraitUrl)) {
 										tempURL = portraitUrl;
 										ImageLoader.getInstance().displayImage(imageUrl, image, options);
 										
-										Log.e(TAG, "use local");
+										MyDebugLog.e(TAG, "use local");
 //										BitmapFactory.Options opts = new BitmapFactory.Options();
 //										opts.inTempStorage = new byte[100 * 1024];
 //										opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -318,7 +312,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 									} else {
 										// request bitmap in the new thread
 										if (portraitUrl != null && !tempURL.equals(portraitUrl)) {
-											Log.e(TAG, "use net");
+											MyDebugLog.e(TAG, "use net");
 											tempURL = portraitUrl;
 											ImageLoader.getInstance().displayImage(portraitUrl, image, options);
 //											if (mThread == null) {
@@ -453,8 +447,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 	@Override
 	public void onResume(){
 		super.onResume();
-		Log.e("TESTTEST", "onResume show");
-		
+
 		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
 		int homePressed = homeKeyEvent.getInt("homePressed", 0);
 		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
@@ -475,10 +468,10 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 		File Imagefile = new File(PATH + imageName);
 		if(Imagefile.exists()){
-			Log.e(TAG, "use local on resume");
+			MyDebugLog.e(TAG, "use local on resume");
 			ImageLoader.getInstance().displayImage(imageUrl, image, options);
 		} else {
-			Log.e(TAG, "ON RESUME file not exists, use net");
+			MyDebugLog.e(TAG, "ON RESUME file not exists, use net");
 			if(portraitUrl != null){
 				ImageLoader.getInstance().displayImage(portraitUrl, image, options);
 			}
@@ -563,7 +556,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 							e.printStackTrace();
 						}
 
-						Log.e("TEST", response.toString());
+						MyDebugLog.e("TEST", response.toString());
 
 						if (statusCode == 1) {
 							try {
@@ -607,13 +600,13 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 								editor.commit();
 
 								File f = new File(PATH + imageName);
-								Log.e(TAG, PATH + imageName);
+								MyDebugLog.e(TAG, PATH + imageName);
 								if (f.exists() && !tempURL.equals(portraitUrl)) {
 									tempURL = portraitUrl;
 									
 									ImageLoader.getInstance().displayImage(imageUrl, image, options);
 									
-									Log.e(TAG, "use local on resume request");
+									MyDebugLog.e(TAG, "use local on resume request");
 //									BitmapFactory.Options opts = new BitmapFactory.Options();
 //									opts.inTempStorage = new byte[100 * 1024];
 //									opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -625,7 +618,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 									// request bitmap in the new thread
 									if (portraitUrl != null && !tempURL.equals(portraitUrl)) {
 										tempURL = portraitUrl;
-										Log.e(TAG, "use net");
+										MyDebugLog.e(TAG, "use net");
 										ImageLoader.getInstance().displayImage(portraitUrl, image, options);
 //										if (mThread == null) {
 //											mThread = new Thread(runnable);

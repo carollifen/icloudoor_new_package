@@ -298,7 +298,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 				provincePosition = position;
  
 				province = provinceSet[position];
-				Log.e("Spinner test pro",  province);
+				MyDebugLog.e("Spinner test pro",  province);
 				
 				Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
 				if (mCursorP.moveToFirst()) {
@@ -314,7 +314,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 					}while(mCursorP.moveToNext());		
 				}
 				mCursorP.close();
-				Log.e("spinner pro id", String.valueOf(provinceId));
+				MyDebugLog.e("spinner pro id", String.valueOf(provinceId));
 				
 			}
 
@@ -349,7 +349,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 				cityPosition = position;
 				
 				city = citySet[provincePosition][position];
-				Log.e("Spinner test city",  city);
+				MyDebugLog.e("Spinner test city",  city);
 				
 				Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
 				if (mCursorC.moveToFirst()) {
@@ -365,7 +365,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 					}while(mCursorC.moveToNext());		
 				}
 				mCursorC.close();
-				Log.e("spinner city id", String.valueOf(cityId));
+				MyDebugLog.e("spinner city id", String.valueOf(cityId));
 			}
 
 			@Override
@@ -382,7 +382,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 					int position, long id) {
  
 				district = districtSet[provincePosition][cityPosition][position];     
-				Log.e("Spinner test dis",  district);
+				MyDebugLog.e("Spinner test dis",  district);
 				
 				Cursor mCursorD = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
 				if (mCursorD.moveToFirst()) {
@@ -398,7 +398,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 					}while(mCursorD.moveToNext());		
 				}
 				mCursorD.close();
-				Log.e("spinner dis id", String.valueOf(districtId));
+				MyDebugLog.e("spinner dis id", String.valueOf(districtId));
 			}
 
 			@Override
@@ -502,7 +502,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
-								Log.e("TEST", response.toString());
+								MyDebugLog.e("TEST", response.toString());
 								
 								try {
 									statusCode = response.getInt("code");
@@ -665,12 +665,12 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 		super.onResume();
 		File f = new File(PATH + imageName);
 		if (f.exists()) {
-			Log.e(TAG, "use local");
+			MyDebugLog.e(TAG, "use local");
 			ImageLoader.getInstance().displayImage(imageUrl, personImage, options);
 		} else {
 			// request bitmap in the new thread
 			if (portraitUrl != null) {
-				Log.e(TAG, "use net");
+				MyDebugLog.e(TAG, "use net");
 				ImageLoader.getInstance().displayImage(portraitUrl, personImage, options);
 			}
 		}
@@ -852,18 +852,18 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
         
         File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PROFILE.xml");
 		if (f.exists()) {
-			Log.e("TAG", "SharedPreferences Name_of_your_preference : exist");
+			MyDebugLog.e("TAG", "SharedPreferences Name_of_your_preference : exist");
 			if(saveProfile.contains("SEX")){
-				Log.e("TAG", "SharedPreferences Name_of_your_preference contains sex");
+				MyDebugLog.e("TAG", "SharedPreferences Name_of_your_preference contains sex");
 				if(saveProfile.getInt("SEX", 1) == 0)
 					Sex = 1;
 				else 
 					Sex = saveProfile.getInt("SEX", 1);
-				Log.e("TAG", "Sex: " + String.valueOf(Sex));
+				MyDebugLog.e("TAG", "Sex: " + String.valueOf(Sex));
 			} else {
-				Log.e("TAG", "SharedPreferences Name_of_your_preference NOT contains sex");
+				MyDebugLog.e("TAG", "SharedPreferences Name_of_your_preference NOT contains sex");
 				Sex = 2;
-				Log.e("TAG", "Sex: " + String.valueOf(Sex));
+				MyDebugLog.e("TAG", "Sex: " + String.valueOf(Sex));
 			}
 			
 			if(saveProfile.contains("NICKNAME")){
@@ -908,7 +908,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 			
 		} else {
 			Sex = 2;
-			Log.e("TAG", "Setup default preferences");
+			MyDebugLog.e("TAG", "Setup default preferences");
 			nickName.setText("");
 			realName.setText("");
 			personalID.setText("");
@@ -1120,7 +1120,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 								}
 							});
 
-							Log.e(TAG, "thread run");
+							MyDebugLog.e(TAG, "thread run");
 
 							try {
 								sleep(1000);
@@ -1154,7 +1154,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 								while ((sResponse = reader.readLine()) != null) {
 									s = s.append(sResponse);
 								}
-								Log.e("TEst StringBuilder", s.toString());
+								MyDebugLog.e("TEst StringBuilder", s.toString());
 
 								//
 								JSONObject jsObj = new JSONObject(s.toString());
@@ -1167,12 +1167,12 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 									edit.putString("URL", portraitUrl);
 									edit.commit();
 									
-									Log.e(TAG, portraitUrl);
+									MyDebugLog.e(TAG, portraitUrl);
 
 									runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
-											Log.e(TAG, "run here");
+											MyDebugLog.e(TAG, "run here");
 											upLoadBar.setVisibility(View.INVISIBLE);
 										}
 									});

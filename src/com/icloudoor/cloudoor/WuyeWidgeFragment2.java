@@ -123,7 +123,7 @@ public class WuyeWidgeFragment2 extends Fragment {
 				if (temp.length() > 0) {
 					if (temp.equals(banner.getString("2url", null))) {
 						File f = new File(PATH + "/" + imageName);
-						Log.e(TAG, "use local");
+						MyDebugLog.e(TAG, "use local");
 
 						ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(getActivity());
 						ImageLoader.getInstance().init(configuration);
@@ -153,7 +153,7 @@ public class WuyeWidgeFragment2 extends Fragment {
 							f.delete();
 						portraitUrl = banner.getString("2url", null);
 
-						Log.e(TAG, portraitUrl);
+						MyDebugLog.e(TAG, portraitUrl);
 
 						if (mThread == null) {
 							mThread = new Thread(runnable);
@@ -166,9 +166,9 @@ public class WuyeWidgeFragment2 extends Fragment {
 				} else {
 					portraitUrl = banner.getString("2url", null);
 
-					Log.e(TAG, "use net -- creat local");
+					MyDebugLog.e(TAG, "use net -- creat local");
 					
-					Log.e(TAG, portraitUrl);
+					MyDebugLog.e(TAG, portraitUrl);
 
 					if (mThread == null) {
 						mThread = new Thread(runnable);
@@ -181,7 +181,7 @@ public class WuyeWidgeFragment2 extends Fragment {
 			} else {
 				portraitUrl = banner.getString("2url", null);
 
-				Log.e(TAG, portraitUrl);
+				MyDebugLog.e(TAG, portraitUrl);
 
 				if (mThread == null) {
 					mThread = new Thread(runnable);

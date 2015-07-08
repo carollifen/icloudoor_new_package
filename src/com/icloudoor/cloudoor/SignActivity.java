@@ -103,7 +103,7 @@ public class SignActivity extends BaseActivity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		if (requestCode == 0 && resultCode == RESULT_OK) {
-			Log.e("Test Sign", "onActivityResult");
+			MyDebugLog.e("Test Sign", "onActivityResult");
 			setContentView(R.layout.set_detail_set_sign_now);
 
 			back = (RelativeLayout) findViewById(R.id.btn_back);
@@ -227,7 +227,7 @@ public class SignActivity extends BaseActivity{
 
 				@Override
 				public void onClick(View v) {
-					Log.e("TEsT", "changeSign clicked!");
+					MyDebugLog.e("TEsT", "changeSign clicked!");
 					Intent confirmIntent=new Intent(SignActivity.this,ConfirmGestureActivity.class);
 					startActivity(confirmIntent);
 				}
@@ -258,7 +258,7 @@ public class SignActivity extends BaseActivity{
 
 				@Override
 				public void onClick(View v) {
-					Log.e("TEsT", "forgetSign clicked!");
+					MyDebugLog.e("TEsT", "forgetSign clicked!");
 					
 					
 					MyDialog myDialog = new MyDialog(SignActivity.this,R.style.add_dialog, getString(R.string.login_pwd),
@@ -273,7 +273,7 @@ public class SignActivity extends BaseActivity{
 									editor.putInt("HAVESETSIGN",
 											SignActivity.this.haveSet);
 									editor.commit();
-									Log.e("forgetOncreate",
+									MyDebugLog.e("forgetOncreate",
 											String.valueOf(haveSet));
 									useSign = 0;
 									SharedPreferences setting = getSharedPreferences(

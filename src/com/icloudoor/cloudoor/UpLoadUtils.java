@@ -117,7 +117,7 @@ public class UpLoadUtils {
 	}
 	
 	public void upLoadInfo(String sid, RequestQueue mQueue) {
-		Log.e(TAG, "upLoadInfo");
+		MyDebugLog.e(TAG, "upLoadInfo");
 		final File file = new File(foldPath + fileName);
 		if (file.exists()) {
 			final HttpParams mParams = new HttpParams();
@@ -153,7 +153,7 @@ public class UpLoadUtils {
 
 						@Override
 						public void onResponse(JSONObject response) {
-							Log.e(TAG, "test upload: " + response.toString());
+							MyDebugLog.e(TAG, "test upload: " + response.toString());
 							file.delete();
 						}
 					}, new Response.ErrorListener() {
@@ -173,7 +173,7 @@ public class UpLoadUtils {
 			};
 			mQueue.add(mJsonRequest);
 		} else {
-			Log.e(TAG, "no file to upload");
+			MyDebugLog.e(TAG, "no file to upload");
 		}
 	}
 }

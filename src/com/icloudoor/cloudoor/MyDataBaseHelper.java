@@ -47,21 +47,21 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 		sBuffer.append("[authFrom] TEXT,");
 		sBuffer.append("[authTo] TEXT)");
 		db.execSQL(sBuffer.toString());
-		Log.e("DBHelper", "TABLE onCreate");
+		MyDebugLog.e("DBHelper", "TABLE onCreate");
 
 		keyBuffer.append("CREATE TABLE [" + Key_TABLE_NAME + "] (");
 		keyBuffer.append("[zoneId] TEXT, ");
 		keyBuffer.append("[zoneAddress] TEXT,");
 		keyBuffer.append("[l1ZoneId] TEXT)");
 		db.execSQL(keyBuffer.toString());
-		Log.e("DBHelper", "TABLE onCreate");
+		MyDebugLog.e("DBHelper", "TABLE onCreate");
 		
 		zoneBuffer.append("CREATE TABLE [" + ZONE_TABLE_NAME + "](");
 		zoneBuffer.append("[zoneid] TEXT, ");
 		zoneBuffer.append("[zonename] TEXT, ");
 		zoneBuffer.append("[parentzoneid] TEXT)");
 		db.execSQL(zoneBuffer.toString());
-		Log.e("DBHelper", "TABLE onCreate");
+		MyDebugLog.e("DBHelper", "TABLE onCreate");
 		
 		carBuffer.append("CREATE TABLE [" + CAR_TABLE_NAME + "](");
 		carBuffer.append("[l1ZoneId] TEXT, ");
@@ -69,7 +69,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 		carBuffer.append("[carStatus] TEXT, ");
 		carBuffer.append("[carPosStatus] TEXT)");
 		db.execSQL(carBuffer.toString());
-		Log.e("DBHelper", "TABLE onCreate");
+		MyDebugLog.e("DBHelper", "TABLE onCreate");
 	}
 
 	@Override

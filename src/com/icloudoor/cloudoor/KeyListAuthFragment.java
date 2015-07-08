@@ -181,7 +181,7 @@ public class KeyListAuthFragment extends Fragment {
 				if (cursor.moveToFirst()) {
 					String zoneid = cursor.getString(cursor.getColumnIndex("zoneId"));
 					String l1ZoneId = cursor.getString(cursor.getColumnIndex("l1ZoneId"));
-					Log.e("ididididid", zoneid);
+					MyDebugLog.e("ididididid", zoneid);
 
 					meditor.putString("ZONEID", zoneid);
 					meditor.putString("l1ZoneId", l1ZoneId);
@@ -337,7 +337,7 @@ public class KeyListAuthFragment extends Fragment {
 
 								@Override
 								public void onResponse(JSONObject response) {
-									Log.e("psotKeyResponse",response.toString());
+									MyDebugLog.e("psotKeyResponse",response.toString());
 
 									try {
 										
@@ -410,7 +410,7 @@ public class KeyListAuthFragment extends Fragment {
 								@Override
 								public void onResponse(JSONObject response) {
 									// TODO Auto-generated method stub
-									Log.e("psotnomalnomalKeyResponse", response.toString());
+									MyDebugLog.e("psotnomalnomalKeyResponse", response.toString());
 									try {
 										
 										if(response.getInt("code") == 1){
@@ -490,7 +490,7 @@ public class KeyListAuthFragment extends Fragment {
 				// TODO Auto-generated method stub
 				try {
 					
-					Log.e(TAG, response.toString());
+					MyDebugLog.e(TAG, response.toString());
 					
 					if(response.getInt("code") == 1){
 						JSONArray zoneArr = response.getJSONArray("data");
@@ -499,7 +499,7 @@ public class KeyListAuthFragment extends Fragment {
 							String zoneId = zoneArr.getJSONObject(i).getString("zoneUserId");
 							String zoneAdd = zoneArr.getJSONObject(i).getString("address");
 							String l1ZoneId = zoneArr.getJSONObject(i).getString("l1ZoneId");
-							Log.e("address", zoneAdd);
+							MyDebugLog.e("address", zoneAdd);
 							Map<String, String> zoneMap = new HashMap<String, String>();
 							zoneMap.put("zoneName", zoneAdd);
 							Zonekeylist.add(zoneMap);
@@ -510,7 +510,7 @@ public class KeyListAuthFragment extends Fragment {
 							try {
 								mKeyDB.insert(TABLE_NAME, null, value);
 							} catch (Exception e) {
-								Log.e("dbdbdbd", "数据已经存在");
+								MyDebugLog.e("dbdbdbd", "数据已经存在");
 							}
 						}
 						

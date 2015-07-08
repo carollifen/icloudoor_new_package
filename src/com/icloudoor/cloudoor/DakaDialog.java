@@ -77,7 +77,7 @@ public class DakaDialog extends BaseActivity {
 		Bundle bundle = new Bundle();
 		bundle = this.getIntent().getExtras();
 		doorId = bundle.getString("doorIdToOpen");
-		Log.e(TAG, "doorId for daka: " + doorId);
+		MyDebugLog.e(TAG, "doorId for daka: " + doorId);
 		
 		dismiss = (RelativeLayout) findViewById(R.id.dismiss);
 		dakaTime = (TextView) findViewById(R.id.daka_time);
@@ -123,7 +123,7 @@ public class DakaDialog extends BaseActivity {
 							public void onResponse(JSONObject response) {
 								try {
 									
-									Log.e(TAG, response.toString());
+									MyDebugLog.e(TAG, response.toString());
 									
 									if(response.getInt("code") == 1){
 										if(response.getString("sid") != null)
@@ -134,9 +134,9 @@ public class DakaDialog extends BaseActivity {
 										isLate = data.getBoolean("isLate");
 										beatRatio = data.getString("beatRatio");
 										
-										Log.e(TAG, "rank: " + String.valueOf(rank));
-										Log.e(TAG, "isLate: " + isLate);
-										Log.e(TAG, "beatRatio: " + beatRatio);
+										MyDebugLog.e(TAG, "rank: " + String.valueOf(rank));
+										MyDebugLog.e(TAG, "isLate: " + isLate);
+										MyDebugLog.e(TAG, "beatRatio: " + beatRatio);
 										
 										Toast.makeText(DakaDialog.this, R.string.daka_success, Toast.LENGTH_SHORT).show();
 										
@@ -217,7 +217,7 @@ public class DakaDialog extends BaseActivity {
 							public void onResponse(JSONObject response) {
 								try {
 									
-									Log.e(TAG, response.toString());
+									MyDebugLog.e(TAG, response.toString());
 									
 									if(response.getInt("code") == 1){
 										if(response.getString("sid") != null)

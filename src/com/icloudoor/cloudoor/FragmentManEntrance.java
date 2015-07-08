@@ -184,7 +184,7 @@ public class FragmentManEntrance extends Fragment implements OnClickListener{
 	}
 	
 	public void getData(String phonenum) {
-		Log.e("phone", phonenum);
+		MyDebugLog.e("phone", phonenum);
 
 		phoneEdit.setText(phonenum.replace(" ", "").replace("-", "").replace("+86", ""));
 

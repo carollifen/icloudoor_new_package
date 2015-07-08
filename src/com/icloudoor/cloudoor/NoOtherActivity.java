@@ -66,7 +66,7 @@ public class NoOtherActivity extends BaseActivity {
 		Bundle bundle = new Bundle();
 		bundle = this.getIntent().getExtras();
 		beatRatio = bundle.getString("beatRatio");
-		Log.e(TAG, "beatRatio: " + beatRatio);
+		MyDebugLog.e(TAG, "beatRatio: " + beatRatio);
 		
 		dismiss = (RelativeLayout) findViewById(R.id.dismiss);
 		shareLayout = (RelativeLayout) findViewById(R.id.share_layout);

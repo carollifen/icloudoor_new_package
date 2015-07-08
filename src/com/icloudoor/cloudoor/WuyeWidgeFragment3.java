@@ -82,7 +82,7 @@ public class WuyeWidgeFragment3 extends Fragment {
 		TextView TVcontent;
 		TextView TVnamedate;
 
-		Log.e(TAG, "create");
+		MyDebugLog.e(TAG, "create");
 
 		View view = inflater.inflate(R.layout.fragment_wuye_widge_fragment3,
 				container, false);
@@ -124,7 +124,7 @@ public class WuyeWidgeFragment3 extends Fragment {
 				if (temp.length() > 0) {
 					if (temp.equals(banner.getString("3url", null))) {
 						File f = new File(PATH + "/" + imageName);
-						Log.e(TAG, "use local");
+						MyDebugLog.e(TAG, "use local");
 
 						ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(getActivity());
 						ImageLoader.getInstance().init(configuration);
@@ -132,10 +132,10 @@ public class WuyeWidgeFragment3 extends Fragment {
 						DisplayImageOptions options = new DisplayImageOptions.Builder()
 				        .resetViewBeforeLoading(false)  // default
 				        .delayBeforeLoading(10)
-				        .cacheInMemory(false) // default
+				        .cacheInMemory(true) // default
 				        .cacheOnDisk(false) // default
 				        .considerExifParams(false) // default
-				        .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
+				        .imageScaleType(ImageScaleType.EXACTLY_STRETCHED) // default
 				        .bitmapConfig(Bitmap.Config.ARGB_8888) // default
 				        .displayer(new SimpleBitmapDisplayer()) // default
 				        .handler(new Handler()) // default
@@ -153,9 +153,9 @@ public class WuyeWidgeFragment3 extends Fragment {
 							f.delete();
 						portraitUrl = banner.getString("3url", null);
 
-						Log.e(TAG, "use net - update local");
+						MyDebugLog.e(TAG, "use net - update local");
 						
-						Log.e(TAG, portraitUrl);
+						MyDebugLog.e(TAG, portraitUrl);
 
 						if (mThread == null) {
 							mThread = new Thread(runnable);
@@ -168,9 +168,9 @@ public class WuyeWidgeFragment3 extends Fragment {
 				} else {
 					portraitUrl = banner.getString("3url", null);
 
-					Log.e(TAG, "use net -- creat local");
+					MyDebugLog.e(TAG, "use net -- creat local");
 					
-					Log.e(TAG, portraitUrl);
+					MyDebugLog.e(TAG, portraitUrl);
 
 					if (mThread == null) {
 						mThread = new Thread(runnable);
@@ -183,9 +183,9 @@ public class WuyeWidgeFragment3 extends Fragment {
 			} else {
 				portraitUrl = banner.getString("3url", null);
 
-				Log.e(TAG, "use net -- creat local");
+				MyDebugLog.e(TAG, "use net -- creat local");
 				
-				Log.e(TAG, portraitUrl);
+				MyDebugLog.e(TAG, portraitUrl);
 
 				if (mThread == null) {
 					mThread = new Thread(runnable);
@@ -249,7 +249,7 @@ public class WuyeWidgeFragment3 extends Fragment {
 		@Override
 		public void run() {
 
-			Log.e(TAG, "loading");
+			MyDebugLog.e(TAG, "loading");
 
 			HttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(portraitUrl);

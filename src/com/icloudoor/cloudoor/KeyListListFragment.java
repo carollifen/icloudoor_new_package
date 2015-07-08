@@ -127,6 +127,7 @@ public class KeyListListFragment extends Fragment {
 		super.onPause();
 		MobclickAgent.onPageEnd(mPageName);
 	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -142,7 +143,7 @@ public class KeyListListFragment extends Fragment {
 		
 		if (mKeyDBHelper.tabIsExist(TABLE_NAME)) {
 			if (DBCount() > 0) {
-				Log.e(TAG, String.valueOf(DBCount()));
+				MyDebugLog.e(TAG, String.valueOf(DBCount()));
 				Cursor mCursor = mKeyDB.rawQuery("select * from " + TABLE_NAME, null);
 				if (mCursor.moveToFirst()) {	
 					int authFromIndex = mCursor.getColumnIndex("authFrom");
@@ -162,7 +163,7 @@ public class KeyListListFragment extends Fragment {
 						
 						HashMap<String, String> keyFromDB = new HashMap<String, String>();
 						if(!doorType.equals("2")){			
-							Log.e(TAG, "add to list");
+							MyDebugLog.e(TAG, "add to list");
 							keyFromDB.put("Door", doorName);
 							keyFromDB.put("BEGIN", authFrom);
 							keyFromDB.put("END", authTo);
@@ -183,10 +184,10 @@ public class KeyListListFragment extends Fragment {
 											String plateNum = mCursorCar.getString(plateNumIndex);
 											String carStatus = mCursorCar.getString(carStatusIndex);
 											
-											Log.e(TAG, carNum + " : " + plateNum);
+											MyDebugLog.e(TAG, carNum + " : " + plateNum);
 											
 											if(zoneId.equals(l1ZoneId) && carNum.equals(plateNum)){
-												Log.e(TAG, "add to list2");
+												MyDebugLog.e(TAG, "add to list2");
 												if(carStatus.equals("2")){ //temp car key
 													blankView.setVisibility(View.VISIBLE);
 
@@ -246,7 +247,7 @@ public class KeyListListFragment extends Fragment {
 		try {
 //			downLoadKeyURL = new URL(HOST + "/user/door/download.do" + "?sid=" + sid);
 			downLoadKeyURL = new URL(HOST + "/user/door/download2.do" + "?sid=" + sid + "&ver=" + version.getVersionName());         //new key download interface
-			Log.e(TAG, String.valueOf(downLoadKeyURL));
+			MyDebugLog.e(TAG, String.valueOf(downLoadKeyURL));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -265,7 +266,7 @@ public class KeyListListFragment extends Fragment {
 
 								parseKeyData(response);
 
-								Log.e("TEST", response.toString());
+								MyDebugLog.e("TEST", response.toString());
 								
 								if(response.getString("sid") != null)
 									saveSid(response.getString("sid"));
@@ -275,7 +276,7 @@ public class KeyListListFragment extends Fragment {
 									Toast.makeText(getActivity(), R.string.have_no_key_authorised, Toast.LENGTH_SHORT).show();
 							}
 						} catch (JSONException e) {
-							Log.e(TAG, "request error");
+							MyDebugLog.e(TAG, "request error");
 							e.printStackTrace();
 							if(getActivity() != null)
 								Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
@@ -320,7 +321,7 @@ public class KeyListListFragment extends Fragment {
 	 *					  	2 - car outside the zone
 	 */
 	public void parseKeyData(JSONObject response) throws JSONException {
-		Log.e("test for new interface", "parseKeyData func");
+		MyDebugLog.e("test for new interface", "parseKeyData func");
 		
 		// for new key download interface
 		JSONObject data = response.getJSONObject("data");
@@ -345,26 +346,26 @@ public class KeyListListFragment extends Fragment {
 					value.put("authTo", doorData.getString("authTo"));
 					
 					if (doorData.getString("doorType").equals("1")) {
-						Log.e(TAG, "add a 1");
+						MyDebugLog.e(TAG, "add a 1");
 						value.put("direction", "none");
 						value.put("plateNum", "none");
 //						value.put("carStatus", "none");
 //						value.put("carPosStatus", "none");
 						mKeyDB.insert(TABLE_NAME, null, value);
 					} else if (doorData.getString("doorType").equals("2")){
-						Log.e(TAG, "add a 2");
+						MyDebugLog.e(TAG, "add a 2");
 //						JSONArray cars = data.getJSONArray("cars");
-//						Log.e(TAG, "cars  " + String.valueOf(cars.length()));
+//						MyDebugLog.e(TAG, "cars  " + String.valueOf(cars.length()));
 //						for (int i = 0; i < cars.length(); i++) {
 //							JSONObject carData = (JSONObject) cars.get(i);
 //							
-//							Log.e(TAG, "carData   " + carData.getString("l1ZoneId"));
-//							Log.e(TAG, "doorData   " + doorData.getString("zoneId"));
-//							Log.e(TAG, "carData   " + carData.getString("plateNum"));
-//							Log.e(TAG, "doorData   " + doorData.getString("plateNum"));
+//							MyDebugLog.e(TAG, "carData   " + carData.getString("l1ZoneId"));
+//							MyDebugLog.e(TAG, "doorData   " + doorData.getString("zoneId"));
+//							MyDebugLog.e(TAG, "carData   " + carData.getString("plateNum"));
+//							MyDebugLog.e(TAG, "doorData   " + doorData.getString("plateNum"));
 //							
 //							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId")) && carData.getString("plateNum").equals(doorData.getString("plateNum"))) {
-//								Log.e(TAG, "add temp key_DB" + carData.getString("plateNum"));
+//								MyDebugLog.e(TAG, "add temp key_DB" + carData.getString("plateNum"));
 								value.put("plateNum", doorData.getString("plateNum"));
 								value.put("direction", doorData.getString("direction"));
 //								value.put("carStatus", carData.getString("carStatus"));
@@ -379,7 +380,7 @@ public class KeyListListFragment extends Fragment {
 //							}
 //						}
 					}
-					Log.e(TAG, "after parse: " + String.valueOf(DBCount()));
+					MyDebugLog.e(TAG, "after parse: " + String.valueOf(DBCount()));
 				} else {            // update the old key status
 				
 //					if(doorData.getString("doorType").equals("1")){
@@ -398,7 +399,7 @@ public class KeyListListFragment extends Fragment {
 //						for (int i = 0; i < cars.length(); i++) {
 //							JSONObject carData = (JSONObject) cars.get(i);
 //							if (carData.getString("l1ZoneId").equals(doorData.getString("zoneId")) && carData.getString("plateNum").equals(carNumAndPhoneNumShare.getString("CARNUM", null))) {
-//								Log.e(TAG, carData.getString("carStatus"));
+//								MyDebugLog.e(TAG, carData.getString("carStatus"));
 //								valueTemp1.put("carStatus", carData.getString("carStatus"));
 //								valueTemp1.put("carPosStatus", carData.getString("carPosStatus"));
 //								break;
@@ -433,7 +434,7 @@ public class KeyListListFragment extends Fragment {
 						}	
 						
 						if(!keepKey){
-							Log.e(TAG, "delete a");
+							MyDebugLog.e(TAG, "delete a");
 							//delete in the table
 							mKeyDB.delete("KeyInfoTable", "deviceId = ?", new String[] {deviceId});
 						}
@@ -452,7 +453,7 @@ public class KeyListListFragment extends Fragment {
 			
 			if(zoneData.getString("zoneId").length() > 0){
 				if(!hasZoneData(mKeyDB, zoneData.getString("zoneId"))){   // insert new
-					Log.e(TAG, "add a zone");
+					MyDebugLog.e(TAG, "add a zone");
 					value.put("zoneid", zoneData.getString("zoneId"));		
 					value.put("zonename", zoneData.getString("zoneName"));
 					value.put("parentzoneid", zoneData.getString("parentZoneId"));
@@ -483,7 +484,7 @@ public class KeyListListFragment extends Fragment {
 						}		
 						
 						if(!keepKey){
-							Log.e(TAG, "delete a zone");
+							MyDebugLog.e(TAG, "delete a zone");
 							mKeyDB.delete("ZoneTable", "zoneId = ?", new String[] {zoneid});
 						}
 					}while(mCursor.moveToNext());
@@ -499,7 +500,7 @@ public class KeyListListFragment extends Fragment {
 			
 			if(carData.getString("l1ZoneId").length() > 0){
 				if(!hasCarData(mKeyDB, carData.getString("l1ZoneId"), carData.getString("plateNum"))){   // insert new
-					Log.e(TAG, "add a car");
+					MyDebugLog.e(TAG, "add a car");
 					ContentValues value = new ContentValues();
 					value.put("l1ZoneId", carData.getString("l1ZoneId"));
 					value.put("plateNum", carData.getString("plateNum"));
@@ -549,7 +550,7 @@ public class KeyListListFragment extends Fragment {
 								}
 							}
 							if(!keepKey){
-								Log.e(TAG, "delete a car");
+								MyDebugLog.e(TAG, "delete a car");
 								mKeyDB.delete("CarKeyTable", "l1ZoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
 								mKeyDB.delete("KeyInfoTable", "zoneId = ? and plateNum = ?", new String[] {l1ZoneId, plateNum});
 							}
@@ -583,7 +584,7 @@ public class KeyListListFragment extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e(TAG, "test " + response.toString());
+						MyDebugLog.e(TAG, "test " + response.toString());
 					}
 				}, new Response.ErrorListener() {
 
@@ -771,7 +772,7 @@ public class KeyListListFragment extends Fragment {
 
 								@Override
 								public void onResponse(JSONObject response) {
-										Log.e(TAG, response.toString());
+									MyDebugLog.e(TAG, response.toString());
 										
 										try {
 											if(response.getInt("code") == 1){
@@ -787,7 +788,7 @@ public class KeyListListFragment extends Fragment {
 													blankView.setVisibility(View.GONE);
 												}
 												
-												Log.e(TAG, "car key return success!!!");
+												MyDebugLog.e(TAG, "car key return success!!!");
 												
 											}else if(response.getInt("code") == -1){
 												Toast.makeText(getActivity(), R.string.wrong_params, Toast.LENGTH_SHORT).show();

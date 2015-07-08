@@ -121,7 +121,7 @@ public class UartService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            Log.e("test", "onCharacteristicChanged");
+        	MyDebugLog.e("test", "onCharacteristicChanged");
             broadcastUpdate(ACTION_MAKESURE_DOOROPENED, characteristic);
         }
     };
@@ -140,7 +140,7 @@ public class UartService extends Service {
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
         if (TX_CHAR_UUID.equals(characteristic.getUuid()) || SIMPLEPROFILE_CHAR2_UUID.equals(characteristic.getUuid())) {     //new modification for response
 //        if (TX_CHAR_UUID.equals(characteristic.getUuid())) { 
-        	Log.e("TEst for response", "broadcastUpdate");
+        	MyDebugLog.e("TEst for response", "broadcastUpdate");
            // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
         } else {
@@ -182,14 +182,14 @@ public class UartService extends Service {
         if (mBluetoothManager == null) {
             mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (mBluetoothManager == null) {
-                Log.e(TAG, "Unable to initialize BluetoothManager.");
+            	MyDebugLog.e(TAG, "Unable to initialize BluetoothManager.");
                 return false;
             }
         }
 
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
-            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
+        	MyDebugLog.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
 
@@ -356,7 +356,7 @@ public class UartService extends Service {
     
     public void readRXCharacteristic(UUID mUuid)     // new modification for response
     {
-    	Log.e("TEst for response", "readRXCharacteristic(UUID mUuid)");
+    	MyDebugLog.e("TEst for response", "readRXCharacteristic(UUID mUuid)");
     	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
     	showMessage("mBluetoothGatt "+ mBluetoothGatt);
     	if (RxService == null) {
@@ -408,7 +408,7 @@ public class UartService extends Service {
     }
     
     private void showMessage(String msg) {
-        Log.e(TAG, msg);
+    	MyDebugLog.e(TAG, msg);
     }
     /**
      * Retrieves a list of supported GATT services on the connected device. This should be

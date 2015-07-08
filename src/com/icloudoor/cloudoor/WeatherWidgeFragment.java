@@ -306,7 +306,7 @@ public class WeatherWidgeFragment extends Fragment {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-						Log.e("TEST", response.toString());
+						MyDebugLog.e("TEST", response.toString());
 					}
 				}, new Response.ErrorListener() {
 
@@ -340,7 +340,7 @@ public class WeatherWidgeFragment extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e("Test", response.toString());
+						MyDebugLog.e("Test", response.toString());
 						try {
 							if(response.getString("status").equals("OK")){
 								JSONArray weather= response.getJSONArray("weather");
@@ -646,7 +646,7 @@ public class WeatherWidgeFragment extends Fragment {
 		@Override
 		public void onLocationChanged(Location location) {
 			if (location != null) {
-				Log.e("Map",
+				MyDebugLog.e("Map",
 						"Location changed : Lat: " + location.getLatitude()
 								+ " Lng: " + location.getLongitude());
 				latitude = location.getLatitude(); 

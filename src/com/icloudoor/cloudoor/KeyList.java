@@ -244,7 +244,7 @@ public class KeyList extends BaseFragmentActivity{
 	 *					   2 - car outside the zone
 	 */
 	public void parseKeyData(JSONObject response) throws JSONException {
-		Log.e("test for new interface", "parseKeyData func");
+		MyDebugLog.e("test for new interface", "parseKeyData func");
 //		ArrayList<HashMap<String, String>> doorNameList = new ArrayList<HashMap<String, String>>();
 		
 		// for new key download interface
@@ -340,7 +340,7 @@ public class KeyList extends BaseFragmentActivity{
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		unregisterReceiver(mFinishActivityBroadcast);
-		
+
 	}
 	
 	class Broadcast extends BroadcastReceiver

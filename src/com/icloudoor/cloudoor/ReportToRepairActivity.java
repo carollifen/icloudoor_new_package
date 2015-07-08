@@ -295,7 +295,7 @@ public class ReportToRepairActivity extends BaseActivity {
 						@Override
 						public void onResponse(JSONObject obj) {
 
-							Log.e("TEst StringBuilder", obj.toString());
+							MyDebugLog.e(TAG, "resultForup: " + obj.toString());
 							try {
 								if (obj.getString("sid") != null) {
 									sid = obj.getString("sid");
@@ -305,10 +305,10 @@ public class ReportToRepairActivity extends BaseActivity {
 									upSignature = UPjsa.getString("signature");
 									upsubmitUrl = UPjsa.getString("submitUrl");
 									upphotoUrl = UPjsa.getString("photoUrl");
-									Log.e(TAG, upPolicy);
-									Log.e(TAG, upSignature);
-									Log.e(TAG, upsubmitUrl);
-									Log.e(TAG, upphotoUrl);
+									MyDebugLog.e(TAG, "upPolicy " + upPolicy);
+									MyDebugLog.e(TAG, "upSignature " + upSignature);
+									MyDebugLog.e(TAG, "upsubmitUrl " + upsubmitUrl);
+									MyDebugLog.e(TAG, "upphotoUrl " + upphotoUrl);
 								}
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block
@@ -341,12 +341,11 @@ public class ReportToRepairActivity extends BaseActivity {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 
-			Log.e(TAG, "’‚ «≤‚ ‘≤‚ ‘");
 			StringBuilder sb = new StringBuilder();
 			sb.append("javascript:").append(callback).append('(').append(0)
 					.append(",").append("'").append(upphotoUrl).append("');");
 			fixwebview.loadUrl(sb.toString());
-			Log.e("string dsklfjkl", sb.toString());
+			MyDebugLog.e(TAG, "onPostExecute  " + sb.toString());
 			upcode = "0";
 
 		}
@@ -390,7 +389,6 @@ public class ReportToRepairActivity extends BaseActivity {
 			postRequest.setEntity(new MultipartEntity(parts));
 			HttpResponse response;
 
-			// try {
 			try {
 				response = httpClient.execute(postRequest);
 
@@ -399,8 +397,8 @@ public class ReportToRepairActivity extends BaseActivity {
 				postToServer = fromUPjson.getString("url");
 				upcode = fromUPjson.getString("code");
 
-				Log.e(TAG, upcode);
-				Log.e("TEst StringBuilder", postToServer);
+				MyDebugLog.e(TAG, "doInBackground upcode: " + upcode);
+				MyDebugLog.e(TAG, "doInBackground postToServer: " + postToServer);
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -448,9 +446,10 @@ public class ReportToRepairActivity extends BaseActivity {
 					try {
 						mhandler = new MyHandler();
 						mhandler.sendEmptyMessage(0);
-						Log.e("webview", str + "sdyiufoi");
 						JSONObject jsObj = new JSONObject(str);
-						Log.e("jsjsjjsjs", jsObj.getString("callback"));
+						
+						MyDebugLog.e(TAG, jsObj.toString());
+						
 						callback = jsObj.getString("callback");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block

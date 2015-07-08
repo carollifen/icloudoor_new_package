@@ -186,7 +186,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 				try {
 					Thread.sleep(mScanningProidShort);
 					if (mKeyFindState == true){
-						Log.i("ThreadTest", "mKeyFindState true : "+String.valueOf(mStopThread));
+						MyDebugLog.i("ThreadTest", "mKeyFindState true : "+String.valueOf(mStopThread));
 						Thread.sleep(mScanningProidLong);
 					}
 				} catch (InterruptedException e) {
@@ -249,7 +249,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 					for (int i=0; i<5; i++) {
 						device_token = UmengRegistrar.getRegistrationId(getApplicationContext());
 						if (device_token != null) {
-							Log.e("devicetoken", device_token);
+							MyDebugLog.e("devicetoken", device_token);
 							break;
 						}
 						sleep(3000);
@@ -278,7 +278,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 				+ "?sid=" + sid + "&ver=" + version.getVersionName(), null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
-				Log.e("response", response.toString());
+				MyDebugLog.e("response", response.toString());
 				try {
 					
 					if(response.getString("sid") != null)
@@ -288,7 +288,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 						JSONArray tagJson = response.getJSONArray("data");
 						for (int i = 0; i < tagJson.length(); i++) {
 							tag = (String) tagJson.get(i);
-							Log.e("response", tag);
+							MyDebugLog.e("response", tag);
 							new AddTagTask(tag).execute();
 						}
 					}else if (response.getInt("code") == -2){
@@ -749,7 +749,6 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 			if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
 				String reason = intent.getStringExtra(SYSTEM_REASON);
 				if (TextUtils.equals(reason, SYSTEM_HOME_KEY)) {
-					Log.e("TEST", "homekey pressed before");
 					homePressed = 1;
 					
 					SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
@@ -815,7 +814,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		protected String doInBackground(Void... params) {
 			try {
 				TagManager.Result result = mPushAgent.getTagManager().add(tagString);
-				Log.e("result", result.toString());
+				MyDebugLog.e("result", result.toString());
 				return result.toString();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -861,7 +860,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
     }
 	
 	public void onDestroy() {
-        Log.e("ThreadTest", "onDestroy");
+		MyDebugLog.e("ThreadTest", "onDestroy");
 		if (myThread != null) {
 			myThread.stopThread();
 		}
@@ -984,10 +983,10 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e("response", response.toString());
+						MyDebugLog.e("response", response.toString());
 						try {
 
-							Log.e(TAG, "banner data request in main activity: " + response.toString());
+							MyDebugLog.e(TAG, "banner data request in main activity: " + response.toString());
 
 							if (response.getInt("code") == 1) {
 								
@@ -995,7 +994,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 								Editor editor = banner.edit();
 
 								JSONArray data = response.getJSONArray("data");
-								Log.e(TAG, "banner count = " + String.valueOf(data.length()));
+								MyDebugLog.e(TAG, "banner count = " + String.valueOf(data.length()));
 								editor.putInt("COUNT", data.length());
 								if (data.length() == 1) {
 									if (data.getJSONObject(0).getString("type").equals("1")) {
@@ -1057,7 +1056,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 
 								} else if (data.length() == 3) {
 
-									Log.e(TAG, "here");
+									MyDebugLog.e(TAG, "here");
 
 									if (data.getJSONObject(0).getString("type").equals("1")) {
 										String bg = data.getJSONObject(0).getString("bgColor");

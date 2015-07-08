@@ -447,7 +447,7 @@ public class KeyFragmentNoBLE extends Fragment {
 			}
 		}	
 		
-		Log.e(TAG, D1 + " " + D2 + " " + D3);
+		MyDebugLog.e(TAG, D1 + " " + D2 + " " + D3);
 		
 		date.setText(D1);
 		
@@ -541,7 +541,7 @@ public class KeyFragmentNoBLE extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e(TAG, response.toString());
+						MyDebugLog.e(TAG, response.toString());
 						
 						try {
 							if (response.getString("sid") != null) {
@@ -614,7 +614,7 @@ public class KeyFragmentNoBLE extends Fragment {
 
 					@Override
 					public void onResponse(JSONObject response) {
-						Log.e(TAG, response.toString());
+						MyDebugLog.e(TAG, response.toString());
 						
 						try {
 							if(response.getString("status").equals("OK")){
@@ -802,7 +802,7 @@ public class KeyFragmentNoBLE extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.e("TEST", "keyFragment onResume()");
+		MyDebugLog.e("TEST", "keyFragment onResume()");
 		MobclickAgent.onPageStart(mPageName);
 	}
 	

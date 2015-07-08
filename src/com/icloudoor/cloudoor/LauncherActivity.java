@@ -32,7 +32,7 @@ public class LauncherActivity extends BaseActivity {
 		if(CheckFirstRun()) {
 			String launcherPkgName = getLauncherPkgName(getApplicationContext());
 			if (launcherPkgName == null) {
-				Log.e("error", "launcherPkgName is null");
+				MyDebugLog.e("error", "launcherPkgName is null");
 			}
 			packageName = getPackageName();
 			try {

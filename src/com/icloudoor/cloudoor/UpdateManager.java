@@ -89,7 +89,7 @@ public class UpdateManager {
             curVersion = pInfo.versionName;
             curVersionCode = pInfo.versionCode;
         } catch (NameNotFoundException e) {
-            Log.e("update", e.getMessage());
+        	MyDebugLog.e("update", e.getMessage());
             curVersion = "1.1.1000";
             curVersionCode = 111000;
         }

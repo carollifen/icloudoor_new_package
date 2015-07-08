@@ -380,7 +380,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 							} catch (JSONException e) {
 								e.printStackTrace();
 							}
-							Log.e("TEST", response.toString());
+							MyDebugLog.e("TEST", response.toString());
 
 							if (loginStatusCode == 1) {
 
@@ -433,7 +433,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 									setPersonal = personalInfo.getInt("SETINFO", 1);
 
 									if (setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0) {
-										Log.e("jump to set", "in login activity");
+										MyDebugLog.e("jump to set", "in login activity");
 										
 										if(userStatus == 2) {
 											intent.setClass(ForgetPwdActivity.this, SetPersonalInfo.class);
@@ -540,7 +540,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 		Log.e(TAG, String.valueOf(isBackKey));
 		
 		if (isBackKey == false) {
-			Log.e(TAG, "saving");
+			MyDebugLog.e(TAG, "saving");
 			SharedPreferences tempInfo = getSharedPreferences("tempInfo", 0);
 			Editor editor = tempInfo.edit();
 			editor.putString("phone", ETInputPhoneNum.getText().toString());

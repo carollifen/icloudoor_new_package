@@ -146,7 +146,7 @@ public class SettingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.set_page, container, false);
-
+		
 		try {
 			PackageManager pm = getActivity().getPackageManager();
 			PackageInfo pi = pm.getPackageInfo(getActivity().getPackageName(), PackageManager.GET_ACTIVITIES);
@@ -251,7 +251,7 @@ public class SettingFragment extends Fragment {
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
 		portraitUrl = loginStatus.getString("URL", null);	
 		File f = new File(PATH + imageName);
-		Log.e(TAG, PATH + imageName);
+		MyDebugLog.e(TAG, PATH + imageName);
 		
 		String imagePath = PATH + imageName;
 		String imageUrl = Scheme.FILE.wrap(imagePath);
@@ -278,7 +278,7 @@ public class SettingFragment extends Fragment {
 
 	        ImageLoader.getInstance().displayImage(imageUrl, image, options);
 			
-			Log.e(TAG, "use local");
+	        MyDebugLog.e(TAG, "use local");
 //			BitmapFactory.Options opts=new BitmapFactory.Options();
 //			opts.inTempStorage = new byte[100 * 1024];
 //			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -289,7 +289,7 @@ public class SettingFragment extends Fragment {
 		}else{
 			// request bitmap in the new thread
 			if(portraitUrl != null){
-				Log.e(TAG, "use net");
+				MyDebugLog.e(TAG, "use net");
 				ImageLoader.getInstance().displayImage(portraitUrl, image, options);
 //				if (mThread == null) {
 //					mThread = new Thread(runnable);
@@ -398,7 +398,7 @@ public class SettingFragment extends Fragment {
 				            break;
 				        case UpdateStatus.No: // has no update
 				        	if(getActivity() != null)
-				        		Toast.makeText(getActivity(), getString(R.string.latest_version_now) + "(" + versionName + " " + versionCode + ")", Toast.LENGTH_SHORT).show();
+				        		Toast.makeText(getActivity(), getString(R.string.latest_version_now) + "(" + versionName + " Build" + versionCode + ")", Toast.LENGTH_SHORT).show();
 				            break;
 				        case UpdateStatus.NoneWifi: // none wifi
 				        	if(getActivity() != null)
@@ -586,8 +586,7 @@ public class SettingFragment extends Fragment {
 		}
 		
 		
-		
-		// ÃŒÃ­Â¼Ã“ÃŽÂ¢ÃÃ…Ã†Â½ÃŒÂ¨
+
 		wxHandler = new UMWXHandler(getActivity(), appID, appSecret);
 		wxHandler.addToSocialSDK();
 		wxCircleHandler = new UMWXHandler(getActivity(), appID, appSecret);
@@ -678,8 +677,8 @@ public class SettingFragment extends Fragment {
 									edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
 									edit.commit();
 									
-									Log.e(TAG, String.valueOf(response.getJSONObject("data").getInt("userStatus")) + "in SettingFragment***********");
-									Log.e(TAG, String.valueOf(response.getJSONObject("data").getBoolean("isHasPropServ")) + "in SettingFragment***********");
+									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getInt("userStatus")) + "in SettingFragment***********");
+									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getBoolean("isHasPropServ")) + "in SettingFragment***********");
 								}
 								
 							}

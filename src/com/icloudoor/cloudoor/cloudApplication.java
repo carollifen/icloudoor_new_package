@@ -62,7 +62,7 @@ public class cloudApplication extends Application {
 		    	noticeUrlEditor=noticeUrlShare.edit();
 		    	queryShare=context.getSharedPreferences("queryShare", 0);
 		    	queryEditor=queryShare.edit();
-		    	Log.e("push", msg.custom.toString());
+		    	MyDebugLog.e("push", msg.custom.toString());
 		    	try {
 					JSONObject customJson=new JSONObject(msg.custom.toString());
 
