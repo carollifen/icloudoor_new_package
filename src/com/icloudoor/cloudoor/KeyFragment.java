@@ -94,6 +94,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.icdcrypto.IcdCrypto;
 import com.icloudoor.cloudoor.ShakeEventManager;
 import com.icloudoor.cloudoor.UartService;
 import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
@@ -2928,7 +2929,7 @@ public class KeyFragment extends Fragment {
                 final byte[] txValue = intent
                         .getByteArrayExtra(UartService.EXTRA_DATA);
 
-                if (txValue[0] == 0x10) {
+                if (txValue[0] == IcdCrypto.getResultJudgement()) {
                 	
                 	MyDebugLog.e(TAG, "**************receive feedback from bt");
                 	
