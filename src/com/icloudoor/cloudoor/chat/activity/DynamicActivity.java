@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -32,6 +33,7 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 	DynamicAdapter adapter;
 	boolean isRefresh = false;
 	TextView dynami_editing;
+	ImageView btn_back;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
@@ -39,7 +41,9 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 		setContentView(R.layout.activity_dynamic);
 		listview = (RefreshListView) findViewById(R.id.listview);
 		dynami_editing = (TextView) findViewById(R.id.dynami_editing);
+		btn_back = (ImageView) findViewById(R.id.btn_back);
 		dynami_editing.setOnClickListener(this);
+		btn_back.setOnClickListener(this);
 		View head = LayoutInflater.from(this).inflate(R.layout.dynamic_head, null);
 		listview.addHeaderView(head);
 		adapter = new DynamicAdapter(this);
@@ -123,6 +127,9 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 		case R.id.dynami_editing:
 			Intent intent = new Intent(this, SendDynamicActivity.class);
 			startActivity(intent);
+			break;
+		case R.id.btn_back:
+			finish();
 			break;
 
 		default:

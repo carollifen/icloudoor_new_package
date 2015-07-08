@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -17,9 +17,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:scaleType="centerCrop"
-            app:border_width="1dp"
+            android:src="@drawable/icon_boy_110"
             app:border_color="@android:color/transparent"
-            android:src="@drawable/icon_boy_110" />
+            app:border_width="1dp" />
 
         <TextView
             android:id="@id/user_name"
@@ -36,8 +36,8 @@
     <RelativeLayout
         android:id="@+id/content_ioc_layout"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
 
         <ImageView
             android:id="@+id/content_ioc"
@@ -50,18 +50,18 @@
         <com.icloudoor.cloudoor.widget.GridViewForScrollview
             android:id="@+id/gridview1"
             android:layout_width="match_parent"
-             android:visibility="gone"
             android:layout_height="wrap_content"
-            android:numColumns="2" >
+            android:numColumns="2"
+            android:visibility="gone" >
         </com.icloudoor.cloudoor.widget.GridViewForScrollview>
 
         <com.icloudoor.cloudoor.widget.GridViewForScrollview
             android:id="@+id/gridview2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:numColumns="3"
             android:verticalSpacing="2dp"
-             android:visibility="gone"
-            android:numColumns="3" >
+            android:visibility="gone" >
         </com.icloudoor.cloudoor.widget.GridViewForScrollview>
     </RelativeLayout>
 
@@ -107,36 +107,26 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:visibility="invisible"
             android:maxLines="4"
             android:text="删除"
             android:textColor="#4779AC"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:visibility="invisible" />
 
-        <LinearLayout
-            android:id="@+id/zan_layout"
+        <TextView
+            android:id="@+id/zan_tx"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/zan_ioc" />
-
-            <TextView
-                android:id="@+id/zan_tx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="16dp"
-                android:maxLines="4"
-                android:text="赞"
-                android:textColor="#4779AC"
-                android:textSize="15sp" />
-        </LinearLayout>
+            android:drawableLeft="@drawable/zan_ioc"
+            android:gravity="right"
+            android:maxLines="4"
+            android:minWidth="50dp"
+            android:text="赞"
+            android:textColor="#4779AC"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <com.icloudoor.cloudoor.widget.MultipleTextView

@@ -4,7 +4,7 @@
     android:layout_height="100dp"
     android:background="@android:color/white" >
 
-    <org.fireking.app.imagelib.view.MyImageView
+    <com.icloudoor.cloudoor.widget.MyImageView
         android:id="@+id/album_image"
         android:layout_width="90dp"
         android:layout_height="90dip"

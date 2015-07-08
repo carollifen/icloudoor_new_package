@@ -3227,6 +3227,7 @@ public class KeyFragment extends Fragment {
 									Editor editor = loginStatus.edit();
 									editor.putInt("STATUS", response.getJSONObject("data").getInt("userStatus"));
 									editor.putBoolean( "isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
+									editor.putString( "l1Zones", response.getJSONObject("data").getString("l1Zones"));
 									editor.commit();
 
 									SharedPreferences saveProfile = getActivity().getSharedPreferences("PROFILE", 0);

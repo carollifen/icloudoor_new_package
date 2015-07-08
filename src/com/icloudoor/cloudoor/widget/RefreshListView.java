@@ -62,13 +62,29 @@ public class RefreshListView extends ListView implements OnScrollListener,
 	private RotateAnimation reverseAnimation;
 	private boolean mBack = false;
 
+	String new_update;
+	String DropdownRefresh;
+	String LooseMore;
+	String Loading;
+	String SeeMore;
+	
 	public RefreshListView(Context context) {
 		super(context);
+		new_update =context.getString(R.string.new_update);
+		DropdownRefresh =context.getString(R.string.DropdownRefresh);
+		LooseMore =context.getString(R.string.LooseMore);
+		Loading =context.getString(R.string.Loading);
+		SeeMore =context.getString(R.string.SeeMore);
 		init(context);
 	}
 
 	public RefreshListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		new_update =context.getString(R.string.new_update);
+		DropdownRefresh =context.getString(R.string.DropdownRefresh);
+		LooseMore =context.getString(R.string.LooseMore);
+		Loading =context.getString(R.string.Loading);
+		SeeMore =context.getString(R.string.SeeMore);
 		init(context);
 	}
 
@@ -85,7 +101,7 @@ public class RefreshListView extends ListView implements OnScrollListener,
 
 	public void onRefreshComplete() {
 		mHeadView.setPadding(0, -1 * mHeadContentHeight, 0, 0);
-		mLastUpdateTextView.setText("最新更新:" + new Date().toLocaleString());
+		mLastUpdateTextView.setText(new_update+ new Date().toLocaleString());
 		switchViewState(IListViewState.LVS_NORMAL);
 	}
 
@@ -307,7 +323,7 @@ public class RefreshListView extends ListView implements OnScrollListener,
 
 			mHeadProgressBar.setVisibility(View.GONE);
 			mArrowImageView.setVisibility(View.VISIBLE);
-			mRefreshTextview.setText("下拉可以刷新");
+			mRefreshTextview.setText(DropdownRefresh);
 			mArrowImageView.clearAnimation();
 
 			// 是由RELEASE_To_REFRESH状�?�转变来�?
@@ -322,7 +338,7 @@ public class RefreshListView extends ListView implements OnScrollListener,
 
 			mHeadProgressBar.setVisibility(View.GONE);
 			mArrowImageView.setVisibility(View.VISIBLE);
-			mRefreshTextview.setText("松开获取更多");
+			mRefreshTextview.setText(LooseMore);
 			mArrowImageView.clearAnimation();
 			mArrowImageView.startAnimation(animation);
 		}
@@ -332,7 +348,7 @@ public class RefreshListView extends ListView implements OnScrollListener,
 			mHeadProgressBar.setVisibility(View.VISIBLE);
 			mArrowImageView.clearAnimation();
 			mArrowImageView.setVisibility(View.GONE);
-			mRefreshTextview.setText("载入�?...");
+			mRefreshTextview.setText(Loading);
 		}
 			break;
 		default:
@@ -395,7 +411,7 @@ public class RefreshListView extends ListView implements OnScrollListener,
 			}
 			mLoadingView.setVisibility(View.GONE);
 			mLoadMoreTextView.setVisibility(View.VISIBLE);
-			mLoadMoreTextView.setText("查看更多");
+			mLoadMoreTextView.setText(SeeMore);
 			break;
 		case ILoadMoreViewState.LMVS_LOADING:
 			mLoadingView.setVisibility(View.VISIBLE);

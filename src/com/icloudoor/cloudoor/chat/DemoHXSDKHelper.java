@@ -48,6 +48,7 @@ import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
 import com.icloudoor.cloudoor.CloudDoorMainActivity;
+import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
@@ -130,15 +131,17 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 	}
 
 	public void getFriends() {
-		RequestQueue mRequestQueue = Volley.newRequestQueue(appContext);
+		RequestQueue mRequestQueue = Volley.newRequestQueue(appContext.getApplicationContext());
+		version = new Version(appContext);
 		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid="
 				+ loadSid() + "&ver=" + version.getVersionName();
-
 		MyRequestBody requestBody = new MyRequestBody(url, "{}",
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
+						
+						
 						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 								response.toString(), MyFriendInfo.class);
 						if (friendInfo != null) {
@@ -180,7 +183,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-
+						Toast.makeText(appContext, R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				});
 

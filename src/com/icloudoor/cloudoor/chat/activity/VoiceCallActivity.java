@@ -39,6 +39,8 @@ import com.easemob.chat.EMCallStateChangeListener;
 import com.easemob.chat.EMChatManager;
 import com.easemob.exceptions.EMServiceNotReadyException;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * 语音通话页面
@@ -51,6 +53,7 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 	private Button answerBtn;
 	private ImageView muteImage;
 	private ImageView handsFreeImage;
+	private ImageView swing_card;
 
 	private boolean isMuteState;
 	private boolean isHandsfreeState;
@@ -65,6 +68,9 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 	String st1;
 	private boolean isAnswered;
 	private LinearLayout voiceContronlLayout;
+	
+	String nickName;
+	String portraitUrl;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,6 +85,7 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 		answerBtn = (Button) findViewById(R.id.btn_answer_call);
 		hangupBtn = (Button) findViewById(R.id.btn_hangup_call);
 		muteImage = (ImageView) findViewById(R.id.iv_mute);
+		swing_card = (ImageView) findViewById(R.id.swing_card);
 		handsFreeImage = (ImageView) findViewById(R.id.iv_handsfree);
 		callStateTextView = (TextView) findViewById(R.id.tv_call_state);
 		nickTextView = (TextView) findViewById(R.id.tv_nick);
@@ -99,13 +106,15 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 		// 注册语音电话的状态的监听
 		addCallStateListener();
 		msgid = UUID.randomUUID().toString();
-
 		username = getIntent().getStringExtra("username");
+		nickName = getIntent().getStringExtra("nickName");
+		portraitUrl = getIntent().getStringExtra("portraitUrl");
 		// 语音电话是否为接收的
 		isInComingCall = getIntent().getBooleanExtra("isComingCall", false);
 
 		// 设置通话�?
-		nickTextView.setText(username);
+		nickTextView.setText(nickName);
+		ImageLoader.getInstance().displayImage(portraitUrl, swing_card, DisplayImageOptionsUtli.options);
 		if (!isInComingCall) {// 拨打电话
 			soundPool = new SoundPool(1, AudioManager.STREAM_RING, 0);
 			outgoing = soundPool.load(this, R.raw.outgoing, 1);

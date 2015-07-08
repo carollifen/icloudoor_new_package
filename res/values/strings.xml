@@ -285,6 +285,16 @@
     <string name="not_content">总得说点什么吧！</string>
     <string name="Word1">还可以输入</string>
     <string name="Word2">字</string>
+    <string name="Complete">完成</string>
+    <string name="Preview">预览</string>
+    <string name="new_update">最新更新:</string>
+    <string name="DropdownRefresh">下拉可以刷新</string>
+    <string name="LooseMore">松开获取更多</string>
+    <string name="Loading">载入中...</string>
+    <string name="SeeMore">查看更多</string>
+    <string name="Thumb">赞</string>
+    <string name="unThumb">取消赞</string>
+    <string name="thisDynamicDelete">该动态已删除</string>
     
 
 </resources>

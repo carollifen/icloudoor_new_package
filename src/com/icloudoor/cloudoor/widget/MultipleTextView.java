@@ -17,7 +17,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.Version;
+import com.icloudoor.cloudoor.chat.entity.ThumberInfo;
 
 public class MultipleTextView extends RelativeLayout {
 
@@ -35,12 +39,12 @@ public class MultipleTextView extends RelativeLayout {
 	private int layout_width;
 
 	private OnMultipleTVItemClickListener listener;
+	
 
 	public MultipleTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
 		this.context = context;
-
 		TypedArray array = context.obtainStyledAttributes(attrs,
 				R.styleable.MyView);
 		textColor = array.getColor(R.styleable.MyView_textColor, 0XFF00FF00); // 提供默认值，放置未指定
@@ -92,7 +96,7 @@ public class MultipleTextView extends RelativeLayout {
 		this.listener = listener;
 	}
 
-	public void setTextViews(List<String> dataList) {
+	public void setTextViews( final List<ThumberInfo> dataList) {
 		if (dataList==null||dataList.size()==0) {
 			return;
 		}
@@ -109,7 +113,11 @@ public class MultipleTextView extends RelativeLayout {
 
 		for (int i = 0; i < dataList.size(); i++) {
 			TextView tv = new TextView(context);
-			tv.setText(dataList.get(i));
+			if((i+1)==dataList.size()){
+				tv.setText(dataList.get(i).getNickname());
+			}else{
+				tv.setText(dataList.get(i).getNickname()+", ");
+			}
 			tv.setTextSize(textSize);
 			if (textBackground != null)
 				tv.setBackgroundResource(android.R.color.transparent);
@@ -122,7 +130,7 @@ public class MultipleTextView extends RelativeLayout {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					if (listener != null) {
-						listener.onMultipleTVItemClick(v, (Integer) v.getTag());
+						listener.onMultipleTVItemClick(v, (Integer) v.getTag(), dataList.get((Integer) v.getTag()));
 					}
 				}
 			});
@@ -198,7 +206,7 @@ public class MultipleTextView extends RelativeLayout {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;  
         return (int) (pxValue / fontScale + 0.5f);  
     } 
-	interface OnMultipleTVItemClickListener {
-		public void onMultipleTVItemClick(View view, int position);
+	public interface OnMultipleTVItemClickListener {
+		public void onMultipleTVItemClick(View view, int position,ThumberInfo info);
 	}
 }

@@ -19,10 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.umeng.fb.FeedbackAgent;
-import com.umeng.message.PushAgent;
-import com.umeng.message.UmengRegistrar;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,8 +27,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteTransactionListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -42,17 +36,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -61,10 +48,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.easemob.EMEventListener;
@@ -74,7 +61,6 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
-import com.icloudoor.cloudoor.chat.HXSDKHelper;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
@@ -83,8 +69,9 @@ import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.tag.TagManager;
-import com.umeng.update.UmengUpdateAgent;
+import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.update.UmengDownloadListener;
+import com.umeng.update.UmengUpdateAgent;
 
 public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEventListener{
     private final String TAG = this.getClass().getSimpleName();
@@ -214,7 +201,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.new_main);
-		EMChat.getInstance().setAppInited();
+		
 
 		logoutToDo = new Logout(getApplicationContext());
 		version = new Version(getApplicationContext());
@@ -363,7 +350,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 //		InitViewPager();
 		InitViews();
 		InitState();
-
+		EMChat.getInstance().setAppInited();
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
 
@@ -940,6 +927,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 					@Override
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
+						
 						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 								response.toString(), MyFriendInfo.class);
 						if (friendInfo != null) {

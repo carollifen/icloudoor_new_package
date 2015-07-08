@@ -598,7 +598,7 @@
              />
         <activity
             android:name="com.icloudoor.cloudoor.widget.PicSelectActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:configChanges="orientation|keyboardHidden"
             android:exported="true"
             android:screenOrientation="portrait"
              />

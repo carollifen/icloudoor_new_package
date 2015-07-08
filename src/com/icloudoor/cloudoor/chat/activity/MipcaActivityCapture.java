@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -129,9 +130,15 @@ public class MipcaActivityCapture extends BaseActivity implements Callback ,Netw
 		if (resultString.equals("")) {
 			Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
 		}else {
-			String url = UrlUtils.HOST + "/user/im/searchUser.do"+ "?sid=" + loadSid()+resultString;
-			
-			getNetworkData(this, url, "{}", true);
+//			String url = UrlUtils.HOST + "/user/im/searchUser.do"+ "?sid=" + loadSid()+resultString;
+			JSONObject object = new JSONObject();
+			try {
+				object.put("searchValue", resultString);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			getNetworkData(this, "/user/im/searchUser.do", object.toString(), true);
 //			Intent resultIntent = new Intent();
 //			Bundle bundle = new Bundle();
 //			bundle.putString("result", resultString);

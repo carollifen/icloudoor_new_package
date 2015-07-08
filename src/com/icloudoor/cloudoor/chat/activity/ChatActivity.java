@@ -191,7 +191,8 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	private boolean haveMoreData = true;
 	private Button btnMore;
 	public String playMsgId;
-
+	String nickName;
+	String portraitUrl;
 	private Handler micImageHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
@@ -329,7 +330,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 
 		if (chatType == CHATTYPE_SINGLE) { 
 			toChatUsername = getIntent().getStringExtra("userId");
-			((TextView) findViewById(R.id.name)).setText(toChatUsername);
+			
 		} 
 //		else {
 //			findViewById(R.id.container_to_group).setVisibility(View.VISIBLE);
@@ -350,6 +351,9 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
 		if(list!=null && list.size()>0){
 			friendsEn = list.get(0);
+			nickName = friendsEn.getNickname();
+			portraitUrl = friendsEn.getPortraitUrl();
+			((TextView) findViewById(R.id.name)).setText(nickName);
 		}else{
 			Toast.makeText(this, R.string.notfriend, Toast.LENGTH_SHORT).show();
 			finish();
@@ -730,9 +734,16 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		} else if (id == R.id.btn_voice_call) { 
 			if (!EMChatManager.getInstance().isConnected())
 				Toast.makeText(this, st1, 0).show();
-			else
-				startActivity(new Intent(ChatActivity.this, VoiceCallActivity.class).putExtra("username",
-						toChatUsername).putExtra("isComingCall", false));
+			else{
+				Intent voiceCall =  new Intent(ChatActivity.this, VoiceCallActivity.class);
+				voiceCall.putExtra("username",toChatUsername);
+				voiceCall.putExtra("nickName",nickName);
+				voiceCall.putExtra("portraitUrl",portraitUrl);
+				voiceCall.putExtra("isComingCall",false);
+//				startActivity(new Intent(ChatActivity.this, VoiceCallActivity.class).putExtra("username",
+//						toChatUsername).putExtra("isComingCall", false));
+				startActivity(voiceCall);
+			}
 		} else if (id == R.id.btn_video_call) { 
 			if (!EMChatManager.getInstance().isConnected())
 				Toast.makeText(this, st1, 0).show();

@@ -3,15 +3,15 @@ package com.icloudoor.cloudoor.widget;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 import org.fireking.app.imagelib.entity.AlbumBean;
 import org.fireking.app.imagelib.entity.ImageBean;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -21,7 +21,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +53,7 @@ import com.icloudoor.cloudoor.widget.MyImageView.OnMeasureListener;
  * @author fireking
  * 
  */
-public class PicSelectActivity extends FragmentActivity implements
+public class PicSelectActivity extends Activity implements
 		OnItemClickListener {
 	private static final int PHOTO_GRAPH = 1;// ����
 
@@ -74,7 +73,7 @@ public class PicSelectActivity extends FragmentActivity implements
 	PopupWindow popWindow;
 
 	int selected = 0;
-
+	File saveFile;
 	int height = 0;
 	List<AlbumBean> mAlbumBean;
 	public static final String IMAGES = "images";
@@ -146,62 +145,74 @@ public class PicSelectActivity extends FragmentActivity implements
 	private void takePhoto() {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-			fileName = getFileName();
-			System.out.println(Environment.getExternalStorageDirectory()
-					.toString());
-			System.out.println(Environment.getExternalStorageDirectory()
-					.getAbsolutePath());
-			dirPath = Environment.getExternalStorageDirectory().getPath()
-					+ Config.getSavePath();
-			File tempFile = new File(dirPath);
-			if (!tempFile.exists()) {
-				tempFile.mkdirs();
-			}
-			File saveFile = new File(tempFile, fileName + ".jpg");
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(saveFile));
-			startActivityForResult(intent, PHOTO_GRAPH);
+			
+			saveFile = new File(Environment.getExternalStorageDirectory()
+					.getAbsolutePath() + "/Cloudoor/CacheImage",
+					+System.currentTimeMillis() + ".jpg");
+			saveFile.getParentFile().mkdirs();
+			Config.filename = saveFile.getAbsolutePath();
+			startActivityForResult(new Intent(
+					MediaStore.ACTION_IMAGE_CAPTURE).putExtra(
+					MediaStore.EXTRA_OUTPUT, Uri.fromFile(saveFile)), 1);
+
 		} else {
 			Toast.makeText(PicSelectActivity.this, "未检测到CDcard，拍照不可用!",
 					Toast.LENGTH_SHORT).show();
 		}
 	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		System.out.println("onDestroy");
+	}
+	
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		System.out.println("onStop");
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		System.out.println("..." + requestCode + ".." + resultCode + "..."
-				+ data);
 		if (requestCode == PHOTO_GRAPH && resultCode == RESULT_OK) {
-			List<ImageBean> selecteds = new ArrayList<ImageBean>();
-			selecteds.add(new ImageBean(null, 0l, null, dirPath + "/"
-					+ fileName + ".jpg", false));
-			Intent intent = new Intent();
-			intent.putExtra(IMAGES, (Serializable) selecteds);
-			setResult(RESULT_OK, intent);
+			System.out.println("Config.filename = "+Config.filename);
+			if(Config.filename!=null){
+				
+				List<ImageBean> selecteds = new ArrayList<ImageBean>();
+				selecteds.add(new ImageBean(null, 0l, null, Config.filename, false));
+				Intent intent = new Intent();
+				intent.putExtra(IMAGES, (Serializable) selecteds);
+				setResult(RESULT_OK, intent);
+			}else{
+				Toast.makeText(this, R.string.takePhoto_fail, Toast.LENGTH_SHORT).show();
+			}
 			finish();
 		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	/**
 	 */
 	private String getFileName() {
-		StringBuffer sb = new StringBuffer();
-		Calendar calendar = Calendar.getInstance();
-		long millis = calendar.getTimeInMillis();
-		String[] dictionaries = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
-				"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
-				"V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g",
-				"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-				"t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4",
-				"5", "6", "7", "8", "9" };
-		sb.append("dzc");
-		sb.append(millis);
-		Random random = new Random();
-		for (int i = 0; i < 5; i++) {
-			sb.append(dictionaries[random.nextInt(dictionaries.length - 1)]);
-		}
-		return sb.toString();
+//		StringBuffer sb = new StringBuffer();
+//		Calendar calendar = Calendar.getInstance();
+//		long millis = calendar.getTimeInMillis();
+//		String[] dictionaries = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
+//				"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+//				"V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g",
+//				"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+//				"t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4",
+//				"5", "6", "7", "8", "9" };
+//		sb.append("dzc");
+//		sb.append(millis);
+//		Random random = new Random();
+//		for (int i = 0; i < 5; i++) {
+//			sb.append(dictionaries[random.nextInt(dictionaries.length - 1)]);
+//		}
+		long fileName = System.currentTimeMillis();
+		return fileName+"";
 	};
 
 	OnImageSelectedCountListener onImageSelectedCountListener = new OnImageSelectedCountListener() {
@@ -217,8 +228,8 @@ public class PicSelectActivity extends FragmentActivity implements
 		@Override
 		public void notifyChecked() {
 			selected = getSelectedCount();
-			complete.setText("完成(" + selected + "/" + Config.limit + ")");
-			preView.setText("预览(" + selected + "/" + Config.limit + ")");
+			complete.setText(getString(R.string.Complete)+"(" + selected + "/" + Config.limit + ")");
+			preView.setText(getString(R.string.Preview)+"(" + selected + "/" + Config.limit + ")");
 		}
 	};
 
@@ -323,6 +334,12 @@ public class PicSelectActivity extends FragmentActivity implements
 			}
 		});
 		return mPopupWindow;
+	}
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+		System.out.println("onConfigurationChanged");
 	}
 
 	class AlbumAdapter extends BaseAdapter {

@@ -1,5 +1,7 @@
 package com.icloudoor.cloudoor.utli;
 
+import java.io.File;
+
 /**
  * 
  * @author join
@@ -9,7 +11,7 @@ public class Config {
 
 	public static int limit;
 	static String savePathString;
-
+	public static String filename;
 	static {
 		limit = 3;
 		savePathString = "/temp";

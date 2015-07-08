@@ -9,6 +9,7 @@ public class DynamicInfo {
 	private String nickname;
 	private String subject;
 	private String content;
+	private Boolean hasThumb;
 	private long createTime;
 	private String portaitUrl;
 	private List<String> photoUrls;
@@ -67,6 +68,12 @@ public class DynamicInfo {
 	}
 	public void setPortaitUrl(String portaitUrl) {
 		this.portaitUrl = portaitUrl;
+	}
+	public Boolean getHasThumb() {
+		return hasThumb;
+	}
+	public void setHasThumb(Boolean hasThumb) {
+		this.hasThumb = hasThumb;
 	}
 	
 	
