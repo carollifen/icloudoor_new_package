@@ -271,6 +271,14 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 									Editor edit = loginStatus.edit();
+									edit.putString("NAME", name);
+									edit.putString("NICKNAME",nickname);
+									edit.putString("ID", id);
+									edit.putString("BIRTH", birthday);
+									edit.putInt("SEX", sex);
+									edit.putInt("PROVINCE",provinceid);
+									edit.putInt("CITY", cityid);
+									edit.putInt("DIS", districtid);
 									edit.putString("URL", portraitUrl);
 									edit.putBoolean("isHasPropServ", isHasPropServ);
 									edit.commit();
