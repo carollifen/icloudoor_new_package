@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -31,12 +33,20 @@ public class BaseActivity extends Activity{
 	public MyProgressDialog dialog;
 	public Version version;
 	
+	private MyAreaDBHelper mAreaDBHelper;
+	private SQLiteDatabase mAreaDB;
+	private final String DATABASE_NAME = "area.db";
+	private final String TABLE_NAME = "tb_core_area";
+	
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		version = new Version(getApplicationContext());
 		mQueue = Volley.newRequestQueue(this);
+		
+		mAreaDBHelper = new MyAreaDBHelper(BaseActivity.this, DATABASE_NAME, null, 1);
+		mAreaDB = mAreaDBHelper.getWritableDatabase();
 	}
 	
 	@Override
@@ -151,4 +161,61 @@ public class BaseActivity extends Activity{
         final float scale = getResources().getDisplayMetrics().density;  
         return (int) (pxValue / scale + 0.5f);  
     }  
+    
+    public String getProvinceName(int provinceId) {
+		String provinceName = null;
+		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorP.moveToFirst()) {
+			int provinceIndex = mCursorP.getColumnIndex("province_short_name");
+			int provinceIdIndex = mCursorP.getColumnIndex("province_id");
+			do{
+				int tempPID = mCursorP.getInt(provinceIdIndex);
+			    String tempPName = mCursorP.getString(provinceIndex);
+				if(tempPID == provinceId){
+					provinceName = tempPName;
+					break;
+				}		
+			}while(mCursorP.moveToNext());		
+		}
+		mCursorP.close();
+		return provinceName;
+	}
+	
+	public String getCityName(int cityId) {
+		String cityName = null;
+		Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorC.moveToFirst()) {
+			int cityIndex = mCursorC.getColumnIndex("city_short_name");
+			int cityIdIndex = mCursorC.getColumnIndex("city_id");
+			do{
+				int tempCID = mCursorC.getInt(cityIdIndex);
+			    String tempCName = mCursorC.getString(cityIndex);
+				if(tempCID == cityId){
+					cityName = tempCName;
+					break;
+				}		
+			}while(mCursorC.moveToNext());		
+		}
+		mCursorC.close();
+		return cityName;
+	}
+	
+	public String getDistrictName(int districtId) {
+		String districtName = null;
+		Cursor mCursorD = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorD.moveToFirst()) {
+			int districtIndex = mCursorD.getColumnIndex("district_short_name");
+			int districtIdIndex = mCursorD.getColumnIndex("district_id");
+			do{
+				int tempDID = mCursorD.getInt(districtIdIndex);
+			    String tempDName = mCursorD.getString(districtIndex);
+				if(tempDID == districtId){
+					districtName = tempDName;
+					break;
+				}		
+			}while(mCursorD.moveToNext());		
+		}
+		mCursorD.close();
+		return districtName;
+	}
 }

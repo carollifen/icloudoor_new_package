@@ -183,6 +183,18 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 	
 	private Version version;
 	
+	int previousProvinceId;
+	int previousCityId;
+	int previousDistrictId;
+	
+	int pid;
+	int cid;
+	int did;
+	
+	boolean haveSetProvince;
+	boolean haveSetCity;
+	boolean haveSetDistrict;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -245,29 +257,9 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 		portraitUrl = loginStatus.getString("URL", null);
 
-//		File f = new File(PATH + imageName);
-//		if (f.exists()) {
-//			Log.e(TAG, "use local");
-//			ImageLoader.getInstance().displayImage(imageUrl, personImage, options);
-////			BitmapFactory.Options opts=new BitmapFactory.Options();
-////			opts.inTempStorage = new byte[100 * 1024];
-////			opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-////			opts.inPurgeable = true;
-//////			opts.inSampleSize = 4;
-////			Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-////			personImage.setImageBitmap(bm);
-//		} else {
-//			// request bitmap in the new thread
-//			if (portraitUrl != null) {
-//				Log.e(TAG, "use net");
-//				ImageLoader.getInstance().displayImage(portraitUrl, personImage, options);
-////				if (mThread == null) {
-////					mThread = new Thread(runnable);
-////					mThread.start();
-////				}
-//			}
-//		}
-		//
+		previousProvinceId = loginStatus.getInt("PROVINCE", 0);
+		previousCityId = loginStatus.getInt("CITY", 0);
+		previousDistrictId = loginStatus.getInt("DIS", 0);
 		
 		initSpinnerData();
 		
@@ -316,6 +308,7 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 				mCursorP.close();
 				MyDebugLog.e("spinner pro id", String.valueOf(provinceId));
 				
+				haveSetProvince = true;
 			}
 
 			@Override
@@ -330,6 +323,10 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
+				
+				if(!haveSetProvince){
+					provincePosition = pid;
+				}
 				
 				int tempLength = 0;
 				String[] tempDistrictSet;
@@ -366,6 +363,8 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 				}
 				mCursorC.close();
 				MyDebugLog.e("spinner city id", String.valueOf(cityId));
+				
+				haveSetCity = true;
 			}
 
 			@Override
@@ -381,6 +380,17 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
  
+				if(!haveSetProvince){
+					provincePosition = pid;
+					MyDebugLog.e(TAG, "**********1");
+				}
+				
+				if(!haveSetCity){
+					cityPosition = cid;
+					MyDebugLog.e(TAG, "**********2");
+				}
+				MyDebugLog.e(TAG, "**********" + String.valueOf(provincePosition) + ":" + String.valueOf(cityPosition));
+				
 				district = districtSet[provincePosition][cityPosition][position];     
 				MyDebugLog.e("Spinner test dis",  district);
 				
@@ -939,6 +949,76 @@ public class SetPersonalInfoNotCerti extends BaseActivity {
 		provinceAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 		provinceSpinner.setAdapter(provinceAdapter);
 
+		
+		haveSetProvince = false;
+		haveSetCity = false;
+		haveSetDistrict = false;
+		
+		if(previousProvinceId != 0 && previousCityId != 0 && previousDistrictId != 0){
+			pid = 0;
+			cid = 0;
+			did = 0;
+			for(int aa = 0; aa < maxPlength; aa++) {
+				if(provinceSet[aa].equals(getProvinceName(previousProvinceId))){
+					pid = aa;
+					provinceId = previousProvinceId;
+					break;
+				}
+			}
+			MyDebugLog.e(TAG, "**********1" + ":" + String.valueOf(pid));
+			provinceSpinner.setSelection(pid, true);
+			
+			int TempLength = 0;
+			for (int aa = 0; aa < maxClength; aa++) {
+				if (citySet[pid][aa] != null)
+					TempLength++;
+			}
+			
+			String[] TempCitySet = new String[TempLength];
+			for (int aa = 0; aa < TempLength; aa++) {
+				TempCitySet[aa] = citySet[pid][aa];
+			}
+			
+			cityAdapter = new ArrayAdapter<String>(SetPersonalInfoNotCerti.this, android.R.layout.simple_spinner_item, TempCitySet);
+			cityAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+			citySpinner.setAdapter(cityAdapter);
+			
+			for(int aa = 0; aa < TempLength; aa++) {
+				if(TempCitySet[aa].equals(getCityName(previousCityId))){
+					cid = aa;
+					cityId = previousCityId;
+					break;
+				}
+			}
+			MyDebugLog.e(TAG, "**********2" + ":" + String.valueOf(cid));
+			citySpinner.setSelection(cid, true);
+			
+			int TLength = 0;
+			for (int aa = 0; aa < maxDlength; aa++) {
+				if (districtSet[pid][cid][aa] != null)
+					TLength++;
+			}
+			
+			String[] TempDistrictSet = new String[TLength];
+			for (int aa = 0; aa < TLength; aa++) {
+				TempDistrictSet[aa] = districtSet[pid][cid][aa];
+			}
+			
+			districtAdapter = new ArrayAdapter<String>(SetPersonalInfoNotCerti.this, android.R.layout.simple_spinner_item, TempDistrictSet);
+			districtAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+			districtSpinner.setAdapter(districtAdapter);
+			
+			for(int aa = 0; aa < TLength; aa++) {
+				if(TempDistrictSet[aa].equals(getDistrictName(previousDistrictId))){
+					did = aa;
+					districtId = previousDistrictId;
+					break;
+				}
+			}
+			
+			districtSpinner.setSelection(did, true);
+		}
+		
 		// some items in the array may be null, so it will cause the NPE.
 		// so i delete these codes
 //		cityAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
