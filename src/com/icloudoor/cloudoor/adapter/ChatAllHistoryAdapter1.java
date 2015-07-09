@@ -180,6 +180,9 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 	}
 	
 	public void setData(List<EMConversation> objects){
+		
+		System.out.println("消息个数："+objects.size());
+		
 		daoImpl = new FriendDaoImpl(context);
 		List<EMConversation> haveFriendData = new ArrayList<EMConversation>();
 		for (int i = 0; i < objects.size(); i++) {

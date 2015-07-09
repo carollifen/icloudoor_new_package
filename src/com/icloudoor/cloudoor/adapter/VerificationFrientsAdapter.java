@@ -21,10 +21,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMConversation;
+import com.easemob.chat.EMMessage;
+import com.easemob.chat.TextMessageBody;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
+import com.icloudoor.cloudoor.chat.activity.FriendDetailActivity;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
@@ -93,6 +98,7 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 		String state = frientsList.getStatus();
 		if(state.equals("0")){
 			holder.state_tv.setVisibility(View.GONE);
+			holder.state_bnt.setVisibility(View.VISIBLE);
 			holder.state_bnt.setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -117,10 +123,18 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 								code = response.getInt("code");
 								if(code==1){
 									activity.showToast(R.string.addfridendSuccess);
-									VFDaoImpl daoImpl = new VFDaoImpl(context);
-									daoImpl.execSql("update verificationFrients set status=? where invitationId=?", new String[]{"1",frientsList.getInvitationId()});
 									getFriends();
 									activity.finish();
+									VFDaoImpl daoImpl = new VFDaoImpl(context);
+									daoImpl.execSql("update verificationFrients set status=? where invitationId=?", new String[]{"1",frientsList.getInvitationId()});
+									EMConversation emConversation = EMChatManager.getInstance().getConversation(frientsList.getUserId());
+									EMMessage txtMessage =  EMMessage.createSendMessage(EMMessage.Type.TXT);
+									txtMessage.status = EMMessage.Status.SUCCESS;
+									TextMessageBody messageBody = new TextMessageBody("我们已经成为好友，可以聊天了");
+									txtMessage.setAttribute("type", 4);
+									txtMessage.addBody(messageBody);
+									txtMessage.setReceipt(frientsList.getUserId());
+									emConversation.addMessage(txtMessage);
 									
 								}
 							} catch (JSONException e) {
@@ -139,6 +153,7 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 			});
 		}else{
 			holder.state_bnt.setVisibility(View.GONE);
+			holder.state_tv.setVisibility(View.VISIBLE);
 		}
 		return convertView;
 	}
@@ -166,13 +181,16 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 				
 				MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 						response.toString(), MyFriendInfo.class);
+				
 				if (friendInfo != null) {
 					List<MyFriendsEn> data = friendInfo.getData();
-					if (data != null && data.size() > 0) {
-						FriendDaoImpl daoImpl = new FriendDaoImpl(
-								context);
-						SQLiteDatabase db = daoImpl.getDbHelper()
-								.getWritableDatabase();
+					FriendDaoImpl daoImpl = new FriendDaoImpl(
+							context);
+					SQLiteDatabase db = daoImpl.getDbHelper()
+							.getWritableDatabase();
+					if(data==null||data.size() == 0){
+						db.execSQL("delete from friends");
+					}else{
 						db.beginTransaction();
 						try {
 							db.execSQL("delete from friends");
@@ -182,14 +200,12 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
 										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
 							}
-							db.setTransactionSuccessful();
+							db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
 						} finally {
 							db.endTransaction();
-
 						}
 					}
-				} else {
-				}
+				} 
 
 			}
 			

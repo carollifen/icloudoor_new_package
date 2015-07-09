@@ -2,12 +2,13 @@ package com.icloudoor.cloudoor.widget;
 
 import java.util.Hashtable;
 
-import android.R.anim;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +20,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.activity.MipcaActivityCapture;
 import com.icloudoor.cloudoor.utli.Uitls;
 
 public class QRCodeCreateDialog extends Dialog{
@@ -46,6 +48,24 @@ public class QRCodeCreateDialog extends Dialog{
 		setContentView(R.layout.activity_qrcode);
 		QR_WIDTH = QR_HEIGHT = Uitls.dip2px(context, 200);
 		qrcode_img = (ImageView) findViewById(R.id.qrcode_img);
+		findViewById(R.id.sweep_bnt).setOnClickListener(new android.view.View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				context.startActivity(new Intent(context, MipcaActivityCapture.class));
+				dismiss();
+			}
+		});
+		
+		findViewById(R.id.cancel_bnt).setOnClickListener(new android.view.View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dismiss();
+			}
+		});
 	}
 	
 	

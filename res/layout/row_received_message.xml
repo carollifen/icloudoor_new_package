@@ -12,7 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
+         <TextView 
+            android:id="@+id/hint_tx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="#ffffff"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:text="222222222222222"
+            android:textSize="12sp"
+             android:layout_marginTop="@dimen/margin_chat_activity"
+            android:background="@drawable/chat_hint_bg"
+            />
     <RelativeLayout
+        android:id="@+id/chat_content_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_chat_activity" >
@@ -26,6 +40,7 @@
             android:layout_marginLeft="@dimen/margin_chat_activity"
             android:background="@drawable/icon_boy_110"
             android:scaleType="fitXY" />
+        
 
         <FrameLayout
             android:id="@+id/layout_chatcontent"

@@ -57,13 +57,11 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	int Sex;
 	int returnChat;
 	
-	private Version version;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		
-		version = new Version(getApplicationContext());
 		
 		setContentView(R.layout.activity_frienddetail);
 		right_img = (ImageView) findViewById(R.id.right_img);
@@ -148,7 +146,8 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			getNetworkData(this, "/user/im/removeFriend.do", jsonObject.toString(),true);
+			loading();
+			getNetworkData(this, "/user/im/removeFriend.do", jsonObject.toString(),false);
 			break;
 		case R.id.report_layout:
 			pw.dismiss();
@@ -177,9 +176,7 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		try {
 			int code = response.getInt("code");
 			if(code==1){
-				showToast(R.string.removeFriendSuccess);
 				getFriends();
-				
 			}else{
 				showToast(R.string.removeFriendFail);
 			}
@@ -197,7 +194,7 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	
 	
 	public void getFriends() {
-    	RequestQueue mRequestQueue = Volley.newRequestQueue(this);
+//    	RequestQueue mRequestQueue = Volley.newRequestQueue(this);
 		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName();
 		MyRequestBody requestBody = new MyRequestBody( url, "{}",new Response.Listener<JSONObject>() {
 			@Override
@@ -205,13 +202,18 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 				// TODO Auto-generated method stub
 				MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 						response.toString(), MyFriendInfo.class);
+				showToast(R.string.removeFriendSuccess);
+				destroyDialog();
 				if (friendInfo != null) {
 					List<MyFriendsEn> data = friendInfo.getData();
-					if (data != null && data.size() > 0) {
-						FriendDaoImpl daoImpl = new FriendDaoImpl(
-								FriendDetailActivity.this);
-						SQLiteDatabase db = daoImpl.getDbHelper()
-								.getWritableDatabase();
+					FriendDaoImpl daoImpl = new FriendDaoImpl(
+							FriendDetailActivity.this);
+					SQLiteDatabase db = daoImpl.getDbHelper()
+							.getWritableDatabase();
+					if(data==null||data.size() == 0){
+						db.execSQL("delete from friends");
+						finish();
+					}else{
 						db.beginTransaction();
 						try {
 							db.execSQL("delete from friends");
@@ -227,8 +229,7 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 							finish();
 						}
 					}
-				} else {
-				}
+				} 
 			}
 			
 		},new Response.ErrorListener() {
@@ -236,10 +237,11 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				// TODO Auto-generated method stub
-				
+				destroyDialog();
+				showToast(R.string.network_error);
 			}
 		});
 		
-		mRequestQueue.add(requestBody);
+		mQueue.add(requestBody);
 	}
 }

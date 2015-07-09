@@ -92,7 +92,7 @@ public class BaseActivity extends Activity{
 	}
 	
 	
-	public void getNetworkData(NetworkInterface networkInterface,String httpurl, String josn,boolean isShowLoadin){
+	public void getNetworkData(NetworkInterface networkInterface,String httpurl, String josn,final boolean isShowLoadin){
 		this.networkInterface = networkInterface;
 			String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid()+"&ver=" + version.getVersionName();
 			if(isShowLoadin)
@@ -104,6 +104,7 @@ public class BaseActivity extends Activity{
 				public void onResponse(JSONObject response) {
 					// TODO Auto-generated method stub
 					BaseActivity.this.networkInterface.onSuccess(response);
+					if(isShowLoadin)
 					destroyDialog();
 				}
 				
@@ -113,6 +114,7 @@ public class BaseActivity extends Activity{
 				public void onErrorResponse(VolleyError error) {
 					// TODO Auto-generated method stub
 					BaseActivity.this.networkInterface.onFailure(error);
+					if(isShowLoadin)
 					destroyDialog();
 					showToast(R.string.network_error);
 				}

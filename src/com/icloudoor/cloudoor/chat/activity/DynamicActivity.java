@@ -54,7 +54,7 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 			@Override
 			public void OnRefresh() {
 				isRefresh = true;
-				refresh();
+				refresh(false);
 			}
 		});
 		
@@ -64,7 +64,7 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 				
 			}
 		});
-		refresh();
+		refresh(true);
 	}
 	
 	public void loadMore(String beforeActId){
@@ -80,11 +80,11 @@ public class DynamicActivity extends BaseActivity implements NetworkInterface,On
 		}
 	}
 	
-	public void refresh(){
+	public void refresh(boolean isShow){
 		JSONObject parm = new JSONObject();
 		try {
 			parm.put("num", 20);
-			getNetworkData(this, "/user/im/act/get.do", parm.toString(), true);
+			getNetworkData(this, "/user/im/act/get.do", parm.toString(), isShow);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

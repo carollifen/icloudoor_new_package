@@ -44,6 +44,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
@@ -365,6 +366,10 @@ public class MessageAdapter extends BaseAdapter {
 							.findViewById(R.id.card_name);
 					holder.addr_tx = (TextView) convertView
 							.findViewById(R.id.addr_tx);
+					holder.hint_tx = (TextView) convertView
+							.findViewById(R.id.hint_tx);
+					holder.chat_content_layout = (RelativeLayout) convertView
+							.findViewById(R.id.chat_content_layout);
 
 				} catch (Exception e) {
 				}
@@ -699,6 +704,8 @@ public class MessageAdapter extends BaseAdapter {
 			int type = message.getIntAttribute("type");
 
 			if (type == 3) {
+				holder.chat_content_layout.setVisibility(View.VISIBLE);
+				holder.hint_tx.setVisibility(View.GONE);
 				final JSONObject card = message.getJSONObjectAttribute("card");
 				holder.tv.setVisibility(View.GONE);
 				holder.card_layout.setVisibility(View.VISIBLE);
@@ -774,8 +781,14 @@ public class MessageAdapter extends BaseAdapter {
 					}
 				});
 
+			}else if(type == 4 ){
+				holder.chat_content_layout.setVisibility(View.GONE);
+				holder.hint_tx.setVisibility(View.VISIBLE);
+				holder.hint_tx.setText(span, BufferType.SPANNABLE);
 			}
 		} catch (EaseMobException e) {
+			holder.hint_tx.setVisibility(View.GONE);
+			holder.chat_content_layout.setVisibility(View.VISIBLE);
 			holder.card_layout.setVisibility(View.GONE);
 			holder.tv.setVisibility(View.VISIBLE);
 			holder.tv.setText(span, BufferType.SPANNABLE);
@@ -1730,6 +1743,9 @@ public class MessageAdapter extends BaseAdapter {
 		TextView card_name;
 		TextView addr_tx;
 		LinearLayout card_layout;
+		
+		TextView hint_tx;
+		RelativeLayout chat_content_layout;
 
 	}
 

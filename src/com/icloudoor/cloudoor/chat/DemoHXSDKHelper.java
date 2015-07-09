@@ -41,9 +41,11 @@ import com.easemob.EMNotifierEvent;
 import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
+import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
+import com.easemob.chat.TextMessageBody;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
@@ -53,6 +55,7 @@ import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
+import com.icloudoor.cloudoor.chat.activity.FriendDetailActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
@@ -145,39 +148,33 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 								response.toString(), MyFriendInfo.class);
 						if (friendInfo != null) {
+							
+							
 							List<MyFriendsEn> data = friendInfo.getData();
-							if (data != null && data.size() > 0) {
-								FriendDaoImpl daoImpl = new FriendDaoImpl(
-										appContext);
-								SQLiteDatabase db = daoImpl.getDbHelper()
-										.getWritableDatabase();
+							FriendDaoImpl daoImpl = new FriendDaoImpl(
+									appContext);
+							SQLiteDatabase db = daoImpl.getDbHelper()
+									.getWritableDatabase();
+							if(data==null||data.size() == 0){
+								db.execSQL("delete from friends");
+							}else{
 								db.beginTransaction();
 								try {
 									db.execSQL("delete from friends");
 									for (int i = 0; i < data.size(); i++) {
 										MyFriendsEn friendsEn = data.get(i);
-										db.execSQL(
-												"insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-												new Object[] {
-														friendsEn.getUserId(),
-														friendsEn.getNickname(),
-														friendsEn
-																.getPortraitUrl(),
-														friendsEn
-																.getProvinceId(),
-														friendsEn
-																.getDistrictId(),
-														friendsEn.getCityId(),
-														friendsEn.getSex() });
+										db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+												new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
+												friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
 									}
 									db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
 								} finally {
 									db.endTransaction();
-
 								}
 							}
-						} else {
-						}
+							
+
+						} 
 
 					}
 				}, new Response.ErrorListener() {
@@ -231,6 +228,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 					CmdMessageBody cmdMsgBody = (CmdMessageBody) message
 							.getBody();
 					String action = cmdMsgBody.action;
+					System.out.println(" EMaction = "+action);
 					if (action.equals("invite")) {
 						try {
 							JSONObject vfoj = message
@@ -262,7 +260,17 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					} else {
+					} else if(action.equals("acceptInvite")){
+						EMConversation emConversation = EMChatManager.getInstance().getConversation(message.getFrom());
+						EMMessage txtMessage =  EMMessage.createSendMessage(EMMessage.Type.TXT);
+						txtMessage.status = EMMessage.Status.SUCCESS;
+						TextMessageBody messageBody = new TextMessageBody("我们已经成为好友，可以聊天了");
+						txtMessage.setAttribute("type", 4);
+						txtMessage.addBody(messageBody);
+						txtMessage.setReceipt(message.getFrom());
+						emConversation.addMessage(txtMessage);
+						getFriends();
+					}else{
 						getFriends();
 					}
 
