@@ -263,12 +263,17 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 					} else if(action.equals("acceptInvite")){
 						EMConversation emConversation = EMChatManager.getInstance().getConversation(message.getFrom());
 						EMMessage txtMessage =  EMMessage.createSendMessage(EMMessage.Type.TXT);
-						txtMessage.status = EMMessage.Status.SUCCESS;
 						TextMessageBody messageBody = new TextMessageBody("我们已经成为好友，可以聊天了");
 						txtMessage.setAttribute("type", 4);
 						txtMessage.addBody(messageBody);
 						txtMessage.setReceipt(message.getFrom());
 						emConversation.addMessage(txtMessage);
+						 try {
+							EMChatManager.getInstance().sendMessage(txtMessage);
+						} catch (EaseMobException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						getFriends();
 					}else{
 						getFriends();

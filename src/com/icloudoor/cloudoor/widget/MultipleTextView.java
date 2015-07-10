@@ -8,6 +8,7 @@ import java.util.Map;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -21,7 +22,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.Version;
+import com.icloudoor.cloudoor.chat.Utils;
 import com.icloudoor.cloudoor.chat.entity.ThumberInfo;
+import com.icloudoor.cloudoor.utli.Uitls;
 
 public class MultipleTextView extends RelativeLayout {
 
@@ -49,7 +52,7 @@ public class MultipleTextView extends RelativeLayout {
 				R.styleable.MyView);
 		textColor = array.getColor(R.styleable.MyView_textColor, 0XFF00FF00); // 提供默认值，放置未指定
 		textSize = array.getDimension(R.styleable.MyView_textSize, 24);
-		textSize=px2sp(context,textSize);
+		textSize=Uitls.dip2px(context, 12);
 //		wordMargin = array.getDimensionPixelSize(R.styleable.MyView_textWordMargin, 0);
 //		lineMargin = array.getDimensionPixelSize(R.styleable.MyView_textLineMargin, 0);
 //		textBackground = array.getDrawable(R.styleable.MyView_textBackground);
@@ -118,11 +121,11 @@ public class MultipleTextView extends RelativeLayout {
 			}else{
 				tv.setText(dataList.get(i).getNickname()+", ");
 			}
-			tv.setTextSize(textSize);
+			tv.setTextSize(12);
 			if (textBackground != null)
 				tv.setBackgroundResource(android.R.color.transparent);
 
-			tv.setTextColor(textColor);
+			tv.setTextColor(Color.parseColor("#666666"));
 //			tv.setPadding(textPaddingLeft, textPaddingTop, textPaddingRight,textPaddingBottom);
 			tv.setTag(i);// 标记position
 			tv.setOnClickListener(new OnClickListener() {

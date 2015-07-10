@@ -127,14 +127,6 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 									activity.finish();
 									VFDaoImpl daoImpl = new VFDaoImpl(context);
 									daoImpl.execSql("update verificationFrients set status=? where invitationId=?", new String[]{"1",frientsList.getInvitationId()});
-									EMConversation emConversation = EMChatManager.getInstance().getConversation(frientsList.getUserId());
-									EMMessage txtMessage =  EMMessage.createSendMessage(EMMessage.Type.TXT);
-									txtMessage.status = EMMessage.Status.SUCCESS;
-									TextMessageBody messageBody = new TextMessageBody("我们已经成为好友，可以聊天了");
-									txtMessage.setAttribute("type", 4);
-									txtMessage.addBody(messageBody);
-									txtMessage.setReceipt(frientsList.getUserId());
-									emConversation.addMessage(txtMessage);
 									
 								}
 							} catch (JSONException e) {
@@ -200,7 +192,7 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
 										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
 							}
-							db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
+							db.setTransactionSuccessful();// 碌梅脫脙麓脣路陆路篓禄谩脭脷脰麓脨脨碌陆endTransaction()
 						} finally {
 							db.endTransaction();
 						}

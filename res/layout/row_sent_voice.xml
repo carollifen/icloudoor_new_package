@@ -16,25 +16,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_chat_activity" >
-
-        <ImageView
+        
+        <com.icloudoor.cloudoor.widget.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res/com.icloudoor.cloudoor"
             android:id="@+id/iv_userhead"
-            android:layout_width="@dimen/size_avatar"
-            android:layout_height="@dimen/size_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/margin_chat_activity"
-            android:background="@drawable/icon_boy_110"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            app:riv_border_color="@android:color/transparent"
+            app:riv_border_width="1dip"
+            app:riv_corner_radius="4dp"
+            app:riv_oval="false" />
 
+        <RelativeLayout 
+            android:id="@+id/layout_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+           android:layout_toLeftOf="@id/iv_userhead"
+            android:background="@drawable/chatto_bg"
+            >
         <ImageView
             android:id="@+id/iv_voice"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_width="38dp"
+            android:layout_height="27dp"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/iv_userhead"
-            android:background="@drawable/chatto_bg"
+            android:layout_marginLeft="10dp"
             android:src="@drawable/chatto_voice_playing" />
+            
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_length"
@@ -42,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/iv_voice"
+            android:layout_toLeftOf="@id/layout_voice"
             android:gravity="center" />
         
         <ImageView

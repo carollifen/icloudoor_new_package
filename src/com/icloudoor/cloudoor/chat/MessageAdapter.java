@@ -389,6 +389,8 @@ public class MessageAdapter extends BaseAdapter {
 				try {
 					holder.iv = ((ImageView) convertView
 							.findViewById(R.id.iv_voice));
+					holder.layout_voice = ((RelativeLayout) convertView
+							.findViewById(R.id.layout_voice));
 					holder.iv_avatar = (ImageView) convertView
 							.findViewById(R.id.iv_userhead);
 					holder.tv = (TextView) convertView
@@ -1122,7 +1124,7 @@ public class MessageAdapter extends BaseAdapter {
 			final ViewHolder holder, final int position, View convertView) {
 		VoiceMessageBody voiceBody = (VoiceMessageBody) message.getBody();
 		holder.tv.setText(voiceBody.getLength() + "\"");
-		holder.iv.setOnClickListener(new VoicePlayClickListener(message,
+		holder.layout_voice.setOnClickListener(new VoicePlayClickListener(message,
 				holder.iv, holder.iv_read_status, this, activity, username));
 		// holder.iv.setOnLongClickListener(new OnLongClickListener() {
 		// @Override
@@ -1746,6 +1748,7 @@ public class MessageAdapter extends BaseAdapter {
 		
 		TextView hint_tx;
 		RelativeLayout chat_content_layout;
+		RelativeLayout layout_voice;
 
 	}
 

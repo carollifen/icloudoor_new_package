@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -132,7 +133,12 @@ public class DynamicAdapter extends BaseAdapter implements OnMultipleTVItemClick
 		}else{
 			hodler.content_ioc_layout.setVisibility(View.GONE);
 		}
-		hodler.content_tx.setText(info.getContent());
+		if(TextUtils.isEmpty(info.getContent())){
+			hodler.content_tx.setVisibility(View.GONE);
+		}else{
+			hodler.content_tx.setVisibility(View.VISIBLE);
+			hodler.content_tx.setText(info.getContent());
+		}
 		hodler.fulltext.setOnClickListener(new OnClickListener() {
 			
 			@Override

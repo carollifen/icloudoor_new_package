@@ -597,6 +597,12 @@
             android:screenOrientation="portrait"
              />
         <activity
+            android:name=".chat.activity.AuthKeyActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+             />
+        <activity
             android:name="com.icloudoor.cloudoor.widget.PicSelectActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"

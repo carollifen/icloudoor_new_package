@@ -145,6 +145,7 @@
                 android:layout_marginTop="20dp"
                 android:divider="#bdc7d4"
                 android:dividerHeight="1.0px"
+                android:listSelector="@drawable/msg_listslelct_bg"
                 android:background="#ffffff"
                 android:scrollbars="none" >
             </com.icloudoor.cloudoor.ListViewForScrollView>

@@ -751,7 +751,9 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 				startActivity(new Intent(this, VideoCallActivity.class).putExtra("username", toChatUsername).putExtra(
 						"isComingCall", false));
 		}else if (id == R.id.btn_auth_key) { 
-			
+			Intent ketIntent = new Intent(this, AuthKeyActivity.class);
+			ketIntent.putExtra("userid", toChatUsername);
+			startActivity(ketIntent);
 		}
 	}
 
@@ -1199,7 +1201,8 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			case MotionEvent.ACTION_MOVE: {
 				if (event.getY() < 0) {
 					recordingHint.setText(getString(R.string.release_to_cancel));
-					recordingHint.setBackgroundResource(R.drawable.recording_text_hint_bg);
+					recordingHint.setTextColor(Color.parseColor("#00deff"));//(R.drawable.recording_text_hint_bg);
+					micImage.setImageResource(R.drawable.cancel_voice);
 				} else {
 					recordingHint.setText(getString(R.string.move_up_to_cancel));
 					recordingHint.setBackgroundColor(Color.TRANSPARENT);
