@@ -12,7 +12,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.CloudDoorMainActivity.Broadcast;
-import com.icloudoor.cloudoor.SetGestureDrawLineView.SetGestureCallBack;
+import com.icloudoor.cloudoor.VerifyGestureUtil.GestureDrawLineView.SetGestureCallBack;
+import com.icloudoor.cloudoor.VerifyGestureUtil.GestureContentView;
 import com.umeng.common.message.Log;
 
 import android.app.Activity;
@@ -34,7 +35,7 @@ import android.widget.Toast;
 public class VerifyGestureActivity extends BaseActivity {
 
 	private FrameLayout mGestureContainer;
-	private SetGestureContentView mGestureContentView;
+	private GestureContentView mGestureContentView;
 	private String gesturePwd;
 	private RequestQueue mQueue;
 	private String sid;
@@ -78,7 +79,7 @@ public class VerifyGestureActivity extends BaseActivity {
 		
 		textTip=(TextView) findViewById(R.id.tip_text);
 		textTip.setText(getString(R.string.input_gesture));
-		textTip.setTextColor(0xFF666666);
+		textTip.setTextColor(0xFFffffff);
 		textTip.setTextSize(17);
 		
 		registerReceiver(KillVerifyActivityBroadcast,new IntentFilter("KillVerifyActivity"));
@@ -119,7 +120,7 @@ public class VerifyGestureActivity extends BaseActivity {
 		
 		gesturePwd = loadSign(); 
 		
-		mGestureContentView = new SetGestureContentView(this, true, gesturePwd, new SetGestureCallBack() {
+		mGestureContentView = new GestureContentView(this, true, gesturePwd, new SetGestureCallBack() {
 
 			@Override
 			public void onGestureCodeInput(String inputCode) {
@@ -182,7 +183,7 @@ public class VerifyGestureActivity extends BaseActivity {
 		                                
 		                                public void onResponse(JSONObject response) {
 		                                    try {
-		                                    	Log.e("logout", response.toString()+"sdmfl;knsad;lfglsadjm'l");
+		                                    	MyDebugLog.e("logout", response.toString()+"sdmfl;knsad;lfglsadjm'l");
 //		                                        if (response.getString("sid") != null) {
 //		                                            sid = response.getString("sid");
 		                                            saveSid("SID", null);
@@ -203,7 +204,7 @@ public class VerifyGestureActivity extends BaseActivity {
 		                                        Bundle bundle = new Bundle();
 		                                        bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
 		                                        intent3.putExtras(bundle);
-		                                     //   intent3.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		                                     
 		                                        intent3.setClass(VerifyGestureActivity.this, Login.class);
 		                                        startActivity(intent3);
 		                                        Intent broadcastIntent = new Intent();
