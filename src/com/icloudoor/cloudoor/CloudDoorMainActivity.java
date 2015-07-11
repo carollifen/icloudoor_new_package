@@ -61,6 +61,9 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
+import com.icloudoor.cloudoor.Interface.NetworkInterface;
+import com.icloudoor.cloudoor.cache.UserCacheWrapper;
+import com.icloudoor.cloudoor.chat.entity.AuthKeyEn;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
@@ -360,6 +363,32 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 			myThread.start();
 		}
 
+		
+		
+		 getMyKey();
+	}
+	
+	public void getMyKey(){
+		
+		getNetworkData(new NetworkInterface() {
+			
+			@Override
+			public void onSuccess(JSONObject response) {
+				// TODO Auto-generated method stub
+				AuthKeyEn keyEn = GsonUtli.jsonToObject(response.toString(), AuthKeyEn.class);
+				if(keyEn!=null){
+					UserCacheWrapper.setMedicalRecord(CloudDoorMainActivity.this, keyEn);
+				}else{
+					showToast(R.string.network_error);
+				}
+			}
+			
+			@Override
+			public void onFailure(VolleyError error) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, "/user/api/keys/my.do", "{}", false);
 	}
 	
 	public void InitViews() {

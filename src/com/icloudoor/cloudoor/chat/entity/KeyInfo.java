@@ -1,8 +1,9 @@
 package com.icloudoor.cloudoor.chat.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class KeyInfo {
+public class KeyInfo implements Serializable{
 
 	private String l1ZoneId;
 	private String zoneUserId;

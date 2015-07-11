@@ -1,6 +1,8 @@
 package com.icloudoor.cloudoor.chat.entity;
 
-public class Key {
+import java.io.Serializable;
+
+public class Key implements Serializable{
 
 	private String authTo;
 	private String doorType;

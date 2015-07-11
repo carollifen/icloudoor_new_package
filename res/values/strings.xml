@@ -295,6 +295,15 @@
     <string name="Thumb">赞</string>
     <string name="unThumb">取消赞</string>
     <string name="thisDynamicDelete">该动态已删除</string>
+    <string name="auth_key_success">授权成功</string>
+    <string name="auth_key_Fail">授权失败</string>
+    <string name="auth_key_car_Fail1">用户尚未注册云门app</string>
+    <string name="auth_key_car_Fail2">用户发送次数超限（一天5次）</string>
+    <string name="auth_key_car_Fail3">该用户已有该临时钥匙</string>
+    <string name="auth_key_car_Fail4">您不能授权给自己</string>
+    <string name="auth_key_car_Fail5">你已有该区小车</string>
+    <string name="auth_key_car_Fail6">用户接收次数超限（一天5次）</string>
+    <string name="plass_door">请选择授权门</string>
     
 
 </resources>

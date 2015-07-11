@@ -1,14 +1,14 @@
 package com.icloudoor.cloudoor.chat.entity;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class AuthKeyEn implements Serializable{
+public class FamilyAddr {
 
 	private String message;
 	private String sid;
-	private String code;
-	private List<KeyInfo> data;
+	private int code;
+	private List<String> data;
+	
 	public String getMessage() {
 		return message;
 	}
@@ -21,16 +21,16 @@ public class AuthKeyEn implements Serializable{
 	public void setSid(String sid) {
 		this.sid = sid;
 	}
-	public String getCode() {
+	public int getCode() {
 		return code;
 	}
-	public void setCode(String code) {
+	public void setCode(int code) {
 		this.code = code;
 	}
-	public List<KeyInfo> getData() {
+	public List<String> getData() {
 		return data;
 	}
-	public void setData(List<KeyInfo> data) {
+	public void setData(List<String> data) {
 		this.data = data;
 	}
 	
