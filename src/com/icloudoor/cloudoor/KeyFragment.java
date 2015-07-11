@@ -94,7 +94,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.icdcrypto.IcdCrypto;
 import com.icloudoor.cloudoor.ShakeEventManager;
 import com.icloudoor.cloudoor.UartService;
 import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
@@ -277,7 +276,13 @@ public class KeyFragment extends Fragment {
 			}
 		}
 	};
-
+ 
+	public native String decodeOpenDoorResult();
+	
+    static {
+        System.loadLibrary("icdcrypto");
+    }
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -2929,8 +2934,8 @@ public class KeyFragment extends Fragment {
                 final byte[] txValue = intent
                         .getByteArrayExtra(UartService.EXTRA_DATA);
 
-                if (txValue[0] == IcdCrypto.getResultJudgement()) {
-                	
+                if (("0x" + Integer.toHexString(txValue[0] & 0xFF)).equals(decodeOpenDoorResult())) {
+
                 	MyDebugLog.e(TAG, "**************receive feedback from bt");
                 	
                     vibrator.vibrate(500);
