@@ -258,7 +258,7 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 			char[] temC = tem.toCharArray();
 			int mid = temC[0];
 			
-			if((mid>=48 && mid<=57) || (mid>=65&&mid<=90) || (mid>=97&&mid<=122)){
+			if(mid >= 33 && mid <= 126){
 				
 			}else{
 				s.delete(temp.length()-1, temp.length());
@@ -268,7 +268,7 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 			char[] temC = temp.toCharArray();
 			int mid = temC[0];
 			
-			if((mid>=48 && mid<=57) || (mid>=65&&mid<=90) || (mid>=97&&mid<=122)){
+			if(mid >= 33 && mid <= 126){
 				
 			}else{
 				s.clear();
