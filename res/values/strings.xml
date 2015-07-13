@@ -304,6 +304,8 @@
     <string name="auth_key_car_Fail5">你已有该区小车</string>
     <string name="auth_key_car_Fail6">用户接收次数超限（一天5次）</string>
     <string name="plass_door">请选择授权门</string>
+    <string name="doorType1">人行门禁授权成功</string>
+    <string name="doorType2">车行门禁授权成功</string>
     
 
 </resources>

@@ -11,6 +11,9 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +26,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.easemob.chat.EMMessage;
+import com.easemob.chat.TextMessageBody;
+import com.easemob.chat.EMMessage.ChatType;
 import com.icloudoor.cloudoor.BaseActivity;
 import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
@@ -170,6 +176,25 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 					int code = response.getInt("code");
 					switch (code) {
 					case 1:
+						
+						
+						List<List<Boolean>> chekbleData = myadapter.getChekbleData();
+						for (int i = 0; i < chekbleData.size(); i++) {
+							for (int j = 0; j < chekbleData.get(i).size(); j++) {
+								if(chekbleData.get(i).get(j)){
+									KeyInfo keyInfo = data.get(i);
+									List<Key> keys = keyInfo.getKeys();
+									Key key = keys.get(j);
+									Intent chatIntent = new Intent();
+									chatIntent.putExtra("zoneName", keyInfo.getAddress());
+									chatIntent.putExtra("zoneType", getString(R.string.doorType2));
+									setResult(Activity.RESULT_OK, chatIntent);  
+					                finish();  
+									break;
+								}
+							}
+						}
+						
 						showToast(R.string.auth_key_success);
 						break;
 					case -101:
@@ -209,6 +234,12 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 		}, "/user/api/authTempCar.do", map, true);
 	}
 	
+	
+	
+	
+	
+	
+	
 //	/user/api/authTempNormal.do
 	public void authTempNormal(Map<String, String> map){
 		getMyJsonObjectRequest(new NetworkInterface() {
@@ -221,6 +252,24 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 					int code = response.getInt("code");
 					if(code==1){
 						showToast(R.string.auth_key_success);
+						List<List<Boolean>> chekbleData = myadapter.getChekbleData();
+						for (int i = 0; i < chekbleData.size(); i++) {
+							for (int j = 0; j < chekbleData.get(i).size(); j++) {
+								if(chekbleData.get(i).get(j)){
+									KeyInfo keyInfo = data.get(i);
+									List<Key> keys = keyInfo.getKeys();
+									Key key = keys.get(j);
+									
+									Intent chatIntent = new Intent();
+									chatIntent.putExtra("zoneName", keyInfo.getAddress());
+									chatIntent.putExtra("zoneType", getString(R.string.doorType1));
+									setResult(Activity.RESULT_OK, chatIntent);  
+					                finish();  
+									
+									break;
+								}
+							}
+						}
 					}else{
 						showToast(R.string.auth_key_Fail);
 					}
@@ -260,6 +309,9 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	
 	
 	
 	
@@ -391,7 +443,7 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 										}
 									}
 									isChekble.get(groupPosition).set(childPosition, true);
-									end_time.setText("Œﬁ ±º‰œﬁ÷∆");
+									end_time.setText("Êó†Êó∂Èó¥ÈôêÂà∂");
 									isCarDoor = true;
 									notifyDataSetChanged();
 								}
@@ -423,12 +475,8 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 		@Override
 		public boolean isChildSelectable(int groupPosition, int childPosition) {
 			// TODO Auto-generated method stub
-			
-			
 			return false;
 		}
-
-		
 		
 	}
 	

@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -121,7 +122,6 @@ public class MessageAdapter extends BaseAdapter {
 	// reference to conversation object in chatsdk
 	private EMConversation conversation;
 	EMMessage[] messages = null;
-
 	private Context context;
 	MyFriendsEn friendsEn;
 	private Map<String, Timer> timers = new Hashtable<String, Timer>();
@@ -356,10 +356,18 @@ public class MessageAdapter extends BaseAdapter {
 					// 这里是文字内容
 					holder.tv = (TextView) convertView
 							.findViewById(R.id.tv_chatcontent);
+					holder.keyauth_sousse = (TextView) convertView
+							.findViewById(R.id.keyauth_sousse);
+					holder.zone_name = (TextView) convertView
+							.findViewById(R.id.zone_name);
 					holder.tv_usernick = (TextView) convertView
 							.findViewById(R.id.tv_userid);
-					holder.card_layout = (LinearLayout) convertView
-							.findViewById(R.id.card_layout);
+					holder.layout_chattx = (FrameLayout) convertView
+							.findViewById(R.id.layout_chattx);
+					holder.layout_card = (FrameLayout) convertView
+							.findViewById(R.id.layout_card);
+					holder.layout_keyauth = (FrameLayout) convertView
+							.findViewById(R.id.layout_keyauth);
 					holder.user_head = (RoundedImageView) convertView
 							.findViewById(R.id.user_head);
 					holder.card_name = (TextView) convertView
@@ -707,10 +715,11 @@ public class MessageAdapter extends BaseAdapter {
 
 			if (type == 3) {
 				holder.chat_content_layout.setVisibility(View.VISIBLE);
+				holder.layout_card.setVisibility(View.VISIBLE);
 				holder.hint_tx.setVisibility(View.GONE);
+				holder.layout_keyauth.setVisibility(View.GONE);
+				holder.layout_chattx.setVisibility(View.GONE);
 				final JSONObject card = message.getJSONObjectAttribute("card");
-				holder.tv.setVisibility(View.GONE);
-				holder.card_layout.setVisibility(View.VISIBLE);
 				ImageLoader.getInstance().displayImage(
 						card.getString("PortraitUrl"), holder.user_head,
 						DisplayImageOptionsUtli.options);
@@ -725,7 +734,7 @@ public class MessageAdapter extends BaseAdapter {
 						+ "   "
 						+ FindDBUtile.getDistrictName(context, DistrictId));
 
-				holder.card_layout.setOnClickListener(new OnClickListener() {
+				holder.layout_card.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -787,12 +796,24 @@ public class MessageAdapter extends BaseAdapter {
 				holder.chat_content_layout.setVisibility(View.GONE);
 				holder.hint_tx.setVisibility(View.VISIBLE);
 				holder.hint_tx.setText(span, BufferType.SPANNABLE);
+			}else if(type == 5 ){
+				holder.chat_content_layout.setVisibility(View.VISIBLE);
+				holder.layout_card.setVisibility(View.GONE);
+				holder.hint_tx.setVisibility(View.GONE);
+				holder.layout_keyauth.setVisibility(View.VISIBLE);
+				holder.layout_chattx.setVisibility(View.GONE);
+				JSONObject keyAuth = message.getJSONObjectAttribute("keyAuth");
+				holder.zone_name.setText(keyAuth.getString("zoneName"));
+				holder.keyauth_sousse.setText(keyAuth.getString("zoneType"));;
 			}
 		} catch (EaseMobException e) {
-			holder.hint_tx.setVisibility(View.GONE);
+			
 			holder.chat_content_layout.setVisibility(View.VISIBLE);
-			holder.card_layout.setVisibility(View.GONE);
-			holder.tv.setVisibility(View.VISIBLE);
+			holder.layout_card.setVisibility(View.GONE);
+			holder.hint_tx.setVisibility(View.GONE);
+			holder.layout_keyauth.setVisibility(View.GONE);
+			holder.layout_chattx.setVisibility(View.VISIBLE);
+			
 			holder.tv.setText(span, BufferType.SPANNABLE);
 
 		} catch (JSONException e) {
@@ -1744,11 +1765,16 @@ public class MessageAdapter extends BaseAdapter {
 		RoundedImageView user_head;
 		TextView card_name;
 		TextView addr_tx;
-		LinearLayout card_layout;
 		
 		TextView hint_tx;
 		RelativeLayout chat_content_layout;
 		RelativeLayout layout_voice;
+		
+		TextView zone_name;
+		TextView keyauth_sousse;
+		FrameLayout layout_chattx;
+		FrameLayout layout_card;
+		FrameLayout layout_keyauth;
 
 	}
 

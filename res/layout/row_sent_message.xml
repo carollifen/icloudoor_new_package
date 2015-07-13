@@ -43,7 +43,6 @@
             app:riv_border_width="1dip"
             app:riv_corner_radius="4dp"
             app:riv_oval="false" />
-       
 
         <FrameLayout
             android:id="@+id/layout_chatcontent"
@@ -52,90 +51,149 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_chat_activity"
             android:layout_toLeftOf="@id/iv_userhead"
-            android:background="@drawable/chatto_bg"
-            android:maxWidth="225.0dip" >
+            android:background="@android:color/transparent" >
 
-            <TextView
-                android:id="@+id/tv_chatcontent"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/layout_keyauth"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:autoLink="web"
-                android:gravity="left|bottom"
-                android:lineSpacingExtra="2dp"
-                android:minHeight="28dp"
-                android:textColor="#000000"
-                android:paddingLeft="8dip"
-                android:layout_marginRight="5dp"
-                android:background="@android:color/transparent"
-                android:textSize="15sp" />
-            
-            
-            <LinearLayout
-                android:id="@+id/card_layout"
-                android:layout_width="226dp"
-                android:layout_height="100dp"
-                android:minWidth="100dp"
-                android:visibility="gone"
-                android:orientation="vertical" >
+                android:background="@drawable/chat_unthkey_right"
+                android:maxWidth="225.0dip"
+                android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="名片"
-                    android:textColor="#333333"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginTop="10dp"
-                    android:textSize="15sp" />
-
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="#cccccc" />
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="40dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                     >
-
-                    <com.icloudoor.cloudoor.widget.RoundedImageView
-                        xmlns:app="http://schemas.android.com/apk/res/com.icloudoor.cloudoor"
-                        android:id="@+id/user_head"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="6dp"
-                        app:riv_border_color="@android:color/transparent"
-                        app:riv_border_width="1dip"
-                        app:riv_corner_radius="10dp"
-                        app:riv_oval="false" />
+                    <ImageView
+                        android:layout_width="29dp"
+                        android:layout_height="29dp"
+                        android:layout_marginLeft="12dp"
+                        android:src="@drawable/chatkey_img" />
 
                     <TextView
-                        android:id="@+id/card_name"
-                        android:layout_alignTop="@+id/user_head"
+                        android:id="@+id/zone_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="8dp"
+                        android:textColor="#ffffff"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/keyauth_sousse"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/keyname_tx_bg"
+                    android:paddingLeft="12dp"
+                    android:textColor="#666666"
+                    android:textSize="13sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_card"
+                style="@style/chat_content_date_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chat_card_bg"
+                android:visibility="gone"
+                android:maxWidth="225.0dip" >
+
+                <LinearLayout
+                    android:id="@+id/card_layout"
+                    android:layout_width="226dp"
+                    android:layout_height="100dp"
+                    android:minWidth="100dp"
+                    android:orientation="vertical" >
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginTop="10dp"
                         android:text="名片"
-                        android:singleLine="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@+id/user_head"
                         android:textColor="#333333"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/addr_tx"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="名片"
-                        android:singleLine="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_below="@+id/card_name"
-                        android:layout_toRightOf="@+id/user_head"
-                        android:textColor="#666666"
-                        android:textSize="15sp" />
-                </RelativeLayout>
-            </LinearLayout>
-            
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:background="#cccccc" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <com.icloudoor.cloudoor.widget.RoundedImageView
+                            xmlns:app="http://schemas.android.com/apk/res/com.icloudoor.cloudoor"
+                            android:id="@+id/user_head"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/icon_boy_110"
+                            android:layout_marginLeft="6dp"
+                            android:layout_marginTop="10dp"
+                            app:riv_border_color="@android:color/transparent"
+                            app:riv_border_width="1dip"
+                            app:riv_corner_radius="10dp"
+                            app:riv_oval="false" />
+
+                        <TextView
+                            android:id="@+id/card_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@+id/user_head"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/user_head"
+                            android:singleLine="true"
+                            android:text="名片"
+                            android:textColor="#333333"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/addr_tx"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/card_name"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/user_head"
+                            android:singleLine="true"
+                            android:text="名片"
+                            android:textColor="#666666"
+                            android:textSize="15sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layout_chattx"
+                style="@style/chat_content_date_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/chatto_bg"
+                android:maxWidth="225.0dip"
+                 >
+
+                <TextView
+                    android:id="@+id/tv_chatcontent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:autoLink="web"
+                    android:background="@android:color/transparent"
+                    android:gravity="left|bottom"
+                    android:lineSpacingExtra="2dp"
+                    android:minHeight="28dp"
+                    android:paddingLeft="8dip"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+            </FrameLayout>
         </FrameLayout>
 
         <ImageView

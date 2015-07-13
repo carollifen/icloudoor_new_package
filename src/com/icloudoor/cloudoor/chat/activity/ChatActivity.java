@@ -137,6 +137,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	public static final int REQUEST_CODE_SELECT_FILE = 24;
 	public static final int REQUEST_CODE_ADD_TO_BLACKLIST = 25;
 	public static final int REQUEST_CODE_CONTACT = 26;
+	public static final int REQUEST_CODE_KEYUNTH = 27;
 
 	public static final int RESULT_CODE_COPY = 1;
 	public static final int RESULT_CODE_DELETE = 2;
@@ -550,10 +551,44 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return card;
+	}
+	
+
+	public void sendKeyAuth(Intent intent){
+		
+		JSONObject keyAuth = getkeyAuthJSONO(intent);
+		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+		setExt(message);
+		if (chatType == CHATTYPE_GROUP){
+		    message.setChatType(ChatType.GroupChat);
+		}else if(chatType == CHATTYPE_CHATROOM){
+		    message.setChatType(ChatType.ChatRoom);
+		}
+		message.setAttribute("type", 5);
+		message.setAttribute("keyAuth", keyAuth);
+		TextMessageBody txtBody = new TextMessageBody("");
+		message.addBody(txtBody);
+		message.setReceipt(toChatUsername);
+		conversation.addMessage(message);
+		adapter.refreshSelectLast();
 		
 	}
+	
+	public JSONObject getkeyAuthJSONO(Intent intent){
+		
+		JSONObject keyAuth = new JSONObject();
+		try {
+			keyAuth.put("zoneName", intent.getStringExtra("zoneName"));
+			keyAuth.put("zoneType", intent.getStringExtra("zoneType"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return keyAuth;
+	}
+	
+	
 	
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -584,9 +619,12 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 				break;
 			}
 		}
-		if (resultCode == RESULT_OK) { 
+		if (resultCode == RESULT_OK) {
 			
-			if(requestCode == REQUEST_CODE_CONTACT){
+			
+			if(requestCode == REQUEST_CODE_KEYUNTH){
+				sendKeyAuth(data);
+			}else if(requestCode == REQUEST_CODE_CONTACT){
 				cardDialog = new BusinessCardDialog(this, R.style.card_dialog);
 				cardDialog.show();
 				cardDialog.setMSGText(data.getStringExtra("Nickname"));
@@ -753,7 +791,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		}else if (id == R.id.btn_auth_key) { 
 			Intent ketIntent = new Intent(this, AuthKeyActivity.class);
 			ketIntent.putExtra("userid", toChatUsername);
-			startActivity(ketIntent);
+			startActivityForResult(ketIntent,REQUEST_CODE_KEYUNTH);
 		}
 	}
 

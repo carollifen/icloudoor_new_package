@@ -45,6 +45,7 @@
                 android:id="@+id/iv_sendPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/signin_local_gallry"
                 android:scaleType="fitCenter" />
 
             <LinearLayout
