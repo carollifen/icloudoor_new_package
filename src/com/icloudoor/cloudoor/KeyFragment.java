@@ -253,6 +253,8 @@ public class KeyFragment extends Fragment {
 	private String cardefault = "-80";
 	private String officedefault = "-100";
 	
+	private IcdCrypto icdCrypto = new IcdCrypto();
+	
 	Handler mHandler = new Handler();
 	
 	public KeyFragment() {
@@ -280,13 +282,7 @@ public class KeyFragment extends Fragment {
 			}
 		}
 	};
- 
-	public native String decodeOpenDoorResult();
-	
-    static {
-        System.loadLibrary("icdcrypto");
-    }
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -2977,7 +2973,7 @@ public class KeyFragment extends Fragment {
                 final byte[] txValue = intent
                         .getByteArrayExtra(UartService.EXTRA_DATA);
 
-                if (("0x" + Integer.toHexString(txValue[0] & 0xFF)).equals(decodeOpenDoorResult())) {
+                if(icdCrypto.decodeOpenDoorResult(txValue) == 1) {
                 	grab();
                 	MyDebugLog.e(TAG, "**************receive feedback from bt");
                 	

@@ -27,7 +27,7 @@ public class UartService extends Service {
 	private final static String TAG = UartService.class.getSimpleName();
 
 	boolean isDebug = DEBUG.isDebug;
-	
+
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
@@ -68,13 +68,9 @@ public class UartService extends Service {
     public static final UUID TX_CHAR_UUID = UUID.fromString("0000fff4-0000-1000-8000-00805f9b34fb");
     
     public static final UUID SIMPLEPROFILE_CHAR2_UUID = UUID.fromString("0000fff2-0000-1000-8000-00805f9b34fb");    // new add for response
+
+    private IcdCrypto icdCrypto = new IcdCrypto();
     
-    public native byte getEncodeByte(byte inByte);
-	
-    static {
-        System.loadLibrary("icdcrypto");
-    }
-   
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -394,9 +390,9 @@ public class UartService extends Service {
 //        RxChar.setValue(value);
         byte[] checkValue;
         checkValue = RxChar.getValue();
-        
-        checkValue[0] = getEncodeByte(checkValue[0]);
 
+        icdCrypto.getEncodeSignal(checkValue);
+        
         RxChar.setValue(checkValue);
     	boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
 
