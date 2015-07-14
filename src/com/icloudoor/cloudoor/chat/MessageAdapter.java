@@ -79,10 +79,12 @@ import com.icloudoor.cloudoor.chat.activity.ShowBigImage;
 import com.icloudoor.cloudoor.chat.activity.ShowNormalFileActivity;
 import com.icloudoor.cloudoor.chat.activity.ShowVideoActivity;
 import com.icloudoor.cloudoor.chat.activity.UsersDetailActivity;
+import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FindDBUtile;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.icloudoor.cloudoor.utli.Uitls;
 import com.icloudoor.cloudoor.widget.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -706,8 +708,10 @@ public class MessageAdapter extends BaseAdapter {
 	private void handleTextMessage(EMMessage message, ViewHolder holder,
 			final int position) {
 		TextMessageBody txtBody = (TextMessageBody) message.getBody();
-		Spannable span = SmileUtils
-				.getSmiledText(context, txtBody.getMessage());
+		
+		Spannable span = EmojiManager.getInstance(context).setEmojiSpan(txtBody.getMessage(), Uitls.dip2px(context, 15));
+//		Spannable span = SmileUtils
+//				.getSmiledText(context, txtBody.getMessage());
 		// 设置内容
 
 		try {

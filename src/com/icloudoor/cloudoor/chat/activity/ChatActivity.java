@@ -41,7 +41,6 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -67,7 +66,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.EMCallBack;
 import com.easemob.EMChatRoomChangeListener;
 import com.easemob.EMError;
 import com.easemob.EMEventListener;
@@ -83,7 +81,6 @@ import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
-import com.easemob.chat.CmdMessageBody;
 import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.LocationMessageBody;
 import com.easemob.chat.NormalFileMessageBody;
@@ -100,13 +97,14 @@ import com.icloudoor.cloudoor.chat.CommonUtils;
 import com.icloudoor.cloudoor.chat.DemoHXSDKHelper;
 import com.icloudoor.cloudoor.chat.ExpandGridView;
 import com.icloudoor.cloudoor.chat.ExpressionAdapter;
-import com.icloudoor.cloudoor.chat.ExpressionPagerAdapter;
 import com.icloudoor.cloudoor.chat.HXSDKHelper;
 import com.icloudoor.cloudoor.chat.ImageUtils;
 import com.icloudoor.cloudoor.chat.MessageAdapter;
-import com.icloudoor.cloudoor.chat.PasteEditText;
 import com.icloudoor.cloudoor.chat.SmileUtils;
 import com.icloudoor.cloudoor.chat.VoicePlayClickListener;
+import com.icloudoor.cloudoor.chat.emoji.EmojiEditText;
+import com.icloudoor.cloudoor.chat.emoji.EmojiGridView.OnEmojiClickListener;
+import com.icloudoor.cloudoor.chat.emoji.ExpressionView;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.widget.BusinessCardDialog;
@@ -156,7 +154,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	private ImageView micImage;
 	private TextView recordingHint;
 	private ListView listView;
-	private PasteEditText mEditTextContent;
+	private EmojiEditText mEditTextContent;
 	private View buttonSetModeKeyboard;
 	private View buttonSetModeVoice;
 	private View buttonSend;
@@ -168,7 +166,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	private View more;
 	private int position;
 	private ClipboardManager clipboard;
-	private ViewPager expressionViewpager;
+//	private ViewPager expressionViewpager;
 	private InputMethodManager manager;
 	private List<String> reslist;
 	private Drawable[] micImages;
@@ -185,6 +183,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 
 	private ImageView iv_emoticons_normal;
 	private ImageView iv_emoticons_checked;
+	private ExpressionView expressionView;
 	private RelativeLayout edittext_layout;
 	private ProgressBar loadmorePB;
 	private boolean isloading;
@@ -224,13 +223,14 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		micImage = (ImageView) findViewById(R.id.mic_image);
 		recordingHint = (TextView) findViewById(R.id.recording_hint);
 		listView = (ListView) findViewById(R.id.list);
-		mEditTextContent = (PasteEditText) findViewById(R.id.et_sendmessage);
+		mEditTextContent = (EmojiEditText) findViewById(R.id.et_sendmessage);
 		buttonSetModeKeyboard = findViewById(R.id.btn_set_mode_keyboard);
 		edittext_layout = (RelativeLayout) findViewById(R.id.edittext_layout);
 		buttonSetModeVoice = findViewById(R.id.btn_set_mode_voice);
 		buttonSend = findViewById(R.id.btn_send);
 		buttonPressToSpeak = findViewById(R.id.btn_press_to_speak);
-		expressionViewpager = (ViewPager) findViewById(R.id.vPager);
+		expressionView = (ExpressionView) findViewById(R.id.expressionView);
+//		expressionViewpager = (ViewPager) findViewById(R.id.vPager);
 		emojiIconContainer = (LinearLayout) findViewById(R.id.ll_face_container);
 		btnContainer = (LinearLayout) findViewById(R.id.ll_btn_container);
 		locationImgview = (ImageView) findViewById(R.id.btn_location);
@@ -242,6 +242,17 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		iv_emoticons_checked.setVisibility(View.INVISIBLE);
 		more = findViewById(R.id.more);
 		edittext_layout.setBackgroundResource(R.drawable.input_bar_bg_normal);
+		
+		
+		expressionView.setOnEmojiClickListener(new OnEmojiClickListener() {
+			
+			@Override
+			public void onClick(String phrase, boolean isDelete) {
+				// TODO Auto-generated method stub
+				mEditTextContent.setText(mEditTextContent.getText().append(phrase));
+				mEditTextContent.setSelection(mEditTextContent.getText().length());
+			}
+		});
 
 		micImages = new Drawable[] { getResources().getDrawable(R.drawable.record_animate_01),
 				getResources().getDrawable(R.drawable.record_animate_02),
@@ -258,13 +269,13 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 				getResources().getDrawable(R.drawable.record_animate_13),
 				getResources().getDrawable(R.drawable.record_animate_14), };
 
-		reslist = getExpressionRes(35);
+		reslist = getExpressionRes(37);
 		List<View> views = new ArrayList<View>();
 		View gv1 = getGridChildView(1);
 		View gv2 = getGridChildView(2);
 		views.add(gv1);
 		views.add(gv2);
-		expressionViewpager.setAdapter(new ExpressionPagerAdapter(views));
+//		expressionViewpager.setAdapter(new ExpressionPagerAdapter(views));
 		edittext_layout.requestFocus();
 		voiceRecorder = new VoiceRecorder(micImageHandler);
 		buttonPressToSpeak.setOnTouchListener(new PressToSpeakListen());

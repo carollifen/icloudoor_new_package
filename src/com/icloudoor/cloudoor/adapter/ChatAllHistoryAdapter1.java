@@ -28,9 +28,11 @@ import com.easemob.util.DateUtils;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.Constant;
 import com.icloudoor.cloudoor.chat.SmileUtils;
+import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.icloudoor.cloudoor.utli.Uitls;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChatAllHistoryAdapter1 extends BaseAdapter {
@@ -122,8 +124,9 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 
 		if (conversation.getMsgCount() != 0) {
 			EMMessage lastMessage = conversation.getLastMessage();
-			holder.message.setText(SmileUtils.getSmiledText(context, getMessageDigest(lastMessage, context)),
-					BufferType.SPANNABLE);
+//			holder.message.setText(SmileUtils.getSmiledText(context, getMessageDigest(lastMessage, context)),
+//					BufferType.SPANNABLE);
+			holder.message.setText(EmojiManager.getInstance(context).setEmojiSpan(getMessageDigest(lastMessage, context), Uitls.dip2px(context, 15)));
 
 			holder.time.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
 			if (lastMessage.direct == EMMessage.Direct.SEND && lastMessage.status == EMMessage.Status.FAIL) {

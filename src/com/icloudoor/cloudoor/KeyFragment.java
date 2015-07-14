@@ -286,7 +286,7 @@ public class KeyFragment extends Fragment {
     static {
         System.loadLibrary("icdcrypto");
     }
-    
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -2974,7 +2974,6 @@ public class KeyFragment extends Fragment {
                         .getByteArrayExtra(UartService.EXTRA_DATA);
 
                 if (("0x" + Integer.toHexString(txValue[0] & 0xFF)).equals(decodeOpenDoorResult())) {
-
                 	grab();
                 	MyDebugLog.e(TAG, "**************receive feedback from bt");
                 	

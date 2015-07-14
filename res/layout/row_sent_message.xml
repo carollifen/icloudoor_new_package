@@ -190,6 +190,7 @@
                     android:gravity="left|bottom"
                     android:lineSpacingExtra="2dp"
                     android:minHeight="28dp"
+                    android:maxWidth="225.0dip"
                     android:paddingLeft="8dip"
                     android:textColor="#000000"
                     android:textSize="15sp" />

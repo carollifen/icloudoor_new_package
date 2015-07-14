@@ -10,7 +10,7 @@
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_bar"
-        android:background="@color/top_bar_normal_bg"
+        android:background="#0065a1"
         android:gravity="center_vertical" >
 
         <include layout="@layout/commom_back_btn" />
@@ -133,7 +133,7 @@
                 android:layout_weight="1"
                 android:gravity="bottom" >
 
-                <com.icloudoor.cloudoor.chat.PasteEditText
+                <com.icloudoor.cloudoor.chat.emoji.EmojiEditText
                     android:id="@+id/et_sendmessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -213,10 +213,11 @@
                 android:orientation="vertical"
                 android:visibility="gone" >
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/vPager"
+                <com.icloudoor.cloudoor.chat.emoji.ExpressionView
+                    android:id="@+id/expressionView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" >
+                </com.icloudoor.cloudoor.chat.emoji.ExpressionView>
             </LinearLayout>
 
             <!-- 图片，表情，名片等按钮 -->
@@ -252,9 +253,9 @@
                                 android:layout_width="59dp"
                                 android:layout_height="59dp"
                                 android:layout_centerInParent="true"
+                                android:background="@drawable/chat_item_bg"
                                 android:clickable="true"
                                 android:onClick="onClick"
-                                android:background="@drawable/chat_item_bg"
                                 android:padding="14dp"
                                 android:src="@drawable/chat_takepic_selector" />
                         </RelativeLayout>
@@ -283,12 +284,11 @@
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_centerInParent="true"
-                                android:padding="14dp"
                                 android:background="@drawable/chat_item_bg"
-                                android:src="@drawable/chat_image_selector"
                                 android:clickable="true"
                                 android:onClick="onClick"
-                                 />
+                                android:padding="14dp"
+                                android:src="@drawable/chat_image_selector" />
                         </RelativeLayout>
 
                         <TextView
@@ -315,10 +315,10 @@
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_centerInParent="true"
+                                android:background="@drawable/chat_item_bg"
                                 android:clickable="true"
                                 android:onClick="onClick"
                                 android:padding="14dp"
-                                android:background="@drawable/chat_item_bg"
                                 android:src="@drawable/chat_location_selector" />
                         </RelativeLayout>
 
@@ -346,10 +346,10 @@
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_centerInParent="true"
+                                android:background="@drawable/chat_item_bg"
                                 android:clickable="true"
                                 android:onClick="onClick"
                                 android:padding="14dp"
-                                android:background="@drawable/chat_item_bg"
                                 android:src="@drawable/chat_video_selector" />
                         </RelativeLayout>
 
@@ -385,12 +385,11 @@
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_centerInParent="true"
-                                android:src="@drawable/chat_file_selector"
+                                android:background="@drawable/chat_item_bg"
                                 android:clickable="true"
                                 android:onClick="onClick"
                                 android:padding="14dp"
-                                android:background="@drawable/chat_item_bg"
-                                 />
+                                android:src="@drawable/chat_file_selector" />
                         </RelativeLayout>
 
                         <TextView
@@ -418,12 +417,11 @@
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_centerInParent="true"
-                                android:src="@drawable/chat_voice_call_selector"
+                                android:background="@drawable/chat_item_bg"
                                 android:clickable="true"
                                 android:onClick="onClick"
                                 android:padding="14dp"
-                                android:background="@drawable/chat_item_bg"
-                                 />
+                                android:src="@drawable/chat_voice_call_selector" />
                         </RelativeLayout>
 
                         <TextView
@@ -451,12 +449,11 @@
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_centerInParent="true"
-                                android:src="@drawable/chat_video_call_selector"
-                                android:padding="14dp"
                                 android:background="@drawable/chat_item_bg"
                                 android:clickable="true"
                                 android:onClick="onClick"
-                                 />
+                                android:padding="14dp"
+                                android:src="@drawable/chat_video_call_selector" />
                         </RelativeLayout>
 
                         <TextView
@@ -466,7 +463,7 @@
                             android:text="@string/attach_video_call"
                             android:textColor="#727171" />
                     </LinearLayout>
-                    
+
                     <LinearLayout
                         android:id="@+id/auth_key_layout"
                         android:layout_width="0dp"
@@ -478,26 +475,23 @@
                         <RelativeLayout
                             android:layout_width="64dp"
                             android:layout_height="64dp" >
-                            
-                            
 
                             <ImageView
                                 android:id="@+id/btn_auth_key"
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_centerInParent="true"
-                                android:src="@drawable/btn_auth_key"
-                                android:padding="14dp"
                                 android:background="@drawable/chat_item_bg"
                                 android:clickable="true"
                                 android:onClick="onClick"
-                                 />
-                            <ImageView 
+                                android:padding="14dp"
+                                android:src="@drawable/btn_auth_key" />
+
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/new_ioc"
                                 android:layout_alignParentRight="true"
-                                />
+                                android:src="@drawable/new_ioc" />
                         </RelativeLayout>
 
                         <TextView
@@ -556,10 +550,10 @@
                 android:id="@+id/recording_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:text="@string/move_up_to_cancel"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="15dp"
+                android:text="@string/move_up_to_cancel"
                 android:textColor="#ffffff"
                 android:textSize="15sp" />
         </RelativeLayout>

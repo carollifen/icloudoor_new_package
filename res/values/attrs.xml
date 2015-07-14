@@ -16,13 +16,12 @@
 -->
 
 <resources>
-    
+
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
         <attr name="border_color" format="color" />
         <attr name="border_overlay" format="boolean" />
     </declare-styleable>
-
     <declare-styleable name="ActionBar">
         <attr name="title" format="string" localization="suggested" />
     </declare-styleable>
@@ -52,6 +51,10 @@
             <enum name="repeat" value="1" />
             <enum name="mirror" value="2" />
         </attr>
+    </declare-styleable>
+        <declare-styleable name="PagerIndicator">
+        <attr name="normalIndicator" format="reference" />
+        <attr name="highlightIndicator" format="reference" />
     </declare-styleable>
 
 </resources>
