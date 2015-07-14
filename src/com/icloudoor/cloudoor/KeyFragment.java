@@ -1,5 +1,7 @@
 package com.icloudoor.cloudoor;
 
+import gov.nist.core.Match;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -99,6 +101,8 @@ import com.icloudoor.cloudoor.UartService;
 import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.cloudoor.ShakeEventManager.OnShakeListener;
 import com.icloudoor.cloudoor.SwitchButton.OnSwitchListener;
+import com.icloudoor.cloudoor.activity.RedActivity;
+import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 
@@ -282,7 +286,7 @@ public class KeyFragment extends Fragment {
     static {
         System.loadLibrary("icdcrypto");
     }
-	
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -2848,6 +2852,41 @@ public class KeyFragment extends Fragment {
 		return intentFilter;
 	}
 	
+	public void grab(){
+//		openDoorDevicdId
+		
+		String doorId = deviceIdTodoorId(openDoorDevicdId);
+		JSONObject parm = new JSONObject();
+		String url = UrlUtils.HOST + "/user/activity/rp/grab.do" + "?sid=" + loadSid() + "&ver="
+				+ version.getVersionName();
+		try {
+			parm.put("doorId", doorId);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		MyRequestBody requestBody = new MyRequestBody(url, parm.toString(),
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						// TODO Auto-generated method stub
+						System.out.println("ºì°üresponse = "+response);
+						startActivity(new Intent(getActivity(), RedActivity.class));
+					}
+
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
+					}
+				});
+		mQueue.add(requestBody);
+	}
+	
 	private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
 
 		public void onReceive(Context context, Intent intent) {
@@ -2936,6 +2975,7 @@ public class KeyFragment extends Fragment {
 
                 if (("0x" + Integer.toHexString(txValue[0] & 0xFF)).equals(decodeOpenDoorResult())) {
 
+                	grab();
                 	MyDebugLog.e(TAG, "**************receive feedback from bt");
                 	
                     vibrator.vibrate(500);
