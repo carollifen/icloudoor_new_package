@@ -2636,12 +2636,14 @@ public class KeyFragment extends Fragment {
 
 												} else if(carStatus.equals("3")){
 													if (getActivity() != null) {
+														openDoorDevicdId = tempCarDoorList.get(deviceIndexToOpen).getAddress();
 														toastShow(getString(R.string.car_already_lend));
 //														Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
 													}
 												} else {
 													// can not open
 													if (getActivity() != null) {
+														openDoorDevicdId = tempCarDoorList.get(deviceIndexToOpen).getAddress();
 														MyDebugLog.e(TAG, "sorry, cannot open");
 														toastShow(getString(R.string.sorry_you_are_in_the_zone));
 //														Toast.makeText(getActivity(), R.string.sorry_you_are_in_the_zone, Toast.LENGTH_SHORT).show();
@@ -2694,6 +2696,7 @@ public class KeyFragment extends Fragment {
 													mOpenDoorState = 2;
 													if (getActivity() != null) {
 														toastShow(getString(R.string.car_already_lend));
+														openDoorDevicdId = tempCarDoorList.get(deviceIndexToOpen).getAddress();
 //														Toast.makeText(getActivity(), R.string.car_already_lend, Toast.LENGTH_SHORT).show();
 													}
 												} else {
@@ -2702,6 +2705,7 @@ public class KeyFragment extends Fragment {
 													if (getActivity() != null) {
 														MyDebugLog.e(TAG, "sorry, cannot open");
 														toastShow(getString(R.string.sorry_you_are_out_the_zone));
+														openDoorDevicdId = tempCarDoorList.get(deviceIndexToOpen).getAddress();
 //														Toast.makeText(getActivity(), R.string.sorry_you_are_out_the_zone, Toast.LENGTH_SHORT).show();
 													}
 												}
