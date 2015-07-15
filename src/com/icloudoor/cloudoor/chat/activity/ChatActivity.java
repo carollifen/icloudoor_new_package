@@ -103,6 +103,7 @@ import com.icloudoor.cloudoor.chat.MessageAdapter;
 import com.icloudoor.cloudoor.chat.SmileUtils;
 import com.icloudoor.cloudoor.chat.VoicePlayClickListener;
 import com.icloudoor.cloudoor.chat.emoji.EmojiEditText;
+import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
 import com.icloudoor.cloudoor.chat.emoji.EmojiGridView.OnEmojiClickListener;
 import com.icloudoor.cloudoor.chat.emoji.ExpressionView;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
@@ -249,7 +250,33 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			@Override
 			public void onClick(String phrase, boolean isDelete) {
 				// TODO Auto-generated method stub
-				mEditTextContent.setText(mEditTextContent.getText().append(phrase));
+				if(isDelete){
+//					mEditTextContent.setText(mEditTextContent.getText().append(phrase));
+					if (!TextUtils.isEmpty(mEditTextContent.getText())) {
+
+						int selectionStart = mEditTextContent.getSelectionStart();
+						if (selectionStart > 0) {
+							String body = mEditTextContent.getText().toString();
+							String tempStr = body.substring(0, selectionStart);
+							int i = tempStr.lastIndexOf("[");
+							if (i != -1) {
+								CharSequence cs = tempStr.substring(i, selectionStart);
+								
+								int isEmoji = EmojiManager.getInstance(ChatActivity.this).getEmojiDrawableId(cs.toString());
+								
+								if (isEmoji!=0)
+									mEditTextContent.getEditableText().delete(i, selectionStart);
+								else
+									mEditTextContent.getEditableText().delete(selectionStart - 1,
+											selectionStart);
+							} else {
+								mEditTextContent.getEditableText().delete(selectionStart - 1, selectionStart);
+							}
+						}
+					}
+				}else{
+					mEditTextContent.setText(mEditTextContent.getText().append(phrase));
+				}
 				mEditTextContent.setSelection(mEditTextContent.getText().length());
 			}
 		});

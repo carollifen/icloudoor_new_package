@@ -77,11 +77,12 @@ public class QRCodeCreateDialog extends Dialog{
         WindowManager.LayoutParams wl = window.getAttributes();  
         wl.gravity = Gravity.BOTTOM;
         wl.width = LayoutParams.MATCH_PARENT;
-        //根据x，y坐标设置窗口需要显示的位置  
+//        根据x，y坐标设置窗口需要显示的位置  
 //        wl.alpha = 0.6f; //设置透明度  
 //        wl.gravity = Gravity.BOTTOM; //设置重力  
         window.setAttributes(wl);  
     }  
+    
     
     public void createQRImage(String url) {
 		try {
