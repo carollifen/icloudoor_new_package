@@ -70,6 +70,7 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 						webView.loadUrl("javascript:"+callback+"("+2+")");
 					}
 				});
+				
 			}
 		});
 		// 设置webview：跳转、开始加载、加载完成、加载失败的逻辑
@@ -157,15 +158,24 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 
 		@JavascriptInterface
 		public void closeWebBrowser() {
-			finish();
+			System.out.println("........closeWebBrowser");
+			runOnUiThread(new Runnable() {
+				public void run() {
+					finish();
+				}
+			});
 		}
 
 		@JavascriptInterface
 		public void snsShare(String parameterJSONStr) {
-			
-			dialog.show();
-			dialog.setClickListener(RedActivity.this);
-			dialog.windowDeploy();
+			System.out.println("........snsShare");
+			runOnUiThread(new Runnable() {
+				public void run() {
+					dialog.show();
+					dialog.setClickListener(RedActivity.this);
+					dialog.windowDeploy();
+				}
+			});
 			JSONObject jsonObject;
 			try {
 				jsonObject = new JSONObject(parameterJSONStr);
@@ -201,6 +211,7 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 
 		}
 		@JavascriptInterface

@@ -2874,6 +2874,7 @@ public class KeyFragment extends Fragment {
 						// TODO Auto-generated method stub
 						System.out.println("ºì°üresponse = "+response);
 						startActivity(new Intent(getActivity(), RedActivity.class));
+						getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 					}
 
 				}, new Response.ErrorListener() {

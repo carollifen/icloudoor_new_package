@@ -63,7 +63,7 @@ public class ShareRedDialog extends Dialog {
 	@Override
 	public void dismiss() {
 		// TODO Auto-generated method stub
-		dismissListener.onDismiss();
 		super.dismiss();
+		dismissListener.onDismiss();
 	}
 }
