@@ -171,9 +171,11 @@ public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 		int useSign = setSign.getInt("useSign", 0);
 
 		if (homePressed == 1 && useSign == 1) {
-			Intent intent = new Intent();
-			intent.setClass(ResetPwdActivity.this, VerifyGestureActivity.class);
-			startActivity(intent);
+			if(System.currentTimeMillis() - homeKeyEvent.getLong("TIME", 0) > 60 * 1000){
+				Intent intent = new Intent();
+				intent.setClass(ResetPwdActivity.this, VerifyGestureActivity.class);
+				startActivity(intent);
+			}
 		}
 	}
 	

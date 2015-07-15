@@ -461,9 +461,11 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
 		int useSign = setSign.getInt("useSign", 0);
 		if (homePressed == 1 && useSign == 1) {
-			Intent intent = new Intent();
-			intent.setClass(ShowPersonalInfo.this, VerifyGestureActivity.class);
-			startActivity(intent);
+			if(System.currentTimeMillis() - homeKeyEvent.getLong("TIME", 0) > 60 * 1000){
+				Intent intent = new Intent();
+				intent.setClass(ShowPersonalInfo.this, VerifyGestureActivity.class);
+				startActivity(intent);
+			}
 		}
 		
 		if(userStatus == 1) {

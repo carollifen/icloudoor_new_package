@@ -129,7 +129,7 @@ public class VerifyGestureActivity extends BaseActivity {
 
 			@Override
 			public void checkedSuccess() {
-				Toast.makeText(VerifyGestureActivity.this, R.string.sign_verify_success, Toast.LENGTH_SHORT).show();
+//				Toast.makeText(VerifyGestureActivity.this, R.string.sign_verify_success, Toast.LENGTH_SHORT).show();
 				
 				SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
 				int homePressed = homeKeyEvent.getInt("homePressed", 0);

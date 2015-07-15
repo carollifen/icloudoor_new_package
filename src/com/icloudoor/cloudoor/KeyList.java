@@ -129,6 +129,8 @@ public class KeyList extends BaseFragmentActivity{
 	
 	boolean isDebug = DEBUG.isDebug;
 	
+	private int homePressed = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -228,6 +230,20 @@ public class KeyList extends BaseFragmentActivity{
 	public void onResume() {
 		super.onResume();
 		Log.e(TAG, "onResume");
+		
+		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
+		homePressed = homeKeyEvent.getInt("homePressed", 0);
+		
+		SharedPreferences setSign = getSharedPreferences("SETTING", 0);
+		int useSign = setSign.getInt("useSign", 0);
+		
+		if(homePressed == 1 && useSign == 1) {
+			if(System.currentTimeMillis() - homeKeyEvent.getLong("TIME", 0) > 60 * 1000){
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
+				startActivity(intent);
+			}
+		}
 	}
 
 	/*

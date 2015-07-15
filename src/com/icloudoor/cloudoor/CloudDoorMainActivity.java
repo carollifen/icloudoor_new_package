@@ -356,16 +356,12 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		EMChat.getInstance().setAppInited();
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
-
-		
 		if(currentVersion >= 18 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)){
 			myThread = new MyThread();
 			myThread.start();
 		}
 
-		
-		
-		 getMyKey();
+		getMyKey();
 	}
 	
 	public void getMyKey(){
@@ -497,9 +493,11 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		if(!(firstLoginShare.getBoolean("FIRSTLOGIN", true)))
 		{	
 			if(homePressed == 1 && useSign == 1) {
-				Intent intent = new Intent();
-				intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
-				startActivity(intent);
+				if(System.currentTimeMillis() - homeKeyEvent.getLong("TIME", 0) > 60 * 1000){
+					Intent intent = new Intent();
+					intent.setClass(getApplicationContext(), VerifyGestureActivity.class);
+					startActivity(intent);
+				}
 			}
 		}
 		mEditor.putBoolean("FIRSTLOGIN", false).commit();
@@ -783,6 +781,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 					SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
 					Editor editor = homeKeyEvent.edit();
 					editor.putInt("homePressed", homePressed);
+					editor.putLong("TIME", System.currentTimeMillis());
 					editor.commit();
 
 				}else if(TextUtils.equals(reason, SYSTEM_DIALOG_REASON_LOCK)){
@@ -791,6 +790,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 					SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
 					Editor editor = homeKeyEvent.edit();
 					editor.putInt("homePressed", homePressed);
+					editor.putLong("TIME", System.currentTimeMillis());
 					editor.commit();
 
 				}

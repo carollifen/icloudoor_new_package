@@ -177,10 +177,14 @@ public class ComplainActivity extends BaseActivity {
 		int usesign = Sign.getInt("useSign", 0);
 
 		if (homePressed == 1 && usesign == 1) {
-			Intent intent = new Intent();
-			intent.setClass(ComplainActivity.this, VerifyGestureActivity.class);
-			startActivity(intent);
-		}	}
+			if(System.currentTimeMillis() - homeKeyEvent.getLong("TIME", 0) > 60 * 1000){
+				Intent intent = new Intent();
+				intent.setClass(ComplainActivity.this, VerifyGestureActivity.class);
+				startActivity(intent);
+			}	
+		}	
+	}
+	
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
