@@ -2,7 +2,7 @@ package com.icloudoor.cloudoor;
 
 public class IcdCrypto {
 
-	public native void getEncodeSignal(byte[] inBytes);
+	public native byte getEncodeSignal(byte[] inBytes);
 	public native int decodeOpenDoorResult(byte[] inBytes);
 
 	static {

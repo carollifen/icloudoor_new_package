@@ -391,12 +391,12 @@ public class UartService extends Service {
         byte[] checkValue;
         checkValue = RxChar.getValue();
 
-        icdCrypto.getEncodeSignal(checkValue);
-        
+        checkValue[0] = icdCrypto.getEncodeSignal(checkValue);
+
         RxChar.setValue(checkValue);
     	boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
 
-        MyDebugLog.d("test for write", "write TXchar - status=" + status);  
+        MyDebugLog.e("test for write", "write TXchar - status=" + String.valueOf(status));  
     }
     
     private void showMessage(String msg) {

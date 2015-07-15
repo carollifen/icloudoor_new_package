@@ -254,7 +254,7 @@ public class KeyFragment extends Fragment {
 	private String officedefault = "-100";
 	
 	private IcdCrypto icdCrypto = new IcdCrypto();
-	
+
 	Handler mHandler = new Handler();
 	
 	public KeyFragment() {
