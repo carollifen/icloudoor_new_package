@@ -977,7 +977,7 @@ public class KeyFragment extends Fragment {
 					value.put("zoneId", doorData.getString("zoneId"));
 					value.put("doorName", doorData.getString("doorName"));
 					value.put("doorId", doorData.getString("doorId"));
-					value.put("deviceId", doorData.getString("deviceId"));
+					value.put("deviceId", doorData.getString("deviceId").toUpperCase());
 					value.put("doorType", doorData.getString("doorType"));
 					value.put("authFrom", doorData.getString("authFrom"));
 					value.put("authTo", doorData.getString("authTo"));
