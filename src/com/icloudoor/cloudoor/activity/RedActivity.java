@@ -56,6 +56,7 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 		webView = (WebView) findViewById(R.id.webView);
 		webView.setFocusable(true);
 		webView.requestFocus();
+		webView.cancelLongPress();
 		// webView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
 
 		webView.setBackgroundResource(R.color.transparent);// transparent是定义在color里的颜色值，可以为黑色
@@ -66,10 +67,9 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onDismiss() {
 				// TODO Auto-generated method stub
-				System.out.println("*****javascript:" + callback + "(2)");
 				runOnUiThread(new Runnable() {
 					public void run() {
-						webView.loadUrl("javascript:" + callback + "(" + 2
+						webView.loadUrl("javascript:" + callback + "(" + 1
 								+ ")");
 					}
 				});
@@ -134,6 +134,7 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 			public void onComplete(SHARE_MEDIA arg0, int arg1,
 					SocializeEntity arg2) {
 				if (arg1 == 200) {
+					dialog.dismiss();
 					System.out.println("share Success");
 				}
 			}
@@ -170,7 +171,6 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 
 		@JavascriptInterface
 		public void closeWebBrowser() {
-			System.out.println("........closeWebBrowser");
 			runOnUiThread(new Runnable() {
 				public void run() {
 					finish();
@@ -181,9 +181,6 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 		@JavascriptInterface
 		public void snsShare(String parameterJSONStr) {
 			JSONObject jsonObject;
-			
-//			 {"callback":"cbSnsShare","imgUrl":"http:\/\/icloudoor-h5.b0.upaiyun.com\/img\/logo_110_110.jpg","title":"号外号外，用手机开门还能拿微信现金红包","linkUrl":"http:\/\/icloudoor-h5.b0.upaiyun.com\/redPacketShare.html","description":""}
-
 			
 			try {
 				jsonObject = new JSONObject(parameterJSONStr);

@@ -103,6 +103,7 @@ import com.icloudoor.cloudoor.ShakeEventManager.OnShakeListener;
 import com.icloudoor.cloudoor.SwitchButton.OnSwitchListener;
 import com.icloudoor.cloudoor.activity.RedActivity;
 import com.icloudoor.cloudoor.http.MyRequestBody;
+import com.icloudoor.cloudoor.icdcrypto.ICDCrypto;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 
@@ -252,7 +253,6 @@ public class KeyFragment extends Fragment {
 	private String mandefault = "-85";
 	private String cardefault = "-80";
 	private String officedefault = "-100";
-	
 	private IcdCrypto icdCrypto = new IcdCrypto();
 
 	Handler mHandler = new Handler();
@@ -2988,7 +2988,7 @@ public class KeyFragment extends Fragment {
                 final byte[] txValue = intent
                         .getByteArrayExtra(UartService.EXTRA_DATA);
 
-                if(icdCrypto.decodeOpenDoorResult(txValue) == 1) {
+                if(ICDCrypto.checkIfOpenDoorSuccess(txValue)) {
                 	grab();
                 	MyDebugLog.e(TAG, "**************receive feedback from bt");
                 	

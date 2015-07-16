@@ -3,6 +3,8 @@ package com.icloudoor.cloudoor;
 import java.util.List;
 import java.util.UUID;
 
+import com.icloudoor.cloudoor.icdcrypto.ICDCrypto;
+
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -391,9 +393,9 @@ public class UartService extends Service {
         byte[] checkValue;
         checkValue = RxChar.getValue();
 
-        checkValue[0] = icdCrypto.getEncodeSignal(checkValue);
-
-        RxChar.setValue(checkValue);
+//        checkValue[0] = icdCrypto.getEncodeSignal(checkValue);
+        
+        RxChar.setValue(ICDCrypto.encodeDoorOpenSignal(checkValue));
     	boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
 
         MyDebugLog.e("test for write", "write TXchar - status=" + String.valueOf(status));  

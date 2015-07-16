@@ -15,7 +15,6 @@ public class ShareRedDialog extends Dialog {
 	
 	LinearLayout weixin_layout;
 	LinearLayout weixin_circle_layout;
-
 	public ShareRedDialog(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -66,4 +65,5 @@ public class ShareRedDialog extends Dialog {
 		super.dismiss();
 		dismissListener.onDismiss();
 	}
+	
 }

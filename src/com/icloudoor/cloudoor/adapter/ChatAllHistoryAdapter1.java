@@ -146,6 +146,7 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 		switch (message.getType()) {
 		case LOCATION: 
 			if (message.direct == EMMessage.Direct.RECEIVE) {
+//				message.get
 				digest = getStrng(context, R.string.location_recv);
 				digest = String.format(digest, message.getFrom());
 				return digest;
