@@ -2873,8 +2873,22 @@ public class KeyFragment extends Fragment {
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
 						System.out.println("ºì°üresponse = "+response);
-						startActivity(new Intent(getActivity(), RedActivity.class));
-						getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+//						{"data":false,"message":"successful","sid":"0641983572e74fc7abf73edb0fe51749","code":1}
+						try {
+							int code =response.getInt("code");
+							if(code==1){
+								boolean data = response.getBoolean("data");
+								if(data){
+									startActivity(new Intent(getActivity(), RedActivity.class));
+									getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+								}
+							}else{
+								activity.showToast(R.string.network_error);
+							}
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 
 				}, new Response.ErrorListener() {

@@ -155,7 +155,7 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 			break;
 		case IMAGE: 
 			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
-			digest = getStrng(context, R.string.picture) + imageBody.getFileName();
+			digest = getStrng(context, R.string.picture);
 			break;
 		case VOICE:
 			digest = getStrng(context, R.string.voice);

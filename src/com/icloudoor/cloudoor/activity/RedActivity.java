@@ -25,12 +25,13 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMediaObject;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
-public class RedActivity extends BaseActivity implements OnClickListener{
+public class RedActivity extends BaseActivity implements OnClickListener {
 
 	private WebView webView;
 	private WebSettings webSettings;
@@ -43,13 +44,14 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 	private SnsPostListener mSnsPostListener;
 	ShareRedDialog dialog;
 	ClipboardManager clip;
-	String callback ;
+	String callback;
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_red);
-		clip = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+		clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		dialog = new ShareRedDialog(this, R.style.mydialog);
 		webView = (WebView) findViewById(R.id.webView);
 		webView.setFocusable(true);
@@ -60,17 +62,18 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 		webView.setBackgroundColor(0);// 以下这两行代码就是设置透明了
 		webView.getBackground().setAlpha(150);// 这个是设置透明度
 		dialog.setOnDismiss(new OnDismissListener() {
-			
+
 			@Override
 			public void onDismiss() {
 				// TODO Auto-generated method stub
-				System.out.println("*****javascript:"+callback+"(2)");
+				System.out.println("*****javascript:" + callback + "(2)");
 				runOnUiThread(new Runnable() {
 					public void run() {
-						webView.loadUrl("javascript:"+callback+"("+2+")");
+						webView.loadUrl("javascript:" + callback + "(" + 2
+								+ ")");
 					}
 				});
-				
+
 			}
 		});
 		// 设置webview：跳转、开始加载、加载完成、加载失败的逻辑
@@ -78,7 +81,7 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				webView.loadUrl(url); 
+				webView.loadUrl(url);
 				return true;
 			}
 
@@ -112,6 +115,11 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 
 	}
 
+	String imgUrl;
+	String linkUrl;
+	String title;
+	String description;
+
 	public void share() {
 
 		wxHandler = new UMWXHandler(this, appID, appSecret);
@@ -137,22 +145,26 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 			}
 
 		};
+		// UMWXHandler handler = new UMWXHandler(context, appid)
 
-		mController = UMServiceFactory.getUMSocialService("com.umeng.share");
-//		mController.registerListener(mSnsPostListener);
-//		mController.getConfig().removePlatform(SHARE_MEDIA.SINA,
-//				SHARE_MEDIA.TENCENT);
+		mController = UMServiceFactory.getUMSocialService("myshare");
+		// mController.registerListener(mSnsPostListener);
+		// mController.getConfig().removePlatform(SHARE_MEDIA.SINA,
+		// SHARE_MEDIA.TENCENT);
 	}
 
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-//		mController.unregisterListener(mSnsPostListener);
-//		ssoHandler.isClientInstalled
+		// mController.unregisterListener(mSnsPostListener);
+		// ssoHandler.isClientInstalled
 		UMSsoHandler ssoHandler = null;
-		
+
 	}
+
+	CircleShareContent circleMedia;
+	WeiXinShareContent weiXinleMedia;
 
 	private class ObjectForJS {
 
@@ -168,7 +180,38 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 
 		@JavascriptInterface
 		public void snsShare(String parameterJSONStr) {
-			System.out.println("........snsShare");
+			JSONObject jsonObject;
+			
+//			 {"callback":"cbSnsShare","imgUrl":"http:\/\/icloudoor-h5.b0.upaiyun.com\/img\/logo_110_110.jpg","title":"号外号外，用手机开门还能拿微信现金红包","linkUrl":"http:\/\/icloudoor-h5.b0.upaiyun.com\/redPacketShare.html","description":""}
+
+			
+			try {
+				jsonObject = new JSONObject(parameterJSONStr);
+				imgUrl = jsonObject.getString("imgUrl"); // 图片链接
+				linkUrl = jsonObject.getString("linkUrl"); // 用户点击后的跳转链接
+				title = jsonObject.getString("title"); // 标题
+				description = jsonObject.getString("description"); // 描述
+				callback = jsonObject.getString("callback"); // 回调方法
+
+				circleMedia = new CircleShareContent();
+				circleMedia.setShareContent(description);
+				circleMedia.setTitle(title);
+				circleMedia.setShareImage(new UMImage(RedActivity.this, imgUrl));
+				circleMedia.setTargetUrl(linkUrl);
+				mController.setShareMedia(circleMedia);
+				
+				weiXinleMedia = new WeiXinShareContent();
+				weiXinleMedia.setShareContent(description);
+				weiXinleMedia.setTitle(title);
+				weiXinleMedia.setShareImage(new UMImage(RedActivity.this, imgUrl));
+				weiXinleMedia.setTargetUrl(linkUrl);
+				mController.setShareMedia(weiXinleMedia);
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			runOnUiThread(new Runnable() {
 				public void run() {
 					dialog.show();
@@ -176,46 +219,10 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 					dialog.windowDeploy();
 				}
 			});
-			JSONObject jsonObject;
-			try {
-				jsonObject = new JSONObject(parameterJSONStr);
-				String imgUrl = jsonObject.getString("imgUrl"); // 图片链接
-				String linkUrl = jsonObject.getString("linkUrl"); // 用户点击后的跳转链接
-				String title = jsonObject.getString("title"); // 标题
-				String description = jsonObject.getString("description"); // 描述
-				callback = jsonObject.getString("callback"); // 回调方法
-				
-				
-				
-				CircleShareContent circleMedia = new CircleShareContent();
-				circleMedia.setShareContent(description);
-				circleMedia.setTitle(title);
-				circleMedia
-						.setShareImage(new UMImage(RedActivity.this, imgUrl));
-				circleMedia.setTargetUrl(linkUrl);
-				
-				mController.setShareMedia(circleMedia);
-				
-				
-				WeiXinShareContent weiXinleMedia = new WeiXinShareContent();
-				weiXinleMedia.setShareContent(description);
-				weiXinleMedia.setTitle(title);
-				weiXinleMedia.setShareImage(new UMImage(RedActivity.this,
-						imgUrl));
-				weiXinleMedia.setTargetUrl(linkUrl);
-				mController.setShareMedia(weiXinleMedia);
-				
-//				SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
-//				mController.openShare(RedActivity.this, false);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+		}  
 
-		}
 		@JavascriptInterface
-		public void copyToClipboard(String parameterJSONStr){
+		public void copyToClipboard(String parameterJSONStr) {
 			try {
 				JSONObject object = new JSONObject(parameterJSONStr);
 				String text = object.getString("text");
@@ -224,7 +231,7 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
 
@@ -233,10 +240,13 @@ public class RedActivity extends BaseActivity implements OnClickListener{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.weixin_layout:
+			
 			mController.postShare(this, SHARE_MEDIA.WEIXIN, mSnsPostListener);
 			break;
 		case R.id.weixin_circle_layout:
-			mController.postShare(this, SHARE_MEDIA.WEIXIN_CIRCLE, mSnsPostListener);
+			
+			mController.postShare(this, SHARE_MEDIA.WEIXIN_CIRCLE,
+					mSnsPostListener);
 			break;
 
 		default:
