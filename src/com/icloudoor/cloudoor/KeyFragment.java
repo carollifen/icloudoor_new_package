@@ -253,7 +253,6 @@ public class KeyFragment extends Fragment {
 	private String mandefault = "-85";
 	private String cardefault = "-80";
 	private String officedefault = "-100";
-	private IcdCrypto icdCrypto = new IcdCrypto();
 
 	Handler mHandler = new Handler();
 	
@@ -970,7 +969,7 @@ public class KeyFragment extends Fragment {
 			ContentValues value = new ContentValues();
 			
 			if(doorData.getString("deviceId").length() > 0){
-				if(!hasData(mKeyDB, doorData.getString("deviceId"))){    //insert the new key
+				if(!hasData(mKeyDB, doorData.getString("deviceId").toUpperCase())){    //insert the new key
 					
 					newNum++;
 					
@@ -1020,7 +1019,7 @@ public class KeyFragment extends Fragment {
 							JSONObject doorData = (JSONObject) doorAuths.get(index);
 							
 							if(doorData.getString("deviceId").length() > 0){
-								if(doorData.getString("deviceId").equals(deviceId)){
+								if((doorData.getString("deviceId")).toUpperCase().equals(deviceId)){
 									keepKey = true;
 									break;
 								}
