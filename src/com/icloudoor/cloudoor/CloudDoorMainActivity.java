@@ -1152,12 +1152,12 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 								
 							} else if (response.getInt("code") == -2) {
 								
-								Toast.makeText(CloudDoorMainActivity.this, R.string.not_login, Toast.LENGTH_SHORT).show();
-								
-								Intent intent = new Intent();
-								intent.setClass(CloudDoorMainActivity.this, Login.class);
-								startActivity(intent);
-								CloudDoorMainActivity.this.finish();
+//								Toast.makeText(CloudDoorMainActivity.this, R.string.not_login, Toast.LENGTH_SHORT).show();
+//								
+//								Intent intent = new Intent();
+//								intent.setClass(CloudDoorMainActivity.this, Login.class);
+//								startActivity(intent);
+//								CloudDoorMainActivity.this.finish();
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();
