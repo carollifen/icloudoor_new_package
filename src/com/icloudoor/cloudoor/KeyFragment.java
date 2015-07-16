@@ -1014,7 +1014,7 @@ public class KeyFragment extends Fragment {
 					
 					do{
 						keepKey = false;
-						String deviceId = mCursor.getString(deviceIdIndex);
+						String deviceId = mCursor.getString(deviceIdIndex).toUpperCase();
 						for (int index = 0; index < doorAuths.length(); index++) {
 							JSONObject doorData = (JSONObject) doorAuths.get(index);
 							
