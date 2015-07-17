@@ -153,7 +153,7 @@ public class KeyFragment extends Fragment {
 	
 	public char centigrade = 176;
 	
-	private String HOST = "http://api.thinkpage.cn/v2/weather/all.json?";
+	private String HOST = "https://api.thinkpage.cn/v2/weather/all.json?";
 	private URL weatherURL;
 	private String Key = "XSI7AKYYBY";
 	private RequestQueue mQueue;
@@ -449,6 +449,9 @@ public class KeyFragment extends Fragment {
 			para.height = screenWidth - 98*2;
 		}
 		
+//		para.width = screenWidth - dip2px(160);
+//		para.height = screenWidth - dip2px(160);
+		
 		BtnOpenDoor.setLayoutParams(para);
 		
 		BtnOpenDoor.setOnClickListener(new OnClickListener(){
@@ -570,6 +573,11 @@ public class KeyFragment extends Fragment {
 		
 		return view;
 	}
+	
+//	public int dip2px(float dpValue) {
+//		final float scale = getResources().getDisplayMetrics().density;
+//		return (int) (dpValue * scale + 0.5f);
+//	}
 	
 	public void configRssiData() {
 		manRssi = OnlineConfigAgent.getInstance().getConfigParams(getActivity(), "manDoorRssi");
@@ -1313,6 +1321,9 @@ public class KeyFragment extends Fragment {
 	@SuppressLint("SimpleDateFormat")
 	public void requestWeatherData() {
 		
+        DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		final int screenWidth = dm.widthPixels;
 		final Calendar c =  Calendar.getInstance();
 		c.setTimeZone(TimeZone.getTimeZone("GMT+8:00")); 
 		
@@ -1563,6 +1574,9 @@ public class KeyFragment extends Fragment {
 								weatherStatus.setTextSize(13);
 							} else {
 								weatherTemperature.setText(getString(R.string.weather_not_available));
+								if(screenWidth <= 480)
+									weatherTemperature.setTextSize(12);
+								else
 								weatherTemperature.setTextSize(16);
 							}
 						} catch (JSONException e) {
@@ -1577,6 +1591,9 @@ public class KeyFragment extends Fragment {
 						if(getActivity() != null){
 							toastShow(getString(R.string.network_error));
 							weatherTemperature.setText(getString(R.string.weather_not_available));
+							if(screenWidth <= 480)
+								weatherTemperature.setTextSize(12);
+							else
 							weatherTemperature.setTextSize(16);
 						}
 //							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
@@ -1593,6 +1610,9 @@ public class KeyFragment extends Fragment {
 			
 			if(loadWeather.getString("Day1Temp", "N/A").equals("N/A")){
 				weatherTemperature.setText(getString(R.string.weather_not_available));
+				if(screenWidth <= 480)
+					weatherTemperature.setTextSize(12);
+				else
 				weatherTemperature.setTextSize(16);
 			}else{
 				weatherTemperature.setText(loadWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade)); //TODO

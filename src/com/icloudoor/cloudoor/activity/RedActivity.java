@@ -25,7 +25,6 @@ import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
 import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMediaObject;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
@@ -57,11 +56,9 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 		webView.setFocusable(true);
 		webView.requestFocus();
 		webView.cancelLongPress();
-		// webView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
-
-		webView.setBackgroundResource(R.color.transparent);// transparent是定义在color里的颜色值，可以为黑色
-		webView.setBackgroundColor(0);// 以下这两行代码就是设置透明了
-		webView.getBackground().setAlpha(150);// 这个是设置透明度
+		webView.setBackgroundResource(R.color.transparent);
+		webView.setBackgroundColor(0);
+		webView.getBackground().setAlpha(150);
 		dialog.setOnDismiss(new OnDismissListener() {
 
 			@Override
@@ -76,7 +73,6 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 
 			}
 		});
-		// 设置webview：跳转、开始加载、加载完成、加载失败的逻辑
 		webView.setWebViewClient(new WebViewClient() {
 
 			@Override
@@ -98,7 +94,6 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
-				// Log.d(MYTAG, " onReceivedError ");
 				destroyDialog();
 			}
 		});
@@ -114,6 +109,7 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 		share();
 
 	}
+
 
 	String imgUrl;
 	String linkUrl;
@@ -156,10 +152,7 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
-		// mController.unregisterListener(mSnsPostListener);
-		// ssoHandler.isClientInstalled
 		UMSsoHandler ssoHandler = null;
 
 	}
@@ -181,29 +174,31 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 		@JavascriptInterface
 		public void snsShare(String parameterJSONStr) {
 			JSONObject jsonObject;
-			
+
 			try {
 				jsonObject = new JSONObject(parameterJSONStr);
-				imgUrl = jsonObject.getString("imgUrl"); // 图片链接
-				linkUrl = jsonObject.getString("linkUrl"); // 用户点击后的跳转链接
-				title = jsonObject.getString("title"); // 标题
-				description = jsonObject.getString("description"); // 描述
-				callback = jsonObject.getString("callback"); // 回调方法
+				imgUrl = jsonObject.getString("imgUrl"); 
+				linkUrl = jsonObject.getString("linkUrl"); 
+				title = jsonObject.getString("title"); 
+				description = jsonObject.getString("description");
+				callback = jsonObject.getString("callback");
 
 				circleMedia = new CircleShareContent();
 				circleMedia.setShareContent(description);
 				circleMedia.setTitle(title);
-				circleMedia.setShareImage(new UMImage(RedActivity.this, imgUrl));
+				circleMedia
+						.setShareImage(new UMImage(RedActivity.this, imgUrl));
 				circleMedia.setTargetUrl(linkUrl);
 				mController.setShareMedia(circleMedia);
-				
+
 				weiXinleMedia = new WeiXinShareContent();
 				weiXinleMedia.setShareContent(description);
 				weiXinleMedia.setTitle(title);
-				weiXinleMedia.setShareImage(new UMImage(RedActivity.this, imgUrl));
+				weiXinleMedia.setShareImage(new UMImage(RedActivity.this,
+						imgUrl));
 				weiXinleMedia.setTargetUrl(linkUrl);
 				mController.setShareMedia(weiXinleMedia);
-				
+
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -216,14 +211,14 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 					dialog.windowDeploy();
 				}
 			});
-		}  
+		}
 
 		@JavascriptInterface
 		public void copyToClipboard(String parameterJSONStr) {
 			try {
 				JSONObject object = new JSONObject(parameterJSONStr);
 				String text = object.getString("text");
-				clip.setText(text); // 复制
+				clip.setText(text); 
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -237,11 +232,9 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.weixin_layout:
-			
 			mController.postShare(this, SHARE_MEDIA.WEIXIN, mSnsPostListener);
 			break;
 		case R.id.weixin_circle_layout:
-			
 			mController.postShare(this, SHARE_MEDIA.WEIXIN_CIRCLE,
 					mSnsPostListener);
 			break;

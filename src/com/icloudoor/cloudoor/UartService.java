@@ -71,8 +71,6 @@ public class UartService extends Service {
     
     public static final UUID SIMPLEPROFILE_CHAR2_UUID = UUID.fromString("0000fff2-0000-1000-8000-00805f9b34fb");    // new add for response
 
-    private IcdCrypto icdCrypto = new IcdCrypto();
-    
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {

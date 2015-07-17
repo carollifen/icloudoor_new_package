@@ -356,16 +356,12 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		EMChat.getInstance().setAppInited();
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
-
-		
 		if(currentVersion >= 18 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)){
 			myThread = new MyThread();
 			myThread.start();
 		}
 
-		
-		
-		 getMyKey();
+		getMyKey();
 	}
 	
 	public void getMyKey(){

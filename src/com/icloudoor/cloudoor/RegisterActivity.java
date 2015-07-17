@@ -119,11 +119,22 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 		ETInputCertiCode = (EditText) findViewById(R.id.regi_input_certi_code);
 		TVGetCertiCode = (TextView) findViewById(R.id.btn_regi_get_certi_code);
 		TVNextStep = (TextView) findViewById(R.id.btn_regi_next_step);
+		
+		sendText = (TextView) findViewById(R.id.send_text);
 
 		// for new ui
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth = dm.widthPixels;
+		
+		sendText.setWidth(screenWidth - 48*2);
+		
+		if(screenWidth <= 480) {
+			ETInputPhoneNum.setTextSize(12);
+			ETInputCertiCode.setTextSize(12);
+			TVGetCertiCode.setTextSize(12);
+			sendText.setTextSize(9);
+		}
 		
 		phoneLayout = (RelativeLayout) findViewById(R.id.phone_input_get_certi_layout);
 		phoneInputLayout = (RelativeLayout) findViewById(R.id.phone_input_layout);
@@ -158,10 +169,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 			
 		});
 		//
-		
-		sendText = (TextView) findViewById(R.id.send_text);
-		sendText.setWidth(screenWidth - 48*2);
-		
+
 		checkBox = (CheckBox) findViewById(R.id.check_box);
 		
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener(){

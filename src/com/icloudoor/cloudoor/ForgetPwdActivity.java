@@ -99,6 +99,8 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 	private String phoneNum;
 	private String password;
 	
+	private TextView sendText;
+	
 	private boolean networkStatus;
 	
 	boolean isDebug = DEBUG.isDebug;
@@ -126,10 +128,21 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 		TVGotoNext = (TextView) findViewById(R.id.btn_regi_next_step);
 		TVGetCertiCode = (TextView) findViewById(R.id.btn_regi_get_certi_code);
 		
+		sendText = (TextView) findViewById(R.id.send_text);
+		
 		// for new ui
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth = dm.widthPixels;
+		
+		sendText.setWidth(screenWidth - 48*2);
+		
+		if(screenWidth <= 480) {
+			ETInputPhoneNum.setTextSize(12);
+			ETInputCertiCode.setTextSize(12);
+			TVGetCertiCode.setTextSize(12);
+			sendText.setTextSize(9);
+		}
 		
 		phoneLayout = (RelativeLayout) findViewById(R.id.phone_input_get_certi_layout);
 		phoneInputLayout = (RelativeLayout) findViewById(R.id.phone_input_layout);
