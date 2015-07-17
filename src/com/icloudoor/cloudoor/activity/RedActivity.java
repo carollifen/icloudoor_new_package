@@ -13,6 +13,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 
 import com.icloudoor.cloudoor.BaseActivity;
 import com.icloudoor.cloudoor.R;
@@ -44,12 +45,15 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 	ShareRedDialog dialog;
 	ClipboardManager clip;
 	String callback;
+	ImageView close_red;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_red);
+		close_red = (ImageView) findViewById(R.id.close_red);
+		close_red.setOnClickListener(this);
 		clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		dialog = new ShareRedDialog(this, R.style.mydialog);
 		webView = (WebView) findViewById(R.id.webView);
@@ -66,8 +70,9 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 				// TODO Auto-generated method stub
 				runOnUiThread(new Runnable() {
 					public void run() {
-						webView.loadUrl("javascript:" + callback + "(" + 1
-								+ ")");
+						close_red.setVisibility(View.VISIBLE);
+//						webView.loadUrl("javascript:" + callback + "(" + 1
+//								+ ")");
 					}
 				});
 
@@ -207,6 +212,7 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 			runOnUiThread(new Runnable() {
 				public void run() {
 					dialog.show();
+					close_red.setVisibility(View.GONE);
 					dialog.setClickListener(RedActivity.this);
 					dialog.windowDeploy();
 				}
@@ -237,6 +243,9 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 		case R.id.weixin_circle_layout:
 			mController.postShare(this, SHARE_MEDIA.WEIXIN_CIRCLE,
 					mSnsPostListener);
+			break;
+		case R.id.close_red:
+			finish();
 			break;
 
 		default:
