@@ -3008,7 +3008,15 @@ public class KeyFragment extends Fragment {
                         .getByteArrayExtra(UartService.EXTRA_DATA);
 
                 if(ICDCrypto.checkIfOpenDoorSuccess(txValue)) {
-                	grab();
+                	
+                	if (getActivity() != null) {
+            			ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            			if (networkInfo != null) {
+            				grab();
+            			}
+            		}
+                	
                 	MyDebugLog.e(TAG, "**************receive feedback from bt");
                 	
                     vibrator.vibrate(500);
