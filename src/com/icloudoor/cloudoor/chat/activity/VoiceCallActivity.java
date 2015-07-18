@@ -14,6 +14,7 @@
 
 package com.icloudoor.cloudoor.chat.activity;
 
+import java.util.List;
 import java.util.UUID;
 
 import android.media.AudioManager;
@@ -39,7 +40,9 @@ import com.easemob.chat.EMCallStateChangeListener;
 import com.easemob.chat.EMChatManager;
 import com.easemob.exceptions.EMServiceNotReadyException;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
+import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
@@ -69,8 +72,6 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 	private boolean isAnswered;
 	private LinearLayout voiceContronlLayout;
 	
-	String nickName;
-	String portraitUrl;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,14 +108,22 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 		addCallStateListener();
 		msgid = UUID.randomUUID().toString();
 		username = getIntent().getStringExtra("username");
-		nickName = getIntent().getStringExtra("nickName");
-		portraitUrl = getIntent().getStringExtra("portraitUrl");
 		// 语音电话是否为接收的
 		isInComingCall = getIntent().getBooleanExtra("isComingCall", false);
 
+		
 		// 设置通话�?
-		nickTextView.setText(nickName);
-		ImageLoader.getInstance().displayImage(portraitUrl, swing_card, DisplayImageOptionsUtli.options);
+		FriendDaoImpl daoImpl = new FriendDaoImpl(this);
+		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{username}, null, null, null, null);
+		if(list!=null && list.size()>0){
+			MyFriendsEn friendsEn = list.get(0);
+			nickName = friendsEn.getNickname();
+			portraitUrl = friendsEn.getPortraitUrl();
+			nickTextView.setText(nickName);
+			ImageLoader.getInstance().displayImage(portraitUrl, swing_card, DisplayImageOptionsUtli.options);
+		}else{
+			Toast.makeText(this, R.string.notfriend_1, Toast.LENGTH_SHORT).show();
+		}
 		if (!isInComingCall) {// 拨打电话
 			soundPool = new SoundPool(1, AudioManager.STREAM_RING, 0);
 			outgoing = soundPool.load(this, R.raw.outgoing, 1);

@@ -13,6 +13,7 @@
  */
 package com.icloudoor.cloudoor.chat.activity;
 
+import java.util.List;
 import java.util.UUID;
 
 import android.media.AudioManager;
@@ -42,445 +43,483 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMVideoCallHelper;
 import com.easemob.exceptions.EMServiceNotReadyException;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
+import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class VideoCallActivity extends CallActivity implements OnClickListener {
 
-    private SurfaceView localSurface;
-    private SurfaceHolder localSurfaceHolder;
-    private static SurfaceView oppositeSurface;
-    private SurfaceHolder oppositeSurfaceHolder;
+	private SurfaceView localSurface;
+	private SurfaceHolder localSurfaceHolder;
+	private static SurfaceView oppositeSurface;
+	private SurfaceHolder oppositeSurfaceHolder;
 
-    private boolean isMuteState;
-    private boolean isHandsfreeState;
-    private boolean isAnswered;
-    private int streamID;
-    private boolean endCallTriggerByMe = false;
+	private boolean isMuteState;
+	private boolean isHandsfreeState;
+	private boolean isAnswered;
+	private int streamID;
+	private boolean endCallTriggerByMe = false;
 
-    EMVideoCallHelper callHelper;
-    private TextView callStateTextView;
+	EMVideoCallHelper callHelper;
+	private TextView callStateTextView;
 
-    private Handler handler = new Handler();
-    private LinearLayout comingBtnContainer;
-    private Button refuseBtn;
-    private Button answerBtn;
-    private Button hangupBtn;
-    private ImageView muteImage;
-    private ImageView handsFreeImage;
-    private TextView nickTextView;
-    private Chronometer chronometer;
-    private LinearLayout voiceContronlLayout;
-    private RelativeLayout rootContainer;
-    private RelativeLayout btnsContainer;
-    private CameraHelper cameraHelper;
-    private LinearLayout topContainer;
-    private LinearLayout bottomContainer;
+	private Handler handler = new Handler();
+	private LinearLayout comingBtnContainer;
+	private Button refuseBtn;
+	private Button answerBtn;
+	private Button hangupBtn;
+	private ImageView muteImage;
+	private ImageView handsFreeImage;
+	private TextView nickTextView;
+	private Chronometer chronometer;
+	private LinearLayout voiceContronlLayout;
+	private RelativeLayout rootContainer;
+	private RelativeLayout btnsContainer;
+	private CameraHelper cameraHelper;
+	private LinearLayout topContainer;
+	private LinearLayout bottomContainer;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(savedInstanceState != null){
-        	finish();
-        	return;
-        }
-        setContentView(R.layout.activity_video_call);
-        
-        getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			finish();
+			return;
+		}
+		setContentView(R.layout.activity_video_call);
 
-        callStateTextView = (TextView) findViewById(R.id.tv_call_state);
-        comingBtnContainer = (LinearLayout) findViewById(R.id.ll_coming_call);
-        rootContainer = (RelativeLayout) findViewById(R.id.root_layout);
-        refuseBtn = (Button) findViewById(R.id.btn_refuse_call);
-        answerBtn = (Button) findViewById(R.id.btn_answer_call);
-        hangupBtn = (Button) findViewById(R.id.btn_hangup_call);
-        muteImage = (ImageView) findViewById(R.id.iv_mute);
-        handsFreeImage = (ImageView) findViewById(R.id.iv_handsfree);
-        callStateTextView = (TextView) findViewById(R.id.tv_call_state);
-        nickTextView = (TextView) findViewById(R.id.tv_nick);
-        chronometer = (Chronometer) findViewById(R.id.chronometer);
-        voiceContronlLayout = (LinearLayout) findViewById(R.id.ll_voice_control);
-        btnsContainer = (RelativeLayout) findViewById(R.id.ll_btns);
-        topContainer = (LinearLayout) findViewById(R.id.ll_top_container);
-        bottomContainer = (LinearLayout) findViewById(R.id.ll_bottom_container);
+		getWindow().addFlags(
+				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+						| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+						| WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+						| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-        refuseBtn.setOnClickListener(this);
-        answerBtn.setOnClickListener(this);
-        hangupBtn.setOnClickListener(this);
-        muteImage.setOnClickListener(this);
-        handsFreeImage.setOnClickListener(this);
-        rootContainer.setOnClickListener(this);
+		callStateTextView = (TextView) findViewById(R.id.tv_call_state);
+		comingBtnContainer = (LinearLayout) findViewById(R.id.ll_coming_call);
+		rootContainer = (RelativeLayout) findViewById(R.id.root_layout);
+		refuseBtn = (Button) findViewById(R.id.btn_refuse_call);
+		answerBtn = (Button) findViewById(R.id.btn_answer_call);
+		hangupBtn = (Button) findViewById(R.id.btn_hangup_call);
+		muteImage = (ImageView) findViewById(R.id.iv_mute);
+		handsFreeImage = (ImageView) findViewById(R.id.iv_handsfree);
+		callStateTextView = (TextView) findViewById(R.id.tv_call_state);
+		nickTextView = (TextView) findViewById(R.id.tv_nick);
+		chronometer = (Chronometer) findViewById(R.id.chronometer);
+		voiceContronlLayout = (LinearLayout) findViewById(R.id.ll_voice_control);
+		btnsContainer = (RelativeLayout) findViewById(R.id.ll_btns);
+		topContainer = (LinearLayout) findViewById(R.id.ll_top_container);
+		bottomContainer = (LinearLayout) findViewById(R.id.ll_bottom_container);
 
-        msgid = UUID.randomUUID().toString();
-        // 获取通话是否为接收方向的
-        isInComingCall = getIntent().getBooleanExtra("isComingCall", false);
-        username = getIntent().getStringExtra("username");
+		refuseBtn.setOnClickListener(this);
+		answerBtn.setOnClickListener(this);
+		hangupBtn.setOnClickListener(this);
+		muteImage.setOnClickListener(this);
+		handsFreeImage.setOnClickListener(this);
+		rootContainer.setOnClickListener(this);
 
-        // 设置通话�?
-        nickTextView.setText(username);
+		msgid = UUID.randomUUID().toString();
+		// 获取通话是否为接收方向的
+		isInComingCall = getIntent().getBooleanExtra("isComingCall", false);
+		username = getIntent().getStringExtra("username");
 
-        // 显示本地图像的surfaceview
-        localSurface = (SurfaceView) findViewById(R.id.local_surface);
-        localSurface.setZOrderMediaOverlay(true);
-        localSurface.setZOrderOnTop(true);
-        localSurfaceHolder = localSurface.getHolder();
+		// 设置通话�?
+		FriendDaoImpl daoImpl = new FriendDaoImpl(this);
+		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?",
+				new String[] { username }, null, null, null, null);
+		if (list != null && list.size() > 0) {
+			MyFriendsEn friendsEn = list.get(0);
+			nickName = friendsEn.getNickname();
+			portraitUrl = friendsEn.getPortraitUrl();
+			nickTextView.setText(nickName);
+		} else {
+			nickTextView.setText(username);
+			Toast.makeText(this, R.string.notfriend_1, Toast.LENGTH_SHORT)
+					.show();
+		}
+		// 设置通话�?
 
-        // 获取callHelper,cameraHelper
-        callHelper = EMVideoCallHelper.getInstance();
-        cameraHelper = new CameraHelper(callHelper, localSurfaceHolder);
+		// 显示本地图像的surfaceview
+		localSurface = (SurfaceView) findViewById(R.id.local_surface);
+		localSurface.setZOrderMediaOverlay(true);
+		localSurface.setZOrderOnTop(true);
+		localSurfaceHolder = localSurface.getHolder();
 
-        // 显示对方图像的surfaceview
-        oppositeSurface = (SurfaceView) findViewById(R.id.opposite_surface);
-        oppositeSurfaceHolder = oppositeSurface.getHolder();
-        // 设置显示对方图像的surfaceview
-        callHelper.setSurfaceView(oppositeSurface);
+		// 获取callHelper,cameraHelper
+		callHelper = EMVideoCallHelper.getInstance();
+		cameraHelper = new CameraHelper(callHelper, localSurfaceHolder);
 
-        localSurfaceHolder.addCallback(new localCallback());
-        oppositeSurfaceHolder.addCallback(new oppositeCallback());
+		// 显示对方图像的surfaceview
+		oppositeSurface = (SurfaceView) findViewById(R.id.opposite_surface);
+		oppositeSurfaceHolder = oppositeSurface.getHolder();
+		// 设置显示对方图像的surfaceview
+		callHelper.setSurfaceView(oppositeSurface);
 
-        // 设置通话监听
-        addCallStateListener();
+		localSurfaceHolder.addCallback(new localCallback());
+		oppositeSurfaceHolder.addCallback(new oppositeCallback());
 
-        if (!isInComingCall) {// 拨打电话
-            soundPool = new SoundPool(1, AudioManager.STREAM_RING, 0);
-            outgoing = soundPool.load(this, R.raw.outgoing, 1);
+		// 设置通话监听
+		addCallStateListener();
 
-            comingBtnContainer.setVisibility(View.INVISIBLE);
-            hangupBtn.setVisibility(View.VISIBLE);
-            String st = getResources().getString(R.string.Are_connected_to_each_other);
-            callStateTextView.setText(st);
+		if (!isInComingCall) {// 拨打电话
+			soundPool = new SoundPool(1, AudioManager.STREAM_RING, 0);
+			outgoing = soundPool.load(this, R.raw.outgoing, 1);
 
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    streamID = playMakeCallSounds();
-                }
-            }, 300);
-        } else { // 有电话进�?
-            voiceContronlLayout.setVisibility(View.INVISIBLE);
-            localSurface.setVisibility(View.INVISIBLE);
-            Uri ringUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            audioManager.setMode(AudioManager.MODE_RINGTONE);
-            audioManager.setSpeakerphoneOn(true);
-            ringtone = RingtoneManager.getRingtone(this, ringUri);
-            ringtone.play();
-        }
-    }
+			comingBtnContainer.setVisibility(View.INVISIBLE);
+			hangupBtn.setVisibility(View.VISIBLE);
+			String st = getResources().getString(
+					R.string.Are_connected_to_each_other);
+			callStateTextView.setText(st);
 
-    /**
-     * 本地SurfaceHolder callback
-     * 
-     */
-    class localCallback implements SurfaceHolder.Callback {
+			handler.postDelayed(new Runnable() {
+				public void run() {
+					streamID = playMakeCallSounds();
+				}
+			}, 300);
+		} else { // 有电话进�?
+			voiceContronlLayout.setVisibility(View.INVISIBLE);
+			localSurface.setVisibility(View.INVISIBLE);
+			Uri ringUri = RingtoneManager
+					.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+			audioManager.setMode(AudioManager.MODE_RINGTONE);
+			audioManager.setSpeakerphoneOn(true);
+			ringtone = RingtoneManager.getRingtone(this, ringUri);
+			ringtone.play();
+		}
+	}
 
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-        }
+	/**
+	 * 本地SurfaceHolder callback
+	 * 
+	 */
+	class localCallback implements SurfaceHolder.Callback {
 
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            cameraHelper.startCapture();
-        }
+		@Override
+		public void surfaceCreated(SurfaceHolder holder) {
+		}
 
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-        }
-    }
+		@Override
+		public void surfaceChanged(SurfaceHolder holder, int format, int width,
+				int height) {
+			cameraHelper.startCapture();
+		}
 
-    /**
-     * 对方SurfaceHolder callback
-     */
-    class oppositeCallback implements SurfaceHolder.Callback {
+		@Override
+		public void surfaceDestroyed(SurfaceHolder holder) {
+		}
+	}
 
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
-        }
+	/**
+	 * 对方SurfaceHolder callback
+	 */
+	class oppositeCallback implements SurfaceHolder.Callback {
 
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            callHelper.onWindowResize(width, height, format);
-            if (!cameraHelper.isStarted()) {
-                if (!isInComingCall) {
-                    try {
-                        // 拨打视频通话
-                        EMChatManager.getInstance().makeVideoCall(username);
-                        // 通知cameraHelper可以写入数据
-                        cameraHelper.setStartFlag(true);
-                    } catch (EMServiceNotReadyException e) {
-                        Toast.makeText(VideoCallActivity.this, R.string.Is_not_yet_connected_to_the_server , 1).show();
-                    }
-                }
+		@Override
+		public void surfaceCreated(SurfaceHolder holder) {
+			holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
+		}
 
-            } else {
-            }
-        }
+		@Override
+		public void surfaceChanged(SurfaceHolder holder, int format, int width,
+				int height) {
+			callHelper.onWindowResize(width, height, format);
+			if (!cameraHelper.isStarted()) {
+				if (!isInComingCall) {
+					try {
+						// 拨打视频通话
+						EMChatManager.getInstance().makeVideoCall(username);
+						// 通知cameraHelper可以写入数据
+						cameraHelper.setStartFlag(true);
+					} catch (EMServiceNotReadyException e) {
+						Toast.makeText(VideoCallActivity.this,
+								R.string.Is_not_yet_connected_to_the_server, 1)
+								.show();
+					}
+				}
 
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-        }
+			} else {
+			}
+		}
 
-    }
+		@Override
+		public void surfaceDestroyed(SurfaceHolder holder) {
+		}
 
-    /**
-     * 设置通话状�?�监�?
-     */
-    void addCallStateListener() {
-        callStateListener = new EMCallStateChangeListener() {
+	}
 
-            @Override
-            public void onCallStateChanged(CallState callState, CallError error) {
-                // Message msg = handler.obtainMessage();
-                switch (callState) {
+	/**
+	 * 设置通话状�?�监�?
+	 */
+	void addCallStateListener() {
+		callStateListener = new EMCallStateChangeListener() {
 
-                case CONNECTING: // 正在连接对方
-                    runOnUiThread(new Runnable() {
+			@Override
+			public void onCallStateChanged(CallState callState, CallError error) {
+				// Message msg = handler.obtainMessage();
+				switch (callState) {
 
-                        @Override
-                        public void run() {
-                            callStateTextView.setText(R.string.Are_connected_to_each_other);
-                        }
+				case CONNECTING: // 正在连接对方
+					runOnUiThread(new Runnable() {
 
-                    });
-                    break;
-                case CONNECTED: // 双方已经建立连接
-                    runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							callStateTextView
+									.setText(R.string.Are_connected_to_each_other);
+						}
 
-                        @Override
-                        public void run() {
-                            callStateTextView.setText(R.string.have_connected_with);
-                        }
+					});
+					break;
+				case CONNECTED: // 双方已经建立连接
+					runOnUiThread(new Runnable() {
 
-                    });
-                    break;
+						@Override
+						public void run() {
+							callStateTextView
+									.setText(R.string.have_connected_with);
+						}
 
-                case ACCEPTED: // 电话接�?�成�?
-                    runOnUiThread(new Runnable() {
+					});
+					break;
 
-                        @Override
-                        public void run() {
-                            try {
-                                if (soundPool != null)
-                                    soundPool.stop(streamID);
-                            } catch (Exception e) {
-                            }
-                            openSpeakerOn();
-                            handsFreeImage.setImageResource(R.drawable.icon_speaker_on);
-                            isHandsfreeState = true;
-                            chronometer.setVisibility(View.VISIBLE);
-                            chronometer.setBase(SystemClock.elapsedRealtime());
-                            // �?始记�?
-                            chronometer.start();
-                            nickTextView.setVisibility(View.INVISIBLE);
-                            callStateTextView.setText(R.string.In_the_call);
-                            callingState = CallingState.NORMAL;
-                        }
+				case ACCEPTED: // 电话接�?�成�?
+					runOnUiThread(new Runnable() {
 
-                    });
-                    break;
-                case DISCONNNECTED: // 电话断了
-                    final CallError fError = error;
-                    runOnUiThread(new Runnable() {
-                        private void postDelayedCloseMsg() {
-                            handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								if (soundPool != null)
+									soundPool.stop(streamID);
+							} catch (Exception e) {
+							}
+							openSpeakerOn();
+							handsFreeImage
+									.setImageResource(R.drawable.icon_speaker_on);
+							isHandsfreeState = true;
+							chronometer.setVisibility(View.VISIBLE);
+							chronometer.setBase(SystemClock.elapsedRealtime());
+							// �?始记�?
+							chronometer.start();
+							nickTextView.setVisibility(View.INVISIBLE);
+							callStateTextView.setText(R.string.In_the_call);
+							callingState = CallingState.NORMAL;
+						}
 
-                                @Override
-                                public void run() {
-                                    saveCallRecord(1);
-                                    Animation animation = new AlphaAnimation(1.0f, 0.0f);
-                                    animation.setDuration(800);
-                                    rootContainer.startAnimation(animation);
-                                    finish();
-                                }
+					});
+					break;
+				case DISCONNNECTED: // 电话断了
+					final CallError fError = error;
+					runOnUiThread(new Runnable() {
+						private void postDelayedCloseMsg() {
+							handler.postDelayed(new Runnable() {
 
-                            }, 200);
-                        }
+								@Override
+								public void run() {
+									saveCallRecord(1);
+									Animation animation = new AlphaAnimation(
+											1.0f, 0.0f);
+									animation.setDuration(800);
+									rootContainer.startAnimation(animation);
+									finish();
+								}
 
-                        @Override
-                        public void run() {
-                            chronometer.stop();
-                            callDruationText = chronometer.getText().toString();
-                            String s1 = getResources().getString(R.string.The_other_party_refused_to_accept);
-                            String s2 = getResources().getString(R.string.Connection_failure);
-                            String s3 = getResources().getString(R.string.The_other_party_is_not_online);
-                            String s4 = getResources().getString(R.string.The_other_is_on_the_phone_please);
-                            String s5 = getResources().getString(R.string.The_other_party_did_not_answer);
-                            
-                            String s6 = getResources().getString(R.string.hang_up);
-                            String s7 = getResources().getString(R.string.The_other_is_hang_up);
-                            String s8 = getResources().getString(R.string.did_not_answer);
-                            String s9 = getResources().getString(R.string.Has_been_cancelled);
-                            
-                            if (fError == CallError.REJECTED) {
-                                callingState = CallingState.BEREFUESD;
-                                callStateTextView.setText(s1);
-                            } else if (fError == CallError.ERROR_TRANSPORT) {
-                                callStateTextView.setText(s2);
-                            } else if (fError == CallError.ERROR_INAVAILABLE) {
-                                callingState = CallingState.OFFLINE;
-                                callStateTextView.setText(s3);
-                            } else if (fError == CallError.ERROR_BUSY) {
-                                callingState = CallingState.BUSY;
-                                callStateTextView.setText(s4);
-                            } else if (fError == CallError.ERROR_NORESPONSE) {
-                                callingState = CallingState.NORESPONSE;
-                                callStateTextView.setText(s5);
-                            } else {
-                                if (isAnswered) {
-                                    callingState = CallingState.NORMAL;
-                                    if (endCallTriggerByMe) {
-                                        callStateTextView.setText(s6);
-                                    } else {
-                                        callStateTextView.setText(s7);
-                                    }
-                                } else {
-                                    if (isInComingCall) {
-                                        callingState = CallingState.UNANSWERED;
-                                        callStateTextView.setText(s8);
-                                    } else {
-                                        if (callingState != CallingState.NORMAL) {
-                                            callingState = CallingState.CANCED;
-                                            callStateTextView.setText(s9);
-                                        } else {
-                                            callStateTextView.setText(s6);
-                                        }
-                                    }
-                                }
-                            }
-                            postDelayedCloseMsg();
-                        }
+							}, 200);
+						}
 
-                    });
+						@Override
+						public void run() {
+							chronometer.stop();
+							callDruationText = chronometer.getText().toString();
+							String s1 = getResources().getString(
+									R.string.The_other_party_refused_to_accept);
+							String s2 = getResources().getString(
+									R.string.Connection_failure);
+							String s3 = getResources().getString(
+									R.string.The_other_party_is_not_online);
+							String s4 = getResources().getString(
+									R.string.The_other_is_on_the_phone_please);
+							String s5 = getResources().getString(
+									R.string.The_other_party_did_not_answer);
 
-                    break;
+							String s6 = getResources().getString(
+									R.string.hang_up);
+							String s7 = getResources().getString(
+									R.string.The_other_is_hang_up);
+							String s8 = getResources().getString(
+									R.string.did_not_answer);
+							String s9 = getResources().getString(
+									R.string.Has_been_cancelled);
 
-                default:
-                    break;
-                }
+							if (fError == CallError.REJECTED) {
+								callingState = CallingState.BEREFUESD;
+								callStateTextView.setText(s1);
+							} else if (fError == CallError.ERROR_TRANSPORT) {
+								callStateTextView.setText(s2);
+							} else if (fError == CallError.ERROR_INAVAILABLE) {
+								callingState = CallingState.OFFLINE;
+								callStateTextView.setText(s3);
+							} else if (fError == CallError.ERROR_BUSY) {
+								callingState = CallingState.BUSY;
+								callStateTextView.setText(s4);
+							} else if (fError == CallError.ERROR_NORESPONSE) {
+								callingState = CallingState.NORESPONSE;
+								callStateTextView.setText(s5);
+							} else {
+								if (isAnswered) {
+									callingState = CallingState.NORMAL;
+									if (endCallTriggerByMe) {
+										callStateTextView.setText(s6);
+									} else {
+										callStateTextView.setText(s7);
+									}
+								} else {
+									if (isInComingCall) {
+										callingState = CallingState.UNANSWERED;
+										callStateTextView.setText(s8);
+									} else {
+										if (callingState != CallingState.NORMAL) {
+											callingState = CallingState.CANCED;
+											callStateTextView.setText(s9);
+										} else {
+											callStateTextView.setText(s6);
+										}
+									}
+								}
+							}
+							postDelayedCloseMsg();
+						}
 
-            }
-        };
-        EMChatManager.getInstance().addVoiceCallStateChangeListener(callStateListener);
-    }
+					});
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-        case R.id.btn_refuse_call: // 拒绝接听
-            if (ringtone != null)
-                ringtone.stop();
-            try {
-                EMChatManager.getInstance().rejectCall();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                saveCallRecord(1);
-                finish();
-            }
-            callingState = CallingState.REFUESD;
-            break;
+					break;
 
-        case R.id.btn_answer_call: // 接听电话
-            if (ringtone != null)
-                ringtone.stop();
-            if (isInComingCall) {
-                try {
-                    EMChatManager.getInstance().answerCall();
-                    cameraHelper.setStartFlag(true);
+				default:
+					break;
+				}
 
-                    openSpeakerOn();
-                    handsFreeImage.setImageResource(R.drawable.icon_speaker_on);
-                    isAnswered = true;
-                    isHandsfreeState = true;
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                    saveCallRecord(1);
-                    finish();
-                    return;
-                }
-            }
-            comingBtnContainer.setVisibility(View.INVISIBLE);
-            hangupBtn.setVisibility(View.VISIBLE);
-            voiceContronlLayout.setVisibility(View.VISIBLE);
-            localSurface.setVisibility(View.VISIBLE);
-            break;
+			}
+		};
+		EMChatManager.getInstance().addVoiceCallStateChangeListener(
+				callStateListener);
+	}
 
-        case R.id.btn_hangup_call: // 挂断电话
-            if (soundPool != null)
-                soundPool.stop(streamID);
-            endCallTriggerByMe = true;
-            try {
-                EMChatManager.getInstance().endCall();
-            } catch (Exception e) {
-                e.printStackTrace();
-                saveCallRecord(1);
-                finish();
-            }
-            break;
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_refuse_call: // 拒绝接听
+			if (ringtone != null)
+				ringtone.stop();
+			try {
+				EMChatManager.getInstance().rejectCall();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				saveCallRecord(1);
+				finish();
+			}
+			callingState = CallingState.REFUESD;
+			break;
 
-        case R.id.iv_mute: // 静音�?�?
-            if (isMuteState) {
-                // 关闭静音
-                muteImage.setImageResource(R.drawable.icon_mute_normal);
-                audioManager.setMicrophoneMute(false);
-                isMuteState = false;
-            } else {
-                // 打开静音
-                muteImage.setImageResource(R.drawable.icon_mute_on);
-                audioManager.setMicrophoneMute(true);
-                isMuteState = true;
-            }
-            break;
-        case R.id.iv_handsfree: // 免提�?�?
-            if (isHandsfreeState) {
-                // 关闭免提
-                handsFreeImage.setImageResource(R.drawable.icon_speaker_normal);
-                closeSpeakerOn();
-                isHandsfreeState = false;
-            } else {
-                handsFreeImage.setImageResource(R.drawable.icon_speaker_on);
-                openSpeakerOn();
-                isHandsfreeState = true;
-            }
-            break;
-        case R.id.root_layout:
-            if (callingState == CallingState.NORMAL) {
-                if (bottomContainer.getVisibility() == View.VISIBLE) {
-                    bottomContainer.setVisibility(View.GONE);
-                    topContainer.setVisibility(View.GONE);
-                    
-                } else {
-                    bottomContainer.setVisibility(View.VISIBLE);
-                    topContainer.setVisibility(View.VISIBLE);
+		case R.id.btn_answer_call: // 接听电话
+			if (ringtone != null)
+				ringtone.stop();
+			if (isInComingCall) {
+				try {
+					EMChatManager.getInstance().answerCall();
+					cameraHelper.setStartFlag(true);
 
-                }
-            }
+					openSpeakerOn();
+					handsFreeImage.setImageResource(R.drawable.icon_speaker_on);
+					isAnswered = true;
+					isHandsfreeState = true;
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					saveCallRecord(1);
+					finish();
+					return;
+				}
+			}
+			comingBtnContainer.setVisibility(View.INVISIBLE);
+			hangupBtn.setVisibility(View.VISIBLE);
+			voiceContronlLayout.setVisibility(View.VISIBLE);
+			localSurface.setVisibility(View.VISIBLE);
+			break;
 
-            break;
-        default:
-            break;
-        }
+		case R.id.btn_hangup_call: // 挂断电话
+			if (soundPool != null)
+				soundPool.stop(streamID);
+			endCallTriggerByMe = true;
+			try {
+				EMChatManager.getInstance().endCall();
+			} catch (Exception e) {
+				e.printStackTrace();
+				saveCallRecord(1);
+				finish();
+			}
+			break;
 
-    }
+		case R.id.iv_mute: // 静音�?�?
+			if (isMuteState) {
+				// 关闭静音
+				muteImage.setImageResource(R.drawable.icon_mute_normal);
+				audioManager.setMicrophoneMute(false);
+				isMuteState = false;
+			} else {
+				// 打开静音
+				muteImage.setImageResource(R.drawable.icon_mute_on);
+				audioManager.setMicrophoneMute(true);
+				isMuteState = true;
+			}
+			break;
+		case R.id.iv_handsfree: // 免提�?�?
+			if (isHandsfreeState) {
+				// 关闭免提
+				handsFreeImage.setImageResource(R.drawable.icon_speaker_normal);
+				closeSpeakerOn();
+				isHandsfreeState = false;
+			} else {
+				handsFreeImage.setImageResource(R.drawable.icon_speaker_on);
+				openSpeakerOn();
+				isHandsfreeState = true;
+			}
+			break;
+		case R.id.root_layout:
+			if (callingState == CallingState.NORMAL) {
+				if (bottomContainer.getVisibility() == View.VISIBLE) {
+					bottomContainer.setVisibility(View.GONE);
+					topContainer.setVisibility(View.GONE);
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try {
+				} else {
+					bottomContainer.setVisibility(View.VISIBLE);
+					topContainer.setVisibility(View.VISIBLE);
+
+				}
+			}
+
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		try {
 			callHelper.setSurfaceView(null);
 			cameraHelper.stopCapture();
 			oppositeSurface = null;
 			cameraHelper = null;
 		} catch (Exception e) {
 		}
-    }
+	}
 
-    @Override
-    public void onBackPressed() {
-        EMChatManager.getInstance().endCall();
-        callDruationText = chronometer.getText().toString();
-        saveCallRecord(1);
-        finish();
-    }
+	@Override
+	public void onBackPressed() {
+		EMChatManager.getInstance().endCall();
+		callDruationText = chronometer.getText().toString();
+		saveCallRecord(1);
+		finish();
+	}
 
 }

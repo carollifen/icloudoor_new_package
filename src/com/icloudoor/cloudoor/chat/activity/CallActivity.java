@@ -26,6 +26,8 @@ public class CallActivity extends BaseActivity {
     protected Ringtone ringtone;
     protected int outgoing;
     protected EMCallStateChangeListener callStateListener;
+    String nickName;
+	String portraitUrl;
     
     @Override
     protected void onCreate(Bundle arg0) {

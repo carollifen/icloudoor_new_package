@@ -203,6 +203,12 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 				MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 						response.toString(), MyFriendInfo.class);
 				showToast(R.string.removeFriendSuccess);
+				if(returnChat==1){
+					setResult(RESULT_OK);
+					finish();
+				}else{
+					finish();
+				}
 				destroyDialog();
 				if (friendInfo != null) {
 					List<MyFriendsEn> data = friendInfo.getData();

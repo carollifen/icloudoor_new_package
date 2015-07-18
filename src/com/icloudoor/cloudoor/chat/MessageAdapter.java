@@ -115,7 +115,7 @@ public class MessageAdapter extends BaseAdapter {
 
 	private String username;
 	private LayoutInflater inflater;
-	private Activity activity;
+	private ChatActivity activity;
 
 	private static final int HANDLER_MESSAGE_REFRESH_LIST = 0;
 	private static final int HANDLER_MESSAGE_SELECT_LAST = 1;
@@ -134,7 +134,7 @@ public class MessageAdapter extends BaseAdapter {
 		this.context = context;
 		this.friendsEn = friendsEn;
 		inflater = LayoutInflater.from(context);
-		activity = (Activity) context;
+		activity = (ChatActivity) context;
 		this.conversation = EMChatManager.getInstance().getConversation(
 				username);
 	}
@@ -744,18 +744,49 @@ public class MessageAdapter extends BaseAdapter {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 
+						String UserId="11111111";
+						try {
+							UserId = card.getString("UserId");
+						} catch (JSONException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
 						FriendDaoImpl daoImpl = new FriendDaoImpl(context);
 
 						List<MyFriendsEn> list = daoImpl.find(null,
-								"userId = ?", new String[] {}, null, null,
+								"userId = ?", new String[] {UserId}, null, null,
 								null, null);
 						Boolean isFirend;
 						if (list == null || list.size() <= 0) {
-							isFirend = true;
-						} else {
 							isFirend = false;
+						} else {
+							isFirend = true;
 						}
+						SharedPreferences loginStatus = context.getSharedPreferences("LOGINSTATUS", Context.MODE_PRIVATE);
+						String myUserid = loginStatus.getString("USERID", "");
+						
 						try {
+							
+							if(username.equals(UserId)|| UserId.equals(myUserid)){
+								Intent intent = new Intent(context,
+										FriendDetailActivity.class);
+								intent.putExtra("CityId", card.getInt("CityId"));
+								intent.putExtra("returnChat", 1);
+								intent.putExtra("DistrictId",
+										card.getInt("DistrictId"));
+								intent.putExtra("ProvinceId",
+										card.getInt("ProvinceId"));
+								intent.putExtra("Sex", card.getInt("Sex"));
+								intent.putExtra("Nickname",
+										card.getString("Nickname"));
+								intent.putExtra("PortraitUrl",
+										card.getString("PortraitUrl"));
+								intent.putExtra("UserId",
+										card.getString("UserId"));
+								activity.startActivityForResult(intent, ChatActivity.REQUEST_CODE_FriendDetail);
+								return;
+							}
 							if (isFirend) {
 								Intent intent = new Intent(context,
 										FriendDetailActivity.class);

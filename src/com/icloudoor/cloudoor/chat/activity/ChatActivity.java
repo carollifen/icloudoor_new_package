@@ -137,6 +137,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	public static final int REQUEST_CODE_ADD_TO_BLACKLIST = 25;
 	public static final int REQUEST_CODE_CONTACT = 26;
 	public static final int REQUEST_CODE_KEYUNTH = 27;
+	public static final int REQUEST_CODE_FriendDetail = 28;
 
 	public static final int RESULT_CODE_COPY = 1;
 	public static final int RESULT_CODE_DELETE = 2;
@@ -659,8 +660,9 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		}
 		if (resultCode == RESULT_OK) {
 			
-			
-			if(requestCode == REQUEST_CODE_KEYUNTH){
+			if(requestCode == REQUEST_CODE_FriendDetail){
+				finish();
+			}else if(requestCode == REQUEST_CODE_KEYUNTH){
 				sendKeyAuth(data);
 			}else if(requestCode == REQUEST_CODE_CONTACT){
 				cardDialog = new BusinessCardDialog(this, R.style.card_dialog);
