@@ -92,7 +92,8 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 		String username = conversation.getUserName();
 		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?",
 				new String[] { username }, null, null, null, null);
-		MyFriendsEn friendsEn = list.get(0);
+			
+			MyFriendsEn friendsEn = list.get(0);
 
 		
 		if (conversation.getType() == EMConversationType.GroupChat) {
@@ -147,8 +148,9 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 		case LOCATION: 
 			if (message.direct == EMMessage.Direct.RECEIVE) {
 //				message.get
-				digest = getStrng(context, R.string.location_recv);
-				digest = String.format(digest, message.getFrom());
+//				digest = getStrng(context, R.string.location_recv);
+//				digest = String.format(digest, message.getFrom());
+				digest = getStrng(context, R.string.location_prefix);
 				return digest;
 			} else {
 				digest = getStrng(context, R.string.location_prefix);
@@ -195,7 +197,12 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 				haveFriendData.add(objects.get(i));
 			}
 		}
-		this.conversationList = haveFriendData;
+		if(conversationList!=null){
+			this.conversationList.clear();
+			this.conversationList.addAll(haveFriendData);
+		}else{
+			this.conversationList = haveFriendData;
+		}
 		notifyDataSetChanged();
 	}
 	

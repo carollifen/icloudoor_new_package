@@ -45,8 +45,6 @@ public class ChannelSwitchView extends LinearLayout implements OnClickListener {
 	private Animation animation; // 移动动画
 	private int currentFlag = FLAG_MOVE_TRUE; // 当前移动方向flag
 
-	boolean isMoving = false;
-	
 	public ChannelSwitchView(Context context) {
 		super(context);
 		this.context = context;
@@ -101,9 +99,6 @@ public class ChannelSwitchView extends LinearLayout implements OnClickListener {
 					cursor_top = v.getTop();
 					cursor_right = v.getRight();
 					cursor_bottom = v.getBottom();
-					
-					isMoving = true;
-					Log.e("check move DOWN", String.valueOf(isMoving));
 					break;
 				case MotionEvent.ACTION_MOVE:
 					int dx = (int) event.getRawX() - lastX;
@@ -123,24 +118,14 @@ public class ChannelSwitchView extends LinearLayout implements OnClickListener {
 					v.layout(cursor_left, cursor_top, cursor_right, cursor_bottom);
 					
 					lastX = (int) event.getRawX();
-					
-					isMoving = true;
-					Log.e("check move MOVING", String.valueOf(isMoving));
 					break;
 				case MotionEvent.ACTION_UP:
 					calculateIscheck();
-					isMoving = false;
-					Log.e("check move UP", String.valueOf(isMoving));
 					break;
 				}
 				return true;
 			}
 		});
-	}
-	
-	public boolean getMovingStatus(){
-		Log.e("check move GET", String.valueOf(isMoving));
-		return isMoving;
 	}
 	
 	private void calculateIscheck() {

@@ -400,11 +400,16 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 		public View getChildView(final int groupPosition, final int childPosition,
 				boolean isLastChild, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			
 			convertView = LayoutInflater.from(AuthKeyActivity.this).inflate(R.layout.key_childview, null);
 			TextView key_name = (TextView) convertView.findViewById(R.id.key_name);
 			TextView state_tx = (TextView) convertView.findViewById(R.id.state_tx);
 			ImageView auth_key_img = (ImageView) convertView.findViewById(R.id.auth_key_img);
+			View divider_view = convertView.findViewById(R.id.divider_view);
+			if((childPosition+1)==data.get(groupPosition).getKeys().size()){
+				divider_view.setVisibility(View.GONE);
+			}else{
+				divider_view.setVisibility(View.VISIBLE);
+			}
 			if(isChekble.get(groupPosition).get(childPosition)){
 				auth_key_img.setImageResource(R.drawable.key_box_p);
 			}else{

@@ -36,6 +36,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -57,7 +58,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Login extends Activity implements TextWatcher {
+public class Login extends BaseActivity implements TextWatcher {
 	
 	private String TAG = this.getClass().getSimpleName();
 	
@@ -117,6 +118,27 @@ public class Login extends Activity implements TextWatcher {
 	private final String KEY_TABLE_NAME = "KeyInfoTable";
 	private final String CAR_TABLE_NAME = "CarKeyTable";
 	private final String ZONE_TABLE_NAME = "ZoneTable";
+	public final int LOGINSOUSSE = 1;
+	public JSONObject loginResponse;
+	
+	Handler handler = new Handler(){
+		
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			super.handleMessage(msg);
+			switch (msg.what) {
+			case LOGINSOUSSE:
+				
+				break;
+
+			default:
+				break;
+			}
+		}
+		
+	};
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -288,139 +310,22 @@ public class Login extends Activity implements TextWatcher {
 
                                     pbLoginBar.setVisibility(View.INVISIBLE);
 									if (loginStatusCode == 1) {
-										isLogin = 1;
-										SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-										Editor editor = loginStatus.edit();
-										editor.putInt("LOGIN", isLogin);
-										editor.putString("PHONENUM", phoneNum);
-										editor.putString("PASSWARD", password);
-//										editor.commit();
-
-										File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PREVIOUSNUM.xml");
-										if(f.exists()){
-											if(!getSharedPreferences("PREVIOUSNUM", 0).getString("NUM", null).equals(phoneNum)){
-												String sql = "DELETE FROM " + KEY_TABLE_NAME +";";
-												mKeyDB.execSQL(sql);
-	                                        
-												String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
-												mKeyDB.execSQL(sq2);
-	                                        
-												String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
-												mKeyDB.execSQL(sq3);  
-											}
-										}
 										
-										
-										SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
-										Editor mEditor=firstLoginShare.edit();
-										mEditor.putBoolean("FIRSTLOGIN", true).commit();
 										try {
 											JSONObject data = response.getJSONObject("data");
-											JSONObject info = data.getJSONObject("info");
 											JSONObject im = data.getJSONObject("im");
 											JSONObject account = im.getJSONObject("account");
-
-											name = info.getString("userName");
-											nickname = info.getString("nickname");
-											id = info.getString("idCardNo");
-											birth = info.getString("birthday");
-											sex = info.getInt("sex");
-											provinceId = info.getInt("provinceId");
-											cityId = info.getInt("cityId");
-											districtId = info.getInt("districtId");
-											isHasPropServ = info.getBoolean("isHasPropServ");
-
-											portraitUrl = info.getString("portraitUrl");
-											userId = info.getString("userId");
-											userStatus = info.getInt("userStatus");     //1 for not approved user; 2 for approved user
-
-											editor.putString("NAME", name);
-											editor.putString("NICKNAME",nickname);
-											editor.putString("ID", id);
-											editor.putString("BIRTH", birth);
-											editor.putInt("SEX", sex);
-											editor.putInt("PROVINCE",provinceId);
-											editor.putInt("CITY", cityId);
-											editor.putInt("DIS", districtId);
-											editor.putString("URL", portraitUrl);
-											editor.putString("USERID", userId);
-											editor.putInt("STATUS", userStatus);
-											editor.putBoolean("isHasPropServ", isHasPropServ);
-											editor.commit();
-											
-											if(provinceId != 0)
-												province = getProvinceName(provinceId);
-											
-											if (cityId != 0) 
-												city = getCityName(cityId);
-
-											if (districtId != 0) 
-												district = getDistrictName(districtId);
-											
-											SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
-											Editor editor1 = saveProfile.edit();
-											editor1.putString("NAME", name);
-											editor1.putString("NICKNAME", nickname);
-											editor1.putString("ID", id);
-											editor1.putString("PROVINCE", province);
-											editor1.putString("CITY", city);
-											editor1.putString("DISTRICT", district);
-											editor1.putInt("PROVINCEID", provinceId);
-											editor1.putInt("CITYID", cityId);
-											editor1.putInt("DISTRICTID", districtId);
-											editor1.putInt("SEX", sex);
-											if(birth.length() > 0){
-												editor1.putString("YEAR", birth.substring(0, 4));
-												editor1.putString("MONTH", birth.substring(5, 7));
-												editor1.putString("DAY", birth.substring(8));
-											}
-											editor1.putBoolean("isHasPropServ", isHasPropServ);
-											editor1.commit();
-											//
+											loginResponse = response;
 											if(account!=null){
 												login(account.getString("userId"), account.getString("password"));
 											}else{
 												Toast.makeText(Login.this, getString(R.string.imError), Toast.LENGTH_SHORT).show();
-											}										
-//											
-//											Intent intent = new Intent();
-//
-//											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-//											setPersonal = personalInfo.getInt("SETINFO", 1);
-//
-//											if (setPersonal == 0 || name.length() == 0 || sex == 0 || provinceId == 0 || cityId == 0 || districtId == 0 || birth.length() == 0 || id.length() == 0) {
-//												Log.e("jump to set", "in login activity");
-//												
-//												if(userStatus == 2) {
-//													intent.setClass(Login.this, SetPersonalInfo.class);
-//													startActivity(intent);
-//													finish();
-//												} else if(userStatus == 1) {
-//													intent.setClass(Login.this, SetPersonalInfoNotCerti.class);
-//													startActivity(intent);
-//													finish();
-//												}
-//													
-//											}
-//
-//											if (setPersonal == 1) {
-//												if(account!=null){
-//													login(account.getString("userId"), account.getString("password"));
-//												}else{
-//													Toast.makeText(Login.this, getString(R.string.imError), Toast.LENGTH_SHORT).show();
-//												}
-//											}
+											}	
+											
 										} catch (JSONException e) {
+											// TODO Auto-generated catch block
 											e.printStackTrace();
 										}
-
-										new Handler().postDelayed(
-												new Runnable() {
-													@Override
-													public void run() {
-														
-													}
-												}, 1000);
 
 										SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
 										Editor editor1 = downPic.edit();
@@ -472,9 +377,104 @@ public class Login extends Activity implements TextWatcher {
 	}
 	
 	
+	public void savaLoginData(JSONObject response){
+		isLogin = 1;
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+		Editor editor = loginStatus.edit();
+		editor.putInt("LOGIN", isLogin);
+		editor.putString("PHONENUM", phoneNum);
+		editor.putString("PASSWARD", password);
+//		editor.commit();
+
+		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PREVIOUSNUM.xml");
+		if(f.exists()){
+			if(!getSharedPreferences("PREVIOUSNUM", 0).getString("NUM", null).equals(phoneNum)){
+				String sql = "DELETE FROM " + KEY_TABLE_NAME +";";
+				mKeyDB.execSQL(sql);
+            
+				String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+				mKeyDB.execSQL(sq2);
+            
+				String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+				mKeyDB.execSQL(sq3);  
+			}
+		}
+		
+		
+		SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
+		Editor mEditor=firstLoginShare.edit();
+		mEditor.putBoolean("FIRSTLOGIN", true).commit();
+		try {
+			JSONObject data = response.getJSONObject("data");
+			JSONObject info = data.getJSONObject("info");
+			
+			
+
+			name = info.getString("userName");
+			nickname = info.getString("nickname");
+			id = info.getString("idCardNo");
+			birth = info.getString("birthday");
+			sex = info.getInt("sex");
+			provinceId = info.getInt("provinceId");
+			cityId = info.getInt("cityId");
+			districtId = info.getInt("districtId");
+			isHasPropServ = info.getBoolean("isHasPropServ");
+
+			portraitUrl = info.getString("portraitUrl");
+			userId = info.getString("userId");
+			userStatus = info.getInt("userStatus");     //1 for not approved user; 2 for approved user
+
+			editor.putString("NAME", name);
+			editor.putString("NICKNAME",nickname);
+			editor.putString("ID", id);
+			editor.putString("BIRTH", birth);
+			editor.putInt("SEX", sex);
+			editor.putInt("PROVINCE",provinceId);
+			editor.putInt("CITY", cityId);
+			editor.putInt("DIS", districtId);
+			editor.putString("URL", portraitUrl);
+			editor.putString("USERID", userId);
+			editor.putInt("STATUS", userStatus);
+			editor.putBoolean("isHasPropServ", isHasPropServ);
+			editor.commit();
+			
+			if(provinceId != 0)
+				province = getProvinceName(provinceId);
+			
+			if (cityId != 0) 
+				city = getCityName(cityId);
+
+			if (districtId != 0) 
+				district = getDistrictName(districtId);
+			
+			SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
+			Editor editor1 = saveProfile.edit();
+			editor1.putString("NAME", name);
+			editor1.putString("NICKNAME", nickname);
+			editor1.putString("ID", id);
+			editor1.putString("PROVINCE", province);
+			editor1.putString("CITY", city);
+			editor1.putString("DISTRICT", district);
+			editor1.putInt("PROVINCEID", provinceId);
+			editor1.putInt("CITYID", cityId);
+			editor1.putInt("DISTRICTID", districtId);
+			editor1.putInt("SEX", sex);
+			if(birth.length() > 0){
+				editor1.putString("YEAR", birth.substring(0, 4));
+				editor1.putString("MONTH", birth.substring(5, 7));
+				editor1.putString("DAY", birth.substring(8));
+			}
+			editor1.putBoolean("isHasPropServ", isHasPropServ);
+			editor1.commit();
+			//
+												
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	boolean progressShow;
-	public void login(final String currentUsername,final String currentPassword) {
+	public void login( final String currentUsername, final String currentPassword) {
 		if (!CommonUtils.isNetWorkConnected(Login.this)) {
 			Toast.makeText(Login.this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
 			return;
@@ -542,6 +542,7 @@ public class Login extends Activity implements TextWatcher {
 				if (!Login.this.isFinishing())
 					pd.dismiss();
 				finish();
+				savaLoginData(loginResponse);
 				startActivity(new Intent(Login.this, CloudDoorMainActivity.class));
 			}
 

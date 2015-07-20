@@ -186,7 +186,6 @@ public class KeyListListFragment extends Fragment {
 											
 											MyDebugLog.e(TAG, carNum + " : " + plateNum);
 											
-//											if(getParentZoneId(zoneId).equals(l1ZoneId) && carNum.equals(plateNum)){
 											if(zoneId.equals(l1ZoneId) && carNum.equals(plateNum)){
 												MyDebugLog.e(TAG, "add to list2");
 												if(carStatus.equals("2")){ //temp car key
@@ -966,35 +965,4 @@ public class KeyListListFragment extends Fragment {
         super.onDetach();
 
     }
-    
-//    public String getParentZoneId(String zoneId){
-//    	String parentZoneId = null;
-//    	boolean haveFoundParent = false;
-//    	String tempId = zoneId;
-//    	while(!haveFoundParent){
-//			Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME, null);
-//    		if(mCursor.moveToFirst()){
-//    			int zoneidIndex = mCursor.getColumnIndex("zoneid");
-//    			int parentzoneidIndex = mCursor.getColumnIndex("parentzoneid");
-//    			do{
-//    				String zoneid = mCursor.getString(zoneidIndex);
-//    				String parentzoneid = mCursor.getString(parentzoneidIndex);			
-//    				
-//    				if(tempId.equals(zoneid)){
-//    					if(!zoneid.equals(parentzoneid)){
-//    						tempId = parentzoneid;
-//    					} else {
-//    						parentZoneId = tempId;
-//    						haveFoundParent = true;
-//    						break;
-//    					}
-//    				} else {
-//						// do nothing here    
-//    				}
-//    			}while(mCursor.moveToNext());
-//    		}
-//			mCursor.close();
-//    	}
-//    	return parentZoneId;
-//    }
 }

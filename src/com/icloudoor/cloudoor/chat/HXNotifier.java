@@ -31,8 +31,11 @@ import android.support.v4.app.NotificationCompat;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
+import com.easemob.chat.ImageMessageBody;
+import com.easemob.chat.TextMessageBody;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
+import com.icloudoor.cloudoor.R;
 
 public class HXNotifier {
     private final static String TAG = "notify";
@@ -41,8 +44,8 @@ public class HXNotifier {
     protected final static String[] msg_eng = { "sent a message", "sent a picture", "sent a voice",
                                                 "sent location message", "sent a video", "sent a file", "%1 contacts sent %2 messages"
                                               };
-    protected final static String[] msg_ch = { "·¢À´Ò»ÌõÏûÏ¢", "·¢À´Ò»ÕÅÍ¼Æ¬", "·¢À´Ò»¶ÎÓïÒô", "·¢À´Î»ÖÃĞÅÏ¢", "·¢À´Ò»¸öÊÓÆµ", "·¢À´Ò»¸öÎÄ¼ş",
-                                               "%1¸öÁªÏµÈË·¢À´%2ÌõÏûÏ¢"
+    protected final static String[] msg_ch = { "å‘æ¥ä¸€æ¡æ¶ˆæ¯", "å‘æ¥ä¸€å¼ å›¾ç‰‡", "å‘æ¥ä¸€æ®µè¯­éŸ³", "å‘æ¥ä½ç½®ä¿¡æ¯", "å‘æ¥ä¸€ä¸ªè§†é¢‘", "å‘æ¥ä¸€ä¸ªæ–‡ä»¶",
+                                               "%1ä¸ªè”ç³»äººå‘æ¥%2æ¡æ¶ˆæ¯"
                                              };
 
     protected static int notifyID = 0525; // start notification id
@@ -146,7 +149,7 @@ public class HXNotifier {
     protected void sendNotification(EMMessage message, boolean isForeground, boolean numIncrease) {
         String username = message.getFrom();
         try {
-            String notifyText = username + " ÄãÓĞĞÂÏûÏ¢";
+            String notifyText = username + " ä½ æœ‰æ–°æ¶ˆæ¯";
             switch (message.getType()) {
             case TXT:
                 notifyText += msgs[0];
@@ -225,8 +228,8 @@ public class HXNotifier {
             }
 
             mBuilder.setContentTitle(contentTitle);
-            mBuilder.setTicker("ÄãÓĞĞÂÏûÏ¢");
-            mBuilder.setContentText(summaryBody);//ÏûÏ¢Ìå
+            mBuilder.setTicker(getMessageDigest(message, appContext));
+            mBuilder.setContentText(summaryBody);//ï¿½ï¿½Ï¢ï¿½ï¿½
             mBuilder.setContentIntent(pendingIntent);
             // mBuilder.setNumber(notificationNum);
             Notification notification = mBuilder.build();
@@ -242,6 +245,53 @@ public class HXNotifier {
             e.printStackTrace();
         }
     }
+    
+    public String getStrng(Context context, int resId) {
+		return context.getResources().getString(resId);
+	}
+	
+	private String getMessageDigest(EMMessage message, Context context) {
+		String digest = "";
+		switch (message.getType()) {
+		case LOCATION: 
+			if (message.direct == EMMessage.Direct.RECEIVE) {
+//				message.get
+//				digest = getStrng(context, R.string.location_recv);
+//				digest = String.format(digest, message.getFrom());
+				digest = getStrng(context, R.string.location_prefix);
+				return digest;
+			} else {
+				digest = getStrng(context, R.string.location_prefix);
+			}
+			break;
+		case IMAGE: 
+			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
+			digest = getStrng(context, R.string.picture);
+			break;
+		case VOICE:
+			digest = getStrng(context, R.string.voice);
+			break;
+		case VIDEO: 
+			digest = getStrng(context, R.string.video);
+			break;
+		case TXT: 
+			if(!message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL,false)){
+				TextMessageBody txtBody = (TextMessageBody) message.getBody();
+				digest = txtBody.getMessage();
+			}else{
+				TextMessageBody txtBody = (TextMessageBody) message.getBody();
+				digest = getStrng(context, R.string.voice_call) + txtBody.getMessage();
+			}
+			break;
+		case FILE: 
+			digest = getStrng(context, R.string.file);
+			break;
+		default:
+			return "";
+		}
+
+		return digest;
+	}
 
     public void viberateAndPlayTone(EMMessage message) {
         if(message != null){

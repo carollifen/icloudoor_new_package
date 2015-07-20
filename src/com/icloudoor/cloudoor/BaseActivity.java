@@ -15,12 +15,13 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
+import com.icloudoor.cloudoor.chat.HXSDKHelper;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.widget.MyProgressDialog;
 import com.umeng.analytics.MobclickAgent;
@@ -54,6 +55,7 @@ public class BaseActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		HXSDKHelper.getInstance().getNotifier().reset();
 		MobclickAgent.onPageStart(mPageName);
 		MobclickAgent.onResume(this);
 	}

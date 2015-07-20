@@ -688,10 +688,10 @@ public class MessageAdapter extends BaseAdapter {
 					intent.putExtra("ProvinceId", friendsEn.getProvinceId());
 					intent.putExtra("Sex", friendsEn.getSex());
 					intent.putExtra("Nickname", friendsEn.getNickname());
-					intent.putExtra("PortraitUrl", friendsEn.getPortraitUrl());
+					intent.putExtra("PortraitUrl", friendsEn.getPortraitUrl());                 
 					intent.putExtra("UserId", friendsEn.getUserId());
 					intent.putExtra("returnChat", 1);
-					context.startActivity(intent);
+					activity.startActivityForResult(intent, ChatActivity.REQUEST_CODE_FriendDetail);
 
 				}
 			});

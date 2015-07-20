@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f8f8f8"
+    android:background="#f7f7f7"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:groupIndicator="@android:color/transparent"
             android:divider="@android:color/transparent"
-            android:childDivider="#f8f8f8"
+            android:childDivider="#f0f0f0"
              >
         </ExpandableListView>
 
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#f8f8f8"
+            android:background="#ffffff"
              >
 
             <RelativeLayout
@@ -93,7 +93,7 @@
             <LinearLayout
                 android:id="@+id/auth_key_layout"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="43dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"

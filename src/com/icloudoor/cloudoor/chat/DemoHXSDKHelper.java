@@ -43,6 +43,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
+import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
 import com.easemob.chat.TextMessageBody;
@@ -402,11 +403,53 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 				});
 	}
 
-	/**
-	 * 自定义�?�知栏提示内�?
-	 * 
-	 * @return
-	 */
+	
+	public String getStrng(Context context, int resId) {
+		return context.getResources().getString(resId);
+	}
+	
+	private String getMessageDigest(EMMessage message, Context context) {
+		String digest = "";
+		switch (message.getType()) {
+		case LOCATION: 
+			if (message.direct == EMMessage.Direct.RECEIVE) {
+//				message.get
+//				digest = getStrng(context, R.string.location_recv);
+//				digest = String.format(digest, message.getFrom());
+				digest = getStrng(context, R.string.location_prefix);
+				return digest;
+			} else {
+				digest = getStrng(context, R.string.location_prefix);
+			}
+			break;
+		case IMAGE: 
+			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
+			digest = getStrng(context, R.string.picture);
+			break;
+		case VOICE:
+			digest = getStrng(context, R.string.voice);
+			break;
+		case VIDEO: 
+			digest = getStrng(context, R.string.video);
+			break;
+		case TXT: 
+			if(!message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL,false)){
+				TextMessageBody txtBody = (TextMessageBody) message.getBody();
+				digest = txtBody.getMessage();
+			}else{
+				TextMessageBody txtBody = (TextMessageBody) message.getBody();
+				digest = getStrng(context, R.string.voice_call) + txtBody.getMessage();
+			}
+			break;
+		case FILE: 
+			digest = getStrng(context, R.string.file);
+			break;
+		default:
+			return "";
+		}
+
+		return digest;
+	}
 	@Override
 	protected HXNotificationInfoProvider getNotificationListener() {
 		// 可以覆盖默认的设�?
@@ -439,8 +482,10 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 			@Override
 			public String getLatestText(EMMessage message, int fromUsersNum,
 					int messageNum) {
-				// return null;
-				return "个基友，发来�?";
+				
+				
+				
+				return getMessageDigest(message, appContext);
 			}
 
 			@Override

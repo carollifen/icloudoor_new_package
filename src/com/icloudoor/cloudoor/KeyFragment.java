@@ -2054,7 +2054,7 @@ public class KeyFragment extends Fragment {
 
 	public void populateDeviceList(final boolean btStateOpen) {
 		MyDebugLog.e("BLE", "populateDeviceList");
-		if (btStateOpen && mThisFragment && !csv.getMovingStatus()) {
+		if (btStateOpen && mThisFragment) {
             BtnOpenDoor.setImageResource(R.drawable.door_normalll_v2);
             BtnOpenDoor.setEnabled(false);
 
