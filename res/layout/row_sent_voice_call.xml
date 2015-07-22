@@ -44,10 +44,10 @@
             <ImageView
                 android:layout_marginLeft="4dp"
                 android:id="@+id/iv_call_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/chat_voice_call_self" />
+                android:src="@drawable/chat_voice_call_receive" />
 
             <TextView
                 android:id="@+id/tv_chatcontent"

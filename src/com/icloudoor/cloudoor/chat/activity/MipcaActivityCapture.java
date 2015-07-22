@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -132,13 +133,15 @@ public class MipcaActivityCapture extends BaseActivity implements Callback ,Netw
 		}else {
 //			String url = UrlUtils.HOST + "/user/im/searchUser.do"+ "?sid=" + loadSid()+resultString;
 			JSONObject object = new JSONObject();
+			JSONArray array = new JSONArray();
 			try {
-				object.put("searchValue", resultString);
+				array.put(resultString);
+				object.put("userIds", array);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			getNetworkData(this, "/user/im/searchUser.do", object.toString(), true);
+			getNetworkData(this, "/user/im/getUsersDetailWsIsFriend.do", object.toString(), true);
 //			Intent resultIntent = new Intent();
 //			Bundle bundle = new Bundle();
 //			bundle.putString("result", resultString);
@@ -245,6 +248,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback ,Netw
 	@Override
 	public void onSuccess(JSONObject response) {
 		// TODO Auto-generated method stub
+		
 		SearchUserInfo searchUserInfo = GsonUtli.jsonToObject(response.toString(), SearchUserInfo.class);
 		if(searchUserInfo!=null){
 			List<SearchUserList> data = searchUserInfo.getData();

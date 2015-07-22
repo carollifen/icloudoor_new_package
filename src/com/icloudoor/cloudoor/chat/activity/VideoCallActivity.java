@@ -496,6 +496,10 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
 			}
 
 			break;
+		case R.id.local_surface:
+			oppositeSurfaceHolder.addCallback(new localCallback());
+			localSurfaceHolder.addCallback(new oppositeCallback());
+			break;
 		default:
 			break;
 		}

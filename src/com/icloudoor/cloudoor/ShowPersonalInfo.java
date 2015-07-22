@@ -771,8 +771,8 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 			dialog.show();
 			dialog.windowDeploy();
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-			String PHONENUM = loginStatus.getString("PHONENUM", "");
-			String url = PHONENUM;
+			String USERID = loginStatus.getString("USERID", "");
+			String url = USERID;
 			dialog.createQRImage(url);
 			break;
 

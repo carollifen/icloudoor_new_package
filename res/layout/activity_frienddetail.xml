@@ -29,12 +29,12 @@
 
         <ImageView
             android:id="@+id/right_img"
-            android:layout_width="45dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:scaleType="center"
-            android:src="@drawable/personnel_ioc" />
+            android:src="@drawable/mm_title_remove" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -15,9 +15,9 @@ public class ImageGridActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG) {
-            Utils.enableStrictMode();
-        }
+//        if (BuildConfig.DEBUG) {
+//            Utils.enableStrictMode();
+//        }
         super.onCreate(savedInstanceState);
 
         if (getSupportFragmentManager().findFragmentByTag(TAG) == null) {

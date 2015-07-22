@@ -215,6 +215,9 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		
 		initView();
 		setUpView();
+		
+		
+		
 	}
 
 	/**
@@ -378,7 +381,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 //			findViewById(R.id.container_voice_call).setVisibility(View.GONE);
 //			findViewById(R.id.container_video_call).setVisibility(View.GONE);
 //			toChatUsername = getIntent().getStringExtra("groupId");
-//
 //			if(chatType == CHATTYPE_GROUP){
 //			    onGroupViewCreation();
 //			}else{ 
@@ -802,6 +804,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 
 		} else if (id == R.id.btn_video) {
 			Intent intent = new Intent(ChatActivity.this, ImageGridActivity.class);
+//			Intent intent = new Intent(ChatActivity.this, RecorderVideoActivity.class);
 			startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
 		} else if (id == R.id.btn_file) { 
 //			selectFileFromLocal();名片
@@ -1203,9 +1206,23 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	}
 
 	public void emptyHistory(View view) {
-		String st5 = getResources().getString(R.string.Whether_to_empty_all_chats);
-		startActivityForResult(new Intent(this, AlertDialog.class).putExtra("titleIsCancel", true).putExtra("msg", st5)
-				.putExtra("cancel", true), REQUEST_CODE_EMPTY_HISTORY);
+		
+		Intent intent = new Intent(this,
+				FriendDetailActivity.class);
+		intent.putExtra("CityId", friendsEn.getCityId());
+		intent.putExtra("DistrictId", friendsEn.getDistrictId());
+		intent.putExtra("ProvinceId", friendsEn.getProvinceId());
+		intent.putExtra("Sex", friendsEn.getSex());
+		intent.putExtra("Nickname", friendsEn.getNickname());
+		intent.putExtra("PortraitUrl", friendsEn.getPortraitUrl());                 
+		intent.putExtra("UserId", friendsEn.getUserId());
+		intent.putExtra("returnChat", 1);
+		startActivityForResult(intent, ChatActivity.REQUEST_CODE_FriendDetail);
+		
+//		s
+//		String st5 = getResources().getString(R.string.Whether_to_empty_all_chats);
+//		startActivityForResult(new Intent(this, AlertDialog.class).putExtra("titleIsCancel", true).putExtra("msg", st5)
+//				.putExtra("cancel", true), REQUEST_CODE_EMPTY_HISTORY);
 	}
 
 	public void toGroupDetails(View view) {
