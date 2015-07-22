@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -257,4 +259,13 @@ public class BaseActivity extends Activity {
 		mCursorD.close();
 		return districtName;
 	}
+	
+	@Override  
+	public Resources getResources() {  
+	    Resources res = super.getResources();    
+	    Configuration config = new Configuration();    
+	    config.setToDefaults();    
+	    res.updateConfiguration(config, res.getDisplayMetrics() );  
+	    return res;  
+	}  
 }

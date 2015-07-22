@@ -378,6 +378,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 //			findViewById(R.id.container_voice_call).setVisibility(View.GONE);
 //			findViewById(R.id.container_video_call).setVisibility(View.GONE);
 //			toChatUsername = getIntent().getStringExtra("groupId");
+//
 //			if(chatType == CHATTYPE_GROUP){
 //			    onGroupViewCreation();
 //			}else{ 
