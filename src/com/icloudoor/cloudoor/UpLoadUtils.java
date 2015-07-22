@@ -90,11 +90,11 @@ public class UpLoadUtils {
 			object = new JSONObject();
 			
 			try {
-				object.put("TIME", time);
-				object.put("UserID", userId);
-				object.put("DoorID", doorId);
-				object.put("MODEL", modelNameAndVersion);
-				object.put("RESULT", String.valueOf(successOrNot));
+				object.put("time", time);
+				object.put("userId", userId);
+				object.put("doorId", doorId);
+				object.put("model", modelNameAndVersion);
+				object.put("result", String.valueOf(successOrNot));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
