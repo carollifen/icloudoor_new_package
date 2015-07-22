@@ -504,7 +504,7 @@ public class SetPersonalInfo extends BaseActivity {
 
 		mQueue = Volley.newRequestQueue(this);
 		try {
-			setInfoURL = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			setInfoURL = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

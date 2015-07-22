@@ -53,7 +53,7 @@ public class BaseFragmentActivity extends FragmentActivity{
 	
 	public void getNetworkData(NetworkInterface networkInterface,String httpurl, String josn,final boolean isShowLoadin){
 		this.networkInterface = networkInterface;
-			String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid()+"&ver=" + version.getVersionName();
+			String url = UrlUtils.HOST + httpurl+ "?sid=" + loadSid()+"&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId();
 			if(isShowLoadin)
 			loading();
 			

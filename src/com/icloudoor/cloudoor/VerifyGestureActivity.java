@@ -171,7 +171,7 @@ public class VerifyGestureActivity extends BaseActivity {
 
 		                    try {
 		                        logOutURL = new URL(UrlUtils.HOST + "/user/manage/logout.do"
-		                                + "?sid=" + sid + "&ver=" + version.getVersionName());
+		                                + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		                    } catch (MalformedURLException e) {
 		                        e.printStackTrace();
 		                    }

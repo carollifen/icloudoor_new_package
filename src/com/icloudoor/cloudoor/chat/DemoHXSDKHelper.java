@@ -138,7 +138,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 		RequestQueue mRequestQueue = Volley.newRequestQueue(appContext.getApplicationContext());
 		version = new Version(appContext);
 		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid="
-				+ loadSid() + "&ver=" + version.getVersionName();
+				+ loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId();
 		MyRequestBody requestBody = new MyRequestBody(url, "{}",
 				new Response.Listener<JSONObject>() {
 					@Override

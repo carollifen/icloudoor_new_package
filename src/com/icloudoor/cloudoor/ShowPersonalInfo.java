@@ -232,7 +232,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 			mQueue = Volley.newRequestQueue(this);
 			sid = loadSid();
 			try {
-				getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+				getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -546,7 +546,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 		mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		try {
-			getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -81,7 +81,7 @@ public class BillActivity extends BaseActivity {
 
 		billWebView.addJavascriptInterface(new autoLogout(), "cloudoorNative");
 		
-		billWebView.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName());
+		billWebView.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		
 		WebChromeClient wcc = new WebChromeClient(){
 			@Override

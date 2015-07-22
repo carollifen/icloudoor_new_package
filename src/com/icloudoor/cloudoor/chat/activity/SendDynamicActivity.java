@@ -77,7 +77,7 @@ public class SendDynamicActivity extends BaseActivity implements
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_send_dynamic);
 //		subject = getIntent().getExtras().getString("subject");
-		subject = "小区趣事";
+		subject = "灏忓尯瓒ｄ簨";
 		dynamic = (GridView) findViewById(R.id.dynamic);
 		btn_back = (ImageView) findViewById(R.id.btn_back);
 		content_edit = (EditText) findViewById(R.id.content_edit);
@@ -195,14 +195,14 @@ public class SendDynamicActivity extends BaseActivity implements
 		loading();
 		JsonObjectRequest upRequest = new JsonObjectRequest(resultForup
 				+ "?sid=" + loadSid() + "&type=" + "41" + "&ext=" + "jpeg"
-				+ "&ver=" + version.getVersionName(), null,
+				+ "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId(), null,
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject obj) {
 
 						try {
 							if (obj.getString("sid") != null) {
-								System.out.println("提交："+obj);
+								System.out.println("鎻愪氦锛�"+obj);
 								JSONObject UPjsa = obj.getJSONObject("data");
 								String upPolicy = UPjsa.getString("policy");
 								String upSignature = UPjsa.getString("signature");

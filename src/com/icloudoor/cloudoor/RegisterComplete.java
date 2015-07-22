@@ -141,7 +141,7 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 				if(networkStatus){
 					try {
 						registerURL = new URL(HOST + "/user/manage/createUser.do"
-								+ "?sid=" + sid + "&ver=" + version.getVersionName());
+								+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}

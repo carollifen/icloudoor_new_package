@@ -332,7 +332,7 @@ public class KeyListAuthFragment extends Fragment {
 					
 					sid = loadSid();
 					MyJsonObjectRequest carAndPhoneRequest = new MyJsonObjectRequest(
-							Method.POST, postKerUrl + "?sid=" + sid + "&ver=" + version.getVersionName(), null,
+							Method.POST, postKerUrl + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId(), null,
 							new Response.Listener<JSONObject>() {
 
 								@Override
@@ -404,7 +404,7 @@ public class KeyListAuthFragment extends Fragment {
 					} else {
 						sid = loadSid();
 						MyJsonObjectRequest postMankeyRequest = new MyJsonObjectRequest(
-							Method.POST, postNomalKeyUrl + "?sid=" + sid + "&ver=" + version.getVersionName(), null,
+							Method.POST, postNomalKeyUrl + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId(), null,
 							new Response.Listener<JSONObject>() {
 
 								@Override
@@ -483,7 +483,7 @@ public class KeyListAuthFragment extends Fragment {
 
 		Zonekeylist = new ArrayList<Map<String, String>>();
 		JsonObjectRequest mjsonobjrequest = new JsonObjectRequest(HOST
-				+ "?sid=" + sid + "&ver=" + version.getVersionName(), null, new Response.Listener<JSONObject>() {
+				+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId(), null, new Response.Listener<JSONObject>() {
 
 			@Override
 			public void onResponse(JSONObject response) {

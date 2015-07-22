@@ -531,7 +531,7 @@ public class KeyFragmentNoBLE extends Fragment {
 			weatherURL = new URL(HOST + "city=ip" + "&language=zh-chs&unit=c&aqi=city&key=" + Key);
 			
 			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid="
-					+ sid + "&ver=" + version.getVersionName());
+					+ sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

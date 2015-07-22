@@ -282,7 +282,7 @@ public class Login extends BaseActivity implements TextWatcher {
 
 					try {
 						loginURL = new URL(HOST + "/user/manage/login.do"
-								+ "?sid=" + sid + "&ver=" + version.getVersionName());
+								+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 						
 						MyDebugLog.e(TAG, loginURL.toString());
 					} catch (MalformedURLException e) {

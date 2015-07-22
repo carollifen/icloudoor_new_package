@@ -77,7 +77,7 @@ public class CommendActivity extends BaseActivity {
 		webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
 		webSetting.setLoadsImagesAutomatically(true);
 		webSetting.setBuiltInZoomControls(true);
-		praiseWebView.loadUrl(url + "?sid=" + sid + "&type=" + TYPE_GOOD + "&ver=" + version.getVersionName());
+		praiseWebView.loadUrl(url + "?sid=" + sid + "&type=" + TYPE_GOOD + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		
 		WebChromeClient wcc = new WebChromeClient(){
 			@Override

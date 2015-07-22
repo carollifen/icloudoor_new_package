@@ -278,7 +278,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 		getFriends();
 		sid = loadSid();
 		JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url
-				+ "?sid=" + sid + "&ver=" + version.getVersionName(), null, new Response.Listener<JSONObject>() {
+				+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId(), null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
 				MyDebugLog.e("response", response.toString());
@@ -648,10 +648,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 	
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
 					MODE_PRIVATE);
-			
-			/*
-			 *  for test version only
-			 */
+
 			boolean isHasPropServ;
 			isHasPropServ = loginStatus.getBoolean("isHasPropServ", false);		
 			if(isHasPropServ) {
@@ -1003,7 +1000,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements EMEve
 	public void getBannerData(){
 		URL bannerURL = null;
 		try {
-			bannerURL = new URL(UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			bannerURL = new URL(UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

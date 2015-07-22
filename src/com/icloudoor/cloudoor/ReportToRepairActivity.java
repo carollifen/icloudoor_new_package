@@ -168,7 +168,7 @@ public class ReportToRepairActivity extends BaseActivity {
 		sid = loadSid();
 
 		fixwebview.addJavascriptInterface(new Camera(), "cloudoorNative");
-		fixwebview.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName());
+		fixwebview.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		sid = loadSid();
 		
 		WebChromeClient wcc = new WebChromeClient(){
@@ -290,7 +290,7 @@ public class ReportToRepairActivity extends BaseActivity {
 			super.handleMessage(msg);
 			requestQueue = Volley.newRequestQueue(ReportToRepairActivity.this);
 			upRequest = new JsonObjectRequest(resultForup + "?sid=" + loadSid()
-					+ "&type=" + "1" + "&ext=" + "jpeg" + "&ver=" + version.getVersionName(), null,
+					+ "&type=" + "1" + "&ext=" + "jpeg" + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId(), null,
 					new Response.Listener<JSONObject>() {
 						@Override
 						public void onResponse(JSONObject obj) {

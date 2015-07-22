@@ -112,7 +112,7 @@ public class BaseActivity extends Activity {
 			String httpurl, String josn, final boolean isShowLoadin) {
 		this.networkInterface = networkInterface;
 		String url = UrlUtils.HOST + httpurl + "?sid=" + loadSid() + "&ver="
-				+ version.getVersionName();
+				+ version.getVersionName() + "&imei=" + version.getDeviceId();
 		if (isShowLoadin)
 			loading();
 
@@ -146,7 +146,7 @@ public class BaseActivity extends Activity {
 			String httpurl, final Map<String, String> map, final boolean isShowLoadin) {
 		this.networkInterface = networkInterface;
 		String url = UrlUtils.HOST + httpurl + "?sid=" + loadSid() + "&ver="
-				+ version.getVersionName();
+				+ version.getVersionName() + "&imei=" + version.getDeviceId();
 		if (isShowLoadin)
 			loading();
 		MyJsonObjectRequest requestBody = new MyJsonObjectRequest(Method.POST,url, null,

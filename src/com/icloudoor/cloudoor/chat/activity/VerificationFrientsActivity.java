@@ -136,7 +136,7 @@ public class VerificationFrientsActivity extends BaseActivity implements
 			e.printStackTrace();
 		}
 		String url = UrlUtils.HOST + "/user/im/invite.do" + "?sid=" + loadSid() + "&ver="
-				+ version.getVersionName();
+				+ version.getVersionName() + "&imei=" + version.getDeviceId();
 		MyRequestBody requestBody = new MyRequestBody(url,
 				jsonObject.toString(), new Response.Listener<JSONObject>() {
 					@Override

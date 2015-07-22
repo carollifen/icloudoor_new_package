@@ -242,7 +242,7 @@ public class FragmentCarEntrance extends Fragment {
 		mQueue = Volley.newRequestQueue(getActivity());
 
 		MyJsonObjectRequest mjsonobjrequest = new MyJsonObjectRequest(
-				Method.POST, HOST + "?sid=" + sid + "&ver=" + version.getVersionName(), null,
+				Method.POST, HOST + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId(), null,
 				new Response.Listener<JSONObject>() {
 
 					@Override

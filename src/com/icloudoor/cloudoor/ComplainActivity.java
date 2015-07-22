@@ -91,7 +91,7 @@ public class ComplainActivity extends BaseActivity {
 
 		});
 
-		complainWebView.loadUrl(url + "?sid=" + sid + "&type=" + TYPE_BAD + "&ver=" + version.getVersionName());
+		complainWebView.loadUrl(url + "?sid=" + sid + "&type=" + TYPE_BAD + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		
 		WebChromeClient wcc = new WebChromeClient(){
 			@Override

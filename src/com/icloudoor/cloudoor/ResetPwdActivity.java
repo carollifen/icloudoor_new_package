@@ -94,7 +94,7 @@ public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 			@Override
 			public void onClick(View v) {
 				try {
-					resetPwdURL = new URL(HOST + "/user/manage/changePassword.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+					resetPwdURL = new URL(HOST + "/user/manage/changePassword.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}

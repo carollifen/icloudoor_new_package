@@ -143,7 +143,7 @@ public class UpLoadUtils {
 
 			URL upLoadURL = null;
 			try {
-				upLoadURL = new URL(UrlUtils.HOST + "/user/stat/add.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+				upLoadURL = new URL(UrlUtils.HOST + "/user/stat/add.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}

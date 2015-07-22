@@ -75,7 +75,7 @@ public class PayActivity extends BaseActivity {
 		
 		payWebView.addJavascriptInterface(new autoLogout(), "cloudoorNative");
 
-		payWebView.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName());
+		payWebView.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener(){

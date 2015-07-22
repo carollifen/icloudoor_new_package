@@ -208,7 +208,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 					counter.start();
 					
 					try {
-						requestCertiCodeURL = new URL(HOST+"/user/manage/sendVerifyCode.do"+"?sid="+sid + "&ver=" + version.getVersionName());
+						requestCertiCodeURL = new URL(HOST+"/user/manage/sendVerifyCode.do"+"?sid="+sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}
@@ -271,7 +271,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 					try {
 						verifyCertiCodeURL = new URL(HOST
 								+ "/user/manage/confirmVerifyCode.do" + "?sid="
-								+ sid + "&ver=" + version.getVersionName());
+								+ sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}
@@ -359,7 +359,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 		sid = loadSid();
 
 		try {
-			loginURL = new URL(HOST + "/user/manage/login.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			loginURL = new URL(HOST + "/user/manage/login.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -370,7 +370,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 
 			try {
 				loginURL = new URL(HOST + "/user/manage/login.do"
-						+ "?sid=" + sid + "&ver=" + version.getVersionName());
+						+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}

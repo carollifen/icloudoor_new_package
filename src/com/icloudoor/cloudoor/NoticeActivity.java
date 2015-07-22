@@ -107,7 +107,7 @@ public class NoticeActivity extends BaseActivity {
 			noticeUrlEditor.putString("NOTICEURL", null).commit();
 
 		} else {
-			anouncePageWebView.loadUrl(pageurl + "?sid=" + sid + "&ver=" + version.getVersionName());
+			anouncePageWebView.loadUrl(pageurl + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		}
 
 		anouncePageWebView.setWebViewClient(new webViewClient());

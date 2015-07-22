@@ -246,7 +246,7 @@ public class KeyListListFragment extends Fragment {
 
 		try {
 //			downLoadKeyURL = new URL(HOST + "/user/door/download.do" + "?sid=" + sid);
-			downLoadKeyURL = new URL(HOST + "/user/door/download2.do" + "?sid=" + sid + "&ver=" + version.getVersionName());         //new key download interface
+			downLoadKeyURL = new URL(HOST + "/user/door/download2.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());         //new key download interface
 			MyDebugLog.e(TAG, String.valueOf(downLoadKeyURL));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -573,7 +573,7 @@ public class KeyListListFragment extends Fragment {
 		
 		sid2 = loadSid();
 		try {
-			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2 + "&ver=" + version.getVersionName());
+			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2 + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -754,7 +754,7 @@ public class KeyListListFragment extends Fragment {
 			final String posstatus = tempDoorNameList.get(position).get("POSSTATUS");
 			
 			try {
-				returnCarKeyURL = new URL(HOST + "/user/api/returnTempAuthCar.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+				returnCarKeyURL = new URL(HOST + "/user/api/returnTempAuthCar.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			}

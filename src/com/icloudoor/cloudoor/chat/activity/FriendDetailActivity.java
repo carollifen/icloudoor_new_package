@@ -195,7 +195,7 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	
 	public void getFriends() {
 //    	RequestQueue mRequestQueue = Volley.newRequestQueue(this);
-		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName();
+		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId();
 		MyRequestBody requestBody = new MyRequestBody( url, "{}",new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {

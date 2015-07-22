@@ -90,7 +90,7 @@ public class QueryActivity extends BaseActivity {
 
 		if (queryShare.getString("QUERYURL", null) != null) {
 			surveyWebView.loadUrl(HOST + queryShare.getString("QUERYURL", null)
-					+ "?sid=" + sid + "&ver=" + version.getVersionName());
+					+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 			queryEditor.putString("QUERYURL", null).commit();
 		} else {
 			surveyWebView.loadUrl(url + "?sid=" + sid);

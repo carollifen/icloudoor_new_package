@@ -110,7 +110,7 @@ public class DakaDialog extends BaseActivity {
 			public void onClick(View v) {
 				sid = loadSid();
 				try {
-					requestURL = new URL(url + "?sid=" + sid + "&ver=" + version.getVersionName());
+					requestURL = new URL(url + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -204,7 +204,7 @@ public class DakaDialog extends BaseActivity {
 			public void onClick(View v) {
 				sid = loadSid();
 				try {
-					requestURL = new URL(url + "?sid=" + sid + "&ver=" + version.getVersionName());
+					requestURL = new URL(url + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -300,7 +300,7 @@ public class DakaDialog extends BaseActivity {
 		URL getTime = null;
 		
 		try {
-			getTime = new URL(UrlUtils.HOST + "/user/utils/time.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			getTime = new URL(UrlUtils.HOST + "/user/utils/time.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

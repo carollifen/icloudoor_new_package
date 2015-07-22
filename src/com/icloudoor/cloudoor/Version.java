@@ -3,6 +3,7 @@ package com.icloudoor.cloudoor;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class Version {
@@ -29,5 +30,14 @@ public class Version {
 			Log.e(TAG, "an error occured when collect package info", e);
 		}
 		return "android_" + versionName;
+	}
+	
+	public String getDeviceId() {
+		String Imei = null;
+		if(context != null){
+			TelephonyManager telephonyManager= (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			Imei = telephonyManager.getDeviceId();
+		}
+		return Imei;
 	}
 }

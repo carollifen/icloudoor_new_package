@@ -251,7 +251,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 	                    }
 	                    counter.start();
 	                    try {
-	                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+	                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 	                    } catch (MalformedURLException e) {
 	                        e.printStackTrace();
 	                    }
@@ -317,7 +317,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 				
 				if(networkStatus){
 					try {
-						verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+						verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}

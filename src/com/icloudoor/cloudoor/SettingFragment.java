@@ -442,7 +442,7 @@ public class SettingFragment extends Fragment {
 
                     try {
                         logOutURL = new URL(HOST + "/user/manage/logout.do"
-                                + "?sid=" + sid + "&ver=" + version.getVersionName());
+                                + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -648,7 +648,7 @@ public class SettingFragment extends Fragment {
 		URL getUserStatusURL = null;
 		sid = loadSid("SID");
 		try {
-			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -282,7 +282,7 @@ public class WuyeFragment extends Fragment {
 		viewPager.startAutoScroll();
 
 		try {
-			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -419,7 +419,7 @@ public class WuyeFragment extends Fragment {
 	public void getBannerData(){
 		URL bannerURL = null;
 		try {
-			bannerURL = new URL(UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			bannerURL = new URL(UrlUtils.HOST + "/user/prop/zone/getBannerRotate.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -107,7 +107,7 @@ public class RedActivity extends BaseActivity implements OnClickListener {
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 		webSettings.setJavaScriptEnabled(true);
 		String url = UrlUtils.HOST + "/user/activity/rp/my.do" + "?sid="
-				+ loadSid() + "&ver=" + version.getVersionName();
+				+ loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId();
 		System.out.println("url = " + url);
 		webView.addJavascriptInterface(new ObjectForJS(), "cloudoorNative");
 		webView.loadUrl(url);

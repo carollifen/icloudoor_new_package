@@ -144,7 +144,7 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 				if(networkStatus){
 					try {
 						registerURL = new URL(HOST
-								+ "/user/manage/changePassword2.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+								+ "/user/manage/changePassword2.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
 					}

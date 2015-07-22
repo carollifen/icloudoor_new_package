@@ -85,7 +85,7 @@ public class ContactWuyeActivity extends BaseActivity {
 
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.addJavascriptInterface(new Contact(), "cloudoorNative");
-		webview.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName());
+		webview.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 
 		webview.setWebChromeClient(new WebChromeClient() {
 			@Override

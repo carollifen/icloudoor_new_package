@@ -834,7 +834,7 @@ public class KeyFragment extends Fragment {
 		try {
 			downLoadKeyURL = new URL(
 					UrlUtils.HOST + "/user/door/download2.do"
-							+ "?sid=" + sid + "&ver=" + version.getVersionName());
+							+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -1189,7 +1189,7 @@ public class KeyFragment extends Fragment {
 		
 		sid2 = loadSid();
 		try {
-			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2 + "&ver=" + version.getVersionName());
+			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2 + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -1451,7 +1451,7 @@ public class KeyFragment extends Fragment {
 					
 			weatherURL = new URL(HOST + "city=ip&language=zh-chs&unit=c&aqi=city&key=" + Key);
 
-			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			lhlURL = new URL(lhlHOST + "/user/data/laohuangli/get.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -1902,7 +1902,7 @@ public class KeyFragment extends Fragment {
 		sid = loadSid();
 		
 		try {
-			getConfigUrl = new URL(UrlUtils.HOST + "/user/config/default.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			getConfigUrl = new URL(UrlUtils.HOST + "/user/config/default.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
@@ -2877,7 +2877,7 @@ public class KeyFragment extends Fragment {
 		String doorId = deviceIdTodoorId(openDoorDevicdId);
 		JSONObject parm = new JSONObject();
 		String url = UrlUtils.HOST + "/user/activity/rp/grab.do" + "?sid=" + loadSid() + "&ver="
-				+ version.getVersionName();
+				+ version.getVersionName() + "&imei=" + version.getDeviceId();
 		try {
 			parm.put("doorId", doorId);
 		} catch (JSONException e) {
@@ -3296,7 +3296,7 @@ public class KeyFragment extends Fragment {
 		URL getUserStatusURL = null;
 		sid = loadSid();
 		try {
-			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
+			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
