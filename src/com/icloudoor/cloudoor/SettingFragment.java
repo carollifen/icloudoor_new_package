@@ -218,7 +218,7 @@ public class SettingFragment extends Fragment {
 		
 		
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);	
-		name = loginStatus.getString("NAME", null);
+		name = loginStatus.getString("NICKNAME", null);
 		portraitUrl = loginStatus.getString("URL", null);
 		
 		if(name != null)
