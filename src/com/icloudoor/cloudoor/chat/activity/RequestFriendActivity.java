@@ -84,6 +84,9 @@ public class RequestFriendActivity extends BaseActivity implements
 				Toast.makeText(this, R.string.friendquestsuccess,
 						Toast.LENGTH_LONG).show();
 				finish();
+			}else if(response.getInt("cede") == -150){
+				showToast(R.string.isFriendtrue);
+				finish();
 			}else{
 				Toast.makeText(this, R.string.network_error,
 						Toast.LENGTH_LONG).show();

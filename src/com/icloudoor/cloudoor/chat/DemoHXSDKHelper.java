@@ -188,6 +188,20 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 		mRequestQueue.add(requestBody);
 	}
 
+	public void setExt(EMMessage message){
+		SharedPreferences loginStatus = appContext.getSharedPreferences("LOGINSTATUS", Context.MODE_PRIVATE);
+		JSONObject ext = new JSONObject();
+		try {
+			ext.put("userId", loginStatus.getString("USERID", ""));
+			ext.put("nickname", loginStatus.getString("NICKNAME", ""));
+			ext.put("portraitUrl", loginStatus.getString("URL", ""));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		message.setAttribute("userInfo", ext);
+	}
+	
 	/**
 	 * 全局事件监听 因为可能会有UI页面先处理到这个消息，所以一般如果UI页面已经处理，这里就不需要再次处�? activityList.size()
 	 * <= 0 意味�?�?有页面都已经在后台运行，或�?�已经离�?Activity Stack
@@ -265,6 +279,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 						EMConversation emConversation = EMChatManager.getInstance().getConversation(message.getFrom());
 						EMMessage txtMessage =  EMMessage.createSendMessage(EMMessage.Type.TXT);
 						TextMessageBody messageBody = new TextMessageBody("我们已经成为好友，可以聊天了");
+						setExt(message);
 						txtMessage.setAttribute("type", 4);
 						txtMessage.addBody(messageBody);
 						txtMessage.setReceipt(message.getFrom());

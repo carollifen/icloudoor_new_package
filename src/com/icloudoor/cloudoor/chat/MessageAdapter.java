@@ -723,14 +723,14 @@ public class MessageAdapter extends BaseAdapter {
 				holder.hint_tx.setVisibility(View.GONE);
 				holder.layout_keyauth.setVisibility(View.GONE);
 				holder.layout_chattx.setVisibility(View.GONE);
-				final JSONObject card = message.getJSONObjectAttribute("card");
+				final JSONObject card = message.getJSONObjectAttribute("data");
 				ImageLoader.getInstance().displayImage(
-						card.getString("PortraitUrl"), holder.user_head,
+						card.getString("portraitUrl"), holder.user_head,
 						DisplayImageOptionsUtli.options);
-				holder.card_name.setText(card.getString("Nickname"));
-				int ProvinceId = card.getInt("ProvinceId");
-				int CityId = card.getInt("CityId");
-				int DistrictId = card.getInt("DistrictId");
+				holder.card_name.setText(card.getString("nickname"));
+				int ProvinceId = card.getInt("provinceId");
+				int CityId = card.getInt("cityId");
+				int DistrictId = card.getInt("districtId");
 				holder.addr_tx.setText(FindDBUtile.getProvinceName(context,
 						ProvinceId)
 						+ ""
@@ -746,7 +746,7 @@ public class MessageAdapter extends BaseAdapter {
 
 						String UserId="11111111";
 						try {
-							UserId = card.getString("UserId");
+							UserId = card.getString("userId");
 						} catch (JSONException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -771,53 +771,53 @@ public class MessageAdapter extends BaseAdapter {
 							if(username.equals(UserId)|| UserId.equals(myUserid)){
 								Intent intent = new Intent(context,
 										FriendDetailActivity.class);
-								intent.putExtra("CityId", card.getInt("CityId"));
+								intent.putExtra("CityId", card.getInt("cityId"));
 								intent.putExtra("returnChat", 1);
 								intent.putExtra("DistrictId",
-										card.getInt("DistrictId"));
+										card.getInt("cistrictId"));
 								intent.putExtra("ProvinceId",
-										card.getInt("ProvinceId"));
-								intent.putExtra("Sex", card.getInt("Sex"));
+										card.getInt("provinceId"));
+								intent.putExtra("Sex", card.getInt("pex"));
 								intent.putExtra("Nickname",
-										card.getString("Nickname"));
+										card.getString("nickname"));
 								intent.putExtra("PortraitUrl",
-										card.getString("PortraitUrl"));
+										card.getString("portraitUrl"));
 								intent.putExtra("UserId",
-										card.getString("UserId"));
+										card.getString("userId"));
 								activity.startActivityForResult(intent, ChatActivity.REQUEST_CODE_FriendDetail);
 								return;
 							}
 							if (isFirend) {
 								Intent intent = new Intent(context,
 										FriendDetailActivity.class);
-								intent.putExtra("CityId", card.getInt("CityId"));
+								intent.putExtra("CityId", card.getInt("cityId"));
 								intent.putExtra("DistrictId",
-										card.getInt("DistrictId"));
+										card.getInt("districtId"));
 								intent.putExtra("ProvinceId",
-										card.getInt("ProvinceId"));
-								intent.putExtra("Sex", card.getInt("Sex"));
+										card.getInt("provinceId"));
+								intent.putExtra("Sex", card.getInt("sex"));
 								intent.putExtra("Nickname",
-										card.getString("Nickname"));
+										card.getString("nickname"));
 								intent.putExtra("PortraitUrl",
-										card.getString("PortraitUrl"));
+										card.getString("portraitUrl"));
 								intent.putExtra("UserId",
-										card.getString("UserId"));
+										card.getString("userId"));
 								context.startActivity(intent);
 							} else {
 								Intent intent = new Intent(context,
 										UsersDetailActivity.class);
-								intent.putExtra("CityId", card.getInt("CityId"));
+								intent.putExtra("CityId", card.getInt("cityId"));
 								intent.putExtra("DistrictId",
-										card.getInt("DistrictId"));
+										card.getInt("districtId"));
 								intent.putExtra("ProvinceId",
-										card.getInt("ProvinceId"));
-								intent.putExtra("Sex", card.getInt("Sex"));
+										card.getInt("provinceId"));
+								intent.putExtra("Sex", card.getInt("sex"));
 								intent.putExtra("Nickname",
-										card.getString("Nickname"));
+										card.getString("nickname"));
 								intent.putExtra("PortraitUrl",
-										card.getString("PortraitUrl"));
+										card.getString("portraitUrl"));
 								intent.putExtra("UserId",
-										card.getString("UserId"));
+										card.getString("userId"));
 								context.startActivity(intent);
 							}
 						} catch (JSONException e) {
@@ -837,9 +837,9 @@ public class MessageAdapter extends BaseAdapter {
 				holder.hint_tx.setVisibility(View.GONE);
 				holder.layout_keyauth.setVisibility(View.VISIBLE);
 				holder.layout_chattx.setVisibility(View.GONE);
-				JSONObject keyAuth = message.getJSONObjectAttribute("keyAuth");
-				holder.zone_name.setText(keyAuth.getString("zoneName"));
-				holder.keyauth_sousse.setText(keyAuth.getString("zoneType"));;
+				JSONObject keyAuth = message.getJSONObjectAttribute("data");
+				holder.zone_name.setText(keyAuth.getString("address"));
+				holder.keyauth_sousse.setText(keyAuth.getString("authSuccMsg"));;
 			}
 		} catch (EaseMobException e) {
 			

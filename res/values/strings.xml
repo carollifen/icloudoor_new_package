@@ -307,6 +307,9 @@
     <string name="plass_door">请选择授权门</string>
     <string name="doorType1">人行门禁授权成功</string>
     <string name="doorType2">车行门禁授权成功</string>
+    <string name="invitatiion2">通过云门app邀请与您成为好友</string>
+    <string name="invitatiion1">您的朋友</string>
+    <string name="isFriendtrue">此人是你好友，不能重复申请</string>
     
 
 </resources>

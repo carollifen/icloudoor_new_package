@@ -568,7 +568,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		    message.setChatType(ChatType.ChatRoom);
 		}
 		message.setAttribute("type", 3);
-		message.setAttribute("card", card);
+		message.setAttribute("data", card);
 		TextMessageBody txtBody = new TextMessageBody("");
 		message.addBody(txtBody);
 		message.setReceipt(toChatUsername);
@@ -581,13 +581,13 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		
 		JSONObject card = new JSONObject();
 		try {
-			card.put("CityId", intent.getIntExtra("CityId", 0));
-			card.put("DistrictId", intent.getIntExtra("DistrictId", 0));
-			card.put("ProvinceId", intent.getIntExtra("ProvinceId", 0));
-			card.put("Sex", intent.getIntExtra("Sex", 0));
-			card.put("Nickname", intent.getStringExtra("Nickname"));
-			card.put("PortraitUrl", intent.getStringExtra("PortraitUrl"));
-			card.put("UserId", intent.getStringExtra("UserId"));
+			card.put("cityId", intent.getIntExtra("CityId", 0));
+			card.put("districtId", intent.getIntExtra("DistrictId", 0));
+			card.put("provinceId", intent.getIntExtra("ProvinceId", 0));
+			card.put("sex", intent.getIntExtra("Sex", 0));
+			card.put("nickname", intent.getStringExtra("Nickname"));
+			card.put("portraitUrl", intent.getStringExtra("PortraitUrl"));
+			card.put("userId", intent.getStringExtra("UserId"));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -607,7 +607,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		    message.setChatType(ChatType.ChatRoom);
 		}
 		message.setAttribute("type", 5);
-		message.setAttribute("keyAuth", keyAuth);
+		message.setAttribute("data", keyAuth);
 		TextMessageBody txtBody = new TextMessageBody("");
 		message.addBody(txtBody);
 		message.setReceipt(toChatUsername);
@@ -620,8 +620,8 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		
 		JSONObject keyAuth = new JSONObject();
 		try {
-			keyAuth.put("zoneName", intent.getStringExtra("zoneName"));
-			keyAuth.put("zoneType", intent.getStringExtra("zoneType"));
+			keyAuth.put("address", intent.getStringExtra("zoneName"));
+			keyAuth.put("authSuccMsg", intent.getStringExtra("zoneType"));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

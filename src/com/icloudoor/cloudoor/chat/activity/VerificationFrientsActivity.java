@@ -33,6 +33,7 @@ import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.icloudoor.cloudoor.utli.VFDaoImpl;
+import com.icloudoor.cloudoor.widget.InvitationFriendDialog;
 
 public class VerificationFrientsActivity extends BaseActivity implements
 		OnClickListener, NetworkInterface {
@@ -147,6 +148,9 @@ public class VerificationFrientsActivity extends BaseActivity implements
 							if (response.getInt("code") == 1) {
 								showToast(R.string.friendquestsuccess);
 								finish();
+							}else if(response.getInt("cede") == -150){
+								showToast(R.string.isFriendtrue);
+								finish();
 							}else{
 								showToast(R.string.network_error);
 							}
@@ -210,9 +214,9 @@ public class VerificationFrientsActivity extends BaseActivity implements
 		}
 	}
 
-
 	public void notHavaUser() {
-
+		InvitationFriendDialog dialog = new InvitationFriendDialog(this, R.style.QRCode_dialog);
+		dialog.show();
 	}
 
 	@Override

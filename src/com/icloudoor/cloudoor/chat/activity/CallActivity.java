@@ -1,6 +1,10 @@
 package com.icloudoor.cloudoor.chat.activity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.SoundPool;
@@ -168,10 +172,24 @@ public class CallActivity extends BaseActivity {
         // 设置消息body
         message.addBody(txtBody);
         message.setMsgId(msgid);
-
+        setExt(message);
         // 保存
         EMChatManager.getInstance().saveMessage(message, false);
     }
+    
+    public void setExt(EMMessage message){
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+		JSONObject ext = new JSONObject();
+		try {
+			ext.put("userId", loginStatus.getString("USERID", ""));
+			ext.put("nickname", loginStatus.getString("NICKNAME", ""));
+			ext.put("portraitUrl", loginStatus.getString("URL", ""));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		message.setAttribute("userInfo", ext);
+	}
 
     enum CallingState {
         CANCED, NORMAL, REFUESD, BEREFUESD, UNANSWERED, OFFLINE, NORESPONSE, BUSY
