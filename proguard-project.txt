@@ -48,6 +48,9 @@
 -libraryjars libs/universal-image-loader-1.9.3.jar
 -libraryjars libs/volley.jar
 -libraryjars libs/zxing.jar
+-libraryjars libs/SocialSDK_QQZone_1.jar
+-libraryjars libs/SocialSDK_QQZone_2.jar
+-libraryjars libs/SocialSDK_QQZone_3.jar
 
 -dontwarn com.squareup.okhttp.**
 -keep class com.squareup.okhttp.** { *;} 
@@ -197,6 +200,10 @@ public static final int *;
 }
 
 -keepclassmembers class com.icloudoor.cloudoor.ContactWuyeActivity$Contact {
+  public *;
+}
+
+-keepclassmembers class com.icloudoor.cloudoor.RedActivity$ObjectForJS {
   public *;
 }
 
