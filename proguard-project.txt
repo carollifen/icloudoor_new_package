@@ -207,6 +207,8 @@ public static final int *;
   public *;
 }
 
+-keep class com.icloudoor.cloudoor.chat.entity.* {*;}
+
 -keepattributes *Annotation*
 -keepattributes *JavascriptInterface*
 
