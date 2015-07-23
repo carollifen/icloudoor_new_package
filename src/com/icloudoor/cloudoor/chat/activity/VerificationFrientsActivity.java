@@ -2,6 +2,7 @@ package com.icloudoor.cloudoor.chat.activity;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,14 +13,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -28,7 +29,8 @@ import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.adapter.VerificationFrientsAdapter;
-import com.icloudoor.cloudoor.chat.entity.VerificationFrientsInfo;
+import com.icloudoor.cloudoor.chat.entity.SearchUserInfo;
+import com.icloudoor.cloudoor.chat.entity.SearchUserList;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.GsonUtli;
@@ -64,7 +66,18 @@ public class VerificationFrientsActivity extends BaseActivity implements
 		List<VerificationFrientsList> data = daoImpl.find();
 		adapter.setData(data);
 		// getNetworkData(this, "/user/im/getInvitations.do", null);
+		
+		vf_listView.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				VerificationFrientsList verificationFrientsList = (VerificationFrientsList) adapter.getItem(position);
+				String userid = verificationFrientsList.getUserId();
+				getUsersDetailWsIsFriend(userid);
+			}
+		});
 	}
 
 	@Override
@@ -127,6 +140,69 @@ public class VerificationFrientsActivity extends BaseActivity implements
 		getNetworkData(this, "/user/api/isUserReg.do", josn.toString(), false);
 	}
 
+	
+	public void getUsersDetailWsIsFriend(String userIds){
+		loading();
+		JSONObject jsonObject = new JSONObject();
+		JSONArray array = new JSONArray();
+		try {
+			array.put(userIds);
+			jsonObject.put("userIds", array);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String url = UrlUtils.HOST + "/user/im/getUsersDetailWsIsFriend.do" + "?sid=" + loadSid() + "&ver="
+				+ version.getVersionName() + "&imei=" + version.getDeviceId();
+		MyRequestBody requestBody = new MyRequestBody(url,
+				jsonObject.toString(), new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						// TODO Auto-generated method stub
+						destroyDialog();
+						SearchUserInfo searchUserInfo = GsonUtli.jsonToObject(response.toString(), SearchUserInfo.class);
+						if(searchUserInfo!=null){
+							List<SearchUserList> data = searchUserInfo.getData();
+							if(data!=null && data.size()>0){
+								SearchUserList searchUserList = data.get(0);
+								Boolean isFirend = searchUserList.getIsFriend();
+								if(isFirend){
+									Intent intent = new Intent(VerificationFrientsActivity.this,FriendDetailActivity.class);
+									intent.putExtra("CityId", searchUserList.getCityId());
+									intent.putExtra("DistrictId", searchUserList.getDistrictId());
+									intent.putExtra("ProvinceId", searchUserList.getProvinceId());
+									intent.putExtra("Nickname", searchUserList.getNickname());
+									intent.putExtra("PortraitUrl", searchUserList.getPortraitUrl());
+									intent.putExtra("Sex", searchUserList.getSex());
+									intent.putExtra("UserId", searchUserList.getUserId());
+									startActivity(intent);
+								}else{
+									Intent intent = new Intent(VerificationFrientsActivity.this,UsersDetailActivity.class);
+									intent.putExtra("CityId", searchUserList.getCityId());
+									intent.putExtra("DistrictId", searchUserList.getDistrictId());
+									intent.putExtra("ProvinceId", searchUserList.getProvinceId());
+									intent.putExtra("Nickname", searchUserList.getNickname());
+									intent.putExtra("PortraitUrl", searchUserList.getPortraitUrl());
+									intent.putExtra("Sex", searchUserList.getSex());
+									intent.putExtra("UserId", searchUserList.getUserId());
+									startActivity(intent);
+								}
+							}else{
+								showToast(R.string.search_result);
+							}
+						}
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+						destroyDialog();
+						showToast(R.string.network_error);
+					}
+				});
+		mQueue.add(requestBody);
+	}
+	
 	public void invite(String phoneNumber) {
 		JSONObject jsonObject = new JSONObject();
 		try {
