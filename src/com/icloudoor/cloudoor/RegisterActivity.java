@@ -220,7 +220,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 		ETInputPhoneNum.addTextChangedListener(this);
 		ETInputCertiCode.addTextChangedListener(this);
 		
-		sid = loadSid();
+//		sid = loadSid();
 		
 		BtnBack = (RelativeLayout) findViewById(R.id.btn_back);
 		BtnBack.setOnClickListener(new OnClickListener(){
@@ -251,6 +251,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 	                    }
 	                    counter.start();
 	                    try {
+	                    	sid = loadSid();
 	                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 	                    } catch (MalformedURLException e) {
 	                        e.printStackTrace();
@@ -263,8 +264,10 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 	                                @Override
 	                                public void onResponse(JSONObject response) {
 	                                    try {
-	                                        if (response.getString("sid") != null)
+	                                        if (response.getString("sid") != null) {
 	                                            sid = response.getString("sid");
+	                                            saveSid(sid);
+	                                        }
 	                                        RequestCertiStatusCode = response.getInt("code");
 	                                    } catch (JSONException e) {
 	                                        e.printStackTrace();
@@ -317,6 +320,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 				
 				if(networkStatus){
 					try {
+						sid = loadSid();
 						verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();

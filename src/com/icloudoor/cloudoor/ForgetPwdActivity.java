@@ -193,7 +193,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 			
 		});
 		
-		sid = loadSid();
+//		sid = loadSid();
 		
         content = new SmsContent(new Handler());
         this.getContentResolver().registerContentObserver(Uri.parse("content://sms/"), true, content);
@@ -208,6 +208,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 					counter.start();
 					
 					try {
+						sid = loadSid();
 						requestCertiCodeURL = new URL(HOST+"/user/manage/sendVerifyCode.do"+"?sid="+sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
@@ -219,8 +220,10 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 								@Override
 								public void onResponse(JSONObject response) {
 									try {
-										if (response.getString("sid") != null) 
+										if (response.getString("sid") != null) {
 											sid = response.getString("sid");
+											saveSid(sid);
+										}
 										RequestCertiStatusCode = response
 												.getInt("code");
 									} catch (JSONException e) {
@@ -269,6 +272,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 			public void onClick(View v) {
 				if(networkStatus){
 					try {
+						sid = loadSid();
 						verifyCertiCodeURL = new URL(HOST
 								+ "/user/manage/confirmVerifyCode.do" + "?sid="
 								+ sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
