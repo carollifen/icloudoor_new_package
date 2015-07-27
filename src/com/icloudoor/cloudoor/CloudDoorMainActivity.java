@@ -995,7 +995,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 	public void getFriends() {
 
 		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid="
-				+ loadSid();
+				+ loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId();
 		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
 				url, null, new Response.Listener<JSONObject>() {
 					@Override
