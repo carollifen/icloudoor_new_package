@@ -12,8 +12,9 @@
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
-        android:layout_marginTop="24dp"
+        
         android:hint="留言给朋友"
+        android:visibility="gone"
         android:textColor="#333333"
         android:textColorHint="#ABB3BD"
         android:paddingLeft="12dp"
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
         android:layout_marginLeft="32dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="32dp"
         android:text="您邀请的好友尚未注册云门app，请选择邀请方式："
         android:textColor="#333333"
@@ -35,6 +37,7 @@
         android:layout_height="55dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
+        android:gravity="center"
         android:layout_marginBottom="23dp"
         android:orientation="horizontal" >
         

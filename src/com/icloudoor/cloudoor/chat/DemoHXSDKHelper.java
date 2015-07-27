@@ -51,6 +51,7 @@ import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
 import com.icloudoor.cloudoor.CloudDoorMainActivity;
+import com.icloudoor.cloudoor.MsgFragment;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
@@ -267,6 +268,10 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 								vf.setStatus("0");
 								daoImpl.insert(vf);
 							}
+							
+							Intent mIntent = new Intent(MsgFragment.class.getName());  
+			                //发送广播  
+							appContext.sendBroadcast(mIntent);  
 
 						} catch (EaseMobException e) {
 							// TODO Auto-generated catch block

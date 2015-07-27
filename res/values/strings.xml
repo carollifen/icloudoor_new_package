@@ -275,7 +275,7 @@
     <string name="update_only_in_wifi">没有wifi连接， 只在wifi下更新</string>
     <string name="modify_info_success">个人资料修改成功</string>
     <string name="friendquestsuccess">好友申请发送成功</string>
-    <string name="notfriend">此人不是你好友，禁止骚扰</string>
+    <string name="notfriend">你还不是他（她）好友，请先添加好友</string>
     <string name="notfriend_1">此人不是你好友，无法正确显示头像昵称</string>
     <string name="msg_tx1">发送好友</string>
     <string name="msg_tx2">的名片到当前聊天？</string>
@@ -302,13 +302,13 @@
     <string name="auth_key_car_Fail2">用户发送次数超限（一天5次）</string>
     <string name="auth_key_car_Fail3">该用户已有该临时钥匙</string>
     <string name="auth_key_car_Fail4">您不能授权给自己</string>
-    <string name="auth_key_car_Fail5">你已有该区小车</string>
+    <string name="auth_key_car_Fail5">对方已有该区小车</string>
     <string name="auth_key_car_Fail6">用户接收次数超限（一天5次）</string>
     <string name="plass_door">请选择授权门</string>
     <string name="doorType1">人行门禁授权成功</string>
     <string name="doorType2">车行门禁授权成功</string>
-    <string name="invitatiion2">通过云门app邀请与您成为好友</string>
-    <string name="invitatiion1">您的朋友</string>
+    <string name="invitatiion2">推荐云门APP给你</string>
+    <string name="invitatiion1">云门能遥控开门也能聊天，点这里下载注册通过我的验证吧。</string>
     <string name="isFriendtrue">此人是你好友，不能重复申请</string>
     
 

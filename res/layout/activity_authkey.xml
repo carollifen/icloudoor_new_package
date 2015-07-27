@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/contact"
+            android:text="钥匙授权"
             android:textColor="#ffffff"
             android:textSize="18sp" />
     </RelativeLayout>

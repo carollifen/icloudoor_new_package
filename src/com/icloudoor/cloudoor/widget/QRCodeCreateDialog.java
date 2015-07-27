@@ -1,12 +1,17 @@
 package com.icloudoor.cloudoor.widget;
 
 import java.util.Hashtable;
+import java.util.jar.JarOutputStream;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -89,9 +94,18 @@ public class QRCodeCreateDialog extends Dialog{
 			if (url == null || "".equals(url) || url.length() < 1) {
 				return;
 			}
+			JSONObject object = new JSONObject();
+			try {
+				object.put("type", 1);
+				object.put("userId", url);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String qrCode = Base64.encodeToString(object.toString().getBytes(), Base64.DEFAULT);
 			Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
 			hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
-			BitMatrix bitMatrix = new QRCodeWriter().encode(url,
+			BitMatrix bitMatrix = new QRCodeWriter().encode(qrCode,
 					BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
 			int[] pixels = new int[QR_WIDTH * QR_HEIGHT];
 			for (int y = 0; y < QR_HEIGHT; y++) {

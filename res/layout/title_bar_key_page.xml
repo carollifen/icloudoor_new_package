@@ -17,6 +17,7 @@
         android:id="@+id/open_key_list"
         android:layout_width="48dp"
         android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants" 
         android:layout_alignParentRight="true" >
 
         <TextView

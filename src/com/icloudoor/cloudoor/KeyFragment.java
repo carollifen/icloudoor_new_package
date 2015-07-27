@@ -101,9 +101,12 @@ import com.icloudoor.cloudoor.UartService;
 import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.cloudoor.ShakeEventManager.OnShakeListener;
 import com.icloudoor.cloudoor.SwitchButton.OnSwitchListener;
+import com.icloudoor.cloudoor.activity.AdministrationKeyActivity;
 import com.icloudoor.cloudoor.activity.RedActivity;
+import com.icloudoor.cloudoor.activity.UserStatusActivity;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.icdcrypto.ICDCrypto;
+import com.icloudoor.cloudoor.widget.UserStatusDialog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 
@@ -563,7 +566,8 @@ public class KeyFragment extends Fragment {
 				}
 
 				Intent intent = new Intent();
-				intent.setClass(getActivity(), KeyList.class);
+//				intent.setClass(getActivity(), KeyList.class);
+				intent.setClass(getActivity(), AdministrationKeyActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -2893,8 +2897,6 @@ public class KeyFragment extends Fragment {
 					@Override
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
-						System.out.println("ºì°üresponse = "+response);
-//						{"data":false,"message":"successful","sid":"0641983572e74fc7abf73edb0fe51749","code":1}
 						try {
 							int code =response.getInt("code");
 							if(code==1){
@@ -3327,6 +3329,21 @@ public class KeyFragment extends Fragment {
 									edit.putInt("userStatus", response.getJSONObject("data").getInt("userStatus"));
 									edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
 									edit.commit();
+									int status = response.getJSONObject("data").getInt("userStatus");
+//									if(status!=2){
+										UserStatusDialog statusDialog = new UserStatusDialog(getActivity());
+										statusDialog.show();
+										statusDialog.setOKOnClickListener(new OnClickListener() {
+											
+											@Override
+											public void onClick(View v) {
+												// TODO Auto-generated method stub
+												Intent intent = new Intent(getActivity(),UserStatusActivity.class);
+												startActivity(intent);
+											}
+										});
+//									}
+										
 									
 									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getInt("userStatus")) + "in KeyFragment***********");
 									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getBoolean("isHasPropServ")) + "in KeyFragment***********");

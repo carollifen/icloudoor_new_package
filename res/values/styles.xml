@@ -151,7 +151,7 @@
  <!-- 无标题 -->
         <item name="android:windowBackground">@android:color/transparent</item>
  <!-- 自己想要的背景 -->
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
  <!-- 模糊 -->
     </style>
 

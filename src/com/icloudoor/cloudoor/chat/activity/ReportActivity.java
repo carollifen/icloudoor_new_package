@@ -54,19 +54,19 @@ public class ReportActivity extends BaseActivity implements OnClickListener,
 					break;
 
 				case R.id.radio_2:
-					type = 2;
+					type = 5;
 					break;
 
 				case R.id.radio_3:
-					type = 3;
+					type = 2;
 					break;
 
 				case R.id.radio_4:
-					type = 4;
+					type = 3;
 					break;
 
 				case R.id.radio_5:
-					type = 5;
+					type = 4;
 					break;
 
 				case R.id.radio_6:

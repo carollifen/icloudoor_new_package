@@ -52,6 +52,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:divider="#dddddd"
+            android:dividerHeight="1px"
             android:listSelector="@android:color/transparent"
              />
 

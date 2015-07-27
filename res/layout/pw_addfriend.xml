@@ -45,11 +45,22 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp" >
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/add_friend_ioc" />
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true" >
+
+                <ImageView
+                    android:id="@+id/push_current"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:src="@drawable/push_current" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/add_friend_ioc" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"

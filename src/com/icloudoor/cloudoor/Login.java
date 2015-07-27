@@ -59,9 +59,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Login extends BaseActivity implements TextWatcher {
-	
+
 	private String TAG = this.getClass().getSimpleName();
-	
+
 	private EditText ETInputPhoneNum;
 	private EditText ETInputPwd;
 	private TextView TVLogin;
@@ -69,7 +69,7 @@ public class Login extends BaseActivity implements TextWatcher {
 	private TextView TVGoToRegi;
 	private RelativeLayout ShowPwd;
 	private ImageView IVPwdIcon;
-    private ProgressBar pbLoginBar;
+	private ProgressBar pbLoginBar;
 	private boolean isHiddenPwd = true;
 
 	private URL loginURL;
@@ -83,9 +83,9 @@ public class Login extends BaseActivity implements TextWatcher {
 
 	private String sid;
 	private int isLogin = 0;
-	
+
 	private int setPersonal;
-	
+
 	private String name = null;
 	private String nickname = null;
 	private String id = null;
@@ -97,21 +97,21 @@ public class Login extends BaseActivity implements TextWatcher {
 	private String district = null;
 	private int userStatus;
 	private boolean isHasPropServ;
-	
+
 	private MyAreaDBHelper mAreaDBHelper;
 	private SQLiteDatabase mAreaDB;
 	private final String DATABASE_NAME = "area.db";
 	private final String TABLE_NAME = "tb_core_area";
-	
+
 	// for new ui
 	private RelativeLayout phoneLayout;
 	private RelativeLayout pwdLayout;
 	private RelativeLayout loginLayout;
 
 	boolean isDebug = DEBUG.isDebug;
-	
+
 	private Version version;
-	
+
 	private MyDataBaseHelper mKeyDBHelper;
 	private SQLiteDatabase mKeyDB;
 	private final String KEY_DATABASE_NAME = "KeyDB.db";
@@ -120,45 +120,45 @@ public class Login extends BaseActivity implements TextWatcher {
 	private final String ZONE_TABLE_NAME = "ZoneTable";
 	public final int LOGINSOUSSE = 1;
 	public JSONObject loginResponse;
-	
-	Handler handler = new Handler(){
-		
+
+	Handler handler = new Handler() {
+
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case LOGINSOUSSE:
-				
+
 				break;
 
 			default:
 				break;
 			}
 		}
-		
+
 	};
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().hide();
+		// getActionBar().hide();
 		setContentView(R.layout.login);
-        pbLoginBar = (ProgressBar) findViewById(R.id.loginBar);
-        pbLoginBar.setVisibility(View.INVISIBLE);
-		registerReceiver(mConnectionStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-		
+		pbLoginBar = (ProgressBar) findViewById(R.id.loginBar);
+		pbLoginBar.setVisibility(View.INVISIBLE);
+		registerReceiver(mConnectionStatusReceiver, new IntentFilter(
+				ConnectivityManager.CONNECTIVITY_ACTION));
+
 		setupUI(findViewById(R.id.main));
-		
+
 		version = new Version(getApplicationContext());
-		
+
 		mAreaDBHelper = new MyAreaDBHelper(Login.this, DATABASE_NAME, null, 1);
-		mAreaDB = mAreaDBHelper.getWritableDatabase();	
-		
+		mAreaDB = mAreaDBHelper.getWritableDatabase();
+
 		mKeyDBHelper = new MyDataBaseHelper(Login.this, KEY_DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
-		
+
 		mQueue = Volley.newRequestQueue(this);
 
 		ETInputPhoneNum = (EditText) findViewById(R.id.login_input_phone_num);
@@ -169,64 +169,73 @@ public class Login extends BaseActivity implements TextWatcher {
 		ShowPwd = (RelativeLayout) findViewById(R.id.show_pwd);
 		IVPwdIcon = (ImageView) findViewById(R.id.btn_show_pwd);
 		IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
-		
+
 		// for new ui
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenWidth = dm.widthPixels;
-		
+
 		phoneLayout = (RelativeLayout) findViewById(R.id.phone_input_layout);
 		pwdLayout = (RelativeLayout) findViewById(R.id.pwd_input_layout);
 		loginLayout = (RelativeLayout) findViewById(R.id.login_btn_layout);
-		
-		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) phoneLayout.getLayoutParams();
-		RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) pwdLayout.getLayoutParams();
-		RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) loginLayout.getLayoutParams();
-		params.width = screenWidth - 48*2;
-		params1.width = screenWidth - 48*2;
-		params2.width = screenWidth - 48*2;
+
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) phoneLayout
+				.getLayoutParams();
+		RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) pwdLayout
+				.getLayoutParams();
+		RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) loginLayout
+				.getLayoutParams();
+		params.width = screenWidth - 48 * 2;
+		params1.width = screenWidth - 48 * 2;
+		params2.width = screenWidth - 48 * 2;
 		phoneLayout.setLayoutParams(params);
 		pwdLayout.setLayoutParams(params1);
 		loginLayout.setLayoutParams(params2);
-		
+
 		phoneLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
 		pwdLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
 		loginLayout.setBackgroundResource(R.drawable.shape_login_btn_disable);
-		
-		ETInputPhoneNum.setOnFocusChangeListener(new OnFocusChangeListener(){
+
+		ETInputPhoneNum.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus){
-					phoneLayout.setBackgroundResource(R.drawable.shape_login_input);
-				}else{
-					phoneLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
-                    if (ETInputPhoneNum.getText().toString().length() != 11){
-                        Toast.makeText(getApplicationContext(), R.string.error_phonenumb_over, Toast.LENGTH_SHORT).show();
-                    }
+				if (hasFocus) {
+					phoneLayout
+							.setBackgroundResource(R.drawable.shape_login_input);
+				} else {
+					phoneLayout
+							.setBackgroundResource(R.drawable.shape_login_input_normal);
+					if (ETInputPhoneNum.getText().toString().length() != 11) {
+						Toast.makeText(getApplicationContext(),
+								R.string.error_phonenumb_over,
+								Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
-			
+
 		});
-		ETInputPwd.setOnFocusChangeListener(new OnFocusChangeListener(){
+		ETInputPwd.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus){
-					pwdLayout.setBackgroundResource(R.drawable.shape_login_input);
-				}else{
-					pwdLayout.setBackgroundResource(R.drawable.shape_login_input_normal);
+				if (hasFocus) {
+					pwdLayout
+							.setBackgroundResource(R.drawable.shape_login_input);
+				} else {
+					pwdLayout
+							.setBackgroundResource(R.drawable.shape_login_input_normal);
 				}
 			}
-			
+
 		});
-		
+
 		TVLogin.setTextColor(0xFFf3f3f3);
 		loginLayout.setEnabled(false);
-		
-		ETInputPhoneNum.addTextChangedListener(this); 
+
+		ETInputPhoneNum.addTextChangedListener(this);
 		ETInputPwd.addTextChangedListener(this);
-		
+
 		sid = loadSid("SID");
 
 		isHiddenPwd = true;
@@ -237,11 +246,15 @@ public class Login extends BaseActivity implements TextWatcher {
 			public void onClick(View v) {
 				if (isHiddenPwd) {
 					isHiddenPwd = false;
-					ETInputPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+					ETInputPwd
+							.setTransformationMethod(HideReturnsTransformationMethod
+									.getInstance());
 					IVPwdIcon.setImageResource(R.drawable.show_pwd_new);
 				} else {
 					isHiddenPwd = true;
-					ETInputPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+					ETInputPwd
+							.setTransformationMethod(PasswordTransformationMethod
+									.getInstance());
 					IVPwdIcon.setImageResource(R.drawable.hide_pwd_new);
 				}
 
@@ -276,14 +289,16 @@ public class Login extends BaseActivity implements TextWatcher {
 			public void onClick(View v) {
 
 				if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
-                    pbLoginBar.setVisibility(View.VISIBLE);
+					pbLoginBar.setVisibility(View.VISIBLE);
 					Toast.makeText(getApplicationContext(), R.string.login_ing,
 							Toast.LENGTH_SHORT).show();
 
 					try {
 						loginURL = new URL(HOST + "/user/manage/login.do"
-								+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
-						
+								+ "?sid=" + sid + "&ver="
+								+ version.getVersionName() + "&imei="
+								+ version.getDeviceId());
+
 						MyDebugLog.e(TAG, loginURL.toString());
 					} catch (MalformedURLException e) {
 						e.printStackTrace();
@@ -308,47 +323,34 @@ public class Login extends BaseActivity implements TextWatcher {
 									}
 									MyDebugLog.e("TEST", response.toString());
 
-                                    pbLoginBar.setVisibility(View.INVISIBLE);
+									pbLoginBar.setVisibility(View.INVISIBLE);
 									if (loginStatusCode == 1) {
-										
-										try {
-											JSONObject data = response.getJSONObject("data");
-											JSONObject im = data.getJSONObject("im");
-											JSONObject account = im.getJSONObject("account");
-											loginResponse = response;
-											if(account!=null){
-												login(account.getString("userId"), account.getString("password"));
-											}else{
-												Toast.makeText(Login.this, getString(R.string.imError), Toast.LENGTH_SHORT).show();
-											}	
-											
-										} catch (JSONException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
 
-										SharedPreferences downPic = getSharedPreferences("DOWNPIC", 0);
+										savaLoginData(response);
+										finish();
+										startActivity(new Intent(Login.this,
+												CloudDoorMainActivity.class));
+										SharedPreferences downPic = getSharedPreferences(
+												"DOWNPIC", 0);
 										Editor editor1 = downPic.edit();
 										editor1.putInt("PIC", 0);
 										editor1.commit();
-										
-										
-										
+
 									} else if (loginStatusCode == -71) {
 										Toast.makeText(getApplicationContext(),
 												R.string.login_fail,
 												Toast.LENGTH_SHORT).show();
-									} else if(loginStatusCode == -99) {
-    									Toast.makeText(getApplicationContext(),
-    											R.string.unknown_err, Toast.LENGTH_SHORT)
-    											.show();
-    								}
+									} else if (loginStatusCode == -99) {
+										Toast.makeText(getApplicationContext(),
+												R.string.unknown_err,
+												Toast.LENGTH_SHORT).show();
+									}
 								}
 							}, new Response.ErrorListener() {
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
-								
+
 								}
 							}) {
 						@Override
@@ -369,46 +371,56 @@ public class Login extends BaseActivity implements TextWatcher {
 				}
 			}
 		});
-		
+
 		SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
-     	Editor editor = RegiPhone.edit();
-     	editor.putString("PHONE", "");
-     	editor.commit();
+		Editor editor = RegiPhone.edit();
+		editor.putString("PHONE", "");
+		editor.commit();
 	}
-	
-	
-	public void savaLoginData(JSONObject response){
+
+	public void savaLoginData(JSONObject response) {
 		isLogin = 1;
-		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
+				MODE_PRIVATE);
 		Editor editor = loginStatus.edit();
 		editor.putInt("LOGIN", isLogin);
 		editor.putString("PHONENUM", phoneNum);
 		editor.putString("PASSWARD", password);
-//		editor.commit();
+		// editor.commit();
 
-		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/PREVIOUSNUM.xml");
-		if(f.exists()){
-			if(!getSharedPreferences("PREVIOUSNUM", 0).getString("NUM", null).equals(phoneNum)){
-				String sql = "DELETE FROM " + KEY_TABLE_NAME +";";
+		File f = new File(
+				"/data/data/com.icloudoor.cloudoor/shared_prefs/PREVIOUSNUM.xml");
+		if (f.exists()) {
+			if (!getSharedPreferences("PREVIOUSNUM", 0).getString("NUM", null)
+					.equals(phoneNum)) {
+				String sql = "DELETE FROM " + KEY_TABLE_NAME + ";";
 				mKeyDB.execSQL(sql);
-            
-				String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+
+				String sq2 = "DELETE FROM " + CAR_TABLE_NAME + ";";
 				mKeyDB.execSQL(sq2);
-            
-				String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
-				mKeyDB.execSQL(sq3);  
+
+				String sq3 = "DELETE FROM " + ZONE_TABLE_NAME + ";";
+				mKeyDB.execSQL(sq3);
 			}
 		}
-		
-		
-		SharedPreferences firstLoginShare=getSharedPreferences("FIRSTLOGINSHARE", 0);
-		Editor mEditor=firstLoginShare.edit();
+
+		SharedPreferences firstLoginShare = getSharedPreferences(
+				"FIRSTLOGINSHARE", 0);
+		Editor mEditor = firstLoginShare.edit();
 		mEditor.putBoolean("FIRSTLOGIN", true).commit();
 		try {
 			JSONObject data = response.getJSONObject("data");
 			JSONObject info = data.getJSONObject("info");
-			
-			
+
+			JSONObject im = data.getJSONObject("im");
+			JSONObject account = im.getJSONObject("account");
+			if (account != null) {
+				editor.putString("IMUSERID", account.getString("userId"));
+				editor.putString("IMPASSWORD", account.getString("password"));
+			} else {
+				editor.putString("IMUSERID", "");
+				editor.putString("IMPASSWORD", "");
+			}
 
 			name = info.getString("userName");
 			nickname = info.getString("nickname");
@@ -422,14 +434,15 @@ public class Login extends BaseActivity implements TextWatcher {
 
 			portraitUrl = info.getString("portraitUrl");
 			userId = info.getString("userId");
-			userStatus = info.getInt("userStatus");     //1 for not approved user; 2 for approved user
+			userStatus = info.getInt("userStatus"); // 1 for not approved user;
+													// 2 for approved user
 
 			editor.putString("NAME", name);
-			editor.putString("NICKNAME",nickname);
+			editor.putString("NICKNAME", nickname);
 			editor.putString("ID", id);
 			editor.putString("BIRTH", birth);
 			editor.putInt("SEX", sex);
-			editor.putInt("PROVINCE",provinceId);
+			editor.putInt("PROVINCE", provinceId);
 			editor.putInt("CITY", cityId);
 			editor.putInt("DIS", districtId);
 			editor.putString("URL", portraitUrl);
@@ -437,17 +450,18 @@ public class Login extends BaseActivity implements TextWatcher {
 			editor.putInt("STATUS", userStatus);
 			editor.putBoolean("isHasPropServ", isHasPropServ);
 			editor.commit();
-			
-			if(provinceId != 0)
+
+			if (provinceId != 0)
 				province = getProvinceName(provinceId);
-			
-			if (cityId != 0) 
+
+			if (cityId != 0)
 				city = getCityName(cityId);
 
-			if (districtId != 0) 
+			if (districtId != 0)
 				district = getDistrictName(districtId);
-			
-			SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
+
+			SharedPreferences saveProfile = getSharedPreferences("PROFILE",
+					MODE_PRIVATE);
 			Editor editor1 = saveProfile.edit();
 			editor1.putString("NAME", name);
 			editor1.putString("NICKNAME", nickname);
@@ -459,7 +473,7 @@ public class Login extends BaseActivity implements TextWatcher {
 			editor1.putInt("CITYID", cityId);
 			editor1.putInt("DISTRICTID", districtId);
 			editor1.putInt("SEX", sex);
-			if(birth.length() > 0){
+			if (birth.length() > 0) {
 				editor1.putString("YEAR", birth.substring(0, 4));
 				editor1.putString("MONTH", birth.substring(5, 7));
 				editor1.putString("DAY", birth.substring(8));
@@ -467,145 +481,53 @@ public class Login extends BaseActivity implements TextWatcher {
 			editor1.putBoolean("isHasPropServ", isHasPropServ);
 			editor1.commit();
 			//
-												
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	boolean progressShow;
-	public void login( final String currentUsername, final String currentPassword) {
-		if (!CommonUtils.isNetWorkConnected(Login.this)) {
-			Toast.makeText(Login.this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
-			return;
+
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if (requestCode == 0 && resultCode == RESULT_OK) {
+
+			finish();
 		}
-
-		if (TextUtils.isEmpty(currentUsername)) {
-			Toast.makeText(Login.this, R.string.User_name_cannot_be_empty, Toast.LENGTH_SHORT).show();
-			return;
-		}
-		if (TextUtils.isEmpty(currentPassword)) {
-			Toast.makeText(Login.this, R.string.Password_cannot_be_empty, Toast.LENGTH_SHORT).show();
-			return;
-		}
-
-		progressShow = true;
-		final ProgressDialog pd = new ProgressDialog(Login.this);
-		pd.setCanceledOnTouchOutside(false);
-		pd.setOnCancelListener(new OnCancelListener() {
-
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				progressShow = false;
-			}
-		});
-		pd.setMessage(getString(R.string.Is_landing));
-		pd.show();
-
-		final long start = System.currentTimeMillis();
-		EMChatManager.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
-
-			@Override
-			public void onSuccess() {
-				if (!progressShow) {
-					return;
-				}
-				cloudApplication.getInstance().setUserName(currentUsername);
-				cloudApplication.getInstance().setPassword(currentPassword);
-
-				Login.this.runOnUiThread(new Runnable() {
-					public void run() {
-						pd.setMessage(getString(R.string.list_is_for));
-					}
-				});
-				try {
-					// ** manually load all local groups and
-				    EMGroupManager.getInstance().loadAllGroups();
-					EMChatManager.getInstance().loadAllConversations();
-//					processContactsAndGroups();
-				} catch (Exception e) {
-					e.printStackTrace();
-					Login.this.runOnUiThread(new Runnable() {
-						public void run() {
-							pd.dismiss();
-							cloudApplication.getInstance().logout(null);
-							Toast.makeText(Login.this.getApplicationContext(), R.string.login_failure_failed, 1).show();
-						}
-					});
-					return;
-				}
-				boolean updatenick = EMChatManager.getInstance().updateCurrentUserNick(
-						cloudApplication.currentUserNick.trim());
-				if (!updatenick) {
-					MyDebugLog.e("LoginActivity", "update current user nick fail");
-				}
-				if (!Login.this.isFinishing())
-					pd.dismiss();
-				finish();
-				savaLoginData(loginResponse);
-				startActivity(new Intent(Login.this, CloudDoorMainActivity.class));
-			}
-
-			@Override
-			public void onProgress(int progress, String status) {
-			}
-
-			@Override
-			public void onError(final int code, final String message) {
-				if (!progressShow) {
-					return;
-				}
-				Login.this.runOnUiThread(new Runnable() {
-					public void run() {
-						pd.dismiss();
-						Toast.makeText(Login.this, getString(R.string.Login_failed) + message,
-								Toast.LENGTH_SHORT).show();
-					}
-				});
-			}
-		});
 	}
 
 	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-         if(requestCode == 0 && resultCode == RESULT_OK) {
-
-            finish();
-        }
-    }
-	
-	@Override
 	protected void onResume() {
-	    super.onResume();
-	    ETInputPhoneNum.setText("");
-	    ETInputPwd.setText("");
-	    
+		super.onResume();
+		ETInputPhoneNum.setText("");
+		ETInputPwd.setText("");
+
 		//
 		Bundle bundle = this.getIntent().getExtras();
-		if(bundle != null){
+		if (bundle != null) {
 			String phone = bundle.getString("phone");
 			ETInputPhoneNum.setText(phone.toString());
 			ETInputPwd.requestFocus();
 		}
-	    
-	    SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
-	    String phone = RegiPhone.getString("PHONE", "");
-	    if(RegiPhone.getString("PHONE", "").length() > 0){
-	    	ETInputPhoneNum.setText(RegiPhone.getString("PHONE", null));
-	    	ETInputPwd.requestFocus();
-	    	
-	    	Editor editor = RegiPhone.edit();
-	    	editor.putString("PHONE", "");
-	    	editor.commit();
-	    }
+
+		SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
+		String phone = RegiPhone.getString("PHONE", "");
+		if (RegiPhone.getString("PHONE", "").length() > 0) {
+			ETInputPhoneNum.setText(RegiPhone.getString("PHONE", null));
+			ETInputPwd.requestFocus();
+
+			Editor editor = RegiPhone.edit();
+			editor.putString("PHONE", "");
+			editor.commit();
+		}
 	}
 
 	protected void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(mConnectionStatusReceiver);
 	}
-	
+
 	public void saveSid(String key, String value) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
 				MODE_PRIVATE);
@@ -623,28 +545,30 @@ public class Login extends BaseActivity implements TextWatcher {
 	public void beforeTextChanged(CharSequence s, int start, int count,
 			int after) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void afterTextChanged(Editable s) {
-		if(ETInputPhoneNum.getText().toString().length() > 10 && ETInputPwd.getText().toString().length() > 5){
+		if (ETInputPhoneNum.getText().toString().length() > 10
+				&& ETInputPwd.getText().toString().length() > 5) {
 			TVLogin.setTextColor(0xFFffffff);
 			loginLayout.setEnabled(true);
 			loginLayout.setBackgroundResource(R.drawable.selector_login_in);
 		} else {
 			TVLogin.setTextColor(0xFFf3f3f3);
 			loginLayout.setEnabled(false);
-			loginLayout.setBackgroundResource(R.drawable.shape_login_btn_disable);
+			loginLayout
+					.setBackgroundResource(R.drawable.shape_login_btn_disable);
 		}
 	}
-	
+
 	public BroadcastReceiver mConnectionStatusReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -681,18 +605,20 @@ public class Login extends BaseActivity implements TextWatcher {
 			}
 		}
 	};
-	
+
 	public static void hideSoftKeyboard(Activity activity) {
-		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+		InputMethodManager inputMethodManager = (InputMethodManager) activity
+				.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus()
+				.getWindowToken(), 0);
 	}
-	
+
 	public void setupUI(View view) {
 		// Set up touch listener for non-text box views to hide keyboard.
 		if (!(view instanceof EditText)) {
 			view.setOnTouchListener(new OnTouchListener() {
 				public boolean onTouch(View v, MotionEvent event) {
-					hideSoftKeyboard(Login.this); 
+					hideSoftKeyboard(Login.this);
 					return false;
 				}
 			});
@@ -705,59 +631,59 @@ public class Login extends BaseActivity implements TextWatcher {
 			}
 		}
 	}
-	
+
 	public String getProvinceName(int provinceId) {
 		String provinceName = null;
 		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
 		if (mCursorP.moveToFirst()) {
 			int provinceIndex = mCursorP.getColumnIndex("province_short_name");
 			int provinceIdIndex = mCursorP.getColumnIndex("province_id");
-			do{
+			do {
 				int tempPID = mCursorP.getInt(provinceIdIndex);
-			    String tempPName = mCursorP.getString(provinceIndex);
-				if(tempPID == provinceId){
+				String tempPName = mCursorP.getString(provinceIndex);
+				if (tempPID == provinceId) {
 					provinceName = tempPName;
 					break;
-				}		
-			}while(mCursorP.moveToNext());		
+				}
+			} while (mCursorP.moveToNext());
 		}
 		mCursorP.close();
 		return provinceName;
 	}
-	
+
 	public String getCityName(int cityId) {
 		String cityName = null;
 		Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
 		if (mCursorC.moveToFirst()) {
 			int cityIndex = mCursorC.getColumnIndex("city_short_name");
 			int cityIdIndex = mCursorC.getColumnIndex("city_id");
-			do{
+			do {
 				int tempCID = mCursorC.getInt(cityIdIndex);
-			    String tempCName = mCursorC.getString(cityIndex);
-				if(tempCID == cityId){
+				String tempCName = mCursorC.getString(cityIndex);
+				if (tempCID == cityId) {
 					cityName = tempCName;
 					break;
-				}		
-			}while(mCursorC.moveToNext());		
+				}
+			} while (mCursorC.moveToNext());
 		}
 		mCursorC.close();
 		return cityName;
 	}
-	
+
 	public String getDistrictName(int districtId) {
 		String districtName = null;
 		Cursor mCursorD = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
 		if (mCursorD.moveToFirst()) {
 			int districtIndex = mCursorD.getColumnIndex("district_short_name");
 			int districtIdIndex = mCursorD.getColumnIndex("district_id");
-			do{
+			do {
 				int tempDID = mCursorD.getInt(districtIdIndex);
-			    String tempDName = mCursorD.getString(districtIndex);
-				if(tempDID == districtId){
+				String tempDName = mCursorD.getString(districtIndex);
+				if (tempDID == districtId) {
 					districtName = tempDName;
 					break;
-				}		
-			}while(mCursorD.moveToNext());		
+				}
+			} while (mCursorD.moveToNext());
 		}
 		mCursorD.close();
 		return districtName;

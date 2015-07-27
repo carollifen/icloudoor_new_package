@@ -7,8 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ import android.widget.RelativeLayout;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.icloudoor.cloudoor.BaseActivity;
+import com.icloudoor.cloudoor.MsgFragment;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
@@ -36,6 +40,7 @@ import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.icloudoor.cloudoor.utli.VFDaoImpl;
 import com.icloudoor.cloudoor.widget.InvitationFriendDialog;
+import com.umeng.analytics.MobclickAgent;
 
 public class VerificationFrientsActivity extends BaseActivity implements
 		OnClickListener, NetworkInterface {
@@ -66,7 +71,7 @@ public class VerificationFrientsActivity extends BaseActivity implements
 		List<VerificationFrientsList> data = daoImpl.find();
 		adapter.setData(data);
 		// getNetworkData(this, "/user/im/getInvitations.do", null);
-		
+		registerBoradcastReceiver();
 		vf_listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -130,8 +135,10 @@ public class VerificationFrientsActivity extends BaseActivity implements
 
 	public void isUserReg(String phoneNumber) {
 		JSONObject josn = new JSONObject();
+		JSONArray array = new JSONArray();
 		try {
-			josn.put("mobile", phoneNumber);
+			array.put(phoneNumber);
+			josn.put("mobiles", array);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -277,8 +284,8 @@ public class VerificationFrientsActivity extends BaseActivity implements
 	public void onSuccess(JSONObject response) {
 		// TODO Auto-generated method stub
 		try {
-			boolean data = response.getBoolean("data");
-			if (data) {
+			JSONArray data = response.getJSONArray("data");
+			if (data.toString().contains(usernumber)) {
 				invite(usernumber);
 			} else {
 				destroyDialog();
@@ -300,5 +307,24 @@ public class VerificationFrientsActivity extends BaseActivity implements
 		// TODO Auto-generated method stub
 
 	}
+	public void registerBoradcastReceiver(){  
+        IntentFilter myIntentFilter = new IntentFilter();  
+        myIntentFilter.addAction(MsgFragment.class.getName());
+        //×¢²á¹ã²¥        
+        registerReceiver(mBroadcastReceiver, myIntentFilter);  
+    }  
+
+	
+	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver(){
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			VFDaoImpl daoImpl = new VFDaoImpl(VerificationFrientsActivity.this);
+			List<VerificationFrientsList> data = daoImpl.find();
+			adapter.setData(data);
+		}
+		
+	};
 
 }

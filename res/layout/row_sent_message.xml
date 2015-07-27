@@ -176,6 +176,7 @@
                 style="@style/chat_content_date_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minHeight="40dp"
                 android:background="@drawable/chatto_bg"
                 android:maxWidth="225.0dip"
                  >
@@ -187,10 +188,11 @@
                     android:layout_marginRight="5dp"
                     android:autoLink="web"
                     android:background="@android:color/transparent"
-                    android:gravity="left|bottom"
+                    android:gravity="left|center_vertical"
                     android:lineSpacingExtra="2dp"
-                    android:minHeight="28dp"
+                    android:minHeight="30dp"
                     android:maxWidth="225.0dip"
+                    android:text="2222"
                     android:paddingLeft="8dip"
                     android:textColor="#000000"
                     android:textSize="15sp" />

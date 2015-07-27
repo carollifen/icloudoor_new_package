@@ -35,7 +35,6 @@ public class InvitationFriendDialog extends Dialog implements android.view.View.
 	UMWXHandler wxHandler;
 	String appID = "wxcddf37d2f770581b";
 	String appSecret = "01d7ab875773e1282059d5b47b792e2b";
-	EditText msg_edit;
 	public InvitationFriendDialog(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -56,7 +55,6 @@ public class InvitationFriendDialog extends Dialog implements android.view.View.
 		setContentView(R.layout.dialog_invitation_friend);
 		findViewById(R.id.weixin_share).setOnClickListener(this);
 		findViewById(R.id.qq_share).setOnClickListener(this);
-		msg_edit = (EditText) findViewById(R.id.msg_edit);
 		mController = UMServiceFactory.getUMSocialService("myshare");
 		wxHandler = new UMWXHandler(context, appID, appSecret);
 		wxHandler.addToSocialSDK();
@@ -106,7 +104,7 @@ public class InvitationFriendDialog extends Dialog implements android.view.View.
     	
     	SharedPreferences preferences = context.getSharedPreferences("LOGINSTATUS", Context.MODE_PRIVATE);
     	
-    	String content = context.getString(R.string.invitatiion1)+ preferences.getString("NICKNAME", "") +context.getString(R.string.invitatiion2);
+    	String content = context.getString(R.string.invitatiion1);
     	
     	WeiXinShareContent weiXinleMedia = new WeiXinShareContent();
 		weiXinleMedia.setShareContent(content);
@@ -129,11 +127,11 @@ public class InvitationFriendDialog extends Dialog implements android.view.View.
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.weixin_share:
-			init(msg_edit.getText().toString().trim());
+			init(context.getString(R.string.invitatiion2));
 			mController.postShare(activity, SHARE_MEDIA.WEIXIN, mSnsPostListener);
 			break;
 		case R.id.qq_share:
-			init(msg_edit.getText().toString().trim());
+			init(context.getString(R.string.invitatiion2));
 			mController.postShare(activity, SHARE_MEDIA.QQ, mSnsPostListener);
 			break;
 

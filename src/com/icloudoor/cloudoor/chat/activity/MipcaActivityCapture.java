@@ -1,6 +1,7 @@
 package com.icloudoor.cloudoor.chat.activity;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Vector;
 
@@ -17,6 +18,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.util.Base64;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -127,28 +129,32 @@ public class MipcaActivityCapture extends BaseActivity implements Callback ,Netw
 		inactivityTimer.onActivity();
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
-		System.out.println("resultString = "+resultString);
-		if (resultString.equals("")) {
-			Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
-		}else {
-//			String url = UrlUtils.HOST + "/user/im/searchUser.do"+ "?sid=" + loadSid()+resultString;
-			JSONObject object = new JSONObject();
-			JSONArray array = new JSONArray();
-			try {
-				array.put(resultString);
-				object.put("userIds", array);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		byte[] codeBytes = Base64.decode(resultString.getBytes(), Base64.DEFAULT);
+		try {
+			String qrCode = new String(codeBytes, "UTF-8");
+			if (qrCode.equals("")) {
+				Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
+			}else {
+				try {
+					JSONObject qrCodeJSON = new JSONObject(qrCode);
+					if(qrCodeJSON.getInt("type")==1){
+						
+						JSONObject object = new JSONObject();
+						JSONArray array = new JSONArray();
+						array.put(qrCodeJSON.getString("userId"));
+						object.put("userIds", array);
+						getNetworkData(this, "/user/im/getUsersDetailWsIsFriend.do", object.toString(), true);
+					}else{
+						
+					}
+					
+				} catch (JSONException e) {
+					showToast(R.string.cloudoormip);
+				}
 			}
-			getNetworkData(this, "/user/im/getUsersDetailWsIsFriend.do", object.toString(), true);
-//			Intent resultIntent = new Intent();
-//			Bundle bundle = new Bundle();
-//			bundle.putString("result", resultString);
-//			bundle.putParcelable("bitmap", barcode);
-//			resultIntent.putExtras(bundle);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
 		}
-		
 	}
 	
 	

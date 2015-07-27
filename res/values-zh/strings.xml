@@ -238,7 +238,7 @@
     <string name="Is_landing">正在登录...</string>
     <string name="list_is_for">正在获取好友和群聊列表...</string>
     <string name="login_failure_failed">登录失败: 获取好友或群聊失败</string>
-    <string name="Login_failed">登录失败:</string>
+    <string name="Login_failed">环信登录失败</string>
     <string name="receive_the_passthrough">收到透传：action：</string>
     <string name="have_you_removed">已把你从他好友列表里移除</string>
     <string name="Less_than_chat_server_connection">连接不到聊天服务器</string>
@@ -296,4 +296,5 @@
     <string name= "send_dunamic_Fail">发布失败</string>
 
     <string name="takePhoto_fail">拍照失败</string>
+    <string name="cloudoormip">云门扫描，暂不支持该地址</string>
 </resources>

@@ -57,8 +57,9 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/iv_call_icon"
                 android:background="@null"
-                android:minHeight="40dp"
-                android:padding="6dp"
+                android:minHeight="30dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
               />
         </RelativeLayout>
 

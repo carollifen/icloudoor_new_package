@@ -38,6 +38,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -74,6 +75,7 @@ import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.activity.AlertDialog;
 import com.icloudoor.cloudoor.chat.activity.BaiduMapActivity;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
+import com.icloudoor.cloudoor.chat.activity.ContextMenu;
 import com.icloudoor.cloudoor.chat.activity.FriendDetailActivity;
 import com.icloudoor.cloudoor.chat.activity.ShowBigImage;
 import com.icloudoor.cloudoor.chat.activity.ShowNormalFileActivity;
@@ -688,10 +690,11 @@ public class MessageAdapter extends BaseAdapter {
 					intent.putExtra("ProvinceId", friendsEn.getProvinceId());
 					intent.putExtra("Sex", friendsEn.getSex());
 					intent.putExtra("Nickname", friendsEn.getNickname());
-					intent.putExtra("PortraitUrl", friendsEn.getPortraitUrl());                 
+					intent.putExtra("PortraitUrl", friendsEn.getPortraitUrl());
 					intent.putExtra("UserId", friendsEn.getUserId());
 					intent.putExtra("returnChat", 1);
-					activity.startActivityForResult(intent, ChatActivity.REQUEST_CODE_FriendDetail);
+					activity.startActivityForResult(intent,
+							ChatActivity.REQUEST_CODE_FriendDetail);
 
 				}
 			});
@@ -708,10 +711,11 @@ public class MessageAdapter extends BaseAdapter {
 	private void handleTextMessage(EMMessage message, ViewHolder holder,
 			final int position) {
 		TextMessageBody txtBody = (TextMessageBody) message.getBody();
-		
-		Spannable span = EmojiManager.getInstance(context).setEmojiSpan(txtBody.getMessage(), Uitls.dip2px(context, 15));
-//		Spannable span = SmileUtils
-//				.getSmiledText(context, txtBody.getMessage());
+
+		Spannable span = EmojiManager.getInstance(context).setEmojiSpan(
+				txtBody.getMessage(), Uitls.dip2px(context, 15));
+		// Spannable span = SmileUtils
+		// .getSmiledText(context, txtBody.getMessage());
 		// 设置内容
 
 		try {
@@ -744,31 +748,34 @@ public class MessageAdapter extends BaseAdapter {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 
-						String UserId="11111111";
+						String UserId = "11111111";
 						try {
 							UserId = card.getString("userId");
 						} catch (JSONException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						
+
 						FriendDaoImpl daoImpl = new FriendDaoImpl(context);
 
 						List<MyFriendsEn> list = daoImpl.find(null,
-								"userId = ?", new String[] {UserId}, null, null,
-								null, null);
+								"userId = ?", new String[] { UserId }, null,
+								null, null, null);
 						Boolean isFirend;
 						if (list == null || list.size() <= 0) {
 							isFirend = false;
 						} else {
 							isFirend = true;
 						}
-						SharedPreferences loginStatus = context.getSharedPreferences("LOGINSTATUS", Context.MODE_PRIVATE);
+						SharedPreferences loginStatus = context
+								.getSharedPreferences("LOGINSTATUS",
+										Context.MODE_PRIVATE);
 						String myUserid = loginStatus.getString("USERID", "");
-						
+
 						try {
-							
-							if(username.equals(UserId)|| UserId.equals(myUserid)){
+
+							if (username.equals(UserId)
+									|| UserId.equals(myUserid)) {
 								Intent intent = new Intent(context,
 										FriendDetailActivity.class);
 								intent.putExtra("CityId", card.getInt("cityId"));
@@ -784,7 +791,8 @@ public class MessageAdapter extends BaseAdapter {
 										card.getString("portraitUrl"));
 								intent.putExtra("UserId",
 										card.getString("userId"));
-								activity.startActivityForResult(intent, ChatActivity.REQUEST_CODE_FriendDetail);
+								activity.startActivityForResult(intent,
+										ChatActivity.REQUEST_CODE_FriendDetail);
 								return;
 							}
 							if (isFirend) {
@@ -827,11 +835,11 @@ public class MessageAdapter extends BaseAdapter {
 					}
 				});
 
-			}else if(type == 4 ){
+			} else if (type == 4) {
 				holder.chat_content_layout.setVisibility(View.GONE);
 				holder.hint_tx.setVisibility(View.VISIBLE);
 				holder.hint_tx.setText(span, BufferType.SPANNABLE);
-			}else if(type == 5 ){
+			} else if (type == 5) {
 				holder.chat_content_layout.setVisibility(View.VISIBLE);
 				holder.layout_card.setVisibility(View.GONE);
 				holder.hint_tx.setVisibility(View.GONE);
@@ -839,16 +847,17 @@ public class MessageAdapter extends BaseAdapter {
 				holder.layout_chattx.setVisibility(View.GONE);
 				JSONObject keyAuth = message.getJSONObjectAttribute("data");
 				holder.zone_name.setText(keyAuth.getString("address"));
-				holder.keyauth_sousse.setText(keyAuth.getString("authSuccMsg"));;
+				holder.keyauth_sousse.setText(keyAuth.getString("authSuccMsg"));
+				;
 			}
 		} catch (EaseMobException e) {
-			
+
 			holder.chat_content_layout.setVisibility(View.VISIBLE);
 			holder.layout_card.setVisibility(View.GONE);
 			holder.hint_tx.setVisibility(View.GONE);
 			holder.layout_keyauth.setVisibility(View.GONE);
 			holder.layout_chattx.setVisibility(View.VISIBLE);
-			
+
 			holder.tv.setText(span, BufferType.SPANNABLE);
 
 		} catch (JSONException e) {
@@ -857,17 +866,16 @@ public class MessageAdapter extends BaseAdapter {
 		}
 
 		// 设置长按事件监听
-		// holder.tv.setOnLongClickListener(new OnLongClickListener() {
-		// @Override
-		// public boolean onLongClick(View v) {
-		// activity.startActivityForResult(
-		// (new Intent(activity, ContextMenu.class)).putExtra("position",
-		// position).putExtra("type",
-		// EMMessage.Type.TXT.ordinal()),
-		// ChatActivity.REQUEST_CODE_CONTEXT_MENU);
-		// return true;
-		// }
-		// });
+		holder.tv.setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				activity.startActivityForResult((new Intent(activity,
+						ContextMenu.class)).putExtra("position", position)
+						.putExtra("type", EMMessage.Type.TXT.ordinal()),
+						ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+				return true;
+			}
+		});
 
 		if (message.direct == EMMessage.Direct.SEND) {
 			switch (message.status) {
@@ -915,17 +923,17 @@ public class MessageAdapter extends BaseAdapter {
 	private void handleImageMessage(final EMMessage message,
 			final ViewHolder holder, final int position, View convertView) {
 		holder.pb.setTag(position);
-		// holder.iv.setOnLongClickListener(new OnLongClickListener() {
-		// @Override
-		// public boolean onLongClick(View v) {
-		// activity.startActivityForResult(
-		// (new Intent(activity, ContextMenu.class)).putExtra("position",
-		// position).putExtra("type",
-		// EMMessage.Type.IMAGE.ordinal()),
-		// ChatActivity.REQUEST_CODE_CONTEXT_MENU);
-		// return true;
-		// }
-		// });
+		 holder.iv.setOnLongClickListener(new OnLongClickListener() {
+		 @Override
+		 public boolean onLongClick(View v) {
+		 activity.startActivityForResult(
+		 (new Intent(activity, ContextMenu.class)).putExtra("position",
+		 position).putExtra("type",
+		 EMMessage.Type.IMAGE.ordinal()),
+		 ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+		 return true;
+		 }
+		 });
 
 		// 接收方向的消息
 		if (message.direct == EMMessage.Direct.RECEIVE) {
@@ -1044,18 +1052,18 @@ public class MessageAdapter extends BaseAdapter {
 		// videoBody.getFileName());
 		String localThumb = videoBody.getLocalThumb();
 
-		// holder.iv.setOnLongClickListener(new OnLongClickListener() {
-		//
-		// @Override
-		// public boolean onLongClick(View v) {
-		// activity.startActivityForResult(
-		// new Intent(activity, ContextMenu.class).putExtra("position",
-		// position).putExtra("type",
-		// EMMessage.Type.VIDEO.ordinal()),
-		// ChatActivity.REQUEST_CODE_CONTEXT_MENU);
-		// return true;
-		// }
-		// });
+		 holder.iv.setOnLongClickListener(new OnLongClickListener() {
+		
+		 @Override
+		 public boolean onLongClick(View v) {
+		 activity.startActivityForResult(
+		 new Intent(activity, ContextMenu.class).putExtra("position",
+		 position).putExtra("type",
+		 EMMessage.Type.VIDEO.ordinal()),
+		 ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+		 return true;
+		 }
+		 });
 
 		if (localThumb != null) {
 
@@ -1180,19 +1188,20 @@ public class MessageAdapter extends BaseAdapter {
 			final ViewHolder holder, final int position, View convertView) {
 		VoiceMessageBody voiceBody = (VoiceMessageBody) message.getBody();
 		holder.tv.setText(voiceBody.getLength() + "\"");
-		holder.layout_voice.setOnClickListener(new VoicePlayClickListener(message,
-				holder.iv, holder.iv_read_status, this, activity, username));
-		// holder.iv.setOnLongClickListener(new OnLongClickListener() {
-		// @Override
-		// public boolean onLongClick(View v) {
-		// activity.startActivityForResult(
-		// (new Intent(activity, ContextMenu.class)).putExtra("position",
-		// position).putExtra("type",
-		// EMMessage.Type.VOICE.ordinal()),
-		// ChatActivity.REQUEST_CODE_CONTEXT_MENU);
-		// return true;
-		// }
-		// });
+		holder.layout_voice.setOnClickListener(new VoicePlayClickListener(
+				message, holder.iv, holder.iv_read_status, this, activity,
+				username));
+		 holder.iv.setOnLongClickListener(new OnLongClickListener() {
+		 @Override
+		 public boolean onLongClick(View v) {
+		 activity.startActivityForResult(
+		 (new Intent(activity, ContextMenu.class)).putExtra("position",
+		 position).putExtra("type",
+		 EMMessage.Type.VOICE.ordinal()),
+		 ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+		 return true;
+		 }
+		 });
 		if (((ChatActivity) activity).playMsgId != null
 				&& ((ChatActivity) activity).playMsgId.equals(message
 						.getMsgId()) && VoicePlayClickListener.isPlaying) {
@@ -1417,17 +1426,17 @@ public class MessageAdapter extends BaseAdapter {
 		LatLng loc = new LatLng(locBody.getLatitude(), locBody.getLongitude());
 		locationView.setOnClickListener(new MapClickListener(loc, locBody
 				.getAddress()));
-		// locationView.setOnLongClickListener(new OnLongClickListener() {
-		// @Override
-		// public boolean onLongClick(View v) {
-		// activity.startActivityForResult(
-		// (new Intent(activity, ContextMenu.class)).putExtra("position",
-		// position).putExtra("type",
-		// EMMessage.Type.LOCATION.ordinal()),
-		// ChatActivity.REQUEST_CODE_CONTEXT_MENU);
-		// return false;
-		// }
-		// });
+		 locationView.setOnLongClickListener(new OnLongClickListener() {
+		 @Override
+		 public boolean onLongClick(View v) {
+		 activity.startActivityForResult(
+		 (new Intent(activity, ContextMenu.class)).putExtra("position",
+		 position).putExtra("type",
+		 EMMessage.Type.LOCATION.ordinal()),
+		 ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+		 return false;
+		 }
+		 });
 
 		if (message.direct == EMMessage.Direct.RECEIVE) {
 			return;
@@ -1800,11 +1809,11 @@ public class MessageAdapter extends BaseAdapter {
 		RoundedImageView user_head;
 		TextView card_name;
 		TextView addr_tx;
-		
+
 		TextView hint_tx;
 		RelativeLayout chat_content_layout;
 		RelativeLayout layout_voice;
-		
+
 		TextView zone_name;
 		TextView keyauth_sousse;
 		FrameLayout layout_chattx;

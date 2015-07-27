@@ -49,6 +49,7 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 	String userid;
 	List<KeyInfo> data;
 	Myadapter myadapter;
+	ImageView btn_back;
 	boolean isCarDoor;
 	boolean isFlage = true;;
 	@Override
@@ -61,6 +62,8 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 		auth_key_layout.setOnClickListener(this);
 		start_time = (TextView) findViewById(R.id.start_time);
 		end_time = (TextView) findViewById(R.id.end_time);
+		btn_back = (ImageView) findViewById(R.id.btn_back);
+		btn_back.setOnClickListener(this);
 		listView = (ExpandableListView) findViewById(R.id.listView);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		String startTime = format.format(new Date(System.currentTimeMillis()));
@@ -158,6 +161,9 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 			if(isFlage){
 				showToast(R.string.plass_door);
 			}
+			break;
+		case R.id.btn_back:
+			finish();
 			break;
 
 		default:
