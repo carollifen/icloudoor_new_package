@@ -233,11 +233,49 @@ public class SetPersonalInfo extends BaseActivity {
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
 		registerReceiver(mFinishActivityBroadcast, intentFilter);
 
+		mQueue = Volley.newRequestQueue(this);
+		
 		back = (RelativeLayout) findViewById(R.id.btn_back);
 		back.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				
+				File f = new File(PATH + imageName);
+				f.delete();
+				
+				URL updatePortrailUrl = null;
+				sid = loadSid();
+				try {
+					updatePortrailUrl = new URL(UrlUtils.HOST + "/user/api/updateProfile.do.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST, updatePortrailUrl.toString(), null,
+						new Response.Listener<JSONObject>() {
+
+							@Override
+							public void onResponse(JSONObject response) {
+				
+							}
+						}, new Response.ErrorListener() {
+
+							@Override
+							public void onErrorResponse(VolleyError error) {
+								
+							}
+						}){
+					@Override
+					protected Map<String, String> getParams()
+							throws AuthFailureError {
+						Map<String, String> map = new HashMap<String, String>();
+						SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+						map.put("portraitUrl", loginStatus.getString("URL", null));
+						return map;
+					}
+				};
+				mQueue.add(mJsonRequest);
+	
 				finish();
 			}
 
@@ -501,8 +539,6 @@ public class SetPersonalInfo extends BaseActivity {
 		});
 
 		sid = loadSid();
-
-		mQueue = Volley.newRequestQueue(this);
 		try {
 			setInfoURL = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
@@ -539,6 +575,11 @@ public class SetPersonalInfo extends BaseActivity {
 									Editor editor = personalInfo.edit();
 									editor.putInt("SETINFO", setPersonal);
 									editor.commit();
+									
+									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+									Editor edit = loginStatus.edit();
+									edit.putString("URL", portraitUrl);
+									edit.commit();
 
 									Toast.makeText(getApplicationContext(), R.string.modify_info_success, Toast.LENGTH_SHORT).show();
 									
@@ -996,17 +1037,6 @@ public class SetPersonalInfo extends BaseActivity {
 			
 			districtSpinner.setSelection(did, true);
 		}
-		//set the profile address -- END
-
-		// some items in the array may be null, so it will cause the NPE.
-		// so i delete these codes
-		// cityAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
-		// android.R.layout.simple_spinner_item, citySet[0]);
-		// citySpinner.setAdapter(cityAdapter);
-		//
-		// districtAdapter = new ArrayAdapter<String>(SetPersonalInfo.this,
-		// android.R.layout.simple_spinner_item, districtSet[0][0]);
-		// districtSpinner.setAdapter(districtAdapter);
 	}
 
 	private long DBCount() {
@@ -1033,6 +1063,41 @@ public class SetPersonalInfo extends BaseActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (event.getAction() == KeyEvent.ACTION_DOWN && KeyEvent.KEYCODE_BACK == keyCode) {
 
+			File f = new File(PATH + imageName);
+			f.delete();
+			
+			URL updatePortrailUrl = null;
+			sid = loadSid();
+			try {
+				updatePortrailUrl = new URL(UrlUtils.HOST + "/user/api/updateProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST, updatePortrailUrl.toString(), null,
+					new Response.Listener<JSONObject>() {
+
+						@Override
+						public void onResponse(JSONObject response) {
+
+						}
+					}, new Response.ErrorListener() {
+
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							
+						}
+					}){
+				@Override
+				protected Map<String, String> getParams()
+						throws AuthFailureError {
+					Map<String, String> map = new HashMap<String, String>();
+					SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+					map.put("portraitUrl", loginStatus.getString("URL", null));
+					return map;
+				}
+			};
+			mQueue.add(mJsonRequest);
+			
 			finish();
 		}
 		return super.onKeyDown(keyCode, event);
@@ -1215,10 +1280,10 @@ public class SetPersonalInfo extends BaseActivity {
 								if (jsObj.getInt("code") == 1) {
 									JSONObject data = jsObj.getJSONObject("data");
 									portraitUrl = data.getString("portraitUrl");
-									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-									Editor edit = loginStatus.edit();
-									edit.putString("URL", portraitUrl);
-									edit.commit();
+//									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+//									Editor edit = loginStatus.edit();
+//									edit.putString("URL", portraitUrl);
+//									edit.commit();
 									
 									MyDebugLog.e(TAG, portraitUrl);
 
