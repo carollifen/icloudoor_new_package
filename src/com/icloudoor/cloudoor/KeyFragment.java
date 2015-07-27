@@ -641,6 +641,7 @@ public class KeyFragment extends Fragment {
 	
 	public boolean checkWithin7DaysOrNot(){
 		boolean isWithin = false;
+		int limitDays;
 		int previousYear;
 		int previousMonth;
 		int previousDay;
@@ -652,6 +653,7 @@ public class KeyFragment extends Fragment {
 		previousYear = userConfig.getInt("YEAR", 0);
 		previousMonth = userConfig.getInt("MONTH", 0);
 		previousDay = userConfig.getInt("DAY", 0);
+		limitDays = userConfig.getInt("DAYS", 0);
 		if(previousYear == 0 || previousMonth == 0 || previousDay == 0){
 			isWithin = false;
 		} else {
@@ -669,7 +671,7 @@ public class KeyFragment extends Fragment {
 			if(nowYear == previousYear && nowMonth == previousMonth && nowDay == previousDay){  // in the same day, same month, same year
 				isWithin = true;
 			} else if(nowYear == previousYear && nowMonth == previousMonth){  // in the same month, same year
-				if(nowDay - previousDay <= 6)
+				if(nowDay - previousDay <= limitDays)
 					isWithin = true;
 				else 
 					isWithin = false;
@@ -678,30 +680,30 @@ public class KeyFragment extends Fragment {
 					isWithin = false;
 				else{
 					if(isSmallMonth(nowMonth) || (nowMonth == 2)){
-						if(31 - previousDay + nowDay <= 6)
+						if(31 - previousDay + nowDay <= limitDays)
 							isWithin = true;
 						else 
 							isWithin = false;
 					} else if(isBigMonth(nowMonth)){
 						if(nowMonth == 3){
 							if(isLeapYear(previousMonth)){
-								if(29 - previousDay + nowDay <= 6)
+								if(29 - previousDay + nowDay <= limitDays)
 									isWithin = true;
 								else 
 									isWithin = false;
 							}else{
-								if(28 - previousDay + nowDay <= 6)
+								if(28 - previousDay + nowDay <= limitDays)
 									isWithin = true;
 								else 
 									isWithin = false;
 							}
 						} else if(nowMonth == 8){
-							if(31 - previousDay + nowDay <= 6)
+							if(31 - previousDay + nowDay <= limitDays)
 								isWithin = true;
 							else 
 								isWithin = false;
 						} else{
-							if(30 - previousDay + nowDay <= 6)
+							if(30 - previousDay + nowDay <= limitDays)
 								isWithin = true;
 							else 
 								isWithin = false;
@@ -717,7 +719,7 @@ public class KeyFragment extends Fragment {
 					else if(nowMonth > 1)
 						isWithin = false;
 					else {
-						if(31 - previousDay + nowDay <= 6)
+						if(31 - previousDay + nowDay <= limitDays)
 							isWithin = true;
 						else 
 							isWithin = false;
