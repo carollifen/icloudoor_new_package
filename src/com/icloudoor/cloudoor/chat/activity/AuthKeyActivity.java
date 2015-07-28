@@ -182,8 +182,6 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 					int code = response.getInt("code");
 					switch (code) {
 					case 1:
-						
-						
 						List<List<Boolean>> chekbleData = myadapter.getChekbleData();
 						for (int i = 0; i < chekbleData.size(); i++) {
 							for (int j = 0; j < chekbleData.get(i).size(); j++) {
@@ -220,6 +218,9 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 						break;
 					case -106:
 						showToast(R.string.auth_key_car_Fail6);
+						break;
+					case -108:
+						showToast(R.string.auth_key_car_Fail7);
 						break;
 
 					default:
@@ -276,6 +277,16 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 								}
 							}
 						}
+					}else if(response.getInt("code") == -101){
+						showToast(R.string.user_not_regis);
+					}else if(response.getInt("code") == -102){
+						showToast(R.string.lend_count_too_more);
+					}else if(response.getInt("code") == -103){
+						showToast(R.string.already_have_the_temp_key);
+					}else if(response.getInt("code") == -104){
+						showToast(R.string.cannot_auth_to_self);
+					}else if(response.getInt("code") == -106){
+						showToast( R.string.borrow_count_too_more);
 					}else{
 						showToast(R.string.auth_key_Fail);
 					}
@@ -454,7 +465,7 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 										}
 									}
 									isChekble.get(groupPosition).set(childPosition, true);
-									end_time.setText("无时间限制");
+									end_time.setText(R.string.notTime);
 									isCarDoor = true;
 									notifyDataSetChanged();
 								}

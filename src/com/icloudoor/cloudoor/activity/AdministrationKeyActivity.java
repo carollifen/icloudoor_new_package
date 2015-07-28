@@ -128,6 +128,7 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 			title_img2.setBackgroundResource(R.color.transparent);
 			title_tx3.setTextColor(Color.parseColor("#999999"));
 			title_img3.setBackgroundResource(R.color.transparent);
+			viewpager.setCurrentItem(0);
 			break;
 		case 1:
 			title_tx2.setTextColor(Color.parseColor("#009bf8"));
@@ -136,6 +137,7 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 			title_img1.setBackgroundResource(R.color.transparent);
 			title_tx3.setTextColor(Color.parseColor("#999999"));
 			title_img3.setBackgroundResource(R.color.transparent);
+			viewpager.setCurrentItem(1);
 			break;
 		case 2:
 			title_tx3.setTextColor(Color.parseColor("#009bf8"));
@@ -144,6 +146,7 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 			title_img2.setBackgroundResource(R.color.transparent);
 			title_tx1.setTextColor(Color.parseColor("#999999"));
 			title_img1.setBackgroundResource(R.color.transparent);
+			viewpager.setCurrentItem(2);
 			break;
 
 		default:

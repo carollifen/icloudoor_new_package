@@ -22,7 +22,7 @@
             android:id="@+id/zone_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#37a64d"
+            android:textColor="#0092e8"
             android:text="2222222"
             android:layout_marginLeft="8dp"
             android:textSize="16sp"

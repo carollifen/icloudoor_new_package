@@ -84,7 +84,7 @@
                 android:id="@+id/title_img2"
                 android:layout_width="75dp"
                 android:layout_height="2dp"
-                android:background="@drawable/bottom_bg" />
+                android:background="@color/transparent" />
         </LinearLayout>
 
         <LinearLayout
@@ -109,7 +109,7 @@
                 android:id="@+id/title_img3"
                 android:layout_width="75dp"
                 android:layout_height="2dp"
-                android:background="@drawable/bottom_bg" />
+                android:background="@color/transparent" />
         </LinearLayout>
     </LinearLayout>
 

@@ -105,7 +105,7 @@
     <string name="plz_upload_image">请上传头像</string>
     <string name="title_activity_weather_detail">WeatherDetail</string>
     <string name="key_has_lend">车钥匙已借出</string>
-    <string name="user_not_regis">该用户尚未注册云门</string>
+    <string name="user_not_regis">该用户尚未注册云门APP</string>
     <string name="car_already_lend">该车正在借出中</string>
     <string name="cannot_auth_to_self">您不能授权给自己</string>
     <string name="lend_count_too_more">用户发送次数超限(一天5次)</string>
@@ -304,12 +304,15 @@
     <string name="auth_key_car_Fail4">您不能授权给自己</string>
     <string name="auth_key_car_Fail5">对方已有该区小车</string>
     <string name="auth_key_car_Fail6">用户接收次数超限（一天5次）</string>
+    <string name="auth_key_car_Fail7">车只能借给同一住户的人</string>
     <string name="plass_door">请选择授权门</string>
     <string name="doorType1">人行门禁授权成功</string>
     <string name="doorType2">车行门禁授权成功</string>
     <string name="invitatiion2">推荐云门APP给你</string>
     <string name="invitatiion1">云门能遥控开门也能聊天，点这里下载注册通过我的验证吧。</string>
     <string name="isFriendtrue">此人是你好友，不能重复申请</string>
+    <string name="notTime">无时间限制</string>
+    <string name="Please_choose_contact">请选择联系人</string>
     
 
 </resources>

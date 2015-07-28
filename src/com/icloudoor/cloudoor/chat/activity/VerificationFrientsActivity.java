@@ -310,7 +310,7 @@ public class VerificationFrientsActivity extends BaseActivity implements
 	public void registerBoradcastReceiver(){  
         IntentFilter myIntentFilter = new IntentFilter();  
         myIntentFilter.addAction(MsgFragment.class.getName());
-        //ע��㲥        
+        //注册广播        
         registerReceiver(mBroadcastReceiver, myIntentFilter);  
     }  
 
