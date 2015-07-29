@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/time_tx"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="sss"
+        android:textColor="#666666"
+        android:textSize="13sp" />
+
+    <com.icloudoor.cloudoor.widget.CustomExpandableListView
+        android:id="@+id/item_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:childDivider="#f0f0f0"
+        android:divider="@android:color/transparent"
+        android:groupIndicator="@android:color/transparent" >
+    </com.icloudoor.cloudoor.widget.CustomExpandableListView>
+
+</LinearLayout>

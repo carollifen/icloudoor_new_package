@@ -1,22 +1,9 @@
 package com.icloudoor.cloudoor;
 
-import gov.nist.core.Match;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,8 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
-import android.app.PendingIntent.CanceledException;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -51,22 +36,15 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -93,17 +71,13 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.Request.Method;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.cloudoor.ShakeEventManager;
-import com.icloudoor.cloudoor.UartService;
 import com.icloudoor.cloudoor.ChannelSwitchView.OnCheckedChangeListener;
 import com.icloudoor.cloudoor.ShakeEventManager.OnShakeListener;
 import com.icloudoor.cloudoor.SwitchButton.OnSwitchListener;
 import com.icloudoor.cloudoor.activity.AdministrationKeyActivity;
 import com.icloudoor.cloudoor.activity.RedActivity;
-import com.icloudoor.cloudoor.activity.UserStatusActivity;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.icdcrypto.ICDCrypto;
 import com.icloudoor.cloudoor.widget.UserStatusDialog;
@@ -3307,7 +3281,8 @@ public class KeyFragment extends Fragment {
 											@Override
 											public void onClick(View v) {
 												// TODO Auto-generated method stub
-												Intent intent = new Intent(getActivity(),UserStatusActivity.class);
+												Intent intent = new Intent(getActivity(),ReportToRepairActivity.class);
+												intent.putExtra("webUrl", "/user/auth/request.do");
 												startActivity(intent);
 											}
 										});

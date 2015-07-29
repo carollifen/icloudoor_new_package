@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
+import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -108,6 +109,13 @@ public class BaseActivity extends Activity {
 		}
 	}
 
+	public void saveSid(String sid) {
+		SharedPreferences savedSid = getSharedPreferences("SAVEDSID", 0);
+		Editor editor = savedSid.edit();
+		editor.putString("SID", sid);
+		editor.commit();
+	}
+
 	public void getNetworkData(NetworkInterface networkInterface,
 			String httpurl, String josn, final boolean isShowLoadin) {
 		this.networkInterface = networkInterface;
@@ -143,14 +151,15 @@ public class BaseActivity extends Activity {
 	}
 
 	public void getMyJsonObjectRequest(NetworkInterface networkInterface,
-			String httpurl, final Map<String, String> map, final boolean isShowLoadin) {
+			String httpurl, final Map<String, String> map,
+			final boolean isShowLoadin) {
 		this.networkInterface = networkInterface;
 		String url = UrlUtils.HOST + httpurl + "?sid=" + loadSid() + "&ver="
 				+ version.getVersionName() + "&imei=" + version.getDeviceId();
 		if (isShowLoadin)
 			loading();
-		MyJsonObjectRequest requestBody = new MyJsonObjectRequest(Method.POST,url, null,
-				new Response.Listener<JSONObject>() {
+		MyJsonObjectRequest requestBody = new MyJsonObjectRequest(Method.POST,
+				url, null, new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
@@ -259,13 +268,13 @@ public class BaseActivity extends Activity {
 		mCursorD.close();
 		return districtName;
 	}
-	
-	@Override  
-	public Resources getResources() {  
-	    Resources res = super.getResources();    
-	    Configuration config = new Configuration();    
-	    config.setToDefaults();    
-	    res.updateConfiguration(config, res.getDisplayMetrics() );  
-	    return res;  
-	}  
+
+	@Override
+	public Resources getResources() {
+		Resources res = super.getResources();
+		Configuration config = new Configuration();
+		config.setToDefaults();
+		res.updateConfiguration(config, res.getDisplayMetrics());
+		return res;
+	}
 }

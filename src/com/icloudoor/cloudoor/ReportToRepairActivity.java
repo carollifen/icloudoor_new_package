@@ -72,7 +72,7 @@ public class ReportToRepairActivity extends BaseActivity {
 	private WebView fixwebview;
 	private String sid;
 	private URL newurl;
-	private String url = UrlUtils.HOST + "/user/prop/zone/rr/add.do";
+//	private String url = UrlUtils.HOST + "/user/prop/zone/rr/add.do";
 	private String resultForup = UrlUtils.HOST + "/user/file/getSignatureAndPolicy.do";
 
 	JsonObjectRequest upRequest;
@@ -122,12 +122,12 @@ public class ReportToRepairActivity extends BaseActivity {
 	private final String ZONE_TABLE_NAME = "ZoneTable";
 	
 	private SelectPicPopupWindow menuWindow;
-	
+	private String webUrl;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_report_to_repair);
-		
+		webUrl =UrlUtils.HOST+ getIntent().getExtras().getString("webUrl");
 		mFinishActivityBroadcast = new Broadcast();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
@@ -168,7 +168,7 @@ public class ReportToRepairActivity extends BaseActivity {
 		sid = loadSid();
 
 		fixwebview.addJavascriptInterface(new Camera(), "cloudoorNative");
-		fixwebview.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
+		fixwebview.loadUrl(webUrl + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		sid = loadSid();
 		
 		WebChromeClient wcc = new WebChromeClient(){

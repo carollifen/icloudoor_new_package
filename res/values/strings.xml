@@ -298,6 +298,7 @@
     <string name="thisDynamicDelete">该动态已删除</string>
     <string name="auth_key_success">授权成功</string>
     <string name="auth_key_Fail">授权失败</string>
+    <string name="auth_key_car_Fail0">这辆车已经借出</string>
     <string name="auth_key_car_Fail1">用户尚未注册云门app</string>
     <string name="auth_key_car_Fail2">用户发送次数超限（一天5次）</string>
     <string name="auth_key_car_Fail3">该用户已有该临时钥匙</string>
@@ -313,6 +314,8 @@
     <string name="isFriendtrue">此人是你好友，不能重复申请</string>
     <string name="notTime">无时间限制</string>
     <string name="Please_choose_contact">请选择联系人</string>
+    <string name="key_type">使用中</string>
+    <string name="key_type1">使用完毕</string>
     
 
 </resources>

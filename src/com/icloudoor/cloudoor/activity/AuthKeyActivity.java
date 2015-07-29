@@ -145,15 +145,15 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener{
 					map.put("plateNum", key.getName());
 					map.put("toMobile", phone);
 					map.put("carPosStatus", key.getAuthStatus());
-					map.put("authFrom", start_time.getText().toString());
+//					map.put("authFrom", start_time.getText().toString());
 					authTempCar(map);
 				}else{
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("zoneUserId", zoneid);
 					map.put("toMobile", phone);
 					map.put("authDate", start_time.getText().toString().split(" ")[0].replaceAll("/", "-"));
-					map.put("authFrom", start_time.getText().toString());
-					map.put("authTo", end_time.getText().toString());
+//					map.put("authFrom", start_time.getText().toString());
+//					map.put("authTo", end_time.getText().toString());
 					authTempNormal(map);
 				}
 			}
@@ -177,6 +177,9 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener{
 					case 1:
 						
 						showToast(R.string.auth_key_success);
+						break;
+					case -100:
+						showToast(R.string.auth_key_car_Fail0);
 						break;
 					case -101:
 						showToast(R.string.auth_key_car_Fail1);

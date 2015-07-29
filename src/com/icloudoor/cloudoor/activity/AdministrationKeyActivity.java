@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.fragment.AuthRecordFragment;
+import com.icloudoor.cloudoor.fragment.BorrowKeyFragment;
 import com.icloudoor.cloudoor.fragment.MyKeyFragment;
 
 public class AdministrationKeyActivity extends FragmentActivity implements OnClickListener,OnPageChangeListener{
@@ -41,8 +43,8 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 		viewpager = (ViewPager) findViewById(R.id.viewpager);
 		viewList = new ArrayList<Fragment>();
 		viewList.add(new MyKeyFragment());
-		viewList.add(new MyKeyFragment());
-		viewList.add(new MyKeyFragment());
+		viewList.add(new BorrowKeyFragment());
+		viewList.add(new AuthRecordFragment());
 		
 		title_tx1 = (TextView) findViewById(R.id.title_tx1);
 		title_img1 = (ImageView) findViewById(R.id.title_img1);

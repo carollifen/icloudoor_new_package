@@ -357,6 +357,7 @@ public class WuyeFragment extends Fragment {
 				break;
 			case R.id.btn_fix:
 				intent.setClass(getActivity(), ReportToRepairActivity.class);
+				intent.putExtra("webUrl", "/user/prop/zone/rr/add.do");
 				startActivity(intent);
 				break;
 			case R.id.btn_bad:
