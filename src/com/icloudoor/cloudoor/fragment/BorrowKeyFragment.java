@@ -9,6 +9,13 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +35,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.BaseFragment;
+import com.icloudoor.cloudoor.MsgFragment;
+import com.icloudoor.cloudoor.MyDataBaseHelper;
 import com.icloudoor.cloudoor.MyDebugLog;
 import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
@@ -37,7 +46,11 @@ import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.entity.AuthKeyEn;
 import com.icloudoor.cloudoor.chat.entity.Key;
 import com.icloudoor.cloudoor.chat.entity.KeyInfo;
+import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.utli.GsonUtli;
+import com.icloudoor.cloudoor.utli.KeyHelper;
+import com.icloudoor.cloudoor.utli.VFDaoImpl;
+import com.umeng.analytics.MobclickAgent;
 
 public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 
@@ -50,6 +63,11 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 	boolean isFlage = true;
 	LinearLayout content_layout;
 	LinearLayout not_content_layout;
+	
+	private final String DATABASE_NAME = "KeyDB.db";
+	private final String CAR_TABLE_NAME = "CarKeyTable";
+	private MyDataBaseHelper mKeyDBHelper;
+	private SQLiteDatabase mKeyDB;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +79,9 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 		not_content_layout = (LinearLayout) rootView.findViewById(R.id.not_content_layout);
 		give_key_layout = (LinearLayout) rootView.findViewById(R.id.give_key_layout);
 		give_key_layout.setOnClickListener(this);
+		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
+		mKeyDB = mKeyDBHelper.getWritableDatabase();
+		registerBoradcastReceiver();
 		getMyBorrow();
 		return rootView;
 	}
@@ -179,6 +200,16 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 
 			return isChekble;
 		}
+		public void remove(int index){
+			isFlage = true;
+			data.get(index).getKeys().remove(data.get(index).getKeys().remove(childIndex));
+			isChekble.get(index).remove(isChekble.get(index).get(childIndex));
+			if(data.size()==0){
+				content_layout.setVisibility(View.GONE);
+				not_content_layout.setVisibility(View.VISIBLE);
+			}
+			notifyDataSetChanged();
+		}
 
 		@Override
 		public View getGroupView(int groupPosition, boolean isExpanded,
@@ -268,6 +299,8 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 
 	}
 
+	int groupIndex;
+	int childIndex;
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -281,12 +314,14 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 						KeyInfo keyInfo = data.get(i);
 						List<Key> keys = keyInfo.getKeys();
 						Key key = keys.get(j);
-						
+						groupIndex = i;
+						childIndex = j;
 						Map<String, String> map = new HashMap<String, String>();
 						map.put("l1ZoneId", keyInfo.getL1ZoneId());
-						map.put("carPosStatus", key.getAuthStatus());
+						getCarPosStatus(key.getName());
+						map.put("carPosStatus", carStatus);
 						map.put("plateNum", key.getName());
-						
+						giveKey(map);
 					}
 				}
 			}
@@ -302,8 +337,36 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 		}
 	}
 	
+	String carStatus;
+	public void getCarPosStatus(String plateNum){
+		
+		
+		if (mKeyDBHelper.tabIsExist(CAR_TABLE_NAME)) {
+			if (DBCount() > 0) {
+				
+				Cursor mCursor = mKeyDB.rawQuery("select * from " + CAR_TABLE_NAME + " where plateNum=?", new String[]{plateNum});
+				while (mCursor.moveToNext()) {
+					carStatus = mCursor.getString(mCursor.getColumnIndex("carStatus"));
+				}
+				mCursor.close();
+			}
+			
+		}
+		
+	}
+	
+	private long DBCount() {  
+	    String sql = "SELECT COUNT(*) FROM " + CAR_TABLE_NAME;
+	    SQLiteStatement statement = mKeyDB.compileStatement(sql);
+	    long count = statement.simpleQueryForLong();
+	    return count;
+	}
+	
+	
 	public void giveKey(Map<String, String> map){
 		//»¹Ô¿³×
+		System.out.println("map = "+map);
+		mQueue = Volley.newRequestQueue(getActivity());
 		getMyJsonObjectRequest(new NetworkInterface() {
 			
 			@Override
@@ -312,10 +375,9 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 				try {
 					if(response.getInt("code") == 1){
 						
-//						if(response.getString("sid") != null){
-//							saveSid(response.getString("sid"));
-//						}
-						
+						Toast.makeText(getActivity(), R.string.give_key, Toast.LENGTH_SHORT).show();
+						myadapter.remove(groupIndex);
+						KeyHelper.getInstance(getActivity()).downLoadKey2();
 					}else if(response.getInt("code") == -1){
 						Toast.makeText(getActivity(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
 					}else if(response.getInt("code") == -2){
@@ -333,11 +395,29 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 			@Override
 			public void onFailure(VolleyError error) {
 				// TODO Auto-generated method stub
-				
+				System.out.println("error = "+error);
 			}
 		}
 		
 		, "/user/api/returnTempAuthCar.do", map, true);
 	}
+	
+	public void registerBoradcastReceiver(){  
+        IntentFilter myIntentFilter = new IntentFilter();  
+        myIntentFilter.addAction(BorrowKeyFragment.class.getName());
+        //×¢²á¹ã²¥        
+        getActivity().registerReceiver(mBroadcastReceiver, myIntentFilter);  
+    }  
+	
+	
+	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver(){
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			getMyBorrow();
+		}
+		
+	};
 
 }

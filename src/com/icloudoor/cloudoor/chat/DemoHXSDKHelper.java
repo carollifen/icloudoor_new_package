@@ -43,9 +43,9 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
-import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.chat.EMMessage.Type;
+import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
@@ -57,13 +57,14 @@ import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
-import com.icloudoor.cloudoor.chat.activity.FriendDetailActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
+import com.icloudoor.cloudoor.fragment.BorrowKeyFragment;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
+import com.icloudoor.cloudoor.utli.KeyHelper;
 import com.icloudoor.cloudoor.utli.VFDaoImpl;
 
 /**
@@ -296,6 +297,26 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 							e.printStackTrace();
 						}
 						getFriends();
+					}else if(action.equals("refreshData")){
+						try {
+							System.out.println("datas = "+message.getJSONArrayAttribute("datas"));
+							String datas = message.getJSONArrayAttribute("datas").toString();
+							if(datas.contains("getProfile")){
+								KeyHelper.getInstance(appContext).checkForUserStatus();
+							}
+							if(datas.contains("download")){
+								KeyHelper.getInstance(appContext).downLoadKey2();
+							}
+							
+						} catch (EaseMobException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						Intent mIntent = new Intent(BorrowKeyFragment.class.getName());  
+		                //发送广播  
+						appContext.sendBroadcast(mIntent);  
+						
 					}else{
 						getFriends();
 					}

@@ -316,6 +316,7 @@
     <string name="Please_choose_contact">请选择联系人</string>
     <string name="key_type">使用中</string>
     <string name="key_type1">使用完毕</string>
+    <string name="give_key">还钥匙成功</string>
     
 
 </resources>

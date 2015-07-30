@@ -35,6 +35,7 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 	LinearLayout mykey_layout;
 	LinearLayout borrowkey_layout;
 	LinearLayout authrecord_layout;
+	ImageView btn_back;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
@@ -48,6 +49,7 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 		
 		title_tx1 = (TextView) findViewById(R.id.title_tx1);
 		title_img1 = (ImageView) findViewById(R.id.title_img1);
+		btn_back = (ImageView) findViewById(R.id.btn_back);
 		title_tx2 = (TextView) findViewById(R.id.title_tx2);
 		title_img2 = (ImageView) findViewById(R.id.title_img2);
 		title_tx3 = (TextView) findViewById(R.id.title_tx3);
@@ -58,7 +60,8 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 		mykey_layout.setOnClickListener(this);
 		borrowkey_layout.setOnClickListener(this);
 		authrecord_layout.setOnClickListener(this);
-		
+		btn_back.setOnClickListener(this);
+		viewpager.setOffscreenPageLimit(3);
 		viewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), viewList));
 		viewpager.setOnPageChangeListener(this);
 		
@@ -73,12 +76,10 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 	 class MyPagerAdapter extends FragmentPagerAdapter {  
 		  
         private List<Fragment> fragmentList;  
-        private List<String>   titleList;  
   
         public MyPagerAdapter(FragmentManager fm, List<Fragment> fragmentList){  
             super(fm);  
             this.fragmentList = fragmentList;  
-            this.titleList = titleList;  
         }  
   
         /** 
@@ -113,6 +114,9 @@ public class AdministrationKeyActivity extends FragmentActivity implements OnCli
 			break;
 		case R.id.authrecord_layout:
 			setBottom(2);
+			break;
+		case R.id.btn_back:
+			finish();
 			break;
 
 		default:

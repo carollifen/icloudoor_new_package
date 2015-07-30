@@ -232,7 +232,7 @@ public class KeyFragment extends Fragment {
 	private String officedefault = "-100";
 
 	Handler mHandler = new Handler();
-	
+	UserStatusDialog statusDialog ;
 	public KeyFragment() {
 		// Required empty public constructor
 	}
@@ -263,7 +263,7 @@ public class KeyFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.e("test63", "onCreateView");
-
+		statusDialog = new UserStatusDialog(getActivity());
 		activity = (CloudDoorMainActivity)getActivity();
 
 		View view = inflater.inflate(R.layout.key_page, container, false);
@@ -3274,18 +3274,20 @@ public class KeyFragment extends Fragment {
 									edit.commit();
 									int status = response.getJSONObject("data").getInt("userStatus");
 //									if(status!=2){
-										UserStatusDialog statusDialog = new UserStatusDialog(getActivity());
-										statusDialog.show();
-										statusDialog.setOKOnClickListener(new OnClickListener() {
-											
-											@Override
-											public void onClick(View v) {
-												// TODO Auto-generated method stub
-												Intent intent = new Intent(getActivity(),ReportToRepairActivity.class);
-												intent.putExtra("webUrl", "/user/auth/request.do");
-												startActivity(intent);
-											}
-										});
+										if(!statusDialog.isShowing()){
+											statusDialog.show();
+											statusDialog.setOKOnClickListener(new OnClickListener() {
+												
+												@Override
+												public void onClick(View v) {
+													// TODO Auto-generated method stub
+													Intent intent = new Intent(getActivity(),ReportToRepairActivity.class);
+													intent.putExtra("webUrl", "/user/auth/request.do");
+													startActivity(intent);
+												}
+											});
+										}
+										
 //									}
 										
 									
