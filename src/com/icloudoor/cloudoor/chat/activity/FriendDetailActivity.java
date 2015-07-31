@@ -6,7 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,22 +17,19 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.BaseActivity;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
-import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FindDBUtile;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
+import com.icloudoor.cloudoor.utli.UserDBHelper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class FriendDetailActivity extends BaseActivity implements OnClickListener , NetworkInterface{
@@ -212,29 +208,31 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 				destroyDialog();
 				if (friendInfo != null) {
 					List<MyFriendsEn> data = friendInfo.getData();
-					FriendDaoImpl daoImpl = new FriendDaoImpl(
-							FriendDetailActivity.this);
-					SQLiteDatabase db = daoImpl.getDbHelper()
-							.getWritableDatabase();
-					if(data==null||data.size() == 0){
-						db.execSQL("delete from friends");
-						finish();
-					}else{
-						db.beginTransaction();
-						try {
-							db.execSQL("delete from friends");
-							for (int i = 0; i < data.size(); i++) {
-								MyFriendsEn friendsEn = data.get(i);
-								db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
-										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
-							}
-							db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
-						} finally {
-							db.endTransaction();
-							finish();
-						}
-					}
+					UserDBHelper.getInstance(FriendDetailActivity.this).initTable(friendInfo.getData());
+					finish();
+//					FriendDaoImpl daoImpl = new FriendDaoImpl(
+//							FriendDetailActivity.this);
+//					SQLiteDatabase db = daoImpl.getDbHelper()
+//							.getWritableDatabase();
+//					if(data==null||data.size() == 0){
+//						db.execSQL("delete from friends");
+//						finish();
+//					}else{
+//						db.beginTransaction();
+//						try {
+//							db.execSQL("delete from friends");
+//							for (int i = 0; i < data.size(); i++) {
+//								MyFriendsEn friendsEn = data.get(i);
+//								db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+//										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
+//										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
+//							}
+//							db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
+//						} finally {
+//							db.endTransaction();
+//							finish();
+//						}
+//					}
 				} 
 			}
 			

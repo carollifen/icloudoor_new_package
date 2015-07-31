@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -58,13 +57,13 @@ import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
-import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.fragment.BorrowKeyFragment;
 import com.icloudoor.cloudoor.http.MyRequestBody;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.icloudoor.cloudoor.utli.KeyHelper;
+import com.icloudoor.cloudoor.utli.UserDBHelper;
 import com.icloudoor.cloudoor.utli.VFDaoImpl;
 
 /**
@@ -137,61 +136,71 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 	}
 
 	public void getFriends() {
-		RequestQueue mRequestQueue = Volley.newRequestQueue(appContext.getApplicationContext());
+		RequestQueue mRequestQueue = Volley.newRequestQueue(appContext
+				.getApplicationContext());
 		version = new Version(appContext);
 		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid="
-				+ loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId();
+				+ loadSid() + "&ver=" + version.getVersionName() + "&imei="
+				+ version.getDeviceId();
 		MyRequestBody requestBody = new MyRequestBody(url, "{}",
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
-						
-						
+
 						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 								response.toString(), MyFriendInfo.class);
-						if (friendInfo != null) {
-							
-							
-							List<MyFriendsEn> data = friendInfo.getData();
-							FriendDaoImpl daoImpl = new FriendDaoImpl(
-									appContext);
-							SQLiteDatabase db = daoImpl.getDbHelper()
-									.getWritableDatabase();
-							if(data==null||data.size() == 0){
-								db.execSQL("delete from friends");
-							}else{
-								db.beginTransaction();
-								try {
-									db.execSQL("delete from friends");
-									for (int i = 0; i < data.size(); i++) {
-										MyFriendsEn friendsEn = data.get(i);
-										db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-												new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
-												friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
-									}
-									db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
-								} finally {
-									db.endTransaction();
-								}
-							}
-							
 
-						} 
+						if (friendInfo != null) {
+							//
+							UserDBHelper.getInstance(appContext).initTable(
+									friendInfo.getData());
+							//
+							// List<MyFriendsEn> data = friendInfo.getData();
+							// FriendDaoImpl daoImpl = new FriendDaoImpl(
+							// appContext);
+							// SQLiteDatabase db = daoImpl.getDbHelper()
+							// .getWritableDatabase();
+							// if(data==null||data.size() == 0){
+							// db.execSQL("delete from friends");
+							// }else{
+							// db.beginTransaction();
+							// try {
+							// db.execSQL("delete from friends");
+							// for (int i = 0; i < data.size(); i++) {
+							// MyFriendsEn friendsEn = data.get(i);
+							// db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+							// new Object[] {
+							// friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(),
+							// friendsEn.getProvinceId(),
+							// friendsEn.getDistrictId(), friendsEn.getCityId(),
+							// friendsEn.getSex()});
+							// }
+							// db.setTransactionSuccessful();//
+							// 调用此方法会在执行到endTransaction()
+							// } finally {
+							// db.endTransaction();
+							// }
+							// }
+							//
+							//
+						}
 
 					}
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						Toast.makeText(appContext, R.string.network_error, Toast.LENGTH_SHORT).show();
+						Toast.makeText(appContext, R.string.network_error,
+								Toast.LENGTH_SHORT).show();
 					}
 				});
 
 		mRequestQueue.add(requestBody);
 	}
 
-	public void setExt(EMMessage message){
-		SharedPreferences loginStatus = appContext.getSharedPreferences("LOGINSTATUS", Context.MODE_PRIVATE);
+	public void setExt(EMMessage message) {
+		SharedPreferences loginStatus = appContext.getSharedPreferences(
+				"LOGINSTATUS", Context.MODE_PRIVATE);
 		JSONObject ext = new JSONObject();
 		try {
 			ext.put("userId", loginStatus.getString("USERID", ""));
@@ -203,7 +212,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 		}
 		message.setAttribute("userInfo", ext);
 	}
-	
+
 	/**
 	 * 全局事件监听 因为可能会有UI页面先处理到这个消息，所以一般如果UI页面已经处理，这里就不需要再次处�? activityList.size()
 	 * <= 0 意味�?�?有页面都已经在后台运行，或�?�已经离�?Activity Stack
@@ -245,7 +254,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 					CmdMessageBody cmdMsgBody = (CmdMessageBody) message
 							.getBody();
 					String action = cmdMsgBody.action;
-					System.out.println(" EMaction = "+action);
+					System.out.println(" EMaction = " + action);
 					if (action.equals("invite")) {
 						try {
 							JSONObject vfoj = message
@@ -269,10 +278,11 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 								vf.setStatus("0");
 								daoImpl.insert(vf);
 							}
-							
-							Intent mIntent = new Intent(MsgFragment.class.getName());  
-			                //发送广播  
-							appContext.sendBroadcast(mIntent);  
+
+							Intent mIntent = new Intent(
+									MsgFragment.class.getName());
+							// 发送广播
+							appContext.sendBroadcast(mIntent);
 
 						} catch (EaseMobException e) {
 							// TODO Auto-generated catch block
@@ -281,43 +291,72 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					} else if(action.equals("acceptInvite")){
-						EMConversation emConversation = EMChatManager.getInstance().getConversation(message.getFrom());
-						EMMessage txtMessage =  EMMessage.createSendMessage(EMMessage.Type.TXT);
-						TextMessageBody messageBody = new TextMessageBody("我们已经成为好友，可以聊天了");
+					} else if (action.equals("acceptInvite")) {
+						EMConversation emConversation = EMChatManager
+								.getInstance().getConversation(
+										message.getFrom());
+						EMMessage txtMessage = EMMessage
+								.createSendMessage(EMMessage.Type.TXT);
+						TextMessageBody messageBody = new TextMessageBody(
+								"我们已经成为好友，可以聊天了");
 						setExt(message);
 						txtMessage.setAttribute("type", 4);
 						txtMessage.addBody(messageBody);
 						txtMessage.setReceipt(message.getFrom());
 						emConversation.addMessage(txtMessage);
-						 try {
+						try {
 							EMChatManager.getInstance().sendMessage(txtMessage);
 						} catch (EaseMobException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						getFriends();
-					}else if(action.equals("refreshData")){
+					} else if (action.equals("refreshData")) {
 						try {
-							System.out.println("datas = "+message.getJSONArrayAttribute("datas"));
-							String datas = message.getJSONArrayAttribute("datas").toString();
-							if(datas.contains("getProfile")){
-								KeyHelper.getInstance(appContext).checkForUserStatus();
+							System.out.println("datas = "
+									+ message.getJSONArrayAttribute("datas"));
+							String datas = message.getJSONArrayAttribute(
+									"datas").toString();
+							if (datas.contains("getProfile")) {
+								KeyHelper.getInstance(appContext)
+										.checkForUserStatus();
 							}
-							if(datas.contains("download")){
-								KeyHelper.getInstance(appContext).downLoadKey2();
+							if (datas.contains("download")) {
+								KeyHelper.getInstance(appContext)
+										.downLoadKey2();
 							}
-							
+
+							JSONObject userInfo = message
+									.getJSONObjectAttribute("userInfo");
+							System.out.println("小区消息 = "+userInfo);
+							try {
+								int type = userInfo.getInt("type");
+								if (type != 0) {
+									UserInfoTable userInfoTable = new UserInfoTable();
+									userInfoTable.setUserId(userInfo
+											.getString("userId"));
+									userInfoTable.setNickname(userInfo
+											.getString("nickname"));
+									userInfoTable.setPortraitUrl(userInfo
+											.getString("portraitUrl"));
+									UserDBHelper.getInstance(appContext)
+											.savaUser(userInfoTable);
+								}
+							} catch (Exception e) {
+								
+							}
+
 						} catch (EaseMobException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						
-						Intent mIntent = new Intent(BorrowKeyFragment.class.getName());  
-		                //发送广播  
-						appContext.sendBroadcast(mIntent);  
-						
-					}else{
+
+						Intent mIntent = new Intent(
+								BorrowKeyFragment.class.getName());
+						// 发送广播
+						appContext.sendBroadcast(mIntent);
+
+					} else {
 						getFriends();
 					}
 
@@ -444,45 +483,46 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 				});
 	}
 
-	
 	public String getStrng(Context context, int resId) {
 		return context.getResources().getString(resId);
 	}
-	
+
 	private String getMessageDigest(EMMessage message, Context context) {
 		String digest = "";
 		switch (message.getType()) {
-		case LOCATION: 
+		case LOCATION:
 			if (message.direct == EMMessage.Direct.RECEIVE) {
-//				message.get
-//				digest = getStrng(context, R.string.location_recv);
-//				digest = String.format(digest, message.getFrom());
+				// message.get
+				// digest = getStrng(context, R.string.location_recv);
+				// digest = String.format(digest, message.getFrom());
 				digest = getStrng(context, R.string.location_prefix);
 				return digest;
 			} else {
 				digest = getStrng(context, R.string.location_prefix);
 			}
 			break;
-		case IMAGE: 
+		case IMAGE:
 			ImageMessageBody imageBody = (ImageMessageBody) message.getBody();
 			digest = getStrng(context, R.string.picture);
 			break;
 		case VOICE:
 			digest = getStrng(context, R.string.voice);
 			break;
-		case VIDEO: 
+		case VIDEO:
 			digest = getStrng(context, R.string.video);
 			break;
-		case TXT: 
-			if(!message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL,false)){
+		case TXT:
+			if (!message.getBooleanAttribute(
+					Constant.MESSAGE_ATTR_IS_VOICE_CALL, false)) {
 				TextMessageBody txtBody = (TextMessageBody) message.getBody();
 				digest = txtBody.getMessage();
-			}else{
+			} else {
 				TextMessageBody txtBody = (TextMessageBody) message.getBody();
-				digest = getStrng(context, R.string.voice_call) + txtBody.getMessage();
+				digest = getStrng(context, R.string.voice_call)
+						+ txtBody.getMessage();
 			}
 			break;
-		case FILE: 
+		case FILE:
 			digest = getStrng(context, R.string.file);
 			break;
 		default:
@@ -491,6 +531,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 
 		return digest;
 	}
+
 	@Override
 	protected HXNotificationInfoProvider getNotificationListener() {
 		// 可以覆盖默认的设�?
@@ -523,9 +564,7 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 			@Override
 			public String getLatestText(EMMessage message, int fromUsersNum,
 					int messageNum) {
-				
-				
-				
+
 				return getMessageDigest(message, appContext);
 			}
 

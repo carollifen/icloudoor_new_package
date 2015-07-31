@@ -14,15 +14,16 @@ import android.widget.TextView;
 
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MyFriendsAdapter extends BaseAdapter implements SectionIndexer{
 	
-	private List<MyFriendsEn> list = null;
+	private List<UserInfoTable> list = null;
 	private Context mContext;
 	
-	public MyFriendsAdapter(Context mContext, List<MyFriendsEn> list) {
+	public MyFriendsAdapter(Context mContext, List<UserInfoTable> list) {
 		this.mContext = mContext;
 		this.list = list;
 	}
@@ -31,7 +32,7 @@ public class MyFriendsAdapter extends BaseAdapter implements SectionIndexer{
 	 * 当ListView数据发生变化时,调用此方法来更新ListView
 	 * @param list
 	 */
-	public void updateListView(List<MyFriendsEn> list){
+	public void updateListView(List<UserInfoTable> list){
 		this.list = list;
 		notifyDataSetChanged();
 	}
@@ -52,7 +53,7 @@ public class MyFriendsAdapter extends BaseAdapter implements SectionIndexer{
 
 	public View getView(final int position, View view, ViewGroup arg2) {
 		ViewHolder viewHolder = null;
-		final MyFriendsEn mContent = list.get(position);
+		final UserInfoTable mContent = list.get(position);
 		if (view == null) {
 			viewHolder = new ViewHolder();
 			view = LayoutInflater.from(mContext).inflate(R.layout.item_myfriends, null);

@@ -103,11 +103,12 @@ import com.icloudoor.cloudoor.chat.MessageAdapter;
 import com.icloudoor.cloudoor.chat.SmileUtils;
 import com.icloudoor.cloudoor.chat.VoicePlayClickListener;
 import com.icloudoor.cloudoor.chat.emoji.EmojiEditText;
-import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
 import com.icloudoor.cloudoor.chat.emoji.EmojiGridView.OnEmojiClickListener;
+import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
 import com.icloudoor.cloudoor.chat.emoji.ExpressionView;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
+import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
+import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 import com.icloudoor.cloudoor.widget.BusinessCardDialog;
 
 public class ChatActivity extends FragmentActivity implements OnClickListener, EMEventListener{
@@ -205,7 +206,7 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	public EMChatRoom room;
 	
 	
-	MyFriendsEn friendsEn;
+	UserInfoTable friendsEn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -389,8 +390,8 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 //		}
 		
 		
-		FriendDaoImpl daoImpl = new FriendDaoImpl(this);
-		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
+		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
+		List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
 		if(list!=null && list.size()>0){
 			friendsEn = list.get(0);
 			nickName = friendsEn.getNickname();

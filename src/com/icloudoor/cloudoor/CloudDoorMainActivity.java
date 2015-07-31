@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 import net.tsz.afinal.FinalHttp;
@@ -26,7 +25,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -55,24 +53,21 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.easemob.EMCallBack;
-import com.easemob.EMConnectionListener;
 import com.easemob.EMEventListener;
 import com.easemob.EMNotifierEvent;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
-import com.easemob.util.NetUtils;
 import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.cache.UserCacheWrapper;
 import com.icloudoor.cloudoor.chat.CommonUtils;
 import com.icloudoor.cloudoor.chat.entity.AuthKeyEn;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
-import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.http.MyRequestBody;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
+import com.icloudoor.cloudoor.utli.UserDBHelper;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
@@ -1005,37 +1000,38 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 								response.toString(), MyFriendInfo.class);
 						if (friendInfo != null) {
-							List<MyFriendsEn> data = friendInfo.getData();
-							if (data != null && data.size() > 0) {
-								FriendDaoImpl daoImpl = new FriendDaoImpl(
-										CloudDoorMainActivity.this);
-								SQLiteDatabase db = daoImpl.getDbHelper()
-										.getWritableDatabase();
-								db.beginTransaction();
-								try {
-									db.execSQL("delete from friends");
-									for (int i = 0; i < data.size(); i++) {
-										MyFriendsEn friendsEn = data.get(i);
-										db.execSQL(
-												"insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-												new Object[] {
-														friendsEn.getUserId(),
-														friendsEn.getNickname(),
-														friendsEn
-																.getPortraitUrl(),
-														friendsEn
-																.getProvinceId(),
-														friendsEn
-																.getDistrictId(),
-														friendsEn.getCityId(),
-														friendsEn.getSex() });
-									}
-									db.setTransactionSuccessful();// µ÷ÓÃ´Ë·½·¨»áÔÚÖ´ÐÐµ½endTransaction()
-								} finally {
-									db.endTransaction();
-
-								}
-							}
+							UserDBHelper.getInstance(CloudDoorMainActivity.this).initTable(friendInfo.getData());
+//							List<MyFriendsEn> data = friendInfo.getData();
+//							if (data != null && data.size() > 0) {
+//								FriendDaoImpl daoImpl = new FriendDaoImpl(
+//										CloudDoorMainActivity.this);
+//								SQLiteDatabase db = daoImpl.getDbHelper()
+//										.getWritableDatabase();
+//								db.beginTransaction();
+//								try {
+//									db.execSQL("delete from friends");
+//									for (int i = 0; i < data.size(); i++) {
+//										MyFriendsEn friendsEn = data.get(i);
+//										db.execSQL(
+//												"insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+//												new Object[] {
+//														friendsEn.getUserId(),
+//														friendsEn.getNickname(),
+//														friendsEn
+//																.getPortraitUrl(),
+//														friendsEn
+//																.getProvinceId(),
+//														friendsEn
+//																.getDistrictId(),
+//														friendsEn.getCityId(),
+//														friendsEn.getSex() });
+//									}
+//									db.setTransactionSuccessful();
+//								} finally {
+//									db.endTransaction();
+//
+//								}
+//							}
 						} else {
 						}
 

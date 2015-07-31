@@ -43,6 +43,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.easemob.chat.EMChatManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -425,9 +426,9 @@ public class SettingFragment extends Fragment {
 				    @Override
 				    public void OnDownloadEnd(int result, String file) {
 				    	if(getActivity() != null) {
-				    		SharedPreferences setting = getActivity().getSharedPreferences("com.icloudoor.clouddoor", 0);
-				    		setting.edit().putBoolean("FIRST", true).commit();
-				    	
+//				    		SharedPreferences setting = getActivity().getSharedPreferences("com.icloudoor.clouddoor", 0);
+//				    		setting.edit().putBoolean("FIRST", true).commit();
+//				    	
 				    		File f = new File(file);
 				    		UmengUpdateAgent.startInstall(getActivity(), f);
 				    	}
@@ -474,6 +475,10 @@ public class SettingFragment extends Fragment {
                                         	intent3.putExtras(bundle);
                                         	intent3.setClass(getActivity(), Login.class);
                                         	startActivity(intent3);
+                                        	
+                                        	CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
+                                            mainActivity.finish();
+                                            EMChatManager.getInstance().logout();
                                         }
                                         
                                         
@@ -486,8 +491,7 @@ public class SettingFragment extends Fragment {
 //                                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
 //                                        mKeyDB.execSQL(sq3);                                        
                                                                   
-                                        CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
-                                        mainActivity.finish();
+                                        
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }

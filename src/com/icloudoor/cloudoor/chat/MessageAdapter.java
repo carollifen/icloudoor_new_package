@@ -82,11 +82,11 @@ import com.icloudoor.cloudoor.chat.activity.ShowNormalFileActivity;
 import com.icloudoor.cloudoor.chat.activity.ShowVideoActivity;
 import com.icloudoor.cloudoor.chat.activity.UsersDetailActivity;
 import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
-import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FindDBUtile;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.Uitls;
+import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 import com.icloudoor.cloudoor.widget.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -127,11 +127,11 @@ public class MessageAdapter extends BaseAdapter {
 	private EMConversation conversation;
 	EMMessage[] messages = null;
 	private Context context;
-	MyFriendsEn friendsEn;
+	UserInfoTable friendsEn;
 	private Map<String, Timer> timers = new Hashtable<String, Timer>();
 
 	public MessageAdapter(Context context, String username, int chatType,
-			MyFriendsEn friendsEn) {
+			UserInfoTable friendsEn) {
 		this.username = username;
 		this.context = context;
 		this.friendsEn = friendsEn;
@@ -756,9 +756,9 @@ public class MessageAdapter extends BaseAdapter {
 							e1.printStackTrace();
 						}
 
-						FriendDaoImpl daoImpl = new FriendDaoImpl(context);
+						UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(context);
 
-						List<MyFriendsEn> list = daoImpl.find(null,
+						List<UserInfoTable> list = daoImpl.find(null,
 								"userId = ?", new String[] { UserId }, null,
 								null, null, null);
 						Boolean isFirend;

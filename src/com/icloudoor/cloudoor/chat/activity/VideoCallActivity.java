@@ -43,10 +43,8 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMVideoCallHelper;
 import com.easemob.exceptions.EMServiceNotReadyException;
 import com.icloudoor.cloudoor.R;
-import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
-import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
+import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 
 public class VideoCallActivity extends CallActivity implements OnClickListener {
 
@@ -124,11 +122,11 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
 		username = getIntent().getStringExtra("username");
 
 		// 设置通话�?
-		FriendDaoImpl daoImpl = new FriendDaoImpl(this);
-		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?",
+		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
+		List<UserInfoTable> list = daoImpl.find(null, "userId = ?",
 				new String[] { username }, null, null, null, null);
 		if (list != null && list.size() > 0) {
-			MyFriendsEn friendsEn = list.get(0);
+			UserInfoTable friendsEn = list.get(0);
 			nickName = friendsEn.getNickname();
 			portraitUrl = friendsEn.getPortraitUrl();
 			nickTextView.setText(nickName);

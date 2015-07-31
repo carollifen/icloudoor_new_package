@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,23 +20,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
-import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
-import com.icloudoor.cloudoor.chat.activity.FriendDetailActivity;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
-import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
+import com.icloudoor.cloudoor.utli.UserDBHelper;
 import com.icloudoor.cloudoor.utli.VFDaoImpl;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -175,28 +168,28 @@ public class VerificationFrientsAdapter extends BaseAdapter{
 						response.toString(), MyFriendInfo.class);
 				
 				if (friendInfo != null) {
-					List<MyFriendsEn> data = friendInfo.getData();
-					FriendDaoImpl daoImpl = new FriendDaoImpl(
-							context);
-					SQLiteDatabase db = daoImpl.getDbHelper()
-							.getWritableDatabase();
-					if(data==null||data.size() == 0){
-						db.execSQL("delete from friends");
-					}else{
-						db.beginTransaction();
-						try {
-							db.execSQL("delete from friends");
-							for (int i = 0; i < data.size(); i++) {
-								MyFriendsEn friendsEn = data.get(i);
-								db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
-										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
-							}
-							db.setTransactionSuccessful();// µ÷ÓÃ´Ë·½·¨»áÔÚÖ´ÐÐµ½endTransaction()
-						} finally {
-							db.endTransaction();
-						}
-					}
+					UserDBHelper.getInstance(context).initTable(friendInfo.getData());
+//					FriendDaoImpl daoImpl = new FriendDaoImpl(
+//							context);
+//					SQLiteDatabase db = daoImpl.getDbHelper()
+//							.getWritableDatabase();
+//					if(data==null||data.size() == 0){
+//						db.execSQL("delete from friends");
+//					}else{
+//						db.beginTransaction();
+//						try {
+//							db.execSQL("delete from friends");
+//							for (int i = 0; i < data.size(); i++) {
+//								MyFriendsEn friendsEn = data.get(i);
+//								db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
+//										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
+//										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
+//							}
+//							db.setTransactionSuccessful();// µ÷ÓÃ´Ë·½·¨»áÔÚÖ´ÐÐµ½endTransaction()
+//						} finally {
+//							db.endTransaction();
+//						}
+//					}
 				} 
 
 			}

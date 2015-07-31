@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
+import org.json.JSONObject;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -36,6 +38,8 @@ import com.easemob.chat.TextMessageBody;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
+import com.icloudoor.cloudoor.utli.UserDBHelper;
 
 public class HXNotifier {
     private final static String TAG = "notify";
@@ -240,7 +244,27 @@ public class HXNotifier {
             } else {
                 notificationManager.notify(notifyID, notification);
             }
-
+            JSONObject userInfo = message
+					.getJSONObjectAttribute("userInfo");
+            try {
+				int type = userInfo.getInt("type");
+				if (type != 0) {
+					System.out.println("小区消息 = "+userInfo);
+					UserInfoTable userInfoTable = new UserInfoTable();
+					userInfoTable.setUserId(userInfo
+							.getString("userId"));
+					userInfoTable.setNickname(userInfo
+							.getString("nickname"));
+					userInfoTable.setPortraitUrl(userInfo
+							.getString("portraitUrl"));
+					UserDBHelper.getInstance(appContext)
+							.savaUser(userInfoTable);
+				}
+			} catch (Exception e) {
+				
+			}
+            
+           
         } catch (Exception e) {
             e.printStackTrace();
         }

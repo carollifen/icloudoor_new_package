@@ -13,7 +13,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TextView.BufferType;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatRoom;
@@ -27,19 +26,19 @@ import com.easemob.chat.TextMessageBody;
 import com.easemob.util.DateUtils;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.chat.Constant;
-import com.icloudoor.cloudoor.chat.SmileUtils;
 import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
-import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.Uitls;
+import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChatAllHistoryAdapter1 extends BaseAdapter {
 
 	Context context;
 	private List<EMConversation> conversationList;
-	FriendDaoImpl daoImpl;
+	UserinfoDaoImpl daoImpl;
 
 	public ChatAllHistoryAdapter1(Context context) {
 		// TODO Auto-generated constructor stub
@@ -90,9 +89,9 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 
 		EMConversation conversation = conversationList.get(position);
 		String username = conversation.getUserName();
-		List<MyFriendsEn> list = daoImpl.find(null, "userId = ?",
+		List<UserInfoTable> list = daoImpl.find(null, "userId = ?",
 				new String[] { username }, null, null, null, null);
-		MyFriendsEn friendsEn = list.get(0);
+		UserInfoTable friendsEn = list.get(0);
 
 		
 		if (conversation.getType() == EMConversationType.GroupChat) {
@@ -188,10 +187,10 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 		
 		System.out.println("消息个数："+objects.size());
 		
-		daoImpl = new FriendDaoImpl(context);
+		daoImpl = new UserinfoDaoImpl(context);
 		List<EMConversation> haveFriendData = new ArrayList<EMConversation>();
 		for (int i = 0; i < objects.size(); i++) {
-			List<MyFriendsEn> list = daoImpl.find(null, "userId = ?", new String[]{objects.get(i).getUserName()}, null, null, null, null);
+			List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{objects.get(i).getUserName()}, null, null, null, null);
 			if(list!=null && list.size()>0){
 				haveFriendData.add(objects.get(i));
 			}

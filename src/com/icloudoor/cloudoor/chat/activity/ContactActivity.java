@@ -1,6 +1,7 @@
 package com.icloudoor.cloudoor.chat.activity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -9,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,9 +29,11 @@ import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.adapter.MyFriendsAdapter;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
+import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
 import com.icloudoor.cloudoor.utli.CharacterParser;
 import com.icloudoor.cloudoor.utli.FriendDaoImpl;
 import com.icloudoor.cloudoor.utli.GsonUtli;
+import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 import com.icloudoor.cloudoor.widget.SideBar;
 import com.icloudoor.cloudoor.widget.SideBar.OnTouchingLetterChangedListener;
 
@@ -45,7 +49,8 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	private CharacterParser characterParser;
 	LayoutInflater inflater;
 	private ImageView btn_back;
-	FriendDaoImpl daoImpl;
+	UserinfoDaoImpl daoImpl;
+	FriendDaoImpl friendDaoImpl;
 	int type;
 	
 	private Version version;
@@ -82,7 +87,7 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				MyFriendsEn friendsEn = (MyFriendsEn) adapter.getItem(position-1);
+				UserInfoTable friendsEn = (UserInfoTable) adapter.getItem(position-1);
 				if(type==1){
 					Intent it  = new Intent();
 					it.putExtra("CityId", friendsEn.getCityId());
@@ -120,9 +125,19 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		daoImpl = new FriendDaoImpl(this);
-		List<MyFriendsEn> data = daoImpl.find();
-		adapter.updateListView(filledData(data));
+		daoImpl = new UserinfoDaoImpl(this);
+		friendDaoImpl = new FriendDaoImpl(this);
+		List<UserInfoTable> data  = daoImpl.find();
+		List<MyFriendsEn> friendData = friendDaoImpl.find();
+		List<UserInfoTable> userInfoData = new LinkedList<UserInfoTable>();
+		for (int i = 0; i < friendData.size(); i++) {
+			for (int j = 0; j < data.size(); j++) {
+				if(friendData.get(i).getUserId().equals(data.get(j).getUserId())){
+					userInfoData.add(data.get(j));
+				}
+			}
+		}
+		adapter.updateListView(filledData(userInfoData));
 	}
 
 	public void setListener() {
@@ -143,11 +158,14 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 	
 
 
-	private List<MyFriendsEn> filledData(List<MyFriendsEn> data) {
-		List<MyFriendsEn> mSortList = new ArrayList<MyFriendsEn>();
+	private List<UserInfoTable> filledData(List<UserInfoTable> data) {
+		List<UserInfoTable> mSortList = new ArrayList<UserInfoTable>();
 
 		for (int i = 0; i < data.size(); i++) {
-			MyFriendsEn sortModel = data.get(i);
+			UserInfoTable sortModel = data.get(i);
+			if(TextUtils.isEmpty(data.get(i).getNickname())){
+				continue;
+			}
 			String pinyin = characterParser.getSelling(data.get(i).getNickname());
 			String sortString = pinyin.substring(0, 1).toUpperCase();
 			if (sortString.matches("[A-Z]")) {
