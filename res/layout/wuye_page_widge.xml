@@ -52,6 +52,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true" />
+            
+            <View
+                android:id="@+id/blankview3"
+                android:layout_width="4dp"
+                android:layout_height="match_parent" />
+            
+            <ImageView
+                android:id="@+id/Iv_wuye_widge_push4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
         </LinearLayout>
 
     </RelativeLayout>
