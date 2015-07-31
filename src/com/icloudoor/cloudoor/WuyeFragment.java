@@ -74,7 +74,7 @@ public class WuyeFragment extends Fragment {
 	
 	private Version version;
 	
-	int bannerCount = 2;
+	int bannerCount = 1;
 		
 	public WuyeFragment() {
 
@@ -106,7 +106,7 @@ public class WuyeFragment extends Fragment {
 		
 		if(getActivity() != null){
 			SharedPreferences banner = getActivity().getSharedPreferences("BANNER", 0);
-			bannerCount = banner.getInt("COUNT", 2);
+			bannerCount = banner.getInt("COUNT", 1);
 		}
 
 		WuyeWidgePush1 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push1);
@@ -117,7 +117,14 @@ public class WuyeFragment extends Fragment {
 		blank3 = (View) view.findViewById(R.id.blankview3);
 		WuyeWidgePush4 = (ImageView) view.findViewById(R.id.Iv_wuye_widge_push4);
 
-		if(bannerCount == 2){
+		if(bannerCount == 1){
+			blank1.setVisibility(View.GONE);
+			WuyeWidgePush2.setVisibility(View.GONE);
+			blank2.setVisibility(View.GONE);
+			WuyeWidgePush3.setVisibility(View.GONE);
+			blank3.setVisibility(View.GONE);
+			WuyeWidgePush4.setVisibility(View.GONE);
+		} else if(bannerCount == 2){
 			blank2.setVisibility(View.GONE);
 			WuyeWidgePush3.setVisibility(View.GONE);
 			blank3.setVisibility(View.GONE);
@@ -180,7 +187,12 @@ public class WuyeFragment extends Fragment {
 		
 		mWuyePageFragmentList = new ArrayList<Fragment>();
 		
-		if(bannerCount == 2){
+		if(bannerCount == 1){
+			WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
+			mWuyeWidgeFragment = new WuyeWidgeFragment();
+			
+			mWuyePageFragmentList.add(mWuyeWidgeFragment);
+		} else if(bannerCount == 2){
 			WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
 			WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
 			
