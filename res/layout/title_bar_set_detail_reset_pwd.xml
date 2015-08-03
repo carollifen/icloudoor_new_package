@@ -15,13 +15,11 @@
 		    android:layout_height="match_parent" 
 		    />
 
-		<TextView
+		<ImageView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="取消"
-            android:textColor="#ffffff"
-        	android:textSize="15sp"
-        	android:gravity="center_vertical" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/new_back" />
 		
 		<View
 		    android:layout_width="16dp"
@@ -55,8 +53,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="保存"
-            android:textColor="#30ff00"
-        	android:textSize="15sp"
+            android:textColor="#00fff6"
+        	android:textSize="18sp"
         	android:gravity="center_vertical" />
         
         <View

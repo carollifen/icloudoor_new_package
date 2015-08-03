@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-     android:background="#f8f8f8"
-     android:orientation="vertical">
+    android:background="#f8f8f8"
+    android:orientation="vertical" >
 
     <include
         android:layout_width="fill_parent"
@@ -13,20 +13,18 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="47dp"
-     
-         >
+        android:background="@drawable/selector_setting_detail" >
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:padding="10dp"
-             android:textColor="#333333"
-            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:paddingLeft="16dp"
             android:text="手势密码"
-            
-           />
-		
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
         <ImageView
             android:id="@+id/btn_sign_switch"
             android:layout_width="wrap_content"
@@ -35,11 +33,11 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:src="@drawable/btn_no" />
-
-       
     </RelativeLayout>
-     <View
+
+    <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#dddddd" />
+
 </LinearLayout>

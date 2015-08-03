@@ -9,36 +9,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="@drawable/dialog_business_crad_bg"
         android:orientation="vertical" >
         <TextView 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="17dp"
             android:textColor="#999999"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:gravity="center"
             android:text="@string/qr_hint"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="17dp"
             />
 
         <ImageView
             android:id="@+id/qrcode_img"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="17dp"
              />
     </LinearLayout>
     
+    <View android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#d6d6dd"/>
+    
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="83dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="100.5dp"
         android:background="@drawable/dialog_business_crad_bg"
         android:gravity="center"
         android:orientation="vertical" >
@@ -47,8 +45,8 @@
             android:id="@+id/sweep_bnt"
             android:layout_width="match_parent"
             android:layout_height="41dp"
-            android:textColor="#007aff"
-            android:textSize="20sp"
+            android:textColor="#333333"
+            android:textSize="17sp"
             android:background="@android:color/transparent"
             android:text="扫一扫"
             />
@@ -61,8 +59,8 @@
             android:id="@+id/cancel_bnt"
             android:layout_width="match_parent"
             android:layout_height="41dp"
-            android:textColor="#007aff"
-            android:textSize="20sp"
+            android:textColor="#333333"
+            android:textSize="17sp"
             android:background="@android:color/transparent"
             android:text="@string/cancel"
             />

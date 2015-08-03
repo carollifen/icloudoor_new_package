@@ -1,0 +1,106 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f8f8"
+    android:orientation="vertical" >
+     
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#0065a1" >
+
+        <RelativeLayout
+            android:id="@+id/btn_back"
+            android:layout_width="56dp"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/new_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="关于我们"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </RelativeLayout> 
+    
+	<View
+	    android:layout_width="match_parent"
+	    android:layout_height="16dp" />
+	
+	<RelativeLayout
+	    android:id="@+id/text_about_us_layout"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    android:layout_gravity="center_horizontal" >
+	    
+	    <com.icloudoor.cloudoor.utli.JustifyTextView 
+	        android:id="@+id/text_about_us"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="16sp"
+	        android:textColor="#333333"
+	        android:layout_centerHorizontal="true"
+	        />
+	    
+	</RelativeLayout>
+	
+	<View
+	    android:id="@+id/view1"
+	    android:layout_width="match_parent"
+	    android:layout_height="64dp" 
+	    />
+	
+	<ImageView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_horizontal"
+	    android:background="@drawable/icon_in_update" />
+	
+	<View
+	    android:layout_width="match_parent"
+	    android:layout_height="14dp" 
+	    />
+	
+	<TextView
+	    android:id="@+id/version_name"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	   	android:layout_gravity="center_horizontal"
+	   	android:textSize="13dp"
+	   	android:textColor="#333333" />
+	
+	<View
+	    android:id="@+id/view2"
+	    android:layout_width="match_parent"
+	    android:layout_height="98dp" 
+	    />
+	
+	<RelativeLayout
+	    android:id="@+id/update"
+	    android:layout_width="150dp"
+	    android:layout_height="35dp"
+	    android:layout_gravity="center_horizontal"
+	    android:background="@drawable/selector_update_btn" >
+	    
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:text="更 新"
+	        android:textSize="16sp"
+	        android:textColor="#333333"
+	        />
+	    
+	</RelativeLayout>
+
+</LinearLayout>

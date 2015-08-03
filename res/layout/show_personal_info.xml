@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/personal_info_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f8f8f8"
@@ -9,51 +10,84 @@
         android:layout_width="fill_parent"
         android:layout_height="44dp"
         layout="@layout/title_bar_show_info" />
+    <View android:layout_width="match_parent"
+        android:layout_height="15dp"/>
 
     <RelativeLayout
+        android:id="@+id/personal_photo_change"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="89dp"
         android:background="#ffffff" >
 
         <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="120dp"
-            android:layout_centerHorizontal="true" 
-            >
-            
-            <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="16dp" 
+            android:layout_centerVertical="true">
+
+            <com.icloudoor.cloudoor.CircularImage
                 android:id="@+id/personal_info_small_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/default_image" />
-            
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/default_icon_female" />
             <ImageView
                 android:id="@+id/certi_or_not_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/unauth_icon" />
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="100dp"
+            android:layout_width="88dp"
+            android:layout_height="26dp">
+            <TextView 
+                android:id="@+id/person_info_per"
+                android:textSize="12dp"
+                android:textColor="#666666"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="资料完整度50%"
+                android:layout_alignParentTop="true" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="88dp"
+                android:layout_height="8dp"
+                android:progress="17"
+                android:progressDrawable="@drawable/progressbar_color"
+                android:layout_alignParentBottom="true" 
+                />
+        </RelativeLayout>
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:textColor="#999999"
+                android:text="头像"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="35dp"/>
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="6dp" />
-            
-            <TextView
-                android:id="@+id/certi_or_not_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="8dp"
-                android:text=""
-                android:textSize="13sp"
-                android:textColor="#333333"
-                />
-            
-        </RelativeLayout>
-        
-        
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/right_arrow"/>
         
     </RelativeLayout>
 
+    <View android:layout_width="match_parent"
+        android:layout_height="18dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,352 +99,292 @@
             android:layout_height="0.5dp"
             android:background="#dddddd" />
 
-        
-        
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/set_nickname"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal" >
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
+            android:layout_height="48dp" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
                 android:text="昵称"
-                android:textColor="#333333"
+                android:textColor="#666666"
                 android:textSize="15sp" />
-
-            <View
-                android:layout_width="60dp"
-                android:layout_height="match_parent" />
 
             <TextView
                 android:id="@+id/personal_info_NickName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="35dp"
                 android:text=""
                 android:textColor="#666666"
                 android:textSize="15sp" />
-        </LinearLayout>
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/right_arrow"/>
+            
+
+        </RelativeLayout>
         
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#dddddd" />
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/set_sex"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal" >
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
+            android:layout_height="48dp" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
                 android:text="性别"
-                android:textColor="#333333"
+                android:textColor="#666666"
                 android:textSize="15sp" />
-
-            <View
-                android:layout_width="60dp"
-                android:layout_height="match_parent" />
 
             <TextView
                 android:id="@+id/personal_info_sexName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text=""
+                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="35dp"
+                android:text="女"
                 android:textColor="#666666"
                 android:textSize="15sp" />
-        </LinearLayout>
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/right_arrow"/>
+            
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#dddddd" />
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/set_birthday"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal" >
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
+            android:layout_height="48dp" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="住处"
-                android:textColor="#333333"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:text="生日"
+                android:textColor="#666666"
                 android:textSize="15sp" />
 
-            <View
-                android:layout_width="60dp"
-                android:layout_height="match_parent" />
+            
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal" >
+                android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="35dp" >
 
-                <TextView
-                    android:id="@+id/personal_info_province"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:gravity="center_vertical"
-                    android:text="省"
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:layout_width="10dp"
-                    android:layout_height="48dp"
-                    android:gravity="center"
-                    android:text="@string/dot"
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/personal_info_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center"
+                        android:text="1"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/personal_info_city"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:gravity="center_vertical"
-                    android:text="市"
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="月"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:layout_width="10dp"
-                    android:layout_height="48dp"
-                    android:gravity="center"
-                    android:text="@string/dot"
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/personal_info_day"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center"
+                        android:text=" 1"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/personal_info_district"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:gravity="center_vertical"
-                    android:text="区"
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
-            </LinearLayout>
-        </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="日"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </RelativeLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/right_arrow" />
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#dddddd" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal" >
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-
+            android:layout_height="48dp" >
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="出生日期"
-                android:textColor="#333333"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:text="地区"
+                android:textColor="#666666"
                 android:textSize="15sp" />
 
-            <View
-                android:layout_width="30dp"
-                android:layout_height="match_parent" />
+            
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal" >
+                android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="35dp">
 
-                <TextView
-                    android:id="@+id/personal_info_year"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical|center"
-                    android:text="    "
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:layout_width="30dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="年"
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/personal_info_province"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:text="省"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/personal_info_month"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|center"
-                    android:text="  "
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:text="@string/dot"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:layout_width="30dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="月"
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/personal_info_city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:text="市"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/personal_info_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|center"
-                    android:text="  "
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:text="@string/dot"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:layout_width="30dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="日"
-                    android:textColor="#666666"
-                    android:textSize="15sp" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/personal_info_district"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:text="区"
+                        android:textColor="#666666"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </RelativeLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/right_arrow" />
+        </RelativeLayout>
+
         </LinearLayout>
         
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#dddddd" />
-        <LinearLayout
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:id="@+id/QRcode_layout"
-            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:orientation="horizontal"
-             >
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
+            android:background="@drawable/selector_setting_detail" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
                 android:text="二维码"
-                android:textColor="#333333"
-                android:textSize="15sp" />
-
-            <View
-                android:layout_width="30dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/QRcode_tx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text=""
                 android:textColor="#666666"
                 android:textSize="15sp" />
-        </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="35dp"
+                android:background="@drawable/qr_code"
+                 />
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/right_arrow"/>
+            
+
+        </RelativeLayout>
         
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#dddddd" />
         
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:background="#eeeeee" >
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="真实名字"
-                android:textColor="#333333"
-                android:textSize="15sp" />
-
-            <View
-                android:layout_width="30dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/personal_info_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text=""
-                android:textColor="#666666"
-                android:textSize="15sp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#dddddd" />
         
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:background="#eeeeee" >
 
-            <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="身份证号"
-                android:textColor="#333333"
-                android:textSize="15sp" />
-
-            <View
-                android:layout_width="30dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/personal_info_ID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text=""
-                android:textColor="#666666"
-                android:textSize="15sp" />
-        </LinearLayout>
-        
-        
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#dddddd" />
-    </LinearLayout>
+       
+ 
 
     <!-- <LinearLayout -->
     <!-- android:layout_width="match_parent" -->

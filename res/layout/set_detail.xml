@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/set_detail"
     android:background="#f8f8f8" >
 
     <include
@@ -12,13 +13,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="59dp"
         android:background="#ffffff"
         android:orientation="vertical" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp" >
+            android:layout_height="52dp" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,7 +48,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp" >
+            android:layout_height="52dp" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,7 +56,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:gravity="center"
-                android:text="声音"
+                android:text="开门音效"
                 android:textColor="#333333"
                 android:textSize="15sp" />
 
@@ -76,7 +77,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp" >
+            android:layout_height="52dp" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -84,7 +85,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:gravity="center"
-                android:text="免提醒"
+                android:text="推送消息"
                 android:textColor="#333333"
                 android:textSize="15sp" />
 
@@ -105,10 +106,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/btn_swich_car_man"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="198.5dp"
-        android:background="#ffffff"
+        android:layout_marginTop="235.5dp"
+        android:background="@drawable/selector_setting_detail"
         android:orientation="vertical" >
 
         <View
@@ -116,81 +118,32 @@
             android:layout_height="0.5dp"
             android:background="#dddddd" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp"
-            android:orientation="horizontal" >
-
-            <View
-                android:layout_width="16dp"
-                android:layout_height="match_parent" />
+            android:layout_height="52dp" >
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="常用"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:text="常用门禁"
                 android:textColor="#333333"
                 android:textSize="15sp" />
 
-            <View
-                android:layout_width="43dp"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="42dp"
                 android:layout_height="match_parent"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="车"
-                    android:textColor="#333333"
-                    android:textSize="15sp" />
-
-                <View
-                    android:layout_width="15dp"
-                    android:layout_height="match_parent" />
+                android:layout_alignParentRight="true" >
 
                 <ImageView
-                    android:id="@+id/btn_switch_car"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/select" />
-            </LinearLayout>
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/new_right" />
+            </RelativeLayout>
+        </RelativeLayout>
 
-            <View
-                android:layout_width="29dp"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="人"
-                    android:textColor="#333333"
-                    android:textSize="15sp" />
-
-                <View
-                    android:layout_width="15dp"
-                    android:layout_height="match_parent" />
-
-                <ImageView
-                    android:id="@+id/btn_switch_man"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/not_select" />
-            </LinearLayout>
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -202,7 +155,7 @@
         android:id="@+id/btn_reset_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="258.5dp"
+        android:layout_marginTop="307dp"
         android:background="@drawable/selector_setting_detail"
         android:orientation="vertical" >
 
@@ -213,7 +166,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp" >
+            android:layout_height="52dp" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -242,5 +195,78 @@
             android:layout_height="0.5dp"
             android:background="#dddddd" />
     </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/btn_set_gesture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="359.5dp"
+        android:background="@drawable/selector_setting_detail"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dddddd" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:text="手势密码"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+
+            <RelativeLayout
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/new_right" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dddddd" />
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:id="@+id/btn_logout"
+        android:layout_marginTop="446dp"
+        android:orientation="horizontal"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="43dp" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/logout"
+                android:layout_marginRight="16dp"
+                android:text="退出"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+           
+        </RelativeLayout>
+    </LinearLayout>
+    
+    
 
 </RelativeLayout>

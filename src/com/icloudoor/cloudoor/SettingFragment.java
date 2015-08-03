@@ -81,6 +81,9 @@ public class SettingFragment extends Fragment {
 	private RelativeLayout RLShare;
 	private RelativeLayout RLUpdate;
 	private RelativeLayout showInfo;
+	
+	private RelativeLayout RLAbout;
+	private RelativeLayout Help_Feedback;
 
 	private TextView logOut;
 	
@@ -142,7 +145,7 @@ public class SettingFragment extends Fragment {
 
 	private String share_link = null;
 	private String defaultLink = "http://www.icloudoor.com/d";
-	
+	int role;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -165,43 +168,43 @@ public class SettingFragment extends Fragment {
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
 		share();
-		back_from_user = (RelativeLayout) view
-				.findViewById(R.id.back_from_user);
-		back_from_user.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
-				
-				agent = new FeedbackAgent(getActivity());
-				UserInfo info = agent.getUserInfo();
-				if (info == null)
-					info = new UserInfo();
-				Map<String, String> contact = info.getContact();
-				if (contact == null)
-					contact = new HashMap<String, String>();
-
-				
-				if(loginStatus.getString("NAME", null).length() > 0)
-					contact.put("name", loginStatus.getString("NAME", null));
-				if(loginStatus.getString("PHONENUM", null).length() > 0)
-					contact.put("phone", loginStatus.getString("PHONENUM", null));
-				info.setContact(contact);
-				agent.setUserInfo(info);
-
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						boolean result = agent.updateUserInfo();
-					}
-					
-				}).start();
-				
-				agent.setWelcomeInfo(getString(R.string.umeng_fb_reply_content_default));
-				agent.startFeedbackActivity();
-			}
-		});
+//		back_from_user = (RelativeLayout) view
+//				.findViewById(R.id.back_from_user);
+//		back_from_user.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+//				
+//				agent = new FeedbackAgent(getActivity());
+//				UserInfo info = agent.getUserInfo();
+//				if (info == null)
+//					info = new UserInfo();
+//				Map<String, String> contact = info.getContact();
+//				if (contact == null)
+//					contact = new HashMap<String, String>();
+//
+//				
+//				if(loginStatus.getString("NAME", null).length() > 0)
+//					contact.put("name", loginStatus.getString("NAME", null));
+//				if(loginStatus.getString("PHONENUM", null).length() > 0)
+//					contact.put("phone", loginStatus.getString("PHONENUM", null));
+//				info.setContact(contact);
+//				agent.setUserInfo(info);
+//
+//				new Thread(new Runnable() {
+//					@Override
+//					public void run() {
+//						boolean result = agent.updateUserInfo();
+//					}
+//					
+//				}).start();
+//				
+//				agent.setWelcomeInfo(getString(R.string.umeng_fb_reply_content_default));
+//				agent.startFeedbackActivity();
+//			}
+//		});
 		
 		mQueue = Volley.newRequestQueue(getActivity());
 		myClickListener = new MyOnClickListener();
@@ -209,9 +212,16 @@ public class SettingFragment extends Fragment {
 		showInfo = (RelativeLayout) view.findViewById(R.id.btn_show_personal_info);
 		RLSet = (RelativeLayout) view.findViewById(R.id.btn_set);
 		RLSig = (RelativeLayout) view.findViewById(R.id.btn_sig);
+		SharedPreferences preferences = getActivity().getSharedPreferences("PROFILE", 0);
+		role = preferences.getInt("role", 1);
+		
 		RLShare = (RelativeLayout) view.findViewById(R.id.btn_share);
-		RLUpdate = (RelativeLayout) view.findViewById(R.id.btn_update);
+//		RLUpdate = (RelativeLayout) view.findViewById(R.id.btn_update);
 		showName = (TextView) view.findViewById(R.id.show_name);
+		
+		RLAbout = (RelativeLayout) view.findViewById(R.id.btn_about_us);
+		Help_Feedback = (RelativeLayout) view.findViewById(R.id.btn_help_feedback);
+		
 		
 		
 		image = (CircularImage) view.findViewById(R.id.person_image);
@@ -225,15 +235,18 @@ public class SettingFragment extends Fragment {
 		if(name != null)
 			showName.setText(name);
 		
-		logOut = (TextView) view.findViewById(R.id.btn_logout);
+//		logOut = (TextView) view.findViewById(R.id.btn_logout);
 
 		RLSet.setOnClickListener(myClickListener);
 		RLSig.setOnClickListener(myClickListener);
 		RLShare.setOnClickListener(myClickListener);
-		RLUpdate.setOnClickListener(myClickListener);
+//		RLUpdate.setOnClickListener(myClickListener);
+		
+		RLAbout.setOnClickListener(myClickListener);
+		Help_Feedback.setOnClickListener(myClickListener);
 
 		showInfo.setOnClickListener(myClickListener);
-		logOut.setOnClickListener(myClickListener);
+//		logOut.setOnClickListener(myClickListener);
 
 		return view;
 	}
@@ -259,7 +272,7 @@ public class SettingFragment extends Fragment {
 		
 		ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(getActivity());
 		ImageLoader.getInstance().init(configuration);
-        
+     
         DisplayImageOptions options = new DisplayImageOptions.Builder()
         .showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
         .showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
@@ -359,10 +372,25 @@ public class SettingFragment extends Fragment {
 				startActivity(intent1);
 				break;
 			case R.id.btn_sig:
+				if(role==1){
+					Toast.makeText(getActivity(), R.string.not_Staff_member, Toast.LENGTH_SHORT).show();
+					return;
+				}
 				Intent intent2 = new Intent();
-				intent2.setClass(getActivity(), SignActivity.class);
+				intent2.setClass(getActivity(), CheckRecord.class);
 				startActivity(intent2);
 				break;
+				
+			case R.id.btn_about_us:
+				Intent intent3 = new Intent();
+				intent3.setClass(getActivity(), AboutUs.class);
+				startActivity(intent3);
+				break;
+			case R.id.btn_help_feedback:
+				Intent intent5 = new Intent();
+				intent5.setClass(getActivity(), HelpFeedback.class);
+				startActivity(intent5);
+			break;
 			case R.id.btn_share:
 //                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
 //                    Intent sendIntent = new Intent();
@@ -378,166 +406,153 @@ public class SettingFragment extends Fragment {
 				
 				mController.openShare(getActivity(), false);
 				break;
-			case R.id.btn_update:
-//                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
-//                    updateMan = new UpdateManager(getActivity().getApplicationContext(), appUpdateCb);
-//                    updateMan.checkUpdate();
-//                }else {
-//                    if (getActivity() != null) {
-//                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-				UmengUpdateAgent.setUpdateOnlyWifi(false);
-				UmengUpdateAgent.setUpdateAutoPopup(false);
-				UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
-				    @Override
-				    public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
-				        switch (updateStatus) {
-				        case UpdateStatus.Yes: // has update
-				        	if(getActivity() != null)
-				        		UmengUpdateAgent.showUpdateDialog(getActivity(), updateInfo);
-				            break;
-				        case UpdateStatus.No: // has no update
-				        	if(getActivity() != null)
-				        		Toast.makeText(getActivity(), getString(R.string.latest_version_now) + "(" + versionName + " Build" + versionCode + ")", Toast.LENGTH_SHORT).show();
-				            break;
-				        case UpdateStatus.NoneWifi: // none wifi
-				        	if(getActivity() != null)
-				        		Toast.makeText(getActivity(), R.string.update_only_in_wifi, Toast.LENGTH_SHORT).show();
-				            break;
-				        case UpdateStatus.Timeout: // time out
-				        	if(getActivity() != null)
-				        		Toast.makeText(getActivity(), R.string.get_update_timeout, Toast.LENGTH_SHORT).show();
-				            break;
-				        }
-				    }
-				});
-				
-				UmengUpdateAgent.setDownloadListener(new UmengDownloadListener(){
-
-				    @Override
-				    public void OnDownloadStart() {
-				    }
-
-				    @Override
-				    public void OnDownloadUpdate(int progress) {
-				    }
-
-				    @Override
-				    public void OnDownloadEnd(int result, String file) {
-				    	if(getActivity() != null) {
+//			case R.id.btn_update:
+////                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+////                    updateMan = new UpdateManager(getActivity().getApplicationContext(), appUpdateCb);
+////                    updateMan.checkUpdate();
+////                }else {
+////                    if (getActivity() != null) {
+////                        Toast.makeText(getActivity().getApplicationContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
+////                    }
+////                }
+//				UmengUpdateAgent.setUpdateOnlyWifi(false);
+//				UmengUpdateAgent.setUpdateAutoPopup(false);
+//				UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+//				    @Override
+//				    public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
+//				        switch (updateStatus) {
+//				        case UpdateStatus.Yes: // has update
+//				        	if(getActivity() != null)
+//				        		UmengUpdateAgent.showUpdateDialog(getActivity(), updateInfo);
+//				            break;
+//				        case UpdateStatus.No: // has no update
+//				        	if(getActivity() != null)
+//				        		Toast.makeText(getActivity(), getString(R.string.latest_version_now) + "(" + versionName + " Build" + versionCode + ")", Toast.LENGTH_SHORT).show();
+//				            break;
+//				        case UpdateStatus.NoneWifi: // none wifi
+//				        	if(getActivity() != null)
+//				        		Toast.makeText(getActivity(), R.string.update_only_in_wifi, Toast.LENGTH_SHORT).show();
+//				            break;
+//				        case UpdateStatus.Timeout: // time out
+//				        	if(getActivity() != null)
+//				        		Toast.makeText(getActivity(), R.string.get_update_timeout, Toast.LENGTH_SHORT).show();
+//				            break;
+//				        }
+//				    }
+//				});
+//				
+//				UmengUpdateAgent.setDownloadListener(new UmengDownloadListener(){
+//
+//				    @Override
+//				    public void OnDownloadStart() {
+//				    }
+//
+//				    @Override
+//				    public void OnDownloadUpdate(int progress) {
+//				    }
+//
+//				    @Override
+//				    public void OnDownloadEnd(int result, String file) {
+//				    	if(getActivity() != null) {
 //				    		SharedPreferences setting = getActivity().getSharedPreferences("com.icloudoor.clouddoor", 0);
 //				    		setting.edit().putBoolean("FIRST", true).commit();
 //				    	
-				    		File f = new File(file);
-				    		UmengUpdateAgent.startInstall(getActivity(), f);
-				    	}
-				    }           
-				});
-				
-				UmengUpdateAgent.update(getActivity());
-				break;
-			case R.id.btn_logout:
-                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
-                    sid = loadSid("SID");
-
-                    try {
-                        logOutURL = new URL(HOST + "/user/manage/logout.do"
-                                + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-                            Method.POST, logOutURL.toString(), null,
-                            new Response.Listener<JSONObject>() {
-
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-
-                                            saveSid("SID", null);
-                                            
-                                        statusCode = response.getInt("code");
-
-                                        isLogin = 0;
-                                        if(getActivity() != null){
-                                        	SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
-                                        	Editor editor1 = loginStatus.edit();
-                                        	editor1.putInt("LOGIN", isLogin);
-                                        	editor1.commit();
-                                        	
-                                        	SharedPreferences previousNum = getActivity().getSharedPreferences("PREVIOUSNUM", 0);
-                                        	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
-                                        
-                                        	Intent intent3 = new Intent();
-                                        	Bundle bundle = new Bundle();
-                                        	bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
-                                        	intent3.putExtras(bundle);
-                                        	intent3.setClass(getActivity(), Login.class);
-                                        	startActivity(intent3);
-                                        	
-                                        	CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
-                                            mainActivity.finish();
-                                            EMChatManager.getInstance().logout();
-                                        }
-                                        
-                                        
-//                                        String sql = "DELETE FROM " + TABLE_NAME +";";
-//                                        mKeyDB.execSQL(sql);
+//				    		File f = new File(file);
+//				    		UmengUpdateAgent.startInstall(getActivity(), f);
+//				    	}
+//				    }           
+//				});
+//				
+//				UmengUpdateAgent.update(getActivity());
+//				break;
+//			case R.id.btn_logout:
+//                if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+//                    sid = loadSid("SID");
+//
+//                    try {
+//                        logOutURL = new URL(HOST + "/user/manage/logout.do"
+//                                + "?sid=" + sid + "&ver=" + version.getVersionName());
+//                    } catch (MalformedURLException e) {
+//                        e.printStackTrace();
+//                    }
+//                    MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
+//                            Method.POST, logOutURL.toString(), null,
+//                            new Response.Listener<JSONObject>() {
+//
+//                                @Override
+//                                public void onResponse(JSONObject response) {
+//                                    try {
+//
+//                                            saveSid("SID", null);
+//                                            
+//                                        statusCode = response.getInt("code");
+//
+//                                        isLogin = 0;
+//                                        if(getActivity() != null){
+//                                        	SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+//                                        	Editor editor1 = loginStatus.edit();
+//                                        	editor1.putInt("LOGIN", isLogin);
+//                                        	editor1.commit();
+//                                        	
+//                                        	SharedPreferences previousNum = getActivity().getSharedPreferences("PREVIOUSNUM", 0);
+//                                        	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
 //                                        
-//                                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
-//                                        mKeyDB.execSQL(sq2);
+//                                        	Intent intent3 = new Intent();
+//                                        	Bundle bundle = new Bundle();
+//                                        	bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
+//                                        	intent3.putExtras(bundle);
+//                                        	intent3.setClass(getActivity(), Login.class);
+//                                        	startActivity(intent3);
+//                                        }
 //                                        
-//                                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
-//                                        mKeyDB.execSQL(sq3);                                        
-                                                                  
-                                        
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        	if(getActivity() != null)
-    							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    mQueue.add(mJsonRequest);
-                }else {
-                    if (getActivity() != null) {
-                    	SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
-                        Editor editor1 = loginStatus.edit();
-                        editor1.putInt("LOGIN", 0);
-                        editor1.commit();
-                        
-                        saveSid("SID", null);
-                        
-                        SharedPreferences previousNum = getActivity().getSharedPreferences("PREVIOUSNUM", 0);
-                    	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
-                        
-//                        String sql = "DELETE FROM " + TABLE_NAME +";";
-//                        mKeyDB.execSQL(sql);
+//                                        
+////                                        String sql = "DELETE FROM " + TABLE_NAME +";";
+////                                        mKeyDB.execSQL(sql);
+////                                        
+////                                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
+////                                        mKeyDB.execSQL(sq2);
+////                                        
+////                                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
+////                                        mKeyDB.execSQL(sq3);                                        
+//                                                                  
+//                                        CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
+//                                        mainActivity.finish();
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            }, new Response.ErrorListener() {
+//
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                        	if(getActivity() != null)
+//    							Toast.makeText(getActivity(), R.string.network_error, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                    mQueue.add(mJsonRequest);
+//                }else {
+//                    if (getActivity() != null) {
+//                    	SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+//                        Editor editor1 = loginStatus.edit();
+//                        editor1.putInt("LOGIN", 0);
+//                        editor1.commit();
 //                        
-//                        String sq2 = "DELETE FROM " + CAR_TABLE_NAME +";";
-//                        mKeyDB.execSQL(sq2);
+//                        saveSid("SID", null);
 //                        
-//                        String sq3 = "DELETE FROM " + ZONE_TABLE_NAME +";";
-//                        mKeyDB.execSQL(sq3);
-                        
-                        Intent intent4 = new Intent();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
-                        intent4.putExtras(bundle);
-                        intent4.setClass(getActivity(), Login.class);
-                        startActivity(intent4);
-                        
-                        CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
-                        mainActivity.finish();
-                    }
-                }
-				break;
+//                        SharedPreferences previousNum = getActivity().getSharedPreferences("PREVIOUSNUM", 0);
+//                    	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
+//                        Intent intent4 = new Intent();
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
+//                        intent4.putExtras(bundle);
+//                        intent4.setClass(getActivity(), Login.class);
+//                        startActivity(intent4);
+//                        
+//                        CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
+//                        mainActivity.finish();
+//                    }
+//                }
+//				break;
 			}
 		}
 
@@ -646,7 +661,6 @@ public class SettingFragment extends Fragment {
 	}
 
 
-    
     public void checkForUserStatus() {
 		Log.e(TAG, "checkForUserStatus()");
 		URL getUserStatusURL = null;
@@ -680,7 +694,6 @@ public class SettingFragment extends Fragment {
 									edit.putInt("userStatus", response.getJSONObject("data").getInt("userStatus"));
 									edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
 									edit.commit();
-									
 									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getInt("userStatus")) + "in SettingFragment***********");
 									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getBoolean("isHasPropServ")) + "in SettingFragment***********");
 								}

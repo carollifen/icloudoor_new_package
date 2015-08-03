@@ -1208,17 +1208,9 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 
 	public void emptyHistory(View view) {
 		
-		Intent intent = new Intent(this,
-				FriendDetailActivity.class);
-		intent.putExtra("CityId", friendsEn.getCityId());
-		intent.putExtra("DistrictId", friendsEn.getDistrictId());
-		intent.putExtra("ProvinceId", friendsEn.getProvinceId());
-		intent.putExtra("Sex", friendsEn.getSex());
-		intent.putExtra("Nickname", friendsEn.getNickname());
-		intent.putExtra("PortraitUrl", friendsEn.getPortraitUrl());                 
-		intent.putExtra("UserId", friendsEn.getUserId());
-		intent.putExtra("returnChat", 1);
-		startActivityForResult(intent, ChatActivity.REQUEST_CODE_FriendDetail);
+		Intent intent = new Intent(this,ChatDetailsActivity.class);
+		intent.putExtra("trgUserId", toChatUsername);
+		startActivity(intent);
 		
 //		s
 //		String st5 = getResources().getString(R.string.Whether_to_empty_all_chats);

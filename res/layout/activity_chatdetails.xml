@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f8f8"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#0065a1" >
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:src="@drawable/new_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="聊天详情"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </RelativeLayout>
+    
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd"
+        android:layout_marginTop="20dp"
+        />
+    <RelativeLayout
+        android:id="@+id/addphoneContact_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/addphonecontact_layout_bg"
+        android:orientation="horizontal" >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="19dp"
+            android:text="@string/clear_chat"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+        
+        
+    </RelativeLayout>
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd"
+        />
+    
+    
+     <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd"
+        android:layout_marginTop="10dp"
+        />
+    <RelativeLayout
+        android:id="@+id/report_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/addphonecontact_layout_bg"
+        android:orientation="horizontal" >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="19dp"
+            android:text="举报"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+        
+        
+        <ImageView
+            android:layout_width="11dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/next_ioc" />
+    </RelativeLayout>
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd"
+        />
+
+</LinearLayout>

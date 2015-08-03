@@ -1,5 +1,7 @@
 package com.icloudoor.cloudoor;
 
+import com.easemob.chat.EMChatManager;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -39,7 +41,7 @@ public class Logout {
         
 		SharedPreferences previousNum = context.getSharedPreferences("PREVIOUSNUM", 0);
     	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
-		
+    	EMChatManager.getInstance().logout();
 //        String sql = "DELETE FROM " + TABLE_NAME +";";
 //        mKeyDB.execSQL(sql);
 //

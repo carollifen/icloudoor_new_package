@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f8f8"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="33dp"
+            android:layout_height="41dp"
+            android:orientation="vertical" >
+
+            
+            <TextView
+                android:id="@+id/work_date"
+                android:layout_width="match_parent"
+                android:layout_height="40.5dp"
+                android:background="#85d1ff"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="15dp" />
+            
+            <View 
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#ffffff"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/work_week"
+            android:layout_width="wrap_content"
+            android:layout_height="41dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#33acf5"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/work_go_time"
+            android:layout_width="wrap_content"
+            android:layout_height="41dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#33acf5"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/work_after_time"
+            android:layout_width="wrap_content"
+            android:layout_height="41dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#33acf5"
+            android:textSize="15dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="68dp"
+        android:background="#dddddd" />
+
+</LinearLayout>

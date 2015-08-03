@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+     android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/logout_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:background="#ffffff" >
+
+        <TextView
+             android:id="@+id/exit"
+             android:layout_width="match_parent"
+             android:layout_height="50dp"
+             android:gravity="center"
+             android:text="退出登录"
+             android:textSize="17dp"
+             android:textColor="#ff0000"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#d6d6dd"
+            />
+        
+        <TextView
+             android:id="@+id/cancle_logout"
+             android:layout_width="match_parent"
+             android:layout_height="50dp"
+             android:gravity="center"
+             android:text="取消"
+             android:textColor="#333333"
+             android:textSize="16dp"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

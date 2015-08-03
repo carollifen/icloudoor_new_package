@@ -297,4 +297,11 @@
 
     <string name="takePhoto_fail">拍照失败</string>
     <string name="cloudoormip">云门扫描，暂不支持该地址</string>
+    <string name="week1">周一</string>
+    <string name="week2">周二</string>
+    <string name="week3">周三</string>
+    <string name="week4">周四</string>
+    <string name="week5">周五</string>
+    <string name="week6">周六</string>
+    <string name="week7">周日</string>
 </resources>

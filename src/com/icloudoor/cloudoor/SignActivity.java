@@ -29,7 +29,7 @@ public class SignActivity extends BaseActivity{
 	private int COLOROLD=0xFF000000;
 	private int COLORNEW=0xFFF3F3F3;
 	
-	private RelativeLayout mlayout;
+//	private RelativeLayout mlayout;
 	
 	private Broadcast mFinishActivityBroadcast;
 	
@@ -49,7 +49,7 @@ public class SignActivity extends BaseActivity{
 
 
 		
-		mlayout=(RelativeLayout) findViewById(R.id.forget_layout);
+//		mlayout=(RelativeLayout) findViewById(R.id.forget_layout);
 		inflater = LayoutInflater.from(this);
 		
 		SharedPreferences setSign = getSharedPreferences("SETSIGN", 0);

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/day_tx"
+            android:layout_width="33dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="日期"
+            android:background="#85d1ff"
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+        
+        
+        <TextView
+            android:id="@+id/week_tx"
+            android:layout_weight="1"
+            android:layout_width="33dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="#33acf5"
+            android:textSize="15sp" />
+        
+        <TextView
+            android:id="@+id/to_work_tx"
+            android:layout_weight="1"
+            android:layout_width="33dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="#33acf5"
+            android:textSize="15sp" />
+        
+        <TextView
+            android:id="@+id/off_work_tk"
+            android:layout_weight="1"
+            android:layout_width="33dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="#33acf5"
+            android:textSize="15sp" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/day_Line"
+            android:layout_width="33dp"
+            android:layout_height="1dp"
+            android:background="#ffffff"
+             />
+        
+        
+        <TextView
+            android:id="@+id/week_Line"
+            android:layout_weight="1"
+            android:layout_width="33dp"
+            android:layout_height="1dp"
+            android:background="#dddddd"
+            android:layout_marginLeft="35dp"
+             />
+        
+        <TextView
+            android:id="@+id/to_work_Line"
+            android:layout_weight="1"
+            android:layout_width="33dp"
+            android:layout_height="1dp"
+            android:background="#dddddd"
+             />
+        
+        <TextView
+            android:id="@+id/off_work_Line"
+            android:layout_weight="1"
+            android:layout_width="33dp"
+            android:layout_height="1dp"
+            android:background="#dddddd"
+             />
+    </LinearLayout>
+
+</LinearLayout>

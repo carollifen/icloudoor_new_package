@@ -56,6 +56,7 @@ import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.chat.HXNotifier.HXNotificationInfoProvider;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
+import com.icloudoor.cloudoor.chat.entity.CMDData;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
@@ -313,19 +314,25 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 						getFriends();
 					} else if (action.equals("refreshData")) {
 						try {
-							System.out.println("datas = "
-									+ message.getJSONArrayAttribute("datas"));
-							String datas = message.getJSONArrayAttribute(
-									"datas").toString();
-							if (datas.contains("getProfile")) {
-								KeyHelper.getInstance(appContext)
+							
+							String data = message.getJSONArrayAttribute(
+									"data").toString();
+							
+							CMDData cmdData = GsonUtli.jsonToObject(data, CMDData.class);
+							List<String> setChat = cmdData.getSet();
+							if(setChat!=null){
+								for (int i = 0; i < setChat.size(); i++) {
+									if(setChat.get(i).equals("getProfile")){
+										KeyHelper.getInstance(appContext)
 										.checkForUserStatus();
+									}
+									if (setChat.get(i).contains("download")) {
+										KeyHelper.getInstance(appContext)
+												.downLoadKey2();
+									}
+								}
 							}
-							if (datas.contains("download")) {
-								KeyHelper.getInstance(appContext)
-										.downLoadKey2();
-							}
-
+							
 							JSONObject userInfo = message
 									.getJSONObjectAttribute("userInfo");
 							System.out.println("小区消息 = "+userInfo);

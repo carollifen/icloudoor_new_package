@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f8f8f8"
+    android:orientation="vertical" >
+    
+    
+    <TextView 
+        android:id="@+id/report_tx"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/addphonecontact_layout_bg"
+        android:textColor="#0092e8"
+        android:gravity="center"
+        android:text="清除聊天记录"
+        android:textSize="17sp"
+        />
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd"
+        />
+    
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd"
+        android:layout_marginTop="5dp"
+        />
+    <TextView 
+        android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textColor="#333333"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textSize="17sp"
+        android:background="@drawable/addphonecontact_layout_bg"
+        />
+
+</LinearLayout>

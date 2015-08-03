@@ -3270,10 +3270,11 @@ public class KeyFragment extends Fragment {
 									SharedPreferences saveProfile = getActivity().getSharedPreferences("PROFILE", 0);
 									Editor edit = saveProfile.edit();
 									edit.putInt("userStatus", response.getJSONObject("data").getInt("userStatus"));
+									edit.putInt("role", response.getJSONObject("data").getInt("role"));
 									edit.putBoolean("isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
 									edit.commit();
 									int status = response.getJSONObject("data").getInt("userStatus");
-//									if(status!=2){
+									if(status!=2){
 										if(!statusDialog.isShowing()){
 											statusDialog.show();
 											statusDialog.setOKOnClickListener(new OnClickListener() {
@@ -3288,7 +3289,7 @@ public class KeyFragment extends Fragment {
 											});
 										}
 										
-//									}
+									}
 										
 									
 									MyDebugLog.e(TAG, String.valueOf(response.getJSONObject("data").getInt("userStatus")) + "in KeyFragment***********");

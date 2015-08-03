@@ -11,15 +11,30 @@
         android:background="@drawable/dialog_business_crad_bg"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/msg_tx"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="#333333"
-            android:text="手机开门需先进行身份验证,马上进行验证？"
-            android:textSize="16sp" />
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/msg_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机开门需先进行身份验证"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+            
+             <TextView
+                android:id="@+id/msg_tx1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="马上进行验证？"
+                android:layout_marginTop="3dp"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

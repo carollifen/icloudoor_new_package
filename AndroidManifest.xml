@@ -620,27 +620,50 @@
         <activity
             android:name=".activity.UserStatusActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-             />
+            android:exported="true" />
         <activity
             android:name=".activity.AdministrationKeyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-             />
+            android:exported="true" />
+  
         <activity
-            android:name=".activity.AuthKeyActivity"
+            android:name=".AboutUs"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".HelpFeedback"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".CommonProblem"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".CheckRecord"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".SetNickname"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".SetSex"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ChooseCarMan"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".chat.activity.ChatDetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-             />
-        <activity
-            android:name="com.icloudoor.cloudoor.widget.PicSelectActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:exported="true"
             android:screenOrientation="portrait" />
 

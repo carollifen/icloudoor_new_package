@@ -17,10 +17,10 @@
         <TextView
              android:id="@+id/btn_take_photo"
              android:layout_width="match_parent"
-             android:layout_height="47dp"
+             android:layout_height="50dp"
              android:gravity="center"
              android:text="拍照"
-             android:textSize="16dp"
+             android:textSize="17dp"
              android:textColor="#0065a1"
             />
 
@@ -33,7 +33,7 @@
         <TextView
              android:id="@+id/btn_pick_photo"
              android:layout_width="match_parent"
-             android:layout_height="47dp"
+             android:layout_height="50dp"
              android:gravity="center"
              android:text="从手机相册中选择"
              android:textSize="16dp"
@@ -42,14 +42,14 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="12dp"
-            android:background="#dddddd"
+            android:layout_height="5dp"
+            android:background="#d6d6dd"
             />
         
         <TextView
              android:id="@+id/btn_cancel"
              android:layout_width="match_parent"
-             android:layout_height="47dp"
+             android:layout_height="50dp"
              android:gravity="center"
              android:text="取消"
              android:textSize="16dp"

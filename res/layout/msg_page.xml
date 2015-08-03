@@ -70,6 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:background="#ffffff"
+                android:visibility="gone"
                 android:descendantFocusability="blocksDescendants"
                 android:gravity="center_vertical" >
 
@@ -139,7 +140,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_toRightOf="@+id/group_msg_image"
-                    android:text="@string/group_msg_name"
+                    android:text="动态（敬请期待）"
                     android:textColor="#333333"
                     android:textSize="17sp" />
 

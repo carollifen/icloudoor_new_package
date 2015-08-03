@@ -366,8 +366,8 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 			Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.group_layout:
-			Intent intent = new Intent(getActivity(), DynamicActivity.class);
-			startActivity(intent);
+//			Intent intent = new Intent(getActivity(), DynamicActivity.class);
+//			startActivity(intent);
 			break;
 
 		case R.id.add_friends:
