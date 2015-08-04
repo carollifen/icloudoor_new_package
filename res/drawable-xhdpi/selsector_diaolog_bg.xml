@@ -3,8 +3,14 @@
 
     <item android:state_pressed="true">
         <color android:color="#d7d7d7"/>
+        <corners  
+        	android:bottomLeftRadius="4dp"  
+        	android:bottomRightRadius="4dp" />  
     </item>
 	<item android:state_pressed="false">
 	    <color android:color="#ececec"/>
+	    <corners  
+        	android:bottomLeftRadius="4dp"  
+        	android:bottomRightRadius="4dp" /> 
 	</item>
 </selector>

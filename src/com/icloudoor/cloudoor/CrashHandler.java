@@ -56,6 +56,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
 		MobclickAgent.reportError(mContext, ex);
+		ex.printStackTrace(System.out);
 		if (!handleException(ex) && mDefaultHandler != null) {
 			mDefaultHandler.uncaughtException(thread, ex);
 		} else {
@@ -79,7 +80,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			@Override
 			public void run() {
 				Looper.prepare();
-				Toast.makeText(mContext, "ºÜ±§Ç¸,³ÌÐò³öÏÖÒì³£,¼´½«ÍË³ö.", Toast.LENGTH_LONG).show();
+				Toast.makeText(mContext, "ï¿½Ü±ï¿½Ç¸,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì³£,ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½.", Toast.LENGTH_LONG).show();
 				Looper.loop();
 			}
 		}.start();

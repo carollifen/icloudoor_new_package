@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#676767" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="请选择城市"
+                android:textColor="#ffffff"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp"
+                android:text="取消"
+                android:textColor="#ffffff"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/button_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="25dp"
+                android:text="确定"
+                android:textColor="#ffffff"
+                android:textSize="17sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/province"
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/city"
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/district"
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

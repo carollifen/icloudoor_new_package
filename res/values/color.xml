@@ -45,5 +45,6 @@
     <color name="possible_result_points">#c0ffff00</color>
     <color name="windtransparent">#99000000</color>
     <color name="transparent">#00000000</color>
+    <color name="spinner_color">#666666</color>
 
 </resources>

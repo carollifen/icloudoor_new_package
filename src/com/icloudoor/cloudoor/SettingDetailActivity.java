@@ -29,13 +29,10 @@ import com.android.volley.VolleyError;
 
 public class SettingDetailActivity extends BaseActivity {
 	private LinearLayout TVBtnResetPwd;
-//	private TextView TVBtnChangePhone;
 	
 	private ImageView IVSetDetailShake;
 	private ImageView IVSetDetailSound;
 	private ImageView IVSetDetailDisturb;
-	private ImageView IVSwitchCar;
-	private ImageView IVSwitchMan;
 	
 	private LinearLayout setGesture;
 	
@@ -51,7 +48,6 @@ public class SettingDetailActivity extends BaseActivity {
 	private String sid = null;
 	private String HOST = UrlUtils.HOST;
 	private URL logOutURL;
-	private int statusCode;
 	private int isLogin = 1;
 	private LogoutPop menuWindow;
 		
@@ -61,25 +57,19 @@ public class SettingDetailActivity extends BaseActivity {
 
 		setContentView(R.layout.set_detail);
 		mFinishActivityBroadcast=	new Broadcast();
-		 IntentFilter intentFilter = new IntentFilter();
-		    intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
-		    registerReceiver(mFinishActivityBroadcast, intentFilter);
-		    //** snip **//
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.icloudoor.cloudoor.ACTION_FINISH");
+		registerReceiver(mFinishActivityBroadcast, intentFilter);
 		
 		TVBtnResetPwd = (LinearLayout) findViewById(R.id.btn_reset_pwd);
 		
 		IVSetDetailShake = (ImageView) findViewById(R.id.btn_set_detail_shake);
 		IVSetDetailSound = (ImageView) findViewById(R.id.btn_set_detail_sound);
 		IVSetDetailDisturb = (ImageView) findViewById(R.id.btn_set_detail_disturb);
-//		IVSwitchCar = (ImageView) findViewById(R.id.btn_switch_car);
-//		IVSwitchMan = (ImageView) findViewById(R.id.btn_switch_man);
 		IVBack = (RelativeLayout) findViewById(R.id.btn_back_set_detail);
 		ChooseCarMan = (LinearLayout) findViewById(R.id.btn_swich_car_man);
 		logout = (LinearLayout) findViewById(R.id.btn_logout);
-		
-		
-		
-		
+
 		setGesture = (LinearLayout) findViewById(R.id.btn_set_gesture);
 		setGesture.setOnClickListener(new View.OnClickListener() {
 			
@@ -153,10 +143,7 @@ public class SettingDetailActivity extends BaseActivity {
 		IVSetDetailShake.setOnClickListener(mMyBtnOnClickListener);
 		IVSetDetailSound.setOnClickListener(mMyBtnOnClickListener);
 		IVSetDetailDisturb.setOnClickListener(mMyBtnOnClickListener);
-		
-//		IVSwitchCar.setOnClickListener(mMyBtnOnClickListener);
-//		IVSwitchMan.setOnClickListener(mMyBtnOnClickListener);
-		
+
 	}
 	
 	@Override
@@ -168,7 +155,6 @@ public class SettingDetailActivity extends BaseActivity {
 	private OnClickListener itemsOnClick = new OnClickListener() {
 
 		public void onClick(View v) {
-//			menuWindow.dismiss();
 			switch (v.getId()) {
 			case R.id.exit:
 				
@@ -176,8 +162,7 @@ public class SettingDetailActivity extends BaseActivity {
                     sid = loadSid("SID");
 
                     try {
-                        logOutURL = new URL(HOST + "/user/manage/logout.do"
-                                + "?sid=" + sid + "&ver=" + version.getVersionName());
+                        logOutURL = new URL(HOST + "/user/manage/logout.do" + "?sid=" + sid + "&ver=" + version.getVersionName());
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -188,31 +173,30 @@ public class SettingDetailActivity extends BaseActivity {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-
-                                            saveSid("SID", null);
+                                    	
+                                    	if(response.getInt("code") == 1) {
+                                    		saveSid("SID", null);
+                                    		
+                                    		isLogin = 0;
+                                            SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+                                            Editor editor1 = loginStatus.edit();
+                                            editor1.putInt("LOGIN", isLogin);
+                                            editor1.commit();
+                                            	
+                                            SharedPreferences previousNum = getSharedPreferences("PREVIOUSNUM", 0);
+                                            previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
                                             
-                                        statusCode = response.getInt("code");
+                                            Intent intent3 = new Intent();
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
+                                            intent3.putExtras(bundle);
+                                            intent3.setClass(SettingDetailActivity.this, Login.class);
+                                            startActivity(intent3);
+                                            
+                                            CloudDoorMainActivity.instance.finish();
 
-                                        isLogin = 0;
-                                        	SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
-                                        	Editor editor1 = loginStatus.edit();
-                                        	editor1.putInt("LOGIN", isLogin);
-                                        	editor1.commit();
-                                        	
-                                        	SharedPreferences previousNum = getSharedPreferences("PREVIOUSNUM", 0);
-                                        	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
-                                        
-                                        	Intent intent3 = new Intent();
-                                        	Bundle bundle = new Bundle();
-                                        	bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
-                                        	intent3.putExtras(bundle);
-                                        	intent3.setClass(SettingDetailActivity.this, Login.class);
-                                        	startActivity(intent3);
-                                        
-                                        
-                                                                  
-//                                        CloudDoorMainActivity mainActivity = (CloudDoorMainActivity) getActivity();
-                                        finish();
+                                            finish();
+                                    	}
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -242,6 +226,7 @@ public class SettingDetailActivity extends BaseActivity {
                         intent4.setClass(SettingDetailActivity.this, Login.class);
                         startActivity(intent4);
                         
+                        CloudDoorMainActivity.instance.finish();
               
                         finish();
                     
@@ -296,14 +281,7 @@ public class SettingDetailActivity extends BaseActivity {
 			IVSetDetailDisturb.setImageResource(R.drawable.btn_yes);
 		else
 			IVSetDetailDisturb.setImageResource(R.drawable.btn_no);
-		
-//		if(switchToCar == 1){
-//			IVSwitchCar.setImageResource(R.drawable.select);
-//			IVSwitchMan.setImageResource(R.drawable.not_select);
-//		}else{
-//			IVSwitchCar.setImageResource(R.drawable.not_select);
-//			IVSwitchMan.setImageResource(R.drawable.select);
-//		}		
+	
 	}
 	
 	public class MyBtnOnClickListener implements OnClickListener {
@@ -346,22 +324,6 @@ public class SettingDetailActivity extends BaseActivity {
 					editor.putInt("disturb", canDisturb);
 				}
 				break;
-//			case R.id.btn_switch_car:
-//				if(switchToCar == 0){
-//					switchToCar = 1;
-//					IVSwitchCar.setImageResource(R.drawable.select);
-//					IVSwitchMan.setImageResource(R.drawable.not_select);
-//					editor.putInt("chooseCar", switchToCar);
-//				}
-//				break;
-//			case R.id.btn_switch_man:
-//				if(switchToCar == 1){
-//					switchToCar = 0;
-//					IVSwitchCar.setImageResource(R.drawable.not_select);
-//					IVSwitchMan.setImageResource(R.drawable.select);
-//					editor.putInt("chooseCar", switchToCar);
-//				}
-//				break;
 			}
 			editor.commit();
 		}
@@ -393,8 +355,7 @@ public class SettingDetailActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { 
             //do something here
-            SharedPreferences setting = getSharedPreferences("SETTING",
-                    MODE_PRIVATE);
+            SharedPreferences setting = getSharedPreferences("SETTING", MODE_PRIVATE);
             Editor editor = setting.edit();
             editor.putInt("chooseCar", switchToCar);
             editor.putInt("disturb", canDisturb);
@@ -407,12 +368,10 @@ public class SettingDetailActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 	public void saveSid(String key, String value) {
-		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
-				MODE_PRIVATE);
+		SharedPreferences savedSid = getSharedPreferences("SAVEDSID", MODE_PRIVATE);
 			Editor editor = savedSid.edit();
 			editor.putString(key, value);
 			editor.commit();
-	
 	}
 
 	public String loadSid(String key) {

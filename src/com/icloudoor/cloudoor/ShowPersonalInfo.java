@@ -8,11 +8,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream.PutField;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import kankan.wheel.widget.OnWheelChangedListener;
+import kankan.wheel.widget.OnWheelScrollListener;
+import kankan.wheel.widget.WheelView;
+import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
+import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -30,16 +40,21 @@ import com.android.volley.VolleyError;
 import com.android.volley.Request.Method;
 import com.android.volley.toolbox.Volley;
 
+import android.R.integer;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -49,18 +64,30 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,83 +109,87 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.ImageDownloader.Scheme;
 
 public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
-	
+
 	private String TAG = this.getClass().getSimpleName();
 
-	private RequestQueue mQueue;
-	private String HOST = UrlUtils.HOST;
-	private URL getInfoURL;
-	private URL setInfoURL;
-	private int statusCode;
-	private String sid;
-	private JSONObject data;
-	
-	private int setPersonal = 0;
-	
-	private String name = null, nickname = null, birthday = null, id = null;
-	private String province = null, city = null, district = null;
-	private int sex = 0, provinceid = 0, cityid = 0, districtid = 0;
-	private boolean isHasPropServ;
-	
-	private TextView TVName;
-	private TextView TVNickName;
-	private TextView TVSex;
-	private TextView TVprovince;
-	private TextView TVcity;
-	private TextView TVdistrict;
-	private TextView TVyear;
-	private TextView TVmonth;
-	private TextView TVday;
-	private TextView TVid;
-	private ImageView image;
-	
-	private RelativeLayout back;
-	private RelativeLayout toModifyProfile;
-	private RelativeLayout SetPersonalNickname;
-	private RelativeLayout SetPersonalSex;
-	private RelativeLayout SetBirthday;
-	
-	private RelativeLayout ChangePhoto;
-	private SelectPicPopupWindow menuWindow;
-	
+	final Calendar c = Calendar.getInstance();
+	int mYear = c.get(Calendar.YEAR);
+	int mMonth = c.get(Calendar.MONTH);
+	int mDay = c.get(Calendar.DAY_OF_MONTH);
+
 	private MyAreaDBHelper mAreaDBHelper;
 	private SQLiteDatabase mAreaDB;
 	private final String DATABASE_NAME = "area.db";
 	private final String TABLE_NAME = "tb_core_area";
+
+	private String[] provinceSet;
+	private String[][] citySet;
+	private String[][][] districtSet;
+
+	private int maxPlength;
+	private int maxClength;
+	private int maxDlength;
+
+	private int  provinceId, cityId, districtId;
+
+	private RelativeLayout setAddress;
+	private TextView addText;
 	
-	private Bitmap bitmap;
-	private Thread mThread;
-	
-	private static final int MSG_SUCCESS = 0;// get the image success
-	private static final int MSG_FAILURE = 1;// fail
+	private File cameraFile;
+	private File imageFile;
+	private RequestQueue mQueue;
+	private String HOST = UrlUtils.HOST;
+	private URL setInfoURL;
+	private int statusCode;
+	private String sid;
+
+	private String nickname = null;
+
+	private TextView TVNickName;
+	private TextView TVSex;
+	private TextView TVDate;
+	private ImageView image;
+
+	private RelativeLayout back;
+	private RelativeLayout SetPersonalNickname;
+	private RelativeLayout SetPersonalSex;
+	private RelativeLayout SetBirthday;
+
+	private RelativeLayout ChangePhoto;
+	private SelectPicPopupWindow menuWindow;
+
+//	private static final int MSG_SUCCESS = 0;// get the image success
+//	private static final int MSG_FAILURE = 1;// fail
 	private static final int RESULT_REQUEST_CODE = 11;
 	private static final int RESULT_SET_NICKNAME = 4;
 	private static final int RESULT_SET_SEX = 5;
-	
+
 	private String portraitUrl;
 
 	private ProgressBar upLoadBar;
-	
-	//
+	private TextView mTextPercent;
+	private ProgressBar InfoPercent;
+
 	private int userStatus;
 	private ImageView certiImage;
-	private TextView certiText;
-	
+
 	//
-	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath()
-			+ "/Cloudoor/CacheImage/";
+	private String PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Cloudoor/CacheImage/";
 	private String imageName = "myImage.jpg";
-	
-	private  String formatID;
-	
+
+	private String BirthDayDate;
+
 	boolean isDebug = DEBUG.isDebug;
-	
+
 	String imageUrl;
 	DisplayImageOptions options;
 	String tempURL;
 	RelativeLayout QRcode_layout;
 	private Version version;
-	
+
+	int width;
+    int height;
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -169,40 +200,48 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 		userStatus = loginStatus.getInt("STATUS", 1);
 		portraitUrl = loginStatus.getString("URL", null);
 		tempURL = portraitUrl;
-		
+
 		version = new Version(getApplicationContext());
-		
+
 		mAreaDBHelper = new MyAreaDBHelper(ShowPersonalInfo.this, DATABASE_NAME, null, 1);
 		mAreaDB = mAreaDBHelper.getWritableDatabase();	
-		
+
 		String imagePath = PATH + imageName;
 		imageUrl = Scheme.FILE.wrap(imagePath);
-		
+
 		ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
 		ImageLoader.getInstance().init(configuration);
-        
-        options = new DisplayImageOptions.Builder()
-        .showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
-        .showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
-        .showImageOnFail(R.drawable.icon_boy_110) // resource or drawable
-        .resetViewBeforeLoading(false)  // default
-        .delayBeforeLoading(10)
-        .cacheInMemory(false) // default
-        .cacheOnDisk(false) // default
-        .considerExifParams(false) // default
-        .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
-        .bitmapConfig(Bitmap.Config.ARGB_8888) // default
-        .displayer(new SimpleBitmapDisplayer()) // default
-        .handler(new Handler()) // default
-        .displayer(new RoundedBitmapDisplayer(10))
-        .build();
+
+		options = new DisplayImageOptions.Builder()
+		.showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
+		.showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
+		.showImageOnFail(R.drawable.icon_boy_110) // resource or drawable
+		.resetViewBeforeLoading(false)  // default
+		.delayBeforeLoading(10)
+		.cacheInMemory(false) // default
+		.cacheOnDisk(false) // default
+		.considerExifParams(false) // default
+		.imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
+		.bitmapConfig(Bitmap.Config.ARGB_8888) // default
+		.displayer(new SimpleBitmapDisplayer()) // default
+		.handler(new Handler()) // default
+		.displayer(new RoundedBitmapDisplayer(10))
+		.build();
 		
-        
+		provinceId = loginStatus.getInt("PROVINCE", 0);
+		cityId = loginStatus.getInt("CITY", 0);
+		districtId = loginStatus.getInt("DIS", 0);
+		
 		initViews();
-		
-//		setupUI(findViewById(R.id.personal_info_main));
-		
-		ChangePhoto = (RelativeLayout) findViewById(R.id.personal_photo_change);
+
+		image.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				pictureZoom(image);
+			}
+		});
+
 		ChangePhoto.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -210,19 +249,18 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 				menuWindow = new SelectPicPopupWindow(ShowPersonalInfo.this, itemsOnClick); 
 				menuWindow.showAtLocation(ShowPersonalInfo.this.findViewById(R.id.personal_info_main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-				
+
 				View view = getWindow().peekDecorView();
-		        if (view != null) {
-		            InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		            inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
-		        }
+				if (view != null) {
+					InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
+				}
 			}
-			
+
 		});
-		
-		
+
 		SetPersonalNickname.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
@@ -231,9 +269,9 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 				startActivityForResult(intent, RESULT_SET_NICKNAME);
 			}
 		});
-		
+
 		SetPersonalSex.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(ShowPersonalInfo.this, SetSex.class);
@@ -243,22 +281,97 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 				startActivityForResult(intent, RESULT_SET_SEX);
 			}
 		});
+
+		SetBirthday.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+
+					@Override
+					public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+						String s = (monthOfYear + 1) + " " + getString(R.string.month) + " " + dayOfMonth + " " + getString(R.string.day);
+						TVDate.setText((String.valueOf(monthOfYear + 1).length() == 1 ? ("0" + String.valueOf(monthOfYear + 1)) : String.valueOf(monthOfYear + 1)) + getString(R.string.month)
+								+ (String.valueOf(dayOfMonth).length() == 1 ? ("0" + String.valueOf(dayOfMonth)) : String.valueOf(dayOfMonth)) + getString(R.string.day));
+						BirthDayDate = String.valueOf(year) + "-" 
+								+ (String.valueOf(monthOfYear + 1).length() == 1 ? ("0" + String.valueOf(monthOfYear + 1)) : String.valueOf(monthOfYear + 1)) + "-"
+								+ (String.valueOf(dayOfMonth).length() == 1 ? ("0" + String.valueOf(dayOfMonth)) : String.valueOf(dayOfMonth));
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("birthday", BirthDayDate);
+						updateProfile(map);
+					}
+
+
+				};
+
+				new DatePickerDialog(ShowPersonalInfo.this,AlertDialog.THEME_HOLO_LIGHT, onDateSetListener, mYear, mMonth, mDay).show();
+			}
+
+		});	
+		
+		back.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				ShowPersonalInfo.this.finish();
+			}
+
+		});
+
+		initSpinnerData();
+
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		width = dm.widthPixels;
+	    height = dm.heightPixels;
 	}
-	File cameraFile;
+	
+	public void initViews() {
+		TVNickName = (TextView) findViewById(R.id.personal_info_NickName);
+		TVSex = (TextView) findViewById(R.id.personal_info_sexName);
+		TVDate = (TextView) findViewById(R.id.personal_info_month);
+		back = (RelativeLayout) findViewById(R.id.btn_back);
+		image = (ImageView) findViewById(R.id.personal_info_small_image);
+		SetPersonalNickname = (RelativeLayout) findViewById(R.id.set_nickname);
+		SetPersonalSex = (RelativeLayout) findViewById(R.id.set_sex);
+		SetBirthday = (RelativeLayout) findViewById(R.id.set_birthday);
+		
+		setAddress = (RelativeLayout) findViewById(R.id.set_address);
+		setAddress.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				PopupWindow popupWindow = makePopupWindow(ShowPersonalInfo.this);
+				popupWindow.showAtLocation(ShowPersonalInfo.this.findViewById(R.id.personal_info_main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+			}
+			
+		});
+		addText = (TextView) findViewById(R.id.personal_info_address);
+		
+		certiImage = (ImageView) findViewById(R.id.certi_or_not_image);
+		ChangePhoto = (RelativeLayout) findViewById(R.id.personal_photo_change);
+
+		upLoadBar = (ProgressBar) findViewById(R.id.uploadBar);
+		upLoadBar.setVisibility(View.INVISIBLE);
+		
+		mTextPercent = (TextView) findViewById(R.id.person_info_percent);
+		InfoPercent = (ProgressBar) findViewById(R.id.progressBar);
+	}
+
 	private OnClickListener itemsOnClick = new OnClickListener() {
 
 		public void onClick(View v) {
 			menuWindow.dismiss();
 			switch (v.getId()) {
 			case R.id.btn_take_photo:
-				
-				
+
+
 				if (!isExitsSdcard()) {
 					Toast.makeText(getApplicationContext(), "SD¿¨²»¿ÉÓÃ", 0).show();
 					return;
 				}
-//				cameraFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/cloudoor", 
-//						+ System.currentTimeMillis() + ".jpg");
+				//				cameraFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/cloudoor", 
+				//						+ System.currentTimeMillis() + ".jpg");
 				cameraFile = new File(Environment.getExternalStorageDirectory()
 						.getAbsolutePath() + "/Cloudoor/CacheImage",
 						+System.currentTimeMillis() + ".jpg");
@@ -279,23 +392,15 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 		}
 
 	};	
-	
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		
+
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
-			
-			case RESULT_SET_NICKNAME:
-				
-				TVNickName.setText(getIntent().getStringExtra("CurrentNickname"));
-				
-				
-				
 			case 1:
-
 				if (cameraFile != null) {
 					Log.e("test for upload", "cameraFile != null");
 					startPhotoZoom(Uri.fromFile(cameraFile));
@@ -305,24 +410,22 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 				if (data != null){
 					Log.e("test for upload", "data != null");
 					startPhotoZoom(data.getData());
-					updatePortraiUrl();
 				}
 				break;
 			case RESULT_REQUEST_CODE:
 				if (data != null){
 					Log.e("test for upload", "data != null  RESULT_REQUEST_CODE");
 					sentPicToNext(data);
-					updatePortraiUrl();
 				}
 				break;
 			}
 		}
-    }
-    
-    public void startPhotoZoom(Uri uri) {
+	}
 
-    	Log.e("test for upload", "startPhotoZoom");
-    	
+	public void startPhotoZoom(Uri uri) {
+
+		Log.e("test for upload", "startPhotoZoom");
+
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		intent.putExtra("crop", "true");
@@ -333,10 +436,10 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 		intent.putExtra("return-data", true);
 		intent.putExtra("noFaceDetection", true);
 		startActivityForResult(intent, RESULT_REQUEST_CODE);
-		
+
 	}
-    File imageFile;
-    private void sentPicToNext(Intent data) {
+	
+	private void sentPicToNext(Intent data) {
 
 		Bundle bundle = data.getExtras();
 		if (bundle != null) {
@@ -344,7 +447,6 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 			ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 			if (networkInfo != null) {
-//				NetworkInfo.State state = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
 				if (NetworkInfo.State.CONNECTED == connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()
 						|| NetworkInfo.State.CONNECTED == connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState()) {
 					Log.e("test for upload", "sentPic 2");
@@ -368,19 +470,20 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 							}
 						}
 					}
-					
+
 					new Thread() {
 						@Override
 						public void run() {
 
+							MyDebugLog.e(TAG, "thread run");
+							
 							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-//									upLoadBar.setVisibility(View.VISIBLE);
+							@Override
+							public void run() {
+								upLoadBar.setVisibility(View.VISIBLE);
 								}
 							});
-
-							MyDebugLog.e(TAG, "thread run");
+							
 							Log.e("test for upload", "sentPic 3");
 
 							try {
@@ -391,7 +494,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 							HttpClient httpClient = new DefaultHttpClient();
 							HttpPost postRequest = new HttpPost(HOST
-									+ "/user/api/uploadPortrait.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
+									+ "/user/api/uploadPortrait.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 
 							Part[] parts = null;
 							FilePart filePart = null;
@@ -422,21 +525,25 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 								JSONObject jsObj = new JSONObject(s.toString());
 
 								if (jsObj.getInt("code") == 1) {
+									
+									if(!jsObj.getString("sid").equals(null))
+										saveSid(jsObj.getString("sid"));
+									
 									JSONObject data = jsObj.getJSONObject("data");
 									portraitUrl = data.getString("portraitUrl");
 									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 									Editor edit = loginStatus.edit();
 									edit.putString("URL", portraitUrl);
 									edit.commit();
-									
+
 									MyDebugLog.e(TAG, portraitUrl);
 									Log.e("test for upload", "sentPic 5 " + portraitUrl);
-									
+
 									runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
 											MyDebugLog.e(TAG, "run here");
-//											upLoadBar.setVisibility(View.INVISIBLE);
+											upLoadBar.setVisibility(View.INVISIBLE);
 										}
 									});
 								}
@@ -482,175 +589,111 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 					}.start();
 				}else {
-					
+
 				}
 			} else {
-//				upLoadBar.setVisibility(View.VISIBLE);
+				upLoadBar.setVisibility(View.VISIBLE);
 				Toast.makeText(this, getString(R.string.no_network_try_again), Toast.LENGTH_SHORT).show();
 			}
-			
+
 		}
 
 	}
-    
-	
-	public void initViews() {
-		TVName = (TextView) findViewById(R.id.personal_info_name);
-		TVNickName = (TextView) findViewById(R.id.personal_info_NickName);
-		TVSex = (TextView) findViewById(R.id.personal_info_sexName);
-		TVprovince = (TextView) findViewById(R.id.personal_info_province);
-		TVcity = (TextView) findViewById(R.id.personal_info_city);
-		TVdistrict = (TextView) findViewById(R.id.personal_info_district);
-		TVyear = (TextView) findViewById(R.id.personal_info_year);
-		TVmonth = (TextView) findViewById(R.id.personal_info_month);
-		TVday = (TextView) findViewById(R.id.personal_info_day);
-		TVid = (TextView) findViewById(R.id.personal_info_ID);
-		back = (RelativeLayout) findViewById(R.id.btn_back);
-		image = (ImageView) findViewById(R.id.personal_info_small_image);
-		SetPersonalNickname = (RelativeLayout) findViewById(R.id.set_nickname);
-		SetPersonalSex = (RelativeLayout) findViewById(R.id.set_sex);
 
-		image.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				pictureZoom(image);
-				
-			}
-		});
-		
-		//
-		certiImage = (ImageView) findViewById(R.id.certi_or_not_image);
-
-		
-		toModifyProfile = (RelativeLayout) findViewById(R.id.tomodify_person_info);
-			
-		
-		back.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				ShowPersonalInfo.this.finish();
-			}
-			
-		});
-		
-//		toModifyProfile.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//				Intent intent = new Intent();
-//				
-//
-//				if (userStatus == 1) {
-//					intent.setClass(ShowPersonalInfo.this, SetPersonalInfoNotCerti.class);
-//					startActivityForResult(intent, 0);
-//				} else if (userStatus == 2) {
-//					intent.setClass(ShowPersonalInfo.this, SetPersonalInfo.class);
-//					intent.putExtra("Whereis", "settingFace");
-//					startActivityForResult(intent, 0);
-//				}				
-//			}
-//			
-//		});
-	}
-	
 	private void pictureZoom(View v) {
 
-//      click fullscreen
-      final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-      ImageView imgView = getView();
-      dialog.setContentView(imgView);
-      dialog.show();
+		// click fullscreen
+		final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+		ImageView imgView = getView();
+		dialog.setContentView(imgView);
+		dialog.show();
 
-     // click dismiss
-     imgView.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-             dialog.dismiss();
-         }
-     });
- }
-	private ImageView getView() {
-        ImageView imgView = new ImageView(this);
-        imgView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        
-
-
-        	File file = new File(PATH +imageName);
-        	if (!file.exists()) {
-        		Drawable drawable = getResources().getDrawable(R.drawable.default_icon_male);
-        		imgView.setImageDrawable(drawable);
+		// click dismiss
+		imgView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
 			}
-        	else
-        	try {
+		});
+	}
+	private ImageView getView() {
+		ImageView imgView = new ImageView(this);
+		imgView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+
+
+		File file = new File(PATH +imageName);
+		if (!file.exists()) {
+			Drawable drawable = getResources().getDrawable(R.drawable.default_icon_male);
+			imgView.setImageDrawable(drawable);
+		}
+		else
+			try {
 				FileInputStream is = new FileInputStream(file);
 				Bitmap bitmap = BitmapFactory.decodeStream(is);
 				imgView.setImageBitmap(bitmap);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-        return imgView;
-    }
+		return imgView;
+	}
+	
 	public  boolean isExitsSdcard() {
 		if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
 			return true;
 		else
 			return false;
 	}
-	private void updatePortraiUrl () {
+	
+	private void updateProfile (final Map<String, String> profileMap) {
 		mQueue = Volley.newRequestQueue(this);
 		sid = loadSid();
 		try {
 			setInfoURL = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 				Method.POST, setInfoURL.toString(), null,
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
-						try {
-							if (response.getString("sid") != null) {
-								sid = response.getString("sid");
-								saveSid(sid);
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						MyDebugLog.e("TEST", response.toString());
 						
 						try {
-							statusCode = response.getInt("code");
-						} catch (JSONException e) {
+							if(response.getInt("code") == 1) {
+
+								if(!response.getString("sid").equals(null)) 
+									saveSid(response.getString("sid"));
+	
+								SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+								Editor editor = loginStatus.edit();
+								if(profileMap.containsKey("birthday")) {
+									editor.putString("BIRTH", BirthDayDate).commit();
+								} else if(profileMap.containsKey("provinceId")) {
+									editor.putInt("PROVINCE", Integer.parseInt(profileMap.get("provinceId")));
+									editor.putInt("CITY", Integer.parseInt(profileMap.get("cityId")));
+									editor.putInt("DIS", Integer.parseInt(profileMap.get("districtId")));
+									editor.commit();
+								} 
+
+							} else if (statusCode == -1) {
+								Toast.makeText(getApplicationContext(), R.string.not_enough_params, Toast.LENGTH_SHORT).show();
+							} else if (statusCode == -2) {
+								Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
+							} else if (statusCode == -99) {
+								Toast.makeText(getApplicationContext(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
+							} else if (statusCode == -42) {
+								Toast.makeText(getApplicationContext(), R.string.nick_name_already, Toast.LENGTH_SHORT).show();
+							}
+						} catch (NotFoundException e) {
+							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}if(statusCode == 1) {
-							setPersonal = 1;
-							SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
-							Editor editor = personalInfo.edit();
-							editor.putInt("SETINFO", setPersonal);
-							editor.commit();
-							
-							SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-							Editor editor1 = loginStatus.edit();
-							editor1.putString("URL", portraitUrl);
-							editor1.commit();
-														
-							
-						} else if (statusCode == -1) {
-							Toast.makeText(getApplicationContext(), R.string.not_enough_params, Toast.LENGTH_SHORT).show();
-						} else if (statusCode == -2) {
-							Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
-						} else if (statusCode == -99) {
-							Toast.makeText(getApplicationContext(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
-						} else if (statusCode == -42) {
-							Toast.makeText(getApplicationContext(), R.string.nick_name_already, Toast.LENGTH_SHORT).show();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-													
+
 					}
 				}, new Response.ErrorListener() {
 
@@ -659,249 +702,24 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
-			
+
 			@Override
 			protected Map<String, String> getParams()
 					throws AuthFailureError {
 				Map<String, String> map = new HashMap<String, String>();
-				map.put("portraitUrl", portraitUrl);
+				map = profileMap;
 				return map;
 			}
 		};
-		
-			mQueue.add(mJsonRequest);
-				
-	}
-	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		// TODO Auto-generated method stub
-//		if (requestCode == 0 && resultCode == RESULT_OK) {
-//			mQueue = Volley.newRequestQueue(this);
-//			sid = loadSid();
-//			try {
-//				getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
-//			} catch (MalformedURLException e) {
-//				e.printStackTrace();
-//			}
-//			MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-//					Method.POST, getInfoURL.toString(), null,
-//					new Response.Listener<JSONObject>() {
-//
-//						@Override
-//						public void onResponse(JSONObject response) {
-//							try {
-//								if (response.getString("sid") != null) {
-//									sid = response.getString("sid");
-//									saveSid(sid);
-//								}
-//								statusCode = response.getInt("code");
-//							} catch (JSONException e) {
-//								e.printStackTrace();
-//							}
-//
-//							MyDebugLog.e("TEST", response.toString());
-//
-//							if (statusCode == 1) {
-//								try {
-//									JSONObject Data = response.getJSONObject("data");
-//
-//									name = Data.getString("userName");
-//									nickname = Data.getString("nickname");
-//									birthday = Data.getString("birthday");
-//									id = Data.getString("idCardNo");
-//									sex = Data.getInt("sex");
-//									provinceid = Data.getInt("provinceId");
-//									cityid = Data.getInt("cityId");
-//									districtid = Data.getInt("districtId");
-//									portraitUrl = Data.getString("portraitUrl");
-//									isHasPropServ = Data.getBoolean("isHasPropServ");
-//
-//									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-//									Editor edit = loginStatus.edit();
-//									edit.putString("NAME", name);
-//									edit.putString("NICKNAME",nickname);
-//									edit.putString("ID", id);
-//									edit.putString("BIRTH", birthday);
-//									edit.putInt("SEX", sex);
-//									edit.putInt("PROVINCE",provinceid);
-//									edit.putInt("CITY", cityid);
-//									edit.putInt("DIS", districtid);
-//									edit.putString("URL", portraitUrl);
-//									edit.putBoolean("isHasPropServ", isHasPropServ);
-//									edit.commit();
-//
-//									SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
-//									Editor editor = saveProfile.edit();
-//									editor.putString("NAME", name);
-//									editor.putString("NICKNAME", nickname);
-//									editor.putString("ID", id);
-//									editor.putString("PROVINCE", province);
-//									editor.putString("CITY", city);
-//									editor.putString("DISTRICT", district);
-//									editor.putInt("PROVINCEID", provinceid);
-//									editor.putInt("CITYID", cityid);
-//									editor.putInt("DISTRICTID", districtid);
-//									editor.putInt("SEX", sex);
-//									if(birthday.length() > 0){
-//										editor.putString("YEAR", birthday.substring(0, 4));
-//										editor.putString("MONTH", birthday.substring(5, 7));
-//										editor.putString("DAY", birthday.substring(8));
-//									}
-//									editor.putBoolean("isHasPropServ", isHasPropServ);
-//									editor.commit();
-//
-//									File f = new File(PATH + imageName);
-//									MyDebugLog.e(TAG, PATH + imageName);
-//									if (f.exists() && !tempURL.equals(portraitUrl)) {
-//										tempURL = portraitUrl;
-//										ImageLoader.getInstance().displayImage(imageUrl, image, options);
-//										
-//										MyDebugLog.e(TAG, "use local");
-////										BitmapFactory.Options opts = new BitmapFactory.Options();
-////										opts.inTempStorage = new byte[100 * 1024];
-////										opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-////										opts.inPurgeable = true;
-//////										opts.inSampleSize = 4;
-////										Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-////										image.setImageBitmap(bm);
-//									} else {
-//										// request bitmap in the new thread
-//										if (portraitUrl != null && !tempURL.equals(portraitUrl)) {
-//											MyDebugLog.e(TAG, "use net");
-//											tempURL = portraitUrl;
-//											ImageLoader.getInstance().displayImage(portraitUrl, image, options);
-////											if (mThread == null) {
-////												mThread = new Thread(runnable);
-////												mThread.start();
-////											}
-//										}
-//									}
-//
-//									if (provinceid != 0) {
-//										province = getProvinceName(provinceid);
-//										TVprovince.setText(province);
-//									}
-//
-//									if (cityid != 0) {
-//										city = getCityName(cityid);
-//										TVcity.setText(city);
-//									}
-//
-//									if (districtid != 0) {
-//										district = getDistrictName(districtid);
-//										TVdistrict.setText(district);
-//									}
-//
-//									if (name != null)
-//										TVName.setText(name);
-//									if (nickname != null)
-//										TVNickName.setText(nickname);
-//
-//									if (sex == 1) {
-//										TVSex.setText(R.string.male);
-//									} else if (sex == 2) {
-//										TVSex.setText(R.string.female);
-//									}
-//
-//									if (id != null) {
-//										formatID = changeNum(id);
-//										TVid.setText(formatID);
-//									}
-//
-//									if (birthday != null) {
-//										TVyear.setText(birthday.substring(0, 4));
-//										TVmonth.setText(birthday.substring(5, 7));
-//										TVday.setText(birthday.substring(8));
-//									}
-//
-//								} catch (JSONException e) {
-//									e.printStackTrace();
-//								}
-//							} else if (statusCode == -1) {
-//								Toast.makeText(getApplicationContext(),
-//										R.string.wrong_params,
-//										Toast.LENGTH_SHORT).show();
-//							} else if (statusCode == -2) {
-//								Toast.makeText(getApplicationContext(),
-//										R.string.not_login, Toast.LENGTH_SHORT)
-//										.show();
-//							} else if (statusCode == -99) {
-//								Toast.makeText(getApplicationContext(),
-//										R.string.unknown_err,
-//										Toast.LENGTH_SHORT).show();
-//							}
-//						}
-//					}, new Response.ErrorListener() {
-//
-//						@Override
-//						public void onErrorResponse(VolleyError error) {
-//							Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-//						}
-//					});
-//			mQueue.add(mJsonRequest);
-//		}
-//	}
 
-	public String getProvinceName(int provinceId) {
-		String provinceName = null;
-		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
-		if (mCursorP.moveToFirst()) {
-			int provinceIndex = mCursorP.getColumnIndex("province_short_name");
-			int provinceIdIndex = mCursorP.getColumnIndex("province_id");
-			do{
-				int tempPID = mCursorP.getInt(provinceIdIndex);
-			    String tempPName = mCursorP.getString(provinceIndex);
-				if(tempPID == provinceId){
-					provinceName = tempPName;
-					break;
-				}		
-			}while(mCursorP.moveToNext());		
-		}
-		mCursorP.close();
-		return provinceName;
-	}
-	
-	public String getCityName(int cityId) {
-		String cityName = null;
-		Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
-		if (mCursorC.moveToFirst()) {
-			int cityIndex = mCursorC.getColumnIndex("city_short_name");
-			int cityIdIndex = mCursorC.getColumnIndex("city_id");
-			do{
-				int tempCID = mCursorC.getInt(cityIdIndex);
-			    String tempCName = mCursorC.getString(cityIndex);
-				if(tempCID == cityId){
-					cityName = tempCName;
-					break;
-				}		
-			}while(mCursorC.moveToNext());		
-		}
-		mCursorC.close();
-		return cityName;
-	}
-	
-	public String getDistrictName(int districtId) {
-		String districtName = null;
-		Cursor mCursorD = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
-		if (mCursorD.moveToFirst()) {
-			int districtIndex = mCursorD.getColumnIndex("district_short_name");
-			int districtIdIndex = mCursorD.getColumnIndex("district_id");
-			do{
-				int tempDID = mCursorD.getInt(districtIdIndex);
-			    String tempDName = mCursorD.getString(districtIndex);
-				if(tempDID == districtId){
-					districtName = tempDName;
-					break;
-				}		
-			}while(mCursorD.moveToNext());		
-		}
-		mCursorD.close();
-		return districtName;
+		mQueue.add(mJsonRequest);
+
 	}
 
 	@Override
 	public void onResume(){
 		super.onResume();
+		Log.e("@@@@@@@", "onResume()");
 
 		SharedPreferences homeKeyEvent = getSharedPreferences("HOMEKEY", 0);
 		int homePressed = homeKeyEvent.getInt("homePressed", 0);
@@ -914,19 +732,20 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 				startActivity(intent);
 			}
 		}
-		
+
 		if(userStatus == 1) {
 			certiImage.setImageResource(R.drawable.unauth_icon);
-//			certiText.setText(R.string.not_certi);
 		} else if(userStatus == 2) {
 			certiImage.setImageResource(R.drawable.auth_icon);
-//			certiText.setText(R.string.certi);
 		}
 
 		File Imagefile = new File(PATH + imageName);
 		if(Imagefile.exists()){
 			MyDebugLog.e(TAG, "use local on resume");
-			ImageLoader.getInstance().displayImage(imageUrl, image, options);
+			Bitmap bitmap = getLoacalBitmap(PATH + imageName);
+			image.setImageBitmap(bitmap);
+					
+//			ImageLoader.getInstance().displayImage(imageUrl, image, options);
 		} else {
 			MyDebugLog.e(TAG, "ON RESUME file not exists, use net");
 			if(portraitUrl != null){
@@ -938,263 +757,180 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 		if(f.exists()){
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 
-			String tempString;
-//			if (tempString != null){
-//				if (tempString.length() > 0){
-//					TVName.setText(loginStatus.getString("NAME", null));
-//				}
-//			}
-//			tempString = loginStatus.getString("NICKNAME", null);
-//			if (tempString != null){
-//				if (tempString.length() > 0){
-//					TVNickName.setText(loginStatus.getString("NICKNAME", null));
-//				}
-//			}
+			String tempString = null;
+			
+			tempString = loginStatus.getString("NICKNAME", null);
+			if (tempString != null){
+				if (tempString.length() > 0){
+					TVNickName.setText(loginStatus.getString("NICKNAME", null));
+				}
+			}
 
-//			if(loginStatus.getInt("SEX", 1) == 1){
-//				TVSex.setText(R.string.male);
-//			} else if(loginStatus.getInt("SEX", 1) == 2){
-//				TVSex.setText(R.string.female);
-//			}
+			if (loginStatus.getInt("SEX", 0) == 1) {
+				TVSex.setText(R.string.male);
+			} else if (loginStatus.getInt("SEX", 0) == 2) {
+				TVSex.setText(R.string.female);
+			} else if (loginStatus.getInt("SEX", 0) == 0) {
+				TVSex.setText(R.string.female);
+			}
 
 			tempString = loginStatus.getString("BIRTH", null);
 			if (tempString != null){
 				if (tempString.length() > 0){
-//					TVyear.setText(tempString.substring(0, 4));
-					TVmonth.setText(tempString.substring(5, 7));
-					TVday.setText(tempString.substring(8));
+					TVDate.setText(tempString.substring(5,7) + getString(R.string.month) + tempString.substring(8) + getString(R.string.day));
 				}
 			}
-
-//			tempString = loginStatus.getString("ID", null);
-//			if (tempString != null){
-//				if (tempString.length() > 0){
-//					String tempFormatID = changeNum(loginStatus.getString("ID", null));
-//					TVid.setText(tempFormatID);
-//				}
-//			}
-
-			if (loginStatus.getInt("PROVINCE", 0) != 0) {
-				province = getProvinceName(loginStatus.getInt("PROVINCE", 0));
-				TVprovince.setText(province);
-			}
-
-			if (loginStatus.getInt("CITY", 0) != 0) {
-				city = getCityName(loginStatus.getInt("CITY", 0));
-				TVcity.setText(city);
-			}
-
-			if (loginStatus.getInt("DIS", 0) != 0) {
-				district = getDistrictName(loginStatus.getInt("DIS", 0));
-				TVdistrict.setText(district);
-			}
-		}
-
-		mQueue = Volley.newRequestQueue(this);
-		sid = loadSid();
-		try {
-			getInfoURL = new URL(HOST + "/user/manage/getProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
-				Method.POST, getInfoURL.toString(), null,
-				new Response.Listener<JSONObject>() {
-
-					@Override
-					public void onResponse(JSONObject response) {
-						try {
-							if (response.getString("sid") != null) {
-								sid = response.getString("sid");
-								saveSid(sid);
-							}
-							statusCode = response.getInt("code");
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-
-						MyDebugLog.e("TEST", response.toString());
-
-						if (statusCode == 1) {
-							try {
-								JSONObject Data = response.getJSONObject("data");
-
-								name = Data.getString("userName");
-								nickname = Data.getString("nickname");
-								birthday = Data.getString("birthday");
-								id = Data.getString("idCardNo");
-								sex = Data.getInt("sex");
-								provinceid = Data.getInt("provinceId");
-								cityid = Data.getInt("cityId");
-								districtid = Data.getInt("districtId");
-								portraitUrl = Data.getString("portraitUrl");
-								isHasPropServ = Data.getBoolean("isHasPropServ");
-
-								SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-								Editor edit = loginStatus.edit();
-								edit.putString("URL", portraitUrl);
-								edit.putBoolean("isHasPropServ", isHasPropServ);
-								edit.commit();
-
-								SharedPreferences saveProfile = getSharedPreferences("PROFILE", MODE_PRIVATE);
-								Editor editor = saveProfile.edit();
-								editor.putString("NAME", name);
-								editor.putString("NICKNAME", nickname);
-								editor.putString("ID", id);
-								editor.putString("PROVINCE", province);
-								editor.putString("CITY", city);
-								editor.putString("DISTRICT", district);
-								editor.putInt("PROVINCEID", provinceid);
-								editor.putInt("CITYID", cityid);
-								editor.putInt("DISTRICTID", districtid);
-								editor.putInt("SEX", sex);
-								edit.putBoolean("isHasPropServ", isHasPropServ);
-								if(birthday.length() > 0){
-									editor.putString("YEAR", birthday.substring(0, 4));
-									editor.putString("MONTH", birthday.substring(5, 7));
-									editor.putString("DAY", birthday.substring(8));
-								}
-								editor.commit();
-
-								File f = new File(PATH + imageName);
-								MyDebugLog.e(TAG, PATH + imageName);
-								if (f.exists() && !tempURL.equals(portraitUrl)) {
-									tempURL = portraitUrl;
-									
-									ImageLoader.getInstance().displayImage(imageUrl, image, options);
-									
-									MyDebugLog.e(TAG, "use local on resume request");
-//									BitmapFactory.Options opts = new BitmapFactory.Options();
-//									opts.inTempStorage = new byte[100 * 1024];
-//									opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//									opts.inPurgeable = true;
-////									opts.inSampleSize = 4;
-//									Bitmap bm = BitmapFactory.decodeFile(PATH + imageName, opts);
-//									image.setImageBitmap(bm);
-								} else {
-									// request bitmap in the new thread
-									if (portraitUrl != null && !tempURL.equals(portraitUrl)) {
-										tempURL = portraitUrl;
-										MyDebugLog.e(TAG, "use net");
-										ImageLoader.getInstance().displayImage(portraitUrl, image, options);
-//										if (mThread == null) {
-//											mThread = new Thread(runnable);
-//											mThread.start();
-//										}
-									}
-								}
-
-								if (provinceid != 0) {
-									province = getProvinceName(provinceid);
-									TVprovince.setText(province);
-								}
-
-								if (cityid != 0) {
-									city = getCityName(cityid);
-									TVcity.setText(city);
-								}
-
-								if (districtid != 0) {
-									district = getDistrictName(districtid);
-									TVdistrict.setText(district);
-								}
-
-//								if (name.length() > 0)
-//									TVName.setText(name);
-								if (nickname.length() > 0)
-									TVNickName.setText(nickname);
-
-								if (sex == 1) {
-									TVSex.setText(R.string.male);
-								} else if (sex == 2) {
-									TVSex.setText(R.string.female);
-								}
-
-//								if (id.length() > 0) {
-//									formatID = changeNum(id);
-//									TVid.setText(formatID);
-//								}
-
-								if (birthday.length() > 0) {
-//									TVyear.setText(birthday.substring(0, 4));
-									TVmonth.setText(birthday.substring(5, 7));
-									TVday.setText(birthday.substring(8));
-								}
-
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-						} else if (statusCode == -1) {
-							Toast.makeText(getApplicationContext(), R.string.wrong_params, Toast.LENGTH_SHORT).show();
-						} else if (statusCode == -2) {
-							Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
-						} else if (statusCode == -99) {
-							Toast.makeText(getApplicationContext(),
-									R.string.unknown_err,
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-				}, new Response.ErrorListener() {
-
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-					}
-				});
-		mQueue.add(mJsonRequest);
-}
-	
-	private Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MSG_SUCCESS:
-				image.setImageBitmap((Bitmap) msg.obj);
-				break;
-			case MSG_FAILURE:
-				break;
+			
+			int infoCount = 0;
+			if(loginStatus.getString("NICKNAME", null).length() > 0)
+				infoCount++;
+			if(loginStatus.getInt("SEX", 0) != 0)
+				infoCount++;
+			if(loginStatus.getString("BIRTH", null).length() > 0)
+				infoCount++;
+			if(loginStatus.getString("URL", null).length() > 0)
+				infoCount++;
+			if(loginStatus.getInt("PROVINCE", 0) != 0)
+				infoCount++;
+			
+			mTextPercent.setText("资料完整度" + String.valueOf((int) infoCount * 100 / 5) + "%");
+			InfoPercent.setProgress((int) infoCount * 100 / 5);
+			
+			provinceId = loginStatus.getInt("PROVINCE", 0);
+			cityId = loginStatus.getInt("CITY", 0);
+			districtId = loginStatus.getInt("DIS", 0);
+			if(provinceId != 0) {
+				if(getCityName(cityId).equals("市辖区")) {
+					addText.setText(getProvinceName(provinceId) + "市" + getDistrictName(districtId) + "区");
+				} else if(getCityName(cityId).equals("县")) {
+					addText.setText(getProvinceName(provinceId) + "市" + getDistrictName(districtId) + "县");
+				} else if(getProvinceName(provinceId).equals("内蒙古") || getProvinceName(provinceId).equals("西藏") 
+						|| getProvinceName(provinceId).equals("新疆")) {
+					addText.setText(getProvinceName(provinceId) + getCityName(cityId) + "市" + getDistrictName(districtId) + "区");
+				} else if (getProvinceName(provinceId).equals("台湾") || getProvinceName(provinceId).equals("香港") 
+						|| getProvinceName(provinceId).equals("澳门")) {
+					addText.setText(getProvinceName(provinceId) + getCityName(cityId) + getDistrictName(districtId));
+				} else {
+					addText.setText(getProvinceName(provinceId) + "省" + getCityName(cityId) + "市" + getDistrictName(districtId) + "区");
+				}
 			}
 		}
-	};
-	
-	Runnable runnable = new Runnable() {
-
-		@Override
-		public void run() {
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(portraitUrl);
-			final Bitmap bitmap;
-			try {
-				org.apache.http.HttpResponse httpResponse = httpClient.execute(httpGet);
-
-				BitmapFactory.Options opts=new BitmapFactory.Options();
-				opts.inTempStorage = new byte[100 * 1024];
-				opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-				opts.inPurgeable = true;
-//				opts.inSampleSize = 4;
-				bitmap = BitmapFactory.decodeStream(httpResponse.getEntity().getContent(), null, opts);
-			} catch (Exception e) {
-				mHandler.obtainMessage(MSG_FAILURE).sendToTarget();
-				return;
-			}
-
-			mHandler.obtainMessage(MSG_SUCCESS, bitmap).sendToTarget();
-		}
-	};
-	
-	public String changeNum(String str) {
-		if (str != null) {
-			StringBuilder sb = new StringBuilder(str);
-
-			for (int i = 6; i < sb.length(); i++) {
-				sb.setCharAt(i, '*');
-			}
-			str = sb.toString();
-		}
-		return str;
 	}
-		
+	
+	public static Bitmap getLoacalBitmap(String url) {
+	     try {
+	          FileInputStream fis = new FileInputStream(url);
+	          return BitmapFactory.decodeStream(fis);
+	     } catch (FileNotFoundException e) {
+	          e.printStackTrace();
+	          return null;
+	     }
+	}
+
+	public void initSpinnerData() {
+		Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		Cursor mCursorD = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		int provinceIdIndex = mCursorP.getColumnIndex("province_id");
+		int cityIdIndex = mCursorP.getColumnIndex("city_id");
+		int districtIdIndex = mCursorP.getColumnIndex("district_id");
+		maxPlength = 1;
+		maxClength = 1;
+		maxDlength = 1;
+
+		if (mCursorP.moveToFirst()) {
+			int tempPId = mCursorP.getInt(provinceIdIndex);
+			while(mCursorP.moveToNext()){
+				if (mCursorP.getInt(provinceIdIndex) != tempPId) {
+					tempPId = mCursorP.getInt(provinceIdIndex);
+					maxPlength++;
+				}
+			}
+			mCursorP.close();
+		}
+
+		if(mCursorC.moveToFirst()){
+			int tempCcount = 1;
+			int tempPId = mCursorC.getInt(provinceIdIndex);
+			int tempCId = mCursorC.getInt(cityIdIndex);
+			while (mCursorC.moveToNext()) {
+				if(mCursorC.getInt(provinceIdIndex) == tempPId && mCursorC.getInt(cityIdIndex) != tempCId){
+					tempCId = mCursorC.getInt(cityIdIndex);
+					tempCcount++;
+				}else if(mCursorC.getInt(provinceIdIndex) != tempPId && mCursorC.getInt(cityIdIndex) != tempCId){
+					tempPId = mCursorC.getInt(provinceIdIndex);
+					tempCId = mCursorC.getInt(cityIdIndex);
+					if(tempCcount > maxClength) {
+						maxClength = tempCcount;
+					}
+					tempCcount = 1;
+				}
+			}
+			mCursorC.close();
+		}
+
+		if(mCursorD.moveToFirst()){
+			int tempDcount = 1;
+			int tempPId = mCursorD.getInt(provinceIdIndex);
+			int tempCId = mCursorD.getInt(cityIdIndex);
+			while (mCursorD.moveToNext()) {
+				if(mCursorD.getInt(provinceIdIndex) == tempPId && mCursorD.getInt(cityIdIndex) == tempCId){
+					tempDcount++;
+				}else if(mCursorD.getInt(provinceIdIndex) == tempPId && mCursorD.getInt(cityIdIndex) != tempCId){
+					tempCId = mCursorD.getInt(cityIdIndex);
+					if(tempDcount > maxDlength) {
+						maxDlength = tempDcount;
+					}
+					tempDcount = 1;
+				}else if(mCursorD.getInt(provinceIdIndex) != tempPId && mCursorD.getInt(cityIdIndex) != tempCId){
+					tempPId = mCursorD.getInt(provinceIdIndex);
+					tempCId = mCursorD.getInt(cityIdIndex);
+					if(tempDcount > maxDlength) {
+						maxDlength = tempDcount;
+					}
+					tempDcount = 1;
+				}
+			}
+			mCursorD.close();
+		}
+
+		provinceSet = new String[maxPlength];
+		citySet = new String[maxPlength][maxClength];
+		districtSet = new String[maxPlength][maxClength][maxDlength];
+		int a = 0, b = 0, c = 0;
+		Cursor mCursor = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		int provinceIndex = mCursor.getColumnIndex("province_short_name");
+		int cityIndex = mCursor.getColumnIndex("city_short_name");
+		int disdrictIndex = mCursor.getColumnIndex("district_short_name");
+		if(mCursor.moveToFirst()){
+			provinceSet[a] = mCursor.getString(provinceIndex);
+			citySet[a][b] = mCursor.getString(cityIndex);
+			districtSet[a][b][c] = mCursor.getString(disdrictIndex);
+
+			while(mCursor.moveToNext()){
+				if(mCursor.getString(provinceIndex).equals(provinceSet[a])){
+					if(mCursor.getString(cityIndex).equals(citySet[a][b])){
+						c++;
+						districtSet[a][b][c] = mCursor.getString(disdrictIndex);
+					}else{
+						c = 0;
+						b++;
+						citySet[a][b] = mCursor.getString(cityIndex);
+						districtSet[a][b][c] = mCursor.getString(disdrictIndex);
+					}
+				}else{
+					b = 0;
+					c = 0;
+					a++;
+					provinceSet[a] = mCursor.getString(provinceIndex);
+					citySet[a][b] = mCursor.getString(cityIndex);
+					districtSet[a][b][c] = mCursor.getString(disdrictIndex);
+				}
+			}
+		}
+		mCursor.close();
+	}
+	
 	public void saveSid(String sid) {
 		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
 				MODE_PRIVATE);
@@ -1221,10 +957,178 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 			String USERID = loginStatus.getString("USERID", "");
 			String url = USERID;
 			dialog.createQRImage(url);
+
 			break;
 
 		default:
 			break;
 		}
 	}	
+
+    private boolean scrolling = false; 
+    private TextView button_ok, button_cancel;
+	private PopupWindow makePopupWindow(Context cx)
+	{
+		final PopupWindow window;
+ 		window = new PopupWindow(cx); 
+ 		 
+        View contentView = LayoutInflater.from(this).inflate(R.layout.cities_layout, null);
+        window.setContentView(contentView);
+        
+        final WheelView provinceView = (WheelView) contentView.findViewById(R.id.province);
+        provinceView.setVisibleItems(3);
+        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this, provinceSet);
+        provinceView.setViewAdapter(adapter);
+        adapter.setTextSize(15);
+        
+        final WheelView cityView = (WheelView) contentView.findViewById(R.id.city);
+        cityView.setVisibleItems(0);
+        
+        provinceView.addChangingListener(new OnWheelChangedListener() {
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
+			    if (!scrolling) {
+			        updateCity(cityView, citySet, newValue);
+			    }
+			}
+		});
+        
+        provinceView.addScrollingListener( new OnWheelScrollListener() {
+            public void onScrollingStarted(WheelView wheel) {
+                scrolling = true;
+            }
+            
+            public void onScrollingFinished(WheelView wheel) {
+                scrolling = false;
+                updateCity(cityView, citySet, provinceView.getCurrentItem());
+ 
+            }
+        });
+
+        final WheelView districtView = (WheelView) contentView.findViewById(R.id.district);
+        districtView.setVisibleItems(0);
+        
+        cityView.addChangingListener(new OnWheelChangedListener() {
+			public void onChanged(WheelView wheel, int oldValue, int newValue) {
+			    if (!scrolling) {
+			    	updatecDistrict(districtView, districtSet, provinceView.getCurrentItem(),newValue); 
+			    }
+			}
+		});
+        
+        cityView.addScrollingListener( new OnWheelScrollListener() {
+            public void onScrollingStarted(WheelView wheel) {
+                scrolling = true;
+            }
+            public void onScrollingFinished(WheelView wheel) {
+                scrolling = false;
+                updatecDistrict(districtView, districtSet, provinceView.getCurrentItem(), cityView.getCurrentItem());
+
+            }
+        }); 
+         
+        districtView.addScrollingListener( new OnWheelScrollListener() {
+            public void onScrollingStarted(WheelView wheel) {
+                scrolling = true;
+            }
+            public void onScrollingFinished(WheelView wheel) {
+                scrolling = false; 
+
+            }
+        }); 
+         
+        provinceView.setCurrentItem(1);
+
+        button_cancel = (TextView) contentView.findViewById(R.id.button_cancel);
+    	button_cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v)
+			{ 
+				window.dismiss(); 
+			}
+		});
+    	
+    	button_ok = (TextView) contentView.findViewById(R.id.button_ok);
+    	button_ok.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				if(citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()].equals("市辖区")) {
+					addText.setText(provinceSet[provinceView.getCurrentItem()] + "市"
+							+ districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()] + "区");
+				} else if(citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()].equals("县")) {
+					addText.setText(provinceSet[provinceView.getCurrentItem()] + "市"
+							+ districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()] + "区");
+				} else if(provinceSet[provinceView.getCurrentItem()].equals("内蒙古") || provinceSet[provinceView.getCurrentItem()].equals("西藏") 
+						|| provinceSet[provinceView.getCurrentItem()].equals("新疆")) {
+					addText.setText(provinceSet[provinceView.getCurrentItem()] + citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()]
+							+ "市" + districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()] + "区");
+				} else if (provinceSet[provinceView.getCurrentItem()].equals("台湾") || provinceSet[provinceView.getCurrentItem()].equals("香港") 
+						|| provinceSet[provinceView.getCurrentItem()].equals("澳门")) {
+					addText.setText(provinceSet[provinceView.getCurrentItem()] + citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()]
+							+ districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()]);
+				} else {
+					addText.setText(provinceSet[provinceView.getCurrentItem()] + "省"
+							+ citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()] + "市"
+							+ districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()] + "区");
+				}
+
+				provinceId = getProvinceID(provinceSet[provinceView.getCurrentItem()]);
+				cityId = getCityID(citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()]);
+				districtId = getDistrictID(districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()]);
+				
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("provinceId", String.valueOf(provinceId));
+				map.put("cityId", String.valueOf(cityId));
+				map.put("districtId", String.valueOf(districtId));
+				updateProfile(map);
+				
+				window.dismiss();
+			}
+    		
+    	});
+         
+ 		window.setWidth(width);
+ 		window.setHeight(320);
+
+		window.setFocusable(true);
+		window.setTouchable(true);
+		window.setOutsideTouchable(true); 
+		return window;
+	}
+
+    private void updateCity(WheelView city, String cities[][], int index) {
+    	
+    	int len = 0;
+    	for(int i = 0; i < cities[index].length; i++){
+    		if(cities[index][i] != null ) len++;
+    	}
+    	
+    	String[] newCity = new String[len];
+    	for(int i = 0; i < len; i++){
+    		if(cities[index][i].length() > 0) newCity[i] = cities[index][i];
+    	}
+    	
+        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this, newCity);
+        adapter.setTextSize(15);
+        city.setViewAdapter(adapter);
+        city.setCurrentItem(newCity.length / 2);    
+    }
+
+    private void updatecDistrict(WheelView city, String ccities[][][], int index,int index2) {
+    	
+    	int len = 0;
+    	for(int i = 0; i < ccities[index][index2].length; i++){
+    		if(ccities[index][index2][i] != null) len++;
+    	}
+    	
+    	String[] newDistrict = new String[len];
+    	for(int i = 0; i < len; i++){
+    		if(ccities[index][index2][i].length() > 0) newDistrict[i] = ccities[index][index2][i];
+    	}
+    	
+        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this, newDistrict);
+        adapter.setTextSize(15);
+        city.setViewAdapter(adapter);
+        city.setCurrentItem(newDistrict.length / 2);     
+    }
 }

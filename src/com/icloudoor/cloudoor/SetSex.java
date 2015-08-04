@@ -45,7 +45,7 @@ public class SetSex extends BaseActivity {
 	private String HOST = UrlUtils.HOST;
 	private URL updateUrl;
 	
-	private int sex = 1;
+	private int sex = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +61,6 @@ public class SetSex extends BaseActivity {
 
 		ChooseMaleImage = (ImageView) findViewById(R.id.choose_male_image);
 		ChooseFemaleImage = (ImageView) findViewById(R.id.choose_female_image);
-
-		if (getIntent().getStringExtra("textsex").equals("ÄÐ")) {
-			ChooseMaleImage.setImageResource(R.drawable.confirm);
-			sex = 1;
-			Log.e(TAG, String.valueOf(sex));
-		}else {
-			sex = 2;
-			Log.e(TAG, String.valueOf(sex));
-			ChooseFemaleImage.setImageResource(R.drawable.confirm);
-		}
-		
 		
 		ChooseMale.setOnClickListener(new OnClickListener() {
 
@@ -110,14 +99,13 @@ public class SetSex extends BaseActivity {
 		});
 
 	}
-//  updatesex
+
 	public void UpdateSex() {
 		sid = loadSid();
 		mQueue = Volley.newRequestQueue(this);
 		try {
 			updateUrl = new URL(HOST + "/user/manage/updateProfile.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -127,20 +115,17 @@ public class SetSex extends BaseActivity {
 
 					@Override 
 					public void onResponse(JSONObject response) {
-						
-						
-						Log.e("####################3", response.toString());
-						
 						try {
-							if (response.getString("sid") != null) {
-								sid = response.getString("sid");
-								saveSid(sid);
-							}
-							
 							if(response.getInt("code") == 1) {
-								Intent intent = new Intent(SetSex.this, ShowPersonalInfo.class);
-								intent.putExtra("sex", sex);
-								setResult(RESULT_OK, intent);
+								if (response.getString("sid") != null) {
+									sid = response.getString("sid");
+									saveSid(sid);
+								}
+								
+								SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+								Editor editor = loginStatus.edit();
+								editor.putInt("SEX", sex).commit();
+								
 								finish();
 							}
 						} catch (JSONException e) {

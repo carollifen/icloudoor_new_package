@@ -246,26 +246,26 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 		mPushAgent.enable();
 
 		// remove tags before add
-		new Thread() {
-			public void run() {
-				String device_token;
-				try {
-					mPushAgent.getTagManager().reset();
-					for (int i = 0; i < 5; i++) {
-						device_token = UmengRegistrar
-								.getRegistrationId(getApplicationContext());
-						if (device_token != null) {
-							MyDebugLog.e("devicetoken", device_token);
-							break;
-						}
-						sleep(3000);
-					}
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-
-		}.start();
+//		new Thread() {
+//			public void run() {
+//				String device_token;
+//				try {
+//					mPushAgent.getTagManager().reset();
+//					for (int i = 0; i < 5; i++) {
+//						device_token = UmengRegistrar
+//								.getRegistrationId(getApplicationContext());
+//						if (device_token != null) {
+//							MyDebugLog.e("devicetoken", device_token);
+//							break;
+//						}
+//						sleep(3000);
+//					}
+//				} catch (Exception e1) {
+//					e1.printStackTrace();
+//				}
+//			}
+//
+//		}.start();
 
 		mFinishActivityBroadcast = new Broadcast();
 		IntentFilter intentFilter = new IntentFilter();
@@ -334,7 +334,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 						// TODO Auto-generated method stub
 					}
 				});
-		mRequestQueue.add(mJsonObjectRequest);
+//		mRequestQueue.add(mJsonObjectRequest);
 
 		registerReceiver(mConnectionStatusReceiver, new IntentFilter(
 				ConnectivityManager.CONNECTIVITY_ACTION));
@@ -493,6 +493,73 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 		OnlineConfigAgent.getInstance().updateOnlineConfig(this);
 
 		getBannerData();
+		
+		new Thread() {
+			public void run() {
+				String device_token;
+				try {
+					mPushAgent.getTagManager().reset();
+					for (int i = 0; i < 5; i++) {
+						device_token = UmengRegistrar
+								.getRegistrationId(getApplicationContext());
+						if (device_token != null) {
+							MyDebugLog.e("devicetoken", device_token);
+							break;
+						}
+						sleep(3000);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+
+		}.start();
+		
+		JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url + "?sid=" + loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId(), null,
+				new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						MyDebugLog.e("response", response.toString());
+						try {
+
+							if (response.getString("sid") != null)
+								saveSid("SID", sid);
+
+							if (response.getInt("code") == 1) {
+								JSONArray tagJson = response
+										.getJSONArray("data");
+								for (int i = 0; i < tagJson.length(); i++) {
+									tag = (String) tagJson.get(i);
+									MyDebugLog.e("response", tag);
+									new AddTagTask(tag).execute();
+								}
+							} else if (response.getInt("code") == -2) {
+								Toast.makeText(getApplicationContext(),
+										R.string.not_login, Toast.LENGTH_SHORT)
+										.show();
+								logoutToDo.logoutDoing();
+
+								final Intent intent = new Intent();
+								intent.setClass(getApplicationContext(),
+										Login.class);
+								startActivity(intent);
+								finish();
+							}
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							Toast.makeText(CloudDoorMainActivity.this,
+									R.string.network_error, Toast.LENGTH_SHORT)
+									.show();
+						}
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+					}
+				});
+		mRequestQueue.add(mJsonObjectRequest);
 
 		EMChatManager.getInstance().registerEventListener(
 				this,

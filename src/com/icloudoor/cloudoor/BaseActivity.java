@@ -275,6 +275,63 @@ public class BaseActivity extends Activity {
 		mCursorD.close();
 		return districtName;
 	}
+	
+	public int getProvinceID(String provinceName) {
+    	int id = 0;
+    	Cursor mCursorP = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+    	if (mCursorP.moveToFirst()) {
+			int provinceIndex = mCursorP.getColumnIndex("province_short_name");
+			int provinceIdIndex = mCursorP.getColumnIndex("province_id");
+			do {
+				int tempPID = mCursorP.getInt(provinceIdIndex);
+				String tempPName = mCursorP.getString(provinceIndex);
+				if (tempPName.equals(provinceName)) {
+					id = tempPID;
+					break;
+				}
+			} while (mCursorP.moveToNext());
+		}
+		mCursorP.close();
+    	return id;
+    }
+	
+	public int getCityID(String cityName) {
+		int id = 0;
+		Cursor mCursorC = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorC.moveToFirst()) {
+			int cityIndex = mCursorC.getColumnIndex("city_short_name");
+			int cityIdIndex = mCursorC.getColumnIndex("city_id");
+			do {
+				int tempCID = mCursorC.getInt(cityIdIndex);
+				String tempCName = mCursorC.getString(cityIndex);
+				if (tempCName.equals(cityName)) {
+					id = tempCID;
+					break;
+				}
+			} while (mCursorC.moveToNext());
+		}
+		mCursorC.close();
+		return id;
+	}
+	
+	public int getDistrictID(String districtName) {
+		int id = 0;
+		Cursor mCursorD = mAreaDB.rawQuery("select * from " + TABLE_NAME, null);
+		if (mCursorD.moveToFirst()) {
+			int districtIndex = mCursorD.getColumnIndex("district_short_name");
+			int districtIdIndex = mCursorD.getColumnIndex("district_id");
+			do {
+				int tempDID = mCursorD.getInt(districtIdIndex);
+				String tempDName = mCursorD.getString(districtIndex);
+				if (tempDName.equals(districtName)) {
+					id = tempDID;
+					break;
+				}
+			} while (mCursorD.moveToNext());
+		}
+		mCursorD.close();
+		return id;
+	}
 
 	@Override
 	public Resources getResources() {

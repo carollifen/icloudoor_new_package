@@ -12,7 +12,7 @@
     <RelativeLayout
         android:id="@+id/btn_set"
         android:layout_width="match_parent"
-        android:layout_height="47dp"
+        android:layout_height="54dp"
         android:background="@drawable/selector_setting_detail" >
 
         <ImageView
@@ -61,7 +61,7 @@
     <RelativeLayout
         android:id="@+id/btn_sig"
         android:layout_width="match_parent"
-        android:layout_height="47dp"
+        android:layout_height="54dp"
         android:background="@drawable/selector_setting_detail" >
 
         <ImageView
@@ -109,7 +109,7 @@
     <RelativeLayout
         android:id="@+id/btn_share"
         android:layout_width="match_parent"
-        android:layout_height="47dp"
+        android:layout_height="54dp"
         android:background="@drawable/selector_setting_detail" >
 
         <ImageView
@@ -150,7 +150,7 @@
     <RelativeLayout
         android:id="@+id/btn_help_feedback"
         android:layout_width="match_parent"
-        android:layout_height="47dp"
+        android:layout_height="54dp"
         android:background="@drawable/selector_setting_detail" >
 
         <ImageView

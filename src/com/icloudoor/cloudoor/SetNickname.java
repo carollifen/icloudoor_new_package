@@ -39,10 +39,8 @@ public class SetNickname extends BaseActivity {
 	private String HOST = UrlUtils.HOST;
 	private URL updateUrl;
 
-	private String OrignalNickname;
-	private String CurrentNickname;
 	private String sid;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -53,13 +51,10 @@ public class SetNickname extends BaseActivity {
 		SaveNickname = (LinearLayout) findViewById(R.id.savenickname);
 		EditNickname = (EditText) findViewById(R.id.editNickname);
 		emptyname = (ImageView) findViewById(R.id.delete_nickname);
-
-
-		OrignalNickname = getIntent().getStringExtra("textnickname");
-		EditNickname.setText(OrignalNickname);
-		
-		CurrentNickname = EditNickname.getText().toString();
-		
+	
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+		if(loginStatus.getString("NICKNAME", null).length() > 0)
+			EditNickname.setText(loginStatus.getString("NICKNAME", null));
 
 		SaveNickname.setOnClickListener(new View.OnClickListener() {
 
@@ -93,7 +88,6 @@ public class SetNickname extends BaseActivity {
 
 	}
 
-	//   updatenickname
 	public void UpdateNickname() {
 		sid = loadSid();
 		mQueue = Volley.newRequestQueue(this);
@@ -110,20 +104,18 @@ public class SetNickname extends BaseActivity {
 
 					@Override 
 					public void onResponse(JSONObject response) {
-						
-						
-						Log.e("####################3", response.toString());
-						
-						try {
-							if (response.getString("sid") != null) {
-								sid = response.getString("sid");
-								saveSid(sid);
-							}
-							
+
+						try {	
 							if(response.getInt("code") == 1) {
-								Intent intent = new Intent(SetNickname.this, ShowPersonalInfo.class);
-								intent.putExtra("CurrentNickname", EditNickname.getText().toString());
-								setResult(RESULT_OK, intent);
+								if (response.getString("sid") != null) {
+									sid = response.getString("sid");
+									saveSid(sid);
+								}
+								
+								SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+								Editor editor = loginStatus.edit();
+								editor.putString("NICKNAME", EditNickname.getText().toString()).commit();
+
 								finish();
 							}
 						} catch (JSONException e) {
@@ -152,8 +144,7 @@ public class SetNickname extends BaseActivity {
 		mQueue.add(mJsonObjectRequest);
 	}
 	public void saveSid(String sid) {
-		SharedPreferences savedSid = getSharedPreferences("SAVEDSID",
-				MODE_PRIVATE);
+		SharedPreferences savedSid = getSharedPreferences("SAVEDSID", MODE_PRIVATE);
 		Editor editor = savedSid.edit();
 		editor.putString("SID", sid);
 		editor.commit();
