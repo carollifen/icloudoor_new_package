@@ -26,6 +26,7 @@ public class HelpFeedback extends Activity {
 
 	private RelativeLayout common_problem;
 	private RelativeLayout back_from_user;
+	private RelativeLayout support_devices;
 	private RelativeLayout back;
 
 	private FeedbackAgent agent;
@@ -35,7 +36,7 @@ public class HelpFeedback extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.help_feedback);
 		back_from_user = (RelativeLayout) findViewById(R.id.back_from_user);
-		back_from_user.setOnClickListener(new View.OnClickListener() {
+		back_from_user.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -72,7 +73,7 @@ public class HelpFeedback extends Activity {
 		});
 		
 		common_problem = (RelativeLayout) findViewById(R.id.common_problem);
-		common_problem.setOnClickListener(new View.OnClickListener() {
+		common_problem.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -81,6 +82,19 @@ public class HelpFeedback extends Activity {
 				startActivity(intent);
 				
 			}
+		});
+		
+		support_devices = (RelativeLayout) findViewById(R.id.support_devices);
+		support_devices.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent();
+				intent.setClass(HelpFeedback.this, ReportToRepairActivity.class);
+				intent.putExtra("webUrl", "/user/help/supportDevice.do");
+				startActivity(intent);
+			}
+			
 		});
 		 
         back = (RelativeLayout) findViewById(R.id.btn_back);
@@ -94,7 +108,6 @@ public class HelpFeedback extends Activity {
         });
 		
 	}
-	
 	
 }
 

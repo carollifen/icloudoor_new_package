@@ -237,15 +237,6 @@ public class SettingFragment extends Fragment {
 				.findViewById(R.id.btn_help_feedback);
 
 		image = (CircularImage) view.findViewById(R.id.person_image);
-		image.setImageResource(R.drawable.icon_girl_110);
-
-		SharedPreferences loginStatus = getActivity().getSharedPreferences(
-				"LOGINSTATUS", 0);
-		name = loginStatus.getString("NICKNAME", null);
-		portraitUrl = loginStatus.getString("URL", null);
-
-		if (name != null)
-			showName.setText(name);
 
 		// logOut = (TextView) view.findViewById(R.id.btn_logout);
 
@@ -275,9 +266,17 @@ public class SettingFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		MobclickAgent.onPageStart(mPageName);
+		
+		image.setImageResource(R.drawable.icon_girl_110);
+
 		SharedPreferences loginStatus = getActivity().getSharedPreferences(
 				"LOGINSTATUS", 0);
 		portraitUrl = loginStatus.getString("URL", null);
+		name = loginStatus.getString("NICKNAME", null);
+
+		if (name != null)
+			showName.setText(name);
+		
 		File f = new File(PATH + imageName);
 		MyDebugLog.e(TAG, PATH + imageName);
 

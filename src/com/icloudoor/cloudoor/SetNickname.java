@@ -53,8 +53,10 @@ public class SetNickname extends BaseActivity {
 		emptyname = (ImageView) findViewById(R.id.delete_nickname);
 	
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-		if(loginStatus.getString("NICKNAME", null).length() > 0)
+		if(loginStatus.getString("NICKNAME", null).length() > 0) {
 			EditNickname.setText(loginStatus.getString("NICKNAME", null));
+			EditNickname.setSelection(EditNickname.getText().length());
+		}
 
 		SaveNickname.setOnClickListener(new View.OnClickListener() {
 

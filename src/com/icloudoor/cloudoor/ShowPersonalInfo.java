@@ -813,6 +813,8 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 				} else {
 					addText.setText(getProvinceName(provinceId) + "省" + getCityName(cityId) + "市" + getDistrictName(districtId) + "区");
 				}
+			} else {
+				addText.setText(getString(R.string.default_address));
 			}
 		}
 	}

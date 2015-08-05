@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
 import com.umeng.analytics.MobclickAgent;
 
 public class WuyeFragment extends Fragment {
@@ -76,6 +77,8 @@ public class WuyeFragment extends Fragment {
 	
 	int bannerCount = 1;
 		
+	boolean isHasPropServ = false;
+	
 	public WuyeFragment() {
 
 	}
@@ -101,6 +104,9 @@ public class WuyeFragment extends Fragment {
 		
 		if(getActivity() != null)
 			version = new Version(getActivity());
+		
+		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+		isHasPropServ = loginStatus.getBoolean("isHasPropServ", false);
 		
 		getBannerData();
 		
@@ -402,47 +408,141 @@ public class WuyeFragment extends Fragment {
 			Intent intent = new Intent();
 			switch (v.getId()) {
 			case R.id.btn_lianxiwuye:
-				intent.setClass(getActivity(), ContactWuyeActivity.class);
-				startActivity(intent);
+				if (isHasPropServ) {
+					intent.setClass(getActivity(), ContactWuyeActivity.class);
+					startActivity(intent);
+				} else {
+					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
+							new WuYeDialogCallBack() {
+								@Override
+								public void back() {
+									// TODO Auto-generated method stub
+
+								}
+							}).show();
+				}
+				
 				break;
 			case R.id.btn_notice:
+				if (isHasPropServ) {
+					unreadNoticeLayout.setVisibility(View.INVISIBLE);
+					unreadNoticeCount.setText("");
+					unreadNotice = 0;
 
-				unreadNoticeLayout.setVisibility(View.INVISIBLE);
-				unreadNoticeCount.setText("");
-				unreadNotice = 0;
+					intent.setClass(getActivity(), NoticeActivity.class);
+					startActivity(intent);
+				} else {
+					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
+							new WuYeDialogCallBack() {
+								@Override
+								public void back() {
+									// TODO Auto-generated method stub
 
-				intent.setClass(getActivity(), NoticeActivity.class);
-				startActivity(intent);
+								}
+							}).show();
+				}
+				
 				break;
 			case R.id.btn_fix:
-				intent.setClass(getActivity(), ReportToRepairActivity.class);
-				intent.putExtra("webUrl", "/user/prop/zone/rr/add.do");
-				startActivity(intent);
+				if (isHasPropServ) {
+					intent.setClass(getActivity(), ReportToRepairActivity.class);
+					intent.putExtra("webUrl", "/user/prop/zone/rr/add.do");
+					startActivity(intent);
+				} else {
+					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
+							new WuYeDialogCallBack() {
+								@Override
+								public void back() {
+									// TODO Auto-generated method stub
+
+								}
+							}).show();
+				}
+				
 				break;
 			case R.id.btn_bad:
-				intent.setClass(getActivity(), ComplainActivity.class);
-				startActivity(intent);
+				if (isHasPropServ) {
+					intent.setClass(getActivity(), ComplainActivity.class);
+					startActivity(intent);
+				} else {
+					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
+							new WuYeDialogCallBack() {
+								@Override
+								public void back() {
+									// TODO Auto-generated method stub
+
+								}
+							}).show();
+				}
+				
 				break;
 			case R.id.btn_good:
-				intent.setClass(getActivity(), CommendActivity.class);
-				startActivity(intent);
+				if (isHasPropServ) {
+					intent.setClass(getActivity(), CommendActivity.class);
+					startActivity(intent);
+				} else {
+					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
+							new WuYeDialogCallBack() {
+								@Override
+								public void back() {
+									// TODO Auto-generated method stub
+
+								}
+							}).show();
+				}
+				
 				break;
 			case R.id.btn_query:
+				if (isHasPropServ) {
+					unreadQueryLayout.setVisibility(View.INVISIBLE);
+					unreadQueryCount.setText("");
+					unreadQuery = 0;
 
-				unreadQueryLayout.setVisibility(View.INVISIBLE);
-				unreadQueryCount.setText("");
-				unreadQuery = 0;
+					intent.setClass(getActivity(), QueryActivity.class);
+					startActivity(intent);
+				} else {
+					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
+							new WuYeDialogCallBack() {
+								@Override
+								public void back() {
+									// TODO Auto-generated method stub
 
-				intent.setClass(getActivity(), QueryActivity.class);
-				startActivity(intent);
+								}
+							}).show();
+				}
+				
 				break;
 			case R.id.btn_bill:
-				intent.setClass(getActivity(), BillActivity.class);
-				startActivity(intent);
+				if (isHasPropServ) {
+					intent.setClass(getActivity(), BillActivity.class);
+					startActivity(intent);
+				} else {
+					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
+							new WuYeDialogCallBack() {
+								@Override
+								public void back() {
+									// TODO Auto-generated method stub
+
+								}
+							}).show();
+				}
+				
 				break;
 			case R.id.btn_pay:
-				intent.setClass(getActivity(), PayActivity.class);
-				startActivity(intent);
+				if (isHasPropServ) {
+					intent.setClass(getActivity(), PayActivity.class);
+					startActivity(intent);
+				} else {
+					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
+							new WuYeDialogCallBack() {
+								@Override
+								public void back() {
+									// TODO Auto-generated method stub
+
+								}
+							}).show();
+				}
+				
 				break;
 			}
 		}

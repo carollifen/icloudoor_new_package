@@ -745,59 +745,17 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 		mInKeyFragment = false;
 		switch (index) {
 		case R.id.bottom_wuye_layout:
+			bottomTvKey.setTextColor(COLOR_GRAY);
+			bottomTvMsg.setTextColor(COLOR_GRAY);
+			bottomTvSetting.setTextColor(COLOR_GRAY);
+			bottomTvWuye.setTextColor(COLOR_BLACK);
 
-			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
-					MODE_PRIVATE);
+			bottomIvMsg.setImageResource(R.drawable.msg_normal);
+			bottomIvKey.setImageResource(R.drawable.key_normal);
+			bottomIvSetting.setImageResource(R.drawable.my_normal);
+			bottomIvWuye.setImageResource(R.drawable.wuye_selected);
 
-			boolean isHasPropServ;
-			isHasPropServ = loginStatus.getBoolean("isHasPropServ", false);
-			if (isHasPropServ) {
-				bottomTvKey.setTextColor(COLOR_GRAY);
-				bottomTvMsg.setTextColor(COLOR_GRAY);
-				bottomTvSetting.setTextColor(COLOR_GRAY);
-				bottomTvWuye.setTextColor(COLOR_BLACK);
-
-				bottomIvMsg.setImageResource(R.drawable.msg_normal);
-				bottomIvKey.setImageResource(R.drawable.key_normal);
-				bottomIvSetting.setImageResource(R.drawable.my_normal);
-				bottomIvWuye.setImageResource(R.drawable.wuye_selected);
-
-				mFragmenetTransaction.replace(R.id.id_content, mWuyeFragment);
-			} else {
-				new WuYeDialog(this, R.style.add_dialog, "hh",
-						new WuYeDialogCallBack() {
-							@Override
-							public void back() {
-								// TODO Auto-generated method stub
-
-							}
-						}).show();
-			}
-
-			// int userStatus;
-			// userStatus = loginStatus.getInt("STATUS", 1);
-			// if(userStatus == 2) {
-			// bottomTvKey.setTextColor(COLOR_GRAY);
-			// bottomTvMsg.setTextColor(COLOR_GRAY);
-			// bottomTvSetting.setTextColor(COLOR_GRAY);
-			// bottomTvWuye.setTextColor(COLOR_BLACK);
-			//
-			// bottomIvMsg.setImageResource(R.drawable.msg_normal);
-			// bottomIvKey.setImageResource(R.drawable.key_normal);
-			// bottomIvSetting.setImageResource(R.drawable.my_normal);
-			// bottomIvWuye.setImageResource(R.drawable.wuye_selected);
-			//
-			// mFragmenetTransaction.replace(R.id.id_content, mWuyeFragment);
-			// } else if(userStatus == 1) {
-			// new WuYeDialog(this, R.style.add_dialog, "hh",
-			// new WuYeDialogCallBack() {
-			// @Override
-			// public void back() {
-			// // TODO Auto-generated method stub
-			//
-			// }
-			// }).show();
-			// }
+			mFragmenetTransaction.replace(R.id.id_content, mWuyeFragment);
 
 			break;
 		case R.id.bottom_msg_layout:
