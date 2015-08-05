@@ -4,27 +4,58 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ExpandableListView
-        android:id="@+id/listView"
+    <LinearLayout
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:childDivider="#f0f0f0"
-        android:divider="@android:color/transparent"
-        android:groupIndicator="@android:color/transparent" >
-    </ExpandableListView>
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/next_bnt"
+        <ExpandableListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:childDivider="#f0f0f0"
+            android:divider="@android:color/transparent"
+            android:groupIndicator="@android:color/transparent" >
+        </ExpandableListView>
+
+        <Button
+            android:id="@+id/next_bnt"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/auth_ket_bnt"
+            android:text="下一步"
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/not_content_layout"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:layout_marginTop="22dp"
-        android:background="@drawable/auth_ket_bnt"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text="下一步"
-        android:layout_marginBottom="20dp"
-        android:textColor="#ffffff"
-        android:textSize="15sp" />
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/my_notkey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="暂无智能钥匙"
+            android:textColor="#c2c2c2"
+            android:textSize="17sp" />
+    </LinearLayout>
 
 </LinearLayout>

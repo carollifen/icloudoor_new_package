@@ -3,9 +3,7 @@ package com.icloudoor.cloudoor.chat;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.cloudApplication;
-import com.squareup.picasso.Picasso;
 
 public class UserUtils {
     public static User getUserInfo(String username){
@@ -21,12 +19,12 @@ public class UserUtils {
         return user;
     }
     
-    public static void setUserAvatar(Context context, String username, ImageView imageView){
+    public static void setUserAvatar1(Context context, String username, ImageView imageView){
         User user = getUserInfo(username);
         if(user != null){
-            Picasso.with(context).load(user.getAvatar()).placeholder(R.drawable.icon_boy_110).into(imageView);
+//            Picasso.with(context).load(user.getAvatar()).placeholder(R.drawable.icon_boy_110).into(imageView);
         }else{
-            Picasso.with(context).load(R.drawable.icon_boy_110).into(imageView);
+//            Picasso.with(context).load(R.drawable.icon_boy_110).into(imageView);
         }
     }
     

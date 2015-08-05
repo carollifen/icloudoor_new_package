@@ -5,7 +5,10 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -80,7 +83,7 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		Nickname = getIntent().getStringExtra("Nickname");
 		PortraitUrl = getIntent().getStringExtra("PortraitUrl");
 		UserId = getIntent().getStringExtra("UserId");
-		
+		registerBoradcastReceiver();
 		if(returnChat==1){
 			add_contact_bnt.setText(R.string.returnChat);
 		}
@@ -248,4 +251,20 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		
 		mQueue.add(requestBody);
 	}
+	
+	public void registerBoradcastReceiver(){  
+        IntentFilter myIntentFilter = new IntentFilter();  
+        myIntentFilter.addAction("removeFriend");
+        //注册广播        
+        registerReceiver(mBroadcastReceiver, myIntentFilter);  
+    }
+	
+	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			finish();
+		}
+		
+	};
 }

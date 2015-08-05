@@ -65,6 +65,7 @@ import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.icloudoor.cloudoor.utli.KeyHelper;
 import com.icloudoor.cloudoor.utli.UserDBHelper;
+import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 import com.icloudoor.cloudoor.utli.VFDaoImpl;
 
 /**
@@ -148,43 +149,11 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 					@Override
 					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
-
 						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
 								response.toString(), MyFriendInfo.class);
-
 						if (friendInfo != null) {
-							//
 							UserDBHelper.getInstance(appContext).initTable(
 									friendInfo.getData());
-							//
-							// List<MyFriendsEn> data = friendInfo.getData();
-							// FriendDaoImpl daoImpl = new FriendDaoImpl(
-							// appContext);
-							// SQLiteDatabase db = daoImpl.getDbHelper()
-							// .getWritableDatabase();
-							// if(data==null||data.size() == 0){
-							// db.execSQL("delete from friends");
-							// }else{
-							// db.beginTransaction();
-							// try {
-							// db.execSQL("delete from friends");
-							// for (int i = 0; i < data.size(); i++) {
-							// MyFriendsEn friendsEn = data.get(i);
-							// db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-							// new Object[] {
-							// friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(),
-							// friendsEn.getProvinceId(),
-							// friendsEn.getDistrictId(), friendsEn.getCityId(),
-							// friendsEn.getSex()});
-							// }
-							// db.setTransactionSuccessful();//
-							// 调用此方法会在执行到endTransaction()
-							// } finally {
-							// db.endTransaction();
-							// }
-							// }
-							//
-							//
 						}
 
 					}
@@ -335,7 +304,6 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 							
 							JSONObject userInfo = message
 									.getJSONObjectAttribute("userInfo");
-							System.out.println("小区消息 = "+userInfo);
 							try {
 								int type = userInfo.getInt("type");
 								if (type != 0) {
@@ -363,42 +331,27 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 						// 发送广播
 						appContext.sendBroadcast(mIntent);
 
-					} else {
+					} else if(action.equals("removeFriend")){
+						Intent mIntent = new Intent("removeFriend");
+						appContext.sendBroadcast(mIntent);
+						JSONObject userInfo;
+						try {
+							userInfo = message.getJSONObjectAttribute("userInfo");
+							UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(appContext);
+							daoImpl.getDbHelper().getWritableDatabase().delete("userinfo", "userId=?", new String[]{userInfo.getString("userId")});
+						} catch (EaseMobException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						getFriends();
+					}else{
 						getFriends();
 					}
 
-					// daoImpl.insert(entity);
-
-					// message.getStringAttribute("");
-					// EMLog.d(TAG, String.format("透传消息：action:%s,message:%s",
-					// action,message.toString()));
-					// final String str =
-					// appContext.getString(R.string.receive_the_passthrough);
-					//
-					// final String CMD_TOAST_BROADCAST =
-					// "easemob.demo.cmd.toast";
-					// IntentFilter cmdFilter = new
-					// IntentFilter(CMD_TOAST_BROADCAST);
-					//
-					// if(broadCastReceiver == null){
-					// broadCastReceiver = new BroadcastReceiver(){
-					//
-					// @Override
-					// public void onReceive(Context context, Intent intent) {
-					// // TODO Auto-generated method stub
-					// Toast.makeText(appContext,
-					// intent.getStringExtra("cmd_value"),
-					// Toast.LENGTH_SHORT).show();
-					// }
-					// };
-					//
-					// //注册通话广播接收�?
-					// appContext.registerReceiver(broadCastReceiver,cmdFilter);
-					// }
-					//
-					// Intent broadcastIntent = new Intent(CMD_TOAST_BROADCAST);
-					// broadcastIntent.putExtra("cmd_value", str+action);
-					// appContext.sendBroadcast(broadcastIntent, null);
+				
 
 					break;
 				}

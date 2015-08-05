@@ -24,8 +24,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -108,6 +110,7 @@ import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
 import com.icloudoor.cloudoor.chat.emoji.ExpressionView;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
+import com.icloudoor.cloudoor.fragment.BorrowKeyFragment;
 import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 import com.icloudoor.cloudoor.widget.BusinessCardDialog;
 
@@ -213,11 +216,10 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		activityInstance = this;
+		registerBoradcastReceiver();
 		
 		initView();
 		setUpView();
-		
-		
 		
 	}
 
@@ -390,23 +392,23 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 //		}
 		
 		
-		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
-		List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
-		if(list!=null && list.size()>0){
-			friendsEn = list.get(0);
-			nickName = friendsEn.getNickname();
-			portraitUrl = friendsEn.getPortraitUrl();
-			((TextView) findViewById(R.id.name)).setText(nickName);
-		}else{
-			Toast.makeText(this, R.string.notfriend, Toast.LENGTH_SHORT).show();
-			finish();
-		}
+//		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
+//		List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
+//		if(list!=null && list.size()>0){
+//			friendsEn = list.get(0);
+//			nickName = friendsEn.getNickname();
+//			portraitUrl = friendsEn.getPortraitUrl();
+//			((TextView) findViewById(R.id.name)).setText(nickName);
+//		}else{
+//			Toast.makeText(this, R.string.notfriend, Toast.LENGTH_SHORT).show();
+//			finish();
+//		}
         
 		// for chatroom type, we only init conversation and create view adapter on success
 		if(chatType != CHATTYPE_CHATROOM){
 		    onConversationInit();
 	        
-	        onListViewCreation();
+	       
 	        
 	        // show forward message if the message is not null
 	        String forward_msg_id = getIntent().getStringExtra("forward_msg_id");
@@ -1419,6 +1421,21 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
+		List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
+		if(list!=null && list.size()>0){
+			friendsEn = list.get(0);
+			nickName = friendsEn.getNickname();
+			portraitUrl = friendsEn.getPortraitUrl();
+			((TextView) findViewById(R.id.name)).setText(nickName);
+		}else{
+			Toast.makeText(this, R.string.notfriend, Toast.LENGTH_SHORT).show();
+			finish();
+		}
+		
+		 onListViewCreation();
+		
 		if (group != null)
 			((TextView) findViewById(R.id.name)).setText(group.getGroupName());
 
@@ -1610,6 +1627,23 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			EMChatManager.getInstance().leaveChatRoom(forward_msg.getTo());
 		}
 	}
+	
+	public void registerBoradcastReceiver(){  
+        IntentFilter myIntentFilter = new IntentFilter();  
+        myIntentFilter.addAction("removeFriend");
+        //注册广播        
+        registerReceiver(mBroadcastReceiver, myIntentFilter);  
+    }
+	
+	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			finish();
+		}
+		
+	};
+	
 	
 	class GroupListener implements EMGroupChangeListener {
 

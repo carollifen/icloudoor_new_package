@@ -230,6 +230,7 @@ public class KeyFragment extends Fragment {
 	private String mandefault = "-85";
 	private String cardefault = "-80";
 	private String officedefault = "-100";
+	boolean isShowStatusDialog;
 
 	Handler mHandler = new Handler();
 	UserStatusDialog statusDialog ;
@@ -556,6 +557,8 @@ public class KeyFragment extends Fragment {
 //		final float scale = getResources().getDisplayMetrics().density;
 //		return (int) (dpValue * scale + 0.5f);
 //	}
+	
+	
 	
 	public void configRssiData() {
 		manRssi = OnlineConfigAgent.getInstance().getConfigParams(getActivity(), "manDoorRssi");
@@ -1762,7 +1765,7 @@ public class KeyFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		isShowStatusDialog = true;
 		MobclickAgent.onPageStart(mPageName);
 		
 		MobclickAgent.onEvent(getActivity(), "OpenDoorStatistics");
@@ -3275,18 +3278,21 @@ public class KeyFragment extends Fragment {
 									edit.commit();
 									int status = response.getJSONObject("data").getInt("userStatus");
 									if(status!=2){
-										if(!statusDialog.isShowing()){
-											statusDialog.show();
-											statusDialog.setOKOnClickListener(new OnClickListener() {
-												
-												@Override
-												public void onClick(View v) {
-													// TODO Auto-generated method stub
-													Intent intent = new Intent(getActivity(),ReportToRepairActivity.class);
-													intent.putExtra("webUrl", "/user/auth/request.do");
-													startActivity(intent);
-												}
-											});
+										if(isShowStatusDialog){
+											if(!statusDialog.isShowing()){
+												statusDialog.show();
+												isShowStatusDialog = false;
+												statusDialog.setOKOnClickListener(new OnClickListener() {
+													
+													@Override
+													public void onClick(View v) {
+														// TODO Auto-generated method stub
+														Intent intent = new Intent(getActivity(),ReportToRepairActivity.class);
+														intent.putExtra("webUrl", "/user/auth/request.do");
+														startActivity(intent);
+													}
+												});
+											}
 										}
 										
 									}

@@ -45,6 +45,8 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 	Button next_bnt;
 	String zonename;
 	String zoneid;
+	LinearLayout content_layout;
+	LinearLayout not_content_layout;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +55,8 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 		rootView = inflater.inflate(R.layout.fragment_mykey, null);
 		listView = (ExpandableListView) rootView.findViewById(R.id.listView);
 		next_bnt = (Button) rootView.findViewById(R.id.next_bnt);
+		content_layout = (LinearLayout) rootView.findViewById(R.id.content_layout);
+		not_content_layout = (LinearLayout) rootView.findViewById(R.id.not_content_layout);
 		next_bnt.setOnClickListener(this);
 		getMyKey();
 		return rootView;
@@ -64,8 +68,11 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 			if (keyEn.getCode().equals("1")) {
 				data = keyEn.getData();
 				if (data == null || data.size() == 0) {
-
+					content_layout.setVisibility(View.GONE);
+					not_content_layout.setVisibility(View.VISIBLE);
 				} else {
+					content_layout.setVisibility(View.VISIBLE);
+					not_content_layout.setVisibility(View.GONE);
 					myadapter = new Myadapter(data);
 					listView.setAdapter(myadapter);
 					for (int i = 0; i < myadapter.getGroupCount(); i++) {
@@ -83,7 +90,8 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 						if (keyEn != null) {
 							data = keyEn.getData();
 							if (data == null || data.size() == 0) {
-
+								content_layout.setVisibility(View.GONE);
+								not_content_layout.setVisibility(View.VISIBLE);
 							} else {
 								myadapter = new Myadapter(data);
 								listView.setAdapter(myadapter);
@@ -91,6 +99,9 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 									listView.expandGroup(i);
 								}
 							}
+						}else{
+							content_layout.setVisibility(View.GONE);
+							not_content_layout.setVisibility(View.VISIBLE);
 						}
 					}
 
