@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +34,7 @@ import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FindDBUtile;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.icloudoor.cloudoor.utli.UserDBHelper;
+import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class FriendDetailActivity extends BaseActivity implements OnClickListener , NetworkInterface{
@@ -116,8 +118,14 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	public void setdata(){
 		ImageLoader.getInstance().displayImage(PortraitUrl, user_head, DisplayImageOptionsUtli.options);
 		user_name.setText(Nickname);
-		address_tx.setText(FindDBUtile.getProvinceName(this, ProvinceId)+""+FindDBUtile.getCityName(this, CityId)+
-				"   "+FindDBUtile.getDistrictName(this, DistrictId));
+		
+		if(TextUtils.isEmpty(FindDBUtile.getProvinceName(this, ProvinceId))){
+			address_tx.setText(R.string.default_address);
+		}else{
+			address_tx.setText(FindDBUtile.getProvinceName(this, ProvinceId)+""+FindDBUtile.getCityName(this, CityId)+
+					"   "+FindDBUtile.getDistrictName(this, DistrictId));
+		}
+		
 		if(Sex==1){
 			sex_img.setBackgroundResource(R.drawable.boy_ioc);
 		}else{
@@ -203,6 +211,8 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 						response.toString(), MyFriendInfo.class);
 				showToast(R.string.removeFriendSuccess);
 				if(returnChat==1){
+					UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(FriendDetailActivity.this);
+					daoImpl.getDbHelper().getWritableDatabase().delete("userinfo", "userId=?", new String[]{UserId});
 					setResult(RESULT_OK);
 					finish();
 				}else{
@@ -213,29 +223,6 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 					List<MyFriendsEn> data = friendInfo.getData();
 					UserDBHelper.getInstance(FriendDetailActivity.this).initTable(friendInfo.getData());
 					finish();
-//					FriendDaoImpl daoImpl = new FriendDaoImpl(
-//							FriendDetailActivity.this);
-//					SQLiteDatabase db = daoImpl.getDbHelper()
-//							.getWritableDatabase();
-//					if(data==null||data.size() == 0){
-//						db.execSQL("delete from friends");
-//						finish();
-//					}else{
-//						db.beginTransaction();
-//						try {
-//							db.execSQL("delete from friends");
-//							for (int i = 0; i < data.size(); i++) {
-//								MyFriendsEn friendsEn = data.get(i);
-//								db.execSQL("insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-//										new Object[] { friendsEn.getUserId(),friendsEn.getNickname(),friendsEn.getPortraitUrl(), 
-//										friendsEn.getProvinceId(), friendsEn.getDistrictId(), friendsEn.getCityId(), friendsEn.getSex()});
-//							}
-//							db.setTransactionSuccessful();// 调用此方法会在执行到endTransaction()
-//						} finally {
-//							db.endTransaction();
-//							finish();
-//						}
-//					}
 				} 
 			}
 			

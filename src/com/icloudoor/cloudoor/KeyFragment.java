@@ -436,7 +436,6 @@ public class KeyFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				
 				if(mBtStateOpen == false){
 					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 		            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -3268,6 +3267,7 @@ public class KeyFragment extends Fragment {
 									editor.putInt("STATUS", response.getJSONObject("data").getInt("userStatus"));
 									editor.putBoolean( "isHasPropServ", response.getJSONObject("data").getBoolean("isHasPropServ"));
 									editor.putString( "l1Zones", response.getJSONObject("data").getString("l1Zones"));
+									editor.putInt("role", response.getJSONObject("data").getInt("role"));
 									editor.commit();
 
 									SharedPreferences saveProfile = getActivity().getSharedPreferences("PROFILE", 0);

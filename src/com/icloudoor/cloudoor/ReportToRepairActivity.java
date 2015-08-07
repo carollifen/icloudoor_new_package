@@ -38,6 +38,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -550,7 +551,7 @@ public class ReportToRepairActivity extends BaseActivity {
 			case R.id.btn_take_photo:
 
 				if (!isExitsSdcard()) {
-					Toast.makeText(getApplicationContext(), "SD¿¨²»¿ÉÓÃ", 0).show();
+					Toast.makeText(getApplicationContext(), "SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", 0).show();
 					return;
 				}
 				cameraFile = new File(Environment.getExternalStorageDirectory()
@@ -598,5 +599,14 @@ public class ReportToRepairActivity extends BaseActivity {
 		intent.putExtra("return-data", true);
 		intent.putExtra("noFaceDetection", true);
 		startActivityForResult(intent, RESULT_REQUEST_CODE);
+	}
+
+	@Override
+	public void onBackPressed() {
+		StringBuilder sb = new StringBuilder();
+		String metho = "backPagePop();";
+		sb.append("javascript:").append(metho);
+		fixwebview.loadUrl(sb.toString());
+		return;
 	}
 }

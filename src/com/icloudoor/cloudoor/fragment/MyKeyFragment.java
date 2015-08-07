@@ -1,10 +1,11 @@
 package com.icloudoor.cloudoor.fragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -21,15 +22,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.BaseFragment;
+import com.icloudoor.cloudoor.CloudDoorMainActivity;
 import com.icloudoor.cloudoor.R;
-import com.icloudoor.cloudoor.Interface.NetworkInterface;
-import com.icloudoor.cloudoor.cache.UserCacheWrapper;
+import com.icloudoor.cloudoor.UrlUtils;
+import com.icloudoor.cloudoor.Version;
 import com.icloudoor.cloudoor.activity.AuthKeyActivity;
+import com.icloudoor.cloudoor.cache.UserCacheWrapper;
 import com.icloudoor.cloudoor.chat.entity.AuthKeyEn;
 import com.icloudoor.cloudoor.chat.entity.Key;
 import com.icloudoor.cloudoor.chat.entity.KeyInfo;
+import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 
 public class MyKeyFragment extends BaseFragment implements OnClickListener {
@@ -38,7 +44,7 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 	LinearLayout auth_key_layout;
 	ExpandableListView listView;
 	String userid;
-	List<KeyInfo> data;
+//	List<KeyInfo> data;
 	Myadapter myadapter;
 	boolean isCarDoor;
 	boolean isFlage = true;
@@ -55,64 +61,130 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 		rootView = inflater.inflate(R.layout.fragment_mykey, null);
 		listView = (ExpandableListView) rootView.findViewById(R.id.listView);
 		next_bnt = (Button) rootView.findViewById(R.id.next_bnt);
-		content_layout = (LinearLayout) rootView.findViewById(R.id.content_layout);
-		not_content_layout = (LinearLayout) rootView.findViewById(R.id.not_content_layout);
+		content_layout = (LinearLayout) rootView
+				.findViewById(R.id.content_layout);
+		not_content_layout = (LinearLayout) rootView
+				.findViewById(R.id.not_content_layout);
 		next_bnt.setOnClickListener(this);
-		getMyKey();
 		return rootView;
+	}
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		getMyKey();
 	}
 
 	public void getMyKey() {
 		AuthKeyEn keyEn = UserCacheWrapper.getMedicalRecord(getActivity());
 		if (keyEn != null) {
 			if (keyEn.getCode().equals("1")) {
-				data = keyEn.getData();
+				List<KeyInfo> data = keyEn.getData();
 				if (data == null || data.size() == 0) {
 					content_layout.setVisibility(View.GONE);
 					not_content_layout.setVisibility(View.VISIBLE);
 				} else {
-					content_layout.setVisibility(View.VISIBLE);
-					not_content_layout.setVisibility(View.GONE);
-					myadapter = new Myadapter(data);
-					listView.setAdapter(myadapter);
-					for (int i = 0; i < myadapter.getGroupCount(); i++) {
-						listView.expandGroup(i);
+					List<KeyInfo> myData = getKeys(data);
+					if(myData.size() == 0){
+						content_layout.setVisibility(View.GONE);
+						not_content_layout.setVisibility(View.VISIBLE);
+					}else{
+						content_layout.setVisibility(View.VISIBLE);
+						not_content_layout.setVisibility(View.GONE);
+						
+						myadapter = new Myadapter(myData);
+						listView.setAdapter(myadapter);
+						for (int i = 0; i < myadapter.getGroupCount(); i++) {
+							listView.expandGroup(i);
+						}
 					}
 				}
-			} else {
-				getNetworkData(new NetworkInterface() {
+			}
+		}
+		getNetworkMyKey();
+	}
+	
+	
+	public List<KeyInfo> getKeys(List<KeyInfo> data){
+		List<KeyInfo> keyinfos = new ArrayList<KeyInfo>();
+		for (int i = 0; i < data.size(); i++) {
+			KeyInfo keyInfo = new KeyInfo();
+			keyInfo.setAddress(data.get(i).getAddress());
+			keyInfo.setL1ZoneId(data.get(i).getL1ZoneId());
+			keyInfo.setZoneUserId(data.get(i).getZoneUserId());
+			List<Key> keys = new ArrayList<Key>();
+			for (int j = 0; j <  data.get(i).getKeys().size(); j++) {
+				Key key = data.get(i).getKeys().get(j);
+				long authTo = getTime(key.getAuthTo());
+				if(authTo>System.currentTimeMillis()){
+					keys.add(key);
+				}
+			}
+			if(keys.size()>0){
+				keyInfo.setKeys(keys);
+				keyinfos.add(keyInfo);
+			}
+		}
+		return keyinfos;
+	} 
+
+	public void getNetworkMyKey() {
+		
+		version = new Version(getActivity().getApplicationContext());
+		mQueue = Volley.newRequestQueue(getActivity());
+		String url = UrlUtils.HOST + "/user/api/keys/my.do" + "?sid="
+				+ loadSid() + "&ver=" + version.getVersionName() + "&imei="
+				+ version.getDeviceId();
+
+		MyRequestBody requestBody = new MyRequestBody(url, "{}",
+				new Response.Listener<JSONObject>() {
 
 					@Override
-					public void onSuccess(JSONObject response) {
+					public void onResponse(JSONObject response) {
 						// TODO Auto-generated method stub
+
 						AuthKeyEn keyEn = GsonUtli.jsonToObject(
 								response.toString(), AuthKeyEn.class);
+						if(getActivity()!=null){
+							UserCacheWrapper.setMedicalRecord(getActivity(), keyEn);
+						}
 						if (keyEn != null) {
-							data = keyEn.getData();
+							List<KeyInfo> data = keyEn.getData();
 							if (data == null || data.size() == 0) {
 								content_layout.setVisibility(View.GONE);
 								not_content_layout.setVisibility(View.VISIBLE);
 							} else {
-								myadapter = new Myadapter(data);
-								listView.setAdapter(myadapter);
-								for (int i = 0; i < myadapter.getGroupCount(); i++) {
-									listView.expandGroup(i);
+								List<KeyInfo> myData = getKeys(data);
+								if(myData.size() == 0){
+									content_layout.setVisibility(View.GONE);
+									not_content_layout.setVisibility(View.VISIBLE);
+								}else{
+									content_layout.setVisibility(View.VISIBLE);
+									not_content_layout.setVisibility(View.GONE);
+									myadapter = new Myadapter(myData);
+									listView.setAdapter(myadapter);
+									for (int i = 0; i < myadapter.getGroupCount(); i++) {
+										listView.expandGroup(i);
+									}
 								}
 							}
-						}else{
+						} else {
 							content_layout.setVisibility(View.GONE);
 							not_content_layout.setVisibility(View.VISIBLE);
 						}
 					}
 
-					@Override
-					public void onFailure(VolleyError error) {
-						// TODO Auto-generated method stub
+				}, new Response.ErrorListener() {
 
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+						showToast(R.string.network_error);
 					}
-				}, "/user/api/keys/my.do", "{}", true);
-			}
-		}
+				});
+		mQueue.add(requestBody);
+
 	}
 
 	class Myadapter extends BaseExpandableListAdapter {
@@ -122,6 +194,7 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 
 		public Myadapter(List<KeyInfo> data) {
 			// TODO Auto-generated constructor stub
+
 			this.data = data;
 			isChekble = new ArrayList<List<Boolean>>();
 			for (int i = 0; i < data.size(); i++) {
@@ -303,7 +376,7 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 			for (int i = 0; i < chekbleData.size(); i++) {
 				for (int j = 0; j < chekbleData.get(i).size(); j++) {
 					if (chekbleData.get(i).get(j)) {
-						KeyInfo keyInfo = data.get(i);
+						KeyInfo keyInfo = (KeyInfo) myadapter.getGroup(i);
 						List<Key> keys = keyInfo.getKeys();
 						Key key = keys.get(j);
 						isFlage = false;
@@ -327,5 +400,18 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 		default:
 			break;
 		}
+	}
+
+	public long getTime(String time) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date date = format.parse(time);
+			return date.getTime();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
 	}
 }

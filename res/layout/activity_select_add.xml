@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal" >
+    android:background="#b0000000" >
 
     <LinearLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#E9E9E9"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -48,29 +51,28 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:orientation="horizontal" >
 
             <kankan.wheel.widget.WheelView
-                android:id="@+id/province"
+                android:id="@+id/id_province"
                 android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+            </kankan.wheel.widget.WheelView>
 
             <kankan.wheel.widget.WheelView
-                android:id="@+id/city"
+                android:id="@+id/id_city"
                 android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+            </kankan.wheel.widget.WheelView>
 
             <kankan.wheel.widget.WheelView
-                android:id="@+id/district"
+                android:id="@+id/id_district"
                 android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+            </kankan.wheel.widget.WheelView>
         </LinearLayout>
     </LinearLayout>
 

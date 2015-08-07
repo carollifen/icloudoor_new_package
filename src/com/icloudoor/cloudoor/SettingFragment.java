@@ -86,7 +86,7 @@ public class SettingFragment extends Fragment {
 
 	private RelativeLayout RLAbout;
 	private RelativeLayout Help_Feedback;
-	private View hint_line;
+	private View hint_line, hint_line2;
 
 	private TextView logOut;
 
@@ -149,6 +149,8 @@ public class SettingFragment extends Fragment {
 	private String share_link = null;
 	private String defaultLink = "http://www.icloudoor.com/d";
 	int role;
+	
+	private int[] sexRole = {R.drawable.default_icon_female, R.drawable.default_icon_male, R.drawable.default_icon_female};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -173,44 +175,6 @@ public class SettingFragment extends Fragment {
 		mKeyDBHelper = new MyDataBaseHelper(getActivity(), DATABASE_NAME);
 		mKeyDB = mKeyDBHelper.getWritableDatabase();
 		share();
-		// back_from_user = (RelativeLayout) view
-		// .findViewById(R.id.back_from_user);
-		// back_from_user.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// // TODO Auto-generated method stub
-		// SharedPreferences loginStatus =
-		// getActivity().getSharedPreferences("LOGINSTATUS", 0);
-		//
-		// agent = new FeedbackAgent(getActivity());
-		// UserInfo info = agent.getUserInfo();
-		// if (info == null)
-		// info = new UserInfo();
-		// Map<String, String> contact = info.getContact();
-		// if (contact == null)
-		// contact = new HashMap<String, String>();
-		//
-		//
-		// if(loginStatus.getString("NAME", null).length() > 0)
-		// contact.put("name", loginStatus.getString("NAME", null));
-		// if(loginStatus.getString("PHONENUM", null).length() > 0)
-		// contact.put("phone", loginStatus.getString("PHONENUM", null));
-		// info.setContact(contact);
-		// agent.setUserInfo(info);
-		//
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// boolean result = agent.updateUserInfo();
-		// }
-		//
-		// }).start();
-		//
-		// agent.setWelcomeInfo(getString(R.string.umeng_fb_reply_content_default));
-		// agent.startFeedbackActivity();
-		// }
-		// });
 
 		mQueue = Volley.newRequestQueue(getActivity());
 		myClickListener = new MyOnClickListener();
@@ -220,16 +184,16 @@ public class SettingFragment extends Fragment {
 		RLSet = (RelativeLayout) view.findViewById(R.id.btn_set);
 		RLSig = (RelativeLayout) view.findViewById(R.id.btn_sig);
 		hint_line = view.findViewById(R.id.hint_line);
+		hint_line2 = view.findViewById(R.id.hint_line2);
 		SharedPreferences preferences = getActivity().getSharedPreferences(
 				"PROFILE", 0);
 		role = preferences.getInt("role", 1);
 		if (role == 0 || role == 1) {
-			// ×¡»§
 			RLSig.setVisibility(View.GONE);
 			hint_line.setVisibility(View.GONE);
+			hint_line2.setVisibility(View.GONE);
 		}
 		RLShare = (RelativeLayout) view.findViewById(R.id.btn_share);
-		// RLUpdate = (RelativeLayout) view.findViewById(R.id.btn_update);
 		showName = (TextView) view.findViewById(R.id.show_name);
 
 		RLAbout = (RelativeLayout) view.findViewById(R.id.btn_about_us);
@@ -238,18 +202,15 @@ public class SettingFragment extends Fragment {
 
 		image = (CircularImage) view.findViewById(R.id.person_image);
 
-		// logOut = (TextView) view.findViewById(R.id.btn_logout);
 
 		RLSet.setOnClickListener(myClickListener);
 		RLSig.setOnClickListener(myClickListener);
 		RLShare.setOnClickListener(myClickListener);
-		// RLUpdate.setOnClickListener(myClickListener);
 
 		RLAbout.setOnClickListener(myClickListener);
 		Help_Feedback.setOnClickListener(myClickListener);
 
 		showInfo.setOnClickListener(myClickListener);
-		// logOut.setOnClickListener(myClickListener);
 
 		return view;
 	}
@@ -267,15 +228,14 @@ public class SettingFragment extends Fragment {
 		super.onResume();
 		MobclickAgent.onPageStart(mPageName);
 		
-		image.setImageResource(R.drawable.icon_girl_110);
-
-		SharedPreferences loginStatus = getActivity().getSharedPreferences(
-				"LOGINSTATUS", 0);
+		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
 		portraitUrl = loginStatus.getString("URL", null);
 		name = loginStatus.getString("NICKNAME", null);
 
 		if (name != null)
 			showName.setText(name);
+		
+		image.setImageResource(sexRole[loginStatus.getInt("SEX", 0)]);
 		
 		File f = new File(PATH + imageName);
 		MyDebugLog.e(TAG, PATH + imageName);
@@ -288,12 +248,9 @@ public class SettingFragment extends Fragment {
 		ImageLoader.getInstance().init(configuration);
 
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageOnLoading(R.drawable.icon_girl_110) // resource or
-																// drawable
-				.showImageForEmptyUri(R.drawable.icon_girl_110) // resource or
-																// drawable
-				.showImageOnFail(R.drawable.icon_girl_110) // resource or
-															// drawable
+				.showImageOnLoading(sexRole[loginStatus.getInt("SEX", 0)]) // resource or drawable
+				.showImageForEmptyUri(sexRole[loginStatus.getInt("SEX", 0)]) // resource or drawable
+				.showImageOnFail(sexRole[loginStatus.getInt("SEX", 0)]) // resource orb drawable
 				.resetViewBeforeLoading(false) // default
 				.delayBeforeLoading(10).cacheInMemory(false) // default
 				.cacheOnDisk(false) // default

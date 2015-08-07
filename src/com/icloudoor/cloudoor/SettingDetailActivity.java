@@ -159,6 +159,7 @@ public class SettingDetailActivity extends BaseActivity {
 			case R.id.exit:
 				
 				if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
+					loading();
                     sid = loadSid("SID");
 
                     try {
@@ -186,6 +187,10 @@ public class SettingDetailActivity extends BaseActivity {
                                             SharedPreferences previousNum = getSharedPreferences("PREVIOUSNUM", 0);
                                             previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
                                             
+                                            SharedPreferences savedUrl = getSharedPreferences("PreviousURL", 0);
+                            				Editor editor = savedUrl.edit();
+                            				editor.putString("Url", " ").commit();
+                                            
                                             Intent intent3 = new Intent();
                                             Bundle bundle = new Bundle();
                                             bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
@@ -195,6 +200,8 @@ public class SettingDetailActivity extends BaseActivity {
                                             
                                             CloudDoorMainActivity.instance.finish();
 
+                                            destroyDialog();
+                                            
                                             finish();
                                     	}
                                     } catch (JSONException e) {
@@ -219,6 +226,11 @@ public class SettingDetailActivity extends BaseActivity {
                         
                         SharedPreferences previousNum = getSharedPreferences("PREVIOUSNUM", 0);
                     	previousNum.edit().putString("NUM", loginStatus.getString("PHONENUM", null)).commit();
+                    	
+                    	SharedPreferences savedUrl = getSharedPreferences("PreviousURL", 0);
+        				Editor editor = savedUrl.edit();
+        				editor.putString("Url", " ").commit();
+        				
                         Intent intent4 = new Intent();
                         Bundle bundle = new Bundle();
                         bundle.putString("phone", loginStatus.getString("PHONENUM", ""));

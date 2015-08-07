@@ -3,6 +3,7 @@ package com.icloudoor.cloudoor.chat.activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -91,8 +92,13 @@ public class UsersDetailActivity extends BaseActivity implements OnClickListener
 	public void setdata(){
 		ImageLoader.getInstance().displayImage(PortraitUrl, user_head, DisplayImageOptionsUtli.options);
 		user_name.setText(Nickname);
-		address_tx.setText(FindDBUtile.getProvinceName(this, ProvinceId)+""+FindDBUtile.getCityName(this, CityId)+
-				"   "+FindDBUtile.getDistrictName(this, DistrictId));
+		
+		if(TextUtils.isEmpty(FindDBUtile.getProvinceName(this, ProvinceId))){
+			address_tx.setText(R.string.default_address);
+		}else{
+			address_tx.setText(FindDBUtile.getProvinceName(this, ProvinceId)+""+FindDBUtile.getCityName(this, CityId)+
+					"   "+FindDBUtile.getDistrictName(this, DistrictId));
+		}
 		if(Sex==1){
 			sex_img.setBackgroundResource(R.drawable.boy_ioc);
 		}else{

@@ -205,7 +205,6 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 			public void onClick(View v) {
 				
 				if(networkStatus){
-					counter.start();
 					
 					try {
 						sid = loadSid();
@@ -220,28 +219,25 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 								@Override
 								public void onResponse(JSONObject response) {
 									try {
-										if (response.getString("sid") != null) {
-											sid = response.getString("sid");
-											saveSid(sid);
+										RequestCertiStatusCode = response.getInt("code");
+
+										if (RequestCertiStatusCode == 1) {
+											if (response.getString("sid") != null) {
+												sid = response.getString("sid");
+												saveSid(sid);
+											}
+											counter.start();
+										} else if (RequestCertiStatusCode == -20) {
+											Toast.makeText(getApplicationContext(), R.string.send_too_many_a_day, Toast.LENGTH_SHORT).show();
+										} else if (RequestCertiStatusCode == -21) {
+											Toast.makeText(getApplicationContext(), R.string.send_too_frequently, Toast.LENGTH_SHORT).show();
+										} else if (RequestCertiStatusCode == -99) {
+											Toast.makeText(getApplicationContext(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
 										}
-										RequestCertiStatusCode = response
-												.getInt("code");
-									} catch (JSONException e) {
-										e.printStackTrace();
+									} catch (JSONException e1) {
+										e1.printStackTrace();
 									}
-									if (RequestCertiStatusCode == -20) {
-										Toast.makeText(getApplicationContext(),
-												R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
-												.show();
-									} else if (RequestCertiStatusCode == -21) {
-										Toast.makeText(getApplicationContext(),
-												R.string.send_too_frequently, Toast.LENGTH_SHORT)
-												.show();
-									} else if(RequestCertiStatusCode == -99) {
-										Toast.makeText(getApplicationContext(),
-												R.string.unknown_err, Toast.LENGTH_SHORT)
-												.show();
-									}
+
 								}
 							}, 
 							new Response.ErrorListener() {

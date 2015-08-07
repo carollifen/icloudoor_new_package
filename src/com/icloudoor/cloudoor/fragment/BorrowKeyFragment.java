@@ -120,6 +120,8 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 					public void onErrorResponse(VolleyError error) {
 						// TODO Auto-generated method stub
 						showToast(R.string.network_error);
+						content_layout.setVisibility(View.GONE);
+						not_content_layout.setVisibility(View.VISIBLE);
 					}
 				}) {
 			@Override

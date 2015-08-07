@@ -1,5 +1,6 @@
 package com.icloudoor.cloudoor.chat.activity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +14,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,19 +25,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
-import com.easemob.chat.EMMessage.ChatType;
 import com.icloudoor.cloudoor.BaseActivity;
-import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.UrlUtils;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.cache.UserCacheWrapper;
 import com.icloudoor.cloudoor.chat.entity.AuthKeyEn;
 import com.icloudoor.cloudoor.chat.entity.FamilyAddr;
 import com.icloudoor.cloudoor.chat.entity.Key;
 import com.icloudoor.cloudoor.chat.entity.KeyInfo;
+import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 
 public class AuthKeyActivity extends BaseActivity implements OnClickListener , NetworkInterface{
@@ -45,9 +44,11 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 	TextView start_time;
 	TextView end_time;
 	LinearLayout auth_key_layout;
+	LinearLayout content_layout;
+	LinearLayout not_content_layout;
 	ExpandableListView listView;
 	String userid;
-	List<KeyInfo> data;
+//	List<KeyInfo> data;
 	Myadapter myadapter;
 	ImageView btn_back;
 	boolean isCarDoor;
@@ -59,6 +60,8 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 		setContentView(R.layout.activity_authkey);
 		userid = getIntent().getStringExtra("userid");
 		auth_key_layout = (LinearLayout) findViewById(R.id.auth_key_layout);
+		content_layout = (LinearLayout) findViewById(R.id.content_layout);
+		not_content_layout = (LinearLayout) findViewById(R.id.not_content_layout);
 		auth_key_layout.setOnClickListener(this);
 		start_time = (TextView) findViewById(R.id.start_time);
 		end_time = (TextView) findViewById(R.id.end_time);
@@ -84,46 +87,123 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 		AuthKeyEn keyEn = UserCacheWrapper.getMedicalRecord(this);
 		if(keyEn!=null){
 			if(keyEn.getCode().equals("1")){
-				data = keyEn.getData();
-				if(data==null|| data.size()==0){
-					
-				}else{
-					myadapter = new Myadapter(data);
-					listView.setAdapter(myadapter);
-					for (int i = 0; i < myadapter.getGroupCount(); i++) {
-						listView.expandGroup(i);
-					}
-				}
-			}else{
-				getNetworkData(new NetworkInterface() {
-					
-					@Override
-					public void onSuccess(JSONObject response) {
-						// TODO Auto-generated method stub
-						AuthKeyEn keyEn = GsonUtli.jsonToObject(response.toString(), AuthKeyEn.class);
-						if(keyEn!=null){
-							data = keyEn.getData();
-							if(data==null|| data.size()==0){
-								
-							}else{
-								myadapter = new Myadapter(data);
-								listView.setAdapter(myadapter);
-								for (int i = 0; i < myadapter.getGroupCount(); i++) {
-									listView.expandGroup(i);
-								}
-							}
+				List<KeyInfo> data = keyEn.getData();
+				if (data == null || data.size() == 0) {
+					content_layout.setVisibility(View.GONE);
+					not_content_layout.setVisibility(View.VISIBLE);
+				} else {
+					List<KeyInfo> myData = getKeys(data);
+					if(myData.size() == 0){
+						content_layout.setVisibility(View.GONE);
+						not_content_layout.setVisibility(View.VISIBLE);
+					}else{
+						content_layout.setVisibility(View.VISIBLE);
+						not_content_layout.setVisibility(View.GONE);
+						myadapter = new Myadapter(myData);
+						listView.setAdapter(myadapter);
+						for (int i = 0; i < myadapter.getGroupCount(); i++) {
+							listView.expandGroup(i);
 						}
 					}
-					
-					@Override
-					public void onFailure(VolleyError error) {
-						// TODO Auto-generated method stub
-						
-					}
-				}, "/user/api/keys/my.do", "{}", true);
+				}
 			}
 		}
+		getNetworkMyKey();
+				
 	}
+	
+	public void getNetworkMyKey(){
+		
+		
+		
+		String url = UrlUtils.HOST + "/user/api/keys/my.do" + "?sid="
+				+ loadSid() + "&ver=" + version.getVersionName() + "&imei="
+				+ version.getDeviceId();
+
+		MyRequestBody requestBody = new MyRequestBody(url, "{}",
+				new Response.Listener<JSONObject>() {
+
+					@Override
+					public void onResponse(JSONObject response) {
+						// TODO Auto-generated method stub
+
+						AuthKeyEn keyEn = GsonUtli.jsonToObject(
+								response.toString(), AuthKeyEn.class);
+						UserCacheWrapper.setMedicalRecord(AuthKeyActivity.this, keyEn);
+						if (keyEn != null) {
+							List<KeyInfo> data = keyEn.getData();
+							if (data == null || data.size() == 0) {
+								content_layout.setVisibility(View.GONE);
+								not_content_layout.setVisibility(View.VISIBLE);
+							} else {
+								List<KeyInfo> myData = getKeys(data);
+								if(myData.size() == 0){
+									content_layout.setVisibility(View.GONE);
+									not_content_layout.setVisibility(View.VISIBLE);
+								}else{
+									content_layout.setVisibility(View.VISIBLE);
+									not_content_layout.setVisibility(View.GONE);
+									myadapter = new Myadapter(myData);
+									listView.setAdapter(myadapter);
+									for (int i = 0; i < myadapter.getGroupCount(); i++) {
+										listView.expandGroup(i);
+									}
+								}
+							}
+						} else {
+							content_layout.setVisibility(View.GONE);
+							not_content_layout.setVisibility(View.VISIBLE);
+						}
+					}
+
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+						showToast(R.string.network_error);
+					}
+				});
+		mQueue.add(requestBody);
+	}
+	
+	public List<KeyInfo> getKeys(List<KeyInfo> data){
+		List<KeyInfo> keyinfos = new ArrayList<KeyInfo>();
+		for (int i = 0; i < data.size(); i++) {
+			KeyInfo keyInfo = new KeyInfo();
+			keyInfo.setAddress(data.get(i).getAddress());
+			keyInfo.setL1ZoneId(data.get(i).getL1ZoneId());
+			keyInfo.setZoneUserId(data.get(i).getZoneUserId());
+			List<Key> keys = new ArrayList<Key>();
+			for (int j = 0; j <  data.get(i).getKeys().size(); j++) {
+				Key key = data.get(i).getKeys().get(j);
+				long authTo = getTime(key.getAuthTo());
+				if(authTo>System.currentTimeMillis()){
+					keys.add(key);
+				}
+			}
+			if(keys.size()>0){
+				keyInfo.setKeys(keys);
+				keyinfos.add(keyInfo);
+			}
+		}
+		return keyinfos;
+	} 
+	
+	public long getTime(String time) {
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date date = format.parse(time);
+			return date.getTime();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -133,7 +213,7 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 			for (int i = 0; i < chekbleData.size(); i++) {
 				for (int j = 0; j < chekbleData.get(i).size(); j++) {
 					if(chekbleData.get(i).get(j)){
-						KeyInfo keyInfo = data.get(i);
+						KeyInfo keyInfo = (KeyInfo) myadapter.getGroup(i);
 						List<Key> keys = keyInfo.getKeys();
 						Key key = keys.get(j);
 						isFlage = false;
@@ -186,7 +266,7 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 						for (int i = 0; i < chekbleData.size(); i++) {
 							for (int j = 0; j < chekbleData.get(i).size(); j++) {
 								if(chekbleData.get(i).get(j)){
-									KeyInfo keyInfo = data.get(i);
+									KeyInfo keyInfo = (KeyInfo) myadapter.getGroup(i);
 									List<Key> keys = keyInfo.getKeys();
 									Key key = keys.get(j);
 									Intent chatIntent = new Intent();
@@ -261,7 +341,7 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener , N
 						for (int i = 0; i < chekbleData.size(); i++) {
 							for (int j = 0; j < chekbleData.get(i).size(); j++) {
 								if(chekbleData.get(i).get(j)){
-									KeyInfo keyInfo = data.get(i);
+									KeyInfo keyInfo = (KeyInfo) myadapter.getGroup(i);
 									List<Key> keys = keyInfo.getKeys();
 									Key key = keys.get(j);
 									

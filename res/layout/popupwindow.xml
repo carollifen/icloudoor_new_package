@@ -11,51 +11,62 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:background="#ffffff" >
+        android:orientation="vertical" >
 
-        <TextView
-             android:id="@+id/btn_take_photo"
-             android:layout_width="match_parent"
-             android:layout_height="50dp"
-             android:gravity="center"
-             android:text="拍照"
-             android:textSize="17dp"
-             android:textColor="#0065a1"
-            />
+        <RelativeLayout
+            android:id="@+id/btn_take_photo"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >"
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="拍照"
+                android:textColor="#333333"
+                android:textSize="17dp" />
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dddddd"
-            />
-        
-        <TextView
-             android:id="@+id/btn_pick_photo"
-             android:layout_width="match_parent"
-             android:layout_height="50dp"
-             android:gravity="center"
-             android:text="从手机相册中选择"
-             android:textSize="16dp"
-             android:textColor="#0065a1"
-            />
+            android:background="#dddddd" />
+
+        <RelativeLayout
+            android:id="@+id/btn_pick_photo"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="从手机相册中选择"
+                android:textColor="#333333"
+                android:textSize="17dp" />
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="#d6d6dd"
-            />
-        
-        <TextView
-             android:id="@+id/btn_cancel"
-             android:layout_width="match_parent"
-             android:layout_height="50dp"
-             android:gravity="center"
-             android:text="取消"
-             android:textSize="16dp"
-             android:textColor="#0065a1"
-            />
+            android:background="#d6d6dd" />
 
+        <RelativeLayout
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="#333333"
+                android:textSize="17dp" />
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

@@ -187,7 +187,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_chat_activity"
                     android:layout_marginRight="5dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:autoLink="web"
+                    android:gravity="left|center"
+                    android:lineSpacingExtra="2dp"
+                    android:maxWidth="225.0dip"
+                    android:minHeight="30dp"
+                    android:textColor="#ff000000"
+                    android:textSize="15sp" />
+                
+                <com.icloudoor.cloudoor.widget.MultiClickableTextView
+                    android:id="@+id/multiClickableTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_chat_activity"
+                    android:layout_marginRight="5dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="left|center"
@@ -195,7 +210,9 @@
                     android:maxWidth="225.0dip"
                     android:minHeight="30dp"
                     android:textColor="#ff000000"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    >
+                </com.icloudoor.cloudoor.widget.MultiClickableTextView>
             </FrameLayout>
         </FrameLayout>
 

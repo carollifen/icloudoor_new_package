@@ -289,7 +289,8 @@ public class Login extends BaseActivity implements TextWatcher {
 			public void onClick(View v) {
 
 				if ("NET_WORKS".equals(loadSid("NETSTATE"))) {
-					pbLoginBar.setVisibility(View.VISIBLE);
+//					pbLoginBar.setVisibility(View.VISIBLE);
+					loading();
 					Toast.makeText(getApplicationContext(), R.string.login_ing,
 							Toast.LENGTH_SHORT).show();
 
@@ -323,7 +324,8 @@ public class Login extends BaseActivity implements TextWatcher {
 									}
 									MyDebugLog.e("TEST", response.toString());
 
-									pbLoginBar.setVisibility(View.INVISIBLE);
+//									pbLoginBar.setVisibility(View.INVISIBLE);
+									destroyDialog();
 									if (loginStatusCode == 1) {
 
 										savaLoginData(response);
@@ -350,7 +352,7 @@ public class Login extends BaseActivity implements TextWatcher {
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
-
+									destroyDialog();
 								}
 							}) {
 						@Override
@@ -449,6 +451,7 @@ public class Login extends BaseActivity implements TextWatcher {
 			editor.putString("USERID", userId);
 			editor.putInt("STATUS", userStatus);
 			editor.putBoolean("isHasPropServ", isHasPropServ);
+			editor.putInt("role", info.getInt("role"));
 			editor.commit();
 
 			if (provinceId != 0)

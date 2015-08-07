@@ -190,12 +190,15 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 	int width;
     int height;
     
+    private int[] sexRole = {R.drawable.default_icon_female, R.drawable.default_icon_male, R.drawable.default_icon_female};
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_personal_info);
 		QRcode_layout = (RelativeLayout) findViewById(R.id.QRcode_layout);
 		QRcode_layout.setOnClickListener(this);
+		
 		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 		userStatus = loginStatus.getInt("STATUS", 1);
 		portraitUrl = loginStatus.getString("URL", null);
@@ -212,22 +215,6 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 		ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
 		ImageLoader.getInstance().init(configuration);
 
-		options = new DisplayImageOptions.Builder()
-		.showImageOnLoading(R.drawable.icon_boy_110) // resource or drawable
-		.showImageForEmptyUri(R.drawable.icon_boy_110) // resource or drawable
-		.showImageOnFail(R.drawable.icon_boy_110) // resource or drawable
-		.resetViewBeforeLoading(false)  // default
-		.delayBeforeLoading(10)
-		.cacheInMemory(false) // default
-		.cacheOnDisk(false) // default
-		.considerExifParams(false) // default
-		.imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
-		.bitmapConfig(Bitmap.Config.ARGB_8888) // default
-		.displayer(new SimpleBitmapDisplayer()) // default
-		.handler(new Handler()) // default
-		.displayer(new RoundedBitmapDisplayer(10))
-		.build();
-		
 		provinceId = loginStatus.getInt("PROVINCE", 0);
 		cityId = loginStatus.getInt("CITY", 0);
 		districtId = loginStatus.getInt("DIS", 0);
@@ -341,8 +328,9 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 			@Override
 			public void onClick(View arg0) {
-				PopupWindow popupWindow = makePopupWindow(ShowPersonalInfo.this);
-				popupWindow.showAtLocation(ShowPersonalInfo.this.findViewById(R.id.personal_info_main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+				Intent intent = new Intent();
+				intent.setClass(ShowPersonalInfo.this, SelectAddActivity.class);
+				startActivity(intent);
 			}
 			
 		});
@@ -453,7 +441,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 					imageFile = new File(PATH + System.currentTimeMillis() + ".jpg");
 					imageFile.getParentFile().mkdirs();
 					Bitmap photo = bundle.getParcelable("data");
-					TakePicFileUtil.getInstance().saveBitmap(photo);
+					TakePicFileUtil.saveBitmap(photo);
 					image.setImageBitmap(photo);
 					FileOutputStream foutput = null;
 					try {
@@ -480,7 +468,8 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 							runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								upLoadBar.setVisibility(View.VISIBLE);
+//								upLoadBar.setVisibility(View.VISIBLE);
+								loading();
 								}
 							});
 							
@@ -531,10 +520,14 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 									
 									JSONObject data = jsObj.getJSONObject("data");
 									portraitUrl = data.getString("portraitUrl");
-									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
-									Editor edit = loginStatus.edit();
-									edit.putString("URL", portraitUrl);
-									edit.commit();
+//									SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+//									Editor edit = loginStatus.edit();
+//									edit.putString("URL", portraitUrl);
+//									edit.commit();
+									
+									Map<String, String> map = new HashMap<String, String>();
+									map.put("portraitUrl", portraitUrl);
+									updateProfile(map);
 
 									MyDebugLog.e(TAG, portraitUrl);
 									Log.e("test for upload", "sentPic 5 " + portraitUrl);
@@ -543,7 +536,8 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 										@Override
 										public void run() {
 											MyDebugLog.e(TAG, "run here");
-											upLoadBar.setVisibility(View.INVISIBLE);
+//											upLoadBar.setVisibility(View.INVISIBLE);
+											destroyDialog();
 										}
 									});
 								}
@@ -620,11 +614,10 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 		ImageView imgView = new ImageView(this);
 		imgView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-
-
 		File file = new File(PATH +imageName);
 		if (!file.exists()) {
-			Drawable drawable = getResources().getDrawable(R.drawable.default_icon_male);
+			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+			Drawable drawable = getResources().getDrawable(sexRole[loginStatus.getInt("SEX", 0)]);
 			imgView.setImageDrawable(drawable);
 		}
 		else
@@ -675,7 +668,14 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 									editor.putInt("CITY", Integer.parseInt(profileMap.get("cityId")));
 									editor.putInt("DIS", Integer.parseInt(profileMap.get("districtId")));
 									editor.commit();
-								} 
+								} else if(profileMap.containsKey("portraitUrl")) {
+									editor.putString("URL", profileMap.get("portraitUrl"));
+									editor.commit();
+									
+									SharedPreferences savedUrl = getSharedPreferences("PreviousURL", 0);
+									Editor editor1 = savedUrl.edit();
+									editor1.putString("Url", profileMap.get("portraitUrl")).commit();
+								}
 
 							} else if (statusCode == -1) {
 								Toast.makeText(getApplicationContext(), R.string.not_enough_params, Toast.LENGTH_SHORT).show();
@@ -732,31 +732,33 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 				startActivity(intent);
 			}
 		}
-
+		
 		if(userStatus == 1) {
 			certiImage.setImageResource(R.drawable.unauth_icon);
 		} else if(userStatus == 2) {
 			certiImage.setImageResource(R.drawable.auth_icon);
 		}
-
-		File Imagefile = new File(PATH + imageName);
-		if(Imagefile.exists()){
-			MyDebugLog.e(TAG, "use local on resume");
-			Bitmap bitmap = getLoacalBitmap(PATH + imageName);
-			image.setImageBitmap(bitmap);
-					
-//			ImageLoader.getInstance().displayImage(imageUrl, image, options);
-		} else {
-			MyDebugLog.e(TAG, "ON RESUME file not exists, use net");
-			if(portraitUrl != null){
-				ImageLoader.getInstance().displayImage(portraitUrl, image, options);
-			}
-		}
-
+		
 		File f = new File("/data/data/com.icloudoor.cloudoor/shared_prefs/LOGINSTATUS.xml");
 		if(f.exists()){
 			SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 
+			options = new DisplayImageOptions.Builder()
+			.showImageOnLoading(sexRole[loginStatus.getInt("SEX", 0)]) // resource or drawable
+			.showImageForEmptyUri(sexRole[loginStatus.getInt("SEX", 0)]) // resource or drawable
+			.showImageOnFail(sexRole[loginStatus.getInt("SEX", 0)]) // resource or drawable
+			.resetViewBeforeLoading(false)  // default
+			.delayBeforeLoading(10)
+			.cacheInMemory(false) // default
+			.cacheOnDisk(false) // default
+			.considerExifParams(false) // default
+			.imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
+			.bitmapConfig(Bitmap.Config.ARGB_8888) // default
+			.displayer(new SimpleBitmapDisplayer()) // default
+			.handler(new Handler()) // default
+			.displayer(new RoundedBitmapDisplayer(10))
+			.build();
+			
 			String tempString = null;
 			
 			tempString = loginStatus.getString("NICKNAME", null);
@@ -793,28 +795,44 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 			if(loginStatus.getInt("PROVINCE", 0) != 0)
 				infoCount++;
 			
-			mTextPercent.setText("资料完整度" + String.valueOf((int) infoCount * 100 / 5) + "%");
+			mTextPercent.setText(getString(R.string.profile_complete) + String.valueOf((int) infoCount * 100 / 5) + "%");
 			InfoPercent.setProgress((int) infoCount * 100 / 5);
 			
 			provinceId = loginStatus.getInt("PROVINCE", 0);
 			cityId = loginStatus.getInt("CITY", 0);
 			districtId = loginStatus.getInt("DIS", 0);
 			if(provinceId != 0) {
-				if(getCityName(cityId).equals("市辖区")) {
-					addText.setText(getProvinceName(provinceId) + "市" + getDistrictName(districtId) + "区");
-				} else if(getCityName(cityId).equals("县")) {
-					addText.setText(getProvinceName(provinceId) + "市" + getDistrictName(districtId) + "县");
-				} else if(getProvinceName(provinceId).equals("内蒙古") || getProvinceName(provinceId).equals("西藏") 
-						|| getProvinceName(provinceId).equals("新疆")) {
-					addText.setText(getProvinceName(provinceId) + getCityName(cityId) + "市" + getDistrictName(districtId) + "区");
-				} else if (getProvinceName(provinceId).equals("台湾") || getProvinceName(provinceId).equals("香港") 
-						|| getProvinceName(provinceId).equals("澳门")) {
+				if(getCityName(cityId).equals(getString(R.string.area))) {
+					addText.setText(getProvinceName(provinceId) + getString(R.string.city) + getDistrictName(districtId) + getString(R.string.district));
+				} else if(getCityName(cityId).equals(getString(R.string.coutry))) {
+					addText.setText(getProvinceName(provinceId) + getString(R.string.city) + getDistrictName(districtId) + getString(R.string.coutry));
+				} else if(getProvinceName(provinceId).equals(getString(R.string.neimeng)) || getProvinceName(provinceId).equals(getString(R.string.xizang)) 
+						|| getProvinceName(provinceId).equals(getString(R.string.xinjiang))) {
+					addText.setText(getProvinceName(provinceId) + getCityName(cityId) + getString(R.string.city) + getDistrictName(districtId) + getString(R.string.district));
+				} else if (getProvinceName(provinceId).equals(getString(R.string.taiwan)) || getProvinceName(provinceId).equals(getString(R.string.hongkong)) 
+						|| getProvinceName(provinceId).equals(getString(R.string.macao))) {
 					addText.setText(getProvinceName(provinceId) + getCityName(cityId) + getDistrictName(districtId));
 				} else {
-					addText.setText(getProvinceName(provinceId) + "省" + getCityName(cityId) + "市" + getDistrictName(districtId) + "区");
+					addText.setText(getProvinceName(provinceId) + getString(R.string.province) + getCityName(cityId) + getString(R.string.city) + getDistrictName(districtId) + getString(R.string.district));
 				}
 			} else {
 				addText.setText(getString(R.string.default_address));
+			}
+			
+			image.setImageResource(sexRole[loginStatus.getInt("SEX", 0)]);
+		}
+		
+		File Imagefile = new File(PATH + imageName);
+		if(Imagefile.exists()){
+			MyDebugLog.e(TAG, "use local on resume");
+			Bitmap bitmap = getLoacalBitmap(PATH + imageName);
+			image.setImageBitmap(bitmap);
+					
+//			ImageLoader.getInstance().displayImage(imageUrl, image, options);
+		} else {
+			MyDebugLog.e(TAG, "ON RESUME file not exists, use net");
+			if(portraitUrl != null){
+				ImageLoader.getInstance().displayImage(portraitUrl, image, options);
 			}
 		}
 	}
@@ -959,178 +977,10 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 			String USERID = loginStatus.getString("USERID", "");
 			String url = USERID;
 			dialog.createQRImage(url);
-
 			break;
 
 		default:
 			break;
 		}
 	}	
-
-    private boolean scrolling = false; 
-    private TextView button_ok, button_cancel;
-	private PopupWindow makePopupWindow(Context cx)
-	{
-		final PopupWindow window;
- 		window = new PopupWindow(cx); 
- 		 
-        View contentView = LayoutInflater.from(this).inflate(R.layout.cities_layout, null);
-        window.setContentView(contentView);
-        
-        final WheelView provinceView = (WheelView) contentView.findViewById(R.id.province);
-        provinceView.setVisibleItems(3);
-        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this, provinceSet);
-        provinceView.setViewAdapter(adapter);
-        adapter.setTextSize(15);
-        
-        final WheelView cityView = (WheelView) contentView.findViewById(R.id.city);
-        cityView.setVisibleItems(0);
-        
-        provinceView.addChangingListener(new OnWheelChangedListener() {
-			public void onChanged(WheelView wheel, int oldValue, int newValue) {
-			    if (!scrolling) {
-			        updateCity(cityView, citySet, newValue);
-			    }
-			}
-		});
-        
-        provinceView.addScrollingListener( new OnWheelScrollListener() {
-            public void onScrollingStarted(WheelView wheel) {
-                scrolling = true;
-            }
-            
-            public void onScrollingFinished(WheelView wheel) {
-                scrolling = false;
-                updateCity(cityView, citySet, provinceView.getCurrentItem());
- 
-            }
-        });
-
-        final WheelView districtView = (WheelView) contentView.findViewById(R.id.district);
-        districtView.setVisibleItems(0);
-        
-        cityView.addChangingListener(new OnWheelChangedListener() {
-			public void onChanged(WheelView wheel, int oldValue, int newValue) {
-			    if (!scrolling) {
-			    	updatecDistrict(districtView, districtSet, provinceView.getCurrentItem(),newValue); 
-			    }
-			}
-		});
-        
-        cityView.addScrollingListener( new OnWheelScrollListener() {
-            public void onScrollingStarted(WheelView wheel) {
-                scrolling = true;
-            }
-            public void onScrollingFinished(WheelView wheel) {
-                scrolling = false;
-                updatecDistrict(districtView, districtSet, provinceView.getCurrentItem(), cityView.getCurrentItem());
-
-            }
-        }); 
-         
-        districtView.addScrollingListener( new OnWheelScrollListener() {
-            public void onScrollingStarted(WheelView wheel) {
-                scrolling = true;
-            }
-            public void onScrollingFinished(WheelView wheel) {
-                scrolling = false; 
-
-            }
-        }); 
-         
-        provinceView.setCurrentItem(1);
-
-        button_cancel = (TextView) contentView.findViewById(R.id.button_cancel);
-    	button_cancel.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v)
-			{ 
-				window.dismiss(); 
-			}
-		});
-    	
-    	button_ok = (TextView) contentView.findViewById(R.id.button_ok);
-    	button_ok.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				if(citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()].equals("市辖区")) {
-					addText.setText(provinceSet[provinceView.getCurrentItem()] + "市"
-							+ districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()] + "区");
-				} else if(citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()].equals("县")) {
-					addText.setText(provinceSet[provinceView.getCurrentItem()] + "市"
-							+ districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()] + "区");
-				} else if(provinceSet[provinceView.getCurrentItem()].equals("内蒙古") || provinceSet[provinceView.getCurrentItem()].equals("西藏") 
-						|| provinceSet[provinceView.getCurrentItem()].equals("新疆")) {
-					addText.setText(provinceSet[provinceView.getCurrentItem()] + citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()]
-							+ "市" + districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()] + "区");
-				} else if (provinceSet[provinceView.getCurrentItem()].equals("台湾") || provinceSet[provinceView.getCurrentItem()].equals("香港") 
-						|| provinceSet[provinceView.getCurrentItem()].equals("澳门")) {
-					addText.setText(provinceSet[provinceView.getCurrentItem()] + citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()]
-							+ districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()]);
-				} else {
-					addText.setText(provinceSet[provinceView.getCurrentItem()] + "省"
-							+ citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()] + "市"
-							+ districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()] + "区");
-				}
-
-				provinceId = getProvinceID(provinceSet[provinceView.getCurrentItem()]);
-				cityId = getCityID(citySet[provinceView.getCurrentItem()][cityView.getCurrentItem()]);
-				districtId = getDistrictID(districtSet[provinceView.getCurrentItem()][cityView.getCurrentItem()][districtView.getCurrentItem()]);
-				
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("provinceId", String.valueOf(provinceId));
-				map.put("cityId", String.valueOf(cityId));
-				map.put("districtId", String.valueOf(districtId));
-				updateProfile(map);
-				
-				window.dismiss();
-			}
-    		
-    	});
-         
- 		window.setWidth(width);
- 		window.setHeight(320);
-
-		window.setFocusable(true);
-		window.setTouchable(true);
-		window.setOutsideTouchable(true); 
-		return window;
-	}
-
-    private void updateCity(WheelView city, String cities[][], int index) {
-    	
-    	int len = 0;
-    	for(int i = 0; i < cities[index].length; i++){
-    		if(cities[index][i] != null ) len++;
-    	}
-    	
-    	String[] newCity = new String[len];
-    	for(int i = 0; i < len; i++){
-    		if(cities[index][i].length() > 0) newCity[i] = cities[index][i];
-    	}
-    	
-        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this, newCity);
-        adapter.setTextSize(15);
-        city.setViewAdapter(adapter);
-        city.setCurrentItem(newCity.length / 2);    
-    }
-
-    private void updatecDistrict(WheelView city, String ccities[][][], int index,int index2) {
-    	
-    	int len = 0;
-    	for(int i = 0; i < ccities[index][index2].length; i++){
-    		if(ccities[index][index2][i] != null) len++;
-    	}
-    	
-    	String[] newDistrict = new String[len];
-    	for(int i = 0; i < len; i++){
-    		if(ccities[index][index2][i].length() > 0) newDistrict[i] = ccities[index][index2][i];
-    	}
-    	
-        ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this, newDistrict);
-        adapter.setTextSize(15);
-        city.setViewAdapter(adapter);
-        city.setCurrentItem(newDistrict.length / 2);     
-    }
 }

@@ -33,7 +33,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.Html;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +77,7 @@ import com.easemob.util.FileUtils;
 import com.easemob.util.LatLng;
 import com.easemob.util.TextFormater;
 import com.icloudoor.cloudoor.R;
+import com.icloudoor.cloudoor.ReportToRepairActivity;
 import com.icloudoor.cloudoor.chat.activity.AlertDialog;
 import com.icloudoor.cloudoor.chat.activity.BaiduMapActivity;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
@@ -87,6 +93,8 @@ import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.FindDBUtile;
 import com.icloudoor.cloudoor.utli.Uitls;
 import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
+import com.icloudoor.cloudoor.widget.MultiClickableTextView;
+import com.icloudoor.cloudoor.widget.MultiClickableTextView.IOnSpanClickListener;
 import com.icloudoor.cloudoor.widget.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -382,6 +390,10 @@ public class MessageAdapter extends BaseAdapter {
 							.findViewById(R.id.hint_tx);
 					holder.chat_content_layout = (RelativeLayout) convertView
 							.findViewById(R.id.chat_content_layout);
+					holder.multiClickableTextView = (MultiClickableTextView) convertView
+							.findViewById(R.id.multiClickableTextView);
+					
+					
 
 				} catch (Exception e) {
 				}
@@ -720,7 +732,7 @@ public class MessageAdapter extends BaseAdapter {
 
 		try {
 			int type = message.getIntAttribute("type");
-
+			
 			if (type == 3) {
 				holder.chat_content_layout.setVisibility(View.VISIBLE);
 				holder.layout_card.setVisibility(View.VISIBLE);
@@ -849,9 +861,49 @@ public class MessageAdapter extends BaseAdapter {
 				holder.zone_name.setText(keyAuth.getString("address"));
 				holder.keyauth_sousse.setText(keyAuth.getString("authSuccMsg"));
 				;
+			} else if(type == 6){
+				holder.chat_content_layout.setVisibility(View.VISIBLE);
+				holder.layout_card.setVisibility(View.GONE);
+				holder.hint_tx.setVisibility(View.GONE);
+				holder.layout_keyauth.setVisibility(View.GONE);
+				holder.layout_chattx.setVisibility(View.VISIBLE);
+				holder.multiClickableTextView.setVisibility(View.VISIBLE);
+				holder.tv.setVisibility(View.GONE);
+				holder.multiClickableTextView.setIOnSpanClickListener(new IOnSpanClickListener() {
+					
+					@Override
+					public void onSpanClick(String url) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(context, ReportToRepairActivity.class);
+						intent.putExtra("webUrl", url);
+						context.startActivity(intent);
+					}
+				});
+				
+				
+				JSONObject data = message.getJSONObjectAttribute("data");
+				String html = data.getString("html");
+				holder.multiClickableTextView.setTextHTML(html);
+				
+//				holder.tv.setText(Html.fromHtml(html));
+//				holder.tv.setMovementMethod(LinkMovementMethod.getInstance());
+//				CharSequence text = holder.tv.getText();   
+//		        if(text instanceof Spannable){   
+//		            int end = text.length();   
+//		            Spannable sp = (Spannable)holder.tv.getText();   
+//		            URLSpan[] urls=sp.getSpans(0, end, URLSpan.class);    
+//		            SpannableStringBuilder style=new SpannableStringBuilder(text);   
+//		            style.clearSpans();//should clear old spans   
+//		            for(URLSpan url : urls){   
+//		                MyURLSpan myURLSpan = new MyURLSpan(url.getURL());   
+//		                style.setSpan(myURLSpan,sp.getSpanStart(url),sp.getSpanEnd(url),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);   
+//		            }   
+//		            holder.tv.setText(style);   
+//		        }
 			}
 		} catch (EaseMobException e) {
-
+			holder.multiClickableTextView.setVisibility(View.GONE);
+			holder.tv.setVisibility(View.VISIBLE);
 			holder.chat_content_layout.setVisibility(View.VISIBLE);
 			holder.layout_card.setVisibility(View.GONE);
 			holder.hint_tx.setVisibility(View.GONE);
@@ -1816,6 +1868,7 @@ public class MessageAdapter extends BaseAdapter {
 
 		TextView zone_name;
 		TextView keyauth_sousse;
+		MultiClickableTextView multiClickableTextView;
 		FrameLayout layout_chattx;
 		FrameLayout layout_card;
 		FrameLayout layout_keyauth;
@@ -1846,5 +1899,20 @@ public class MessageAdapter extends BaseAdapter {
 		}
 
 	}
+	class MyURLSpan extends ClickableSpan{   
+        
+        private String mUrl;   
+        MyURLSpan(String url) {   
+            mUrl =url;   
+        }   
+        @Override
+        public void onClick(View widget) {
+            // TODO Auto-generated method stub
+//            Toast.makeText(context, mUrl,Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(context, ReportToRepairActivity.class);
+			intent.putExtra("webUrl", mUrl);
+			context.startActivity(intent);
+        }   
+    }
 
 }

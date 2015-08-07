@@ -33,7 +33,7 @@
                 android:id="@+id/personal_photo_change"
                 android:layout_width="match_parent"
                 android:layout_height="89dp"
-                android:background="#ffffff" >
+                android:background="@drawable/selector_setting_detail" >
 
                 <RelativeLayout
                     android:layout_width="72dp"

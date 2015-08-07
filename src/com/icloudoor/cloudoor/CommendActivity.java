@@ -201,5 +201,12 @@ public class CommendActivity extends BaseActivity {
 		
 	}
 	
-	
+	@Override
+	public void onBackPressed() {
+		StringBuilder sb = new StringBuilder();
+		String metho = "backPagePop();";
+		sb.append("javascript:").append(metho);
+		praiseWebView.loadUrl(sb.toString());
+		return;
+	}
 }

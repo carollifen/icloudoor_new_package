@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:text="物业服务"
+        android:text="服务"
         android:textSize="18sp"
         android:textColor="#ffffff"/>
 

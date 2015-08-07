@@ -11,11 +11,12 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SelectPicPopupWindow extends PopupWindow {
 
-	private TextView btn_take_photo, btn_pick_photo, btn_cancel;
+	private RelativeLayout btn_take_photo, btn_pick_photo, btn_cancel;
 	private View mMenuView;
 
 	public SelectPicPopupWindow(Activity context, OnClickListener itemsOnClick) {
@@ -23,33 +24,38 @@ public class SelectPicPopupWindow extends PopupWindow {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mMenuView = inflater.inflate(R.layout.popupwindow, null);
-		btn_take_photo = (TextView) mMenuView.findViewById(R.id.btn_take_photo);
-		btn_pick_photo = (TextView) mMenuView.findViewById(R.id.btn_pick_photo);
-		btn_cancel = (TextView) mMenuView.findViewById(R.id.btn_cancel);
-		// È¡Ïû°´Å¥
+		btn_take_photo = (RelativeLayout) mMenuView.findViewById(R.id.btn_take_photo);
+		btn_pick_photo = (RelativeLayout) mMenuView.findViewById(R.id.btn_pick_photo);
+		btn_cancel = (RelativeLayout) mMenuView.findViewById(R.id.btn_cancel);
+		
+		btn_take_photo.setBackgroundResource(R.drawable.selector_pic_pick);
+		btn_pick_photo.setBackgroundResource(R.drawable.selector_pic_pick);
+		btn_cancel.setBackgroundResource(R.drawable.selector_pic_pick);
+		
+		// È¡ï¿½ï¿½ï¿½ï¿½Å¥
 		btn_cancel.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				// Ïú»Ùµ¯³ö¿ò
+				// ï¿½ï¿½ï¿½Ùµï¿½ï¿½ï¿½ï¿½ï¿½
 				dismiss();
 			}
 		});
-		// ÉèÖÃ°´Å¥¼àÌý
+		// ï¿½ï¿½ï¿½Ã°ï¿½Å¥ï¿½ï¿½ï¿½ï¿½
 		btn_pick_photo.setOnClickListener(itemsOnClick);
 		btn_take_photo.setOnClickListener(itemsOnClick);
-		// ÉèÖÃSelectPicPopupWindowµÄView
+		// ï¿½ï¿½ï¿½ï¿½SelectPicPopupWindowï¿½ï¿½View
 		this.setContentView(mMenuView);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°ÌåµÄ¿í
+		// ï¿½ï¿½ï¿½ï¿½SelectPicPopupWindowï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½
 		this.setWidth(LayoutParams.MATCH_PARENT);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°ÌåµÄ¸ß
+		// ï¿½ï¿½ï¿½ï¿½SelectPicPopupWindowï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½
 		this.setHeight(LayoutParams.WRAP_CONTENT);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°Ìå¿Éµã»÷
+		// ï¿½ï¿½ï¿½ï¿½SelectPicPopupWindowï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½
 		this.setFocusable(true);
-		// ÊµÀý»¯Ò»¸öColorDrawableÑÕÉ«Îª°ëÍ¸Ã÷
+		// Êµï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ColorDrawableï¿½ï¿½É«Îªï¿½ï¿½Í¸ï¿½ï¿½
 		ColorDrawable dw = new ColorDrawable(0xb0000000);
-		// ÉèÖÃSelectPicPopupWindowµ¯³ö´°ÌåµÄ±³¾°
+		// ï¿½ï¿½ï¿½ï¿½SelectPicPopupWindowï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½
 		this.setBackgroundDrawable(dw);
-		// mMenuViewÌí¼ÓOnTouchListener¼àÌýÅÐ¶Ï»ñÈ¡´¥ÆÁÎ»ÖÃÈç¹ûÔÚÑ¡Ôñ¿òÍâÃæÔòÏú»Ùµ¯³ö¿ò
+		// mMenuViewï¿½ï¿½ï¿½OnTouchListenerï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï»ï¿½È¡ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùµï¿½ï¿½ï¿½ï¿½ï¿½
 		mMenuView.setOnTouchListener(new OnTouchListener() {
 
 			public boolean onTouch(View v, MotionEvent event) {

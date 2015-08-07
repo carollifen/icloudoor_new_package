@@ -17,11 +17,13 @@ package kankan.wheel.widget.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -36,13 +38,13 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
     protected static final int NO_RESOURCE = 0;
     
     /** Default text color */
-    public static final int DEFAULT_TEXT_COLOR = 0xFF101010;
+    public static final int DEFAULT_TEXT_COLOR = 0xFF585858;
     
     /** Default text color */
     public static final int LABEL_COLOR = 0xFF700070;
     
     /** Default text size */
-    public static final int DEFAULT_TEXT_SIZE = 24;
+    public static final int DEFAULT_TEXT_SIZE = 18;
     
     // Text settings
     private int textColor = DEFAULT_TEXT_COLOR;
@@ -222,8 +224,10 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
         view.setTextColor(textColor);
         view.setGravity(Gravity.CENTER);
         view.setTextSize(textSize);
+        view.setEllipsize(TextUtils.TruncateAt.END);
         view.setLines(1);
-        view.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+//        view.setCompoundDrawablePadding(20);
+//        view.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
     }
     
     /**

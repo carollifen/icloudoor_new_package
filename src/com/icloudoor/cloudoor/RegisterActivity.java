@@ -249,7 +249,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 	                    if (imm.isActive()) {
 	                        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
 	                    }
-	                    counter.start();
+	                    
 	                    try {
 	                    	sid = loadSid();
 	                        requestCertiCodeURL = new URL(HOST + "/user/manage/sendVerifyCode.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
@@ -263,31 +263,28 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 
 	                                @Override
 	                                public void onResponse(JSONObject response) {
-	                                    try {
-	                                        if (response.getString("sid") != null) {
-	                                            sid = response.getString("sid");
-	                                            saveSid(sid);
-	                                        }
-	                                        RequestCertiStatusCode = response.getInt("code");
-	                                    } catch (JSONException e) {
-	                                        e.printStackTrace();
-	                                    }
+	                                	
+	                                	try {
+											RequestCertiStatusCode = response.getInt("code");
+											
+											if(RequestCertiStatusCode == 1) {
+												if (response.getString("sid") != null) {
+		                                            sid = response.getString("sid");
+		                                            saveSid(sid);
+		                                        }
+												Log.e("@@@@", response.toString());
 
-	                                    MyDebugLog.e("TEST", "response:" + response.toString());
-
-	                                    if (RequestCertiStatusCode == -20) {
-	                                        Toast.makeText(getApplicationContext(),
-	                                                R.string.send_too_many_a_day, Toast.LENGTH_SHORT)
-	                                                .show();
-	                                    } else if (RequestCertiStatusCode == -21) {
-	                                        Toast.makeText(getApplicationContext(),
-	                                                R.string.send_too_frequently, Toast.LENGTH_SHORT)
-	                                                .show();
-	                                    } else if(RequestCertiStatusCode == -99) {
-	    									Toast.makeText(getApplicationContext(),
-	    											R.string.unknown_err, Toast.LENGTH_SHORT)
-	    											.show();
-	    								}
+												counter.start();
+											} else if (RequestCertiStatusCode == -20) {
+		                                        Toast.makeText(getApplicationContext(), R.string.send_too_many_a_day, Toast.LENGTH_SHORT).show();
+		                                    } else if (RequestCertiStatusCode == -21) {
+		                                        Toast.makeText(getApplicationContext(), R.string.send_too_frequently, Toast.LENGTH_SHORT).show();
+		                                    } else if(RequestCertiStatusCode == -99) {
+		    									Toast.makeText(getApplicationContext(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
+		    								}
+										} catch (JSONException e1) {
+											e1.printStackTrace();
+										}
 	                                }
 
 	                            }, new Response.ErrorListener() {

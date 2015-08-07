@@ -21,6 +21,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
@@ -43,7 +44,6 @@ import com.icloudoor.cloudoor.adapter.ChatAllHistoryAdapter1;
 import com.icloudoor.cloudoor.chat.CommonUtils;
 import com.icloudoor.cloudoor.chat.activity.ChatActivity;
 import com.icloudoor.cloudoor.chat.activity.ContactActivity;
-import com.icloudoor.cloudoor.chat.activity.DynamicActivity;
 import com.icloudoor.cloudoor.chat.activity.MipcaActivityCapture;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
@@ -122,6 +122,21 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 				}
 			}
 		});
+		
+		
+		
+		msg_list.setOnLongClickListener(new OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				// TODO Auto-generated method stub
+				
+				
+				
+				return true;
+			}
+		});
+		
 		group_layout.setOnClickListener(this);
 		add_friends.setOnClickListener(this);
 		registerBoradcastReceiver();
@@ -183,13 +198,14 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 						@Override
 						public void onError(final int code, final String message) {
 							System.out.println("IM___**____");
-							getActivity().runOnUiThread(new Runnable() {
-								public void run() {
-									loginIM();
-									activity.showToast(R.string.Login_failed);
-									System.out.println("code = "+code +"   message = "+message);
-								}
-							});
+							if(getActivity()!=null){
+								getActivity().runOnUiThread(new Runnable() {
+									public void run() {
+										activity.showToast(R.string.Login_failed);
+										System.out.println("code = "+code +"   message = "+message);
+									}
+								});
+							}
 						}
 					});
 		}
@@ -349,7 +365,6 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 		public TextView content;
 		public TextView time;
 		public ViewGroup deleteHolder;
-
 		ViewHolder(View view) {
 			image = (ImageView) view.findViewById(R.id.msg_image);
 			name = (TextView) view.findViewById(R.id.msg_name);

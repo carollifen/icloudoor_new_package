@@ -147,6 +147,8 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 	boolean isDebug = DEBUG.isDebug;
 
 	private Version version;
+	
+	private String previousUrl = " ";
 
 	Handler mHandler1 = new Handler() {
 		@Override
@@ -211,6 +213,10 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 
 		logoutToDo = new Logout(getApplicationContext());
 		version = new Version(getApplicationContext());
+		
+		SharedPreferences savedUrl = getSharedPreferences("PreviousURL", 0);
+		Editor editor = savedUrl.edit();
+		editor.putString("Url", previousUrl).commit();
 
 		UmengUpdateAgent.setDownloadListener(new UmengDownloadListener() {
 
@@ -602,20 +608,31 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 		mEditor.putBoolean("FIRSTLOGIN", false).commit();
 		// save image to file
 
-		File f = new File(PATH + "/" + jpegName);
-		if (f.exists())
-			f.delete();
-
-		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",
-				MODE_PRIVATE);
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
 		imageURL = loginStatus.getString("URL", null);
-		if (imageURL != null) {
-			MyDebugLog.e(TAG, imageURL + "  downloading");
-			// if (mThread == null) {
-			// mThread = new Thread(runnable);
-			// mThread.start();
-			// }
+//
+		SharedPreferences savedUrl = getSharedPreferences("PreviousURL", 0);
+//
+//		if(!savedUrl.getString("Url", " ").equals(imageURL) && imageURL != null) {
+//			File f = new File(PATH + "/" + jpegName);
+//			if (f.exists())
+//				f.delete();
+//			
+//			MyDebugLog.e(TAG, imageURL + "  downloading");
+//			downLoadImage();		
+//		}
+		File f = new File(PATH + "/" + jpegName);
+		if (!f.exists() && imageURL.length() > 0) {
+			Log.e(TAG, "use local");
 			downLoadImage();
+		} else if(f.exists()) {
+			if(imageURL.equals(""))
+				f.delete();
+			else if(!savedUrl.getString("Url", " ").equals(imageURL) && imageURL.length() > 0){
+				f.delete();
+				Log.e(TAG, "use net");
+				downLoadImage();
+			}
 		}
 	}
 
@@ -639,6 +656,9 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 
 			public void onSuccess(File t) {
 				super.onSuccess(t);
+				SharedPreferences savedUrl = getSharedPreferences("PreviousURL", 0);
+				Editor editor = savedUrl.edit();
+				editor.putString("Url", imageURL).commit();
 				MyDebugLog.e(TAG, "download image success");
 			}
 
@@ -1026,37 +1046,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 								response.toString(), MyFriendInfo.class);
 						if (friendInfo != null) {
 							UserDBHelper.getInstance(CloudDoorMainActivity.this).initTable(friendInfo.getData());
-//							List<MyFriendsEn> data = friendInfo.getData();
-//							if (data != null && data.size() > 0) {
-//								FriendDaoImpl daoImpl = new FriendDaoImpl(
-//										CloudDoorMainActivity.this);
-//								SQLiteDatabase db = daoImpl.getDbHelper()
-//										.getWritableDatabase();
-//								db.beginTransaction();
-//								try {
-//									db.execSQL("delete from friends");
-//									for (int i = 0; i < data.size(); i++) {
-//										MyFriendsEn friendsEn = data.get(i);
-//										db.execSQL(
-//												"insert into friends(userId, nickname ,portraitUrl,provinceId,districtId,cityId,sex) values(?,?,?,?,?,?,?)",
-//												new Object[] {
-//														friendsEn.getUserId(),
-//														friendsEn.getNickname(),
-//														friendsEn
-//																.getPortraitUrl(),
-//														friendsEn
-//																.getProvinceId(),
-//														friendsEn
-//																.getDistrictId(),
-//														friendsEn.getCityId(),
-//														friendsEn.getSex() });
-//									}
-//									db.setTransactionSuccessful();
-//								} finally {
-//									db.endTransaction();
-//
-//								}
-//							}
+
 						} else {
 						}
 
@@ -1108,7 +1098,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 							System.out.println("IM___**____");
 							runOnUiThread(new Runnable() {
 								public void run() {
-									showToast(R.string.Login_failed);
+//									showToast(R.string.Login_failed);
 								}
 							});
 						}

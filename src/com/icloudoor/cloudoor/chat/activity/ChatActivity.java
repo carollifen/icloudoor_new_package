@@ -359,6 +359,8 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 
 			}
 		});
+		
+	
 
 	}
 
@@ -373,11 +375,24 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 				PowerManager.SCREEN_DIM_WAKE_LOCK, "demo");
 		chatType = getIntent().getIntExtra("chatType", CHATTYPE_SINGLE);
 		
-
 		if (chatType == CHATTYPE_SINGLE) { 
 			toChatUsername = getIntent().getStringExtra("userId");
 			
 		} 
+		
+		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
+		List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
+		if(list!=null && list.size()>0){
+			friendsEn = list.get(0);
+			nickName = friendsEn.getNickname();
+			portraitUrl = friendsEn.getPortraitUrl();
+			((TextView) findViewById(R.id.name)).setText(nickName);
+		}else{
+			Toast.makeText(this, R.string.notfriend, Toast.LENGTH_SHORT).show();
+			finish();
+		}
+		
+		 onListViewCreation();
 //		else {
 //			findViewById(R.id.container_to_group).setVisibility(View.VISIBLE);
 //			findViewById(R.id.container_remove).setVisibility(View.GONE);
@@ -1434,7 +1449,6 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			finish();
 		}
 		
-		 onListViewCreation();
 		
 		if (group != null)
 			((TextView) findViewById(R.id.name)).setText(group.getGroupName());

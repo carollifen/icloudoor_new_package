@@ -321,5 +321,17 @@
     <string name="clear_chat">清除聊天记录</string>
     <string name="not_Staff_member">你乃非职场员工，没有考勤记录</string>
     <string name="default_address">广东省广州市</string>
+    <string name="province">省</string>
+    <string name="city">市</string>
+    <string name="area">市辖区</string>
+    <string name="coutry">县</string>
+    <string name="district">区</string>
+    <string name="neimeng">内蒙古</string>
+    <string name="xinjiang">新疆</string>
+    <string name="xizang">西藏</string>
+    <string name="taiwan">台湾</string>
+    <string name="hongkong">香港</string>
+    <string name="macao">澳门</string>
+    <string name="profile_complete">资料完整度</string>
 
 </resources>
