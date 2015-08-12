@@ -267,6 +267,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 			@Override
 			public void onClick(View v) {
 				if(networkStatus){
+					loading();
 					try {
 						sid = loadSid();
 						verifyCertiCodeURL = new URL(HOST
@@ -291,14 +292,17 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 										e.printStackTrace();
 									}
 									if (ConfirmCertiStatusCode == 1) {
+										destroyDialog();
 										Intent intent = new Intent();
 										intent.setClass(getApplicationContext(), ForgetPwdComplete.class);
 										startActivityForResult(intent, 0);
 									} else if (ConfirmCertiStatusCode == -30) {
+										destroyDialog();
 										Toast.makeText(getApplicationContext(),
 												R.string.input_wrong_certi_code, Toast.LENGTH_SHORT)
 												.show();
 									} else if (ConfirmCertiStatusCode == -31) {
+										destroyDialog();
 										Toast.makeText(getApplicationContext(), R.string.certi_code_overdue,
 												Toast.LENGTH_SHORT).show();
 									}
@@ -308,6 +312,7 @@ public class ForgetPwdActivity extends BaseActivity implements TextWatcher {
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
+									destroyDialog();
 									Toast.makeText(ForgetPwdActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
 								}
 							}){

@@ -303,7 +303,7 @@
     <string name="auth_key_car_Fail2">用户发送次数超限（一天5次）</string>
     <string name="auth_key_car_Fail3">该用户已有该临时钥匙</string>
     <string name="auth_key_car_Fail4">您不能授权给自己</string>
-    <string name="auth_key_car_Fail5">对方已有该区小车</string>
+    <string name="auth_key_car_Fail5">抱歉，小区每户最多只能拥有一条车门电子钥匙</string>
     <string name="auth_key_car_Fail6">用户接收次数超限（一天5次）</string>
     <string name="auth_key_car_Fail7">车只能借给同一住户的人</string>
     <string name="plass_door">请选择授权门</string>

@@ -105,6 +105,18 @@ public class PayActivity extends BaseActivity {
 				}
 				return super.onConsoleMessage(consoleMessage);
 			}
+			
+			public void onProgressChanged(WebView view, int progress){
+				loading();
+				
+				if(progress == 100)
+					destroyDialog();
+			}
+			
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				destroyDialog();
+			}
 		};
 		
 		payWebView.setWebChromeClient(wcc);

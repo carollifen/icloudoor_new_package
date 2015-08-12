@@ -87,6 +87,7 @@ public class SetSex extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				UpdateSex();
+				loading();
 			}
 		});
 		
@@ -115,6 +116,7 @@ public class SetSex extends BaseActivity {
 
 					@Override 
 					public void onResponse(JSONObject response) {
+						destroyDialog();
 						try {
 							if(response.getInt("code") == 1) {
 								if (response.getString("sid") != null) {
@@ -138,6 +140,7 @@ public class SetSex extends BaseActivity {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						destroyDialog();
 						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}){

@@ -87,18 +87,6 @@ public class ContactWuyeActivity extends BaseActivity {
 		webview.addJavascriptInterface(new Contact(), "cloudoorNative");
 		webview.loadUrl(url + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 
-		webview.setWebChromeClient(new WebChromeClient() {
-			@Override
-			public void onReceivedTitle(WebView view, String title) {
-
-			}
-
-			@Override
-			public void onProgressChanged(WebView view, int progress) {
-
-			}
-
-		});
 		webview.setWebViewClient(new WebViewClient() {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				view.loadUrl(url);
@@ -120,6 +108,18 @@ public class ContactWuyeActivity extends BaseActivity {
 					finish();
 				}
 				return super.onConsoleMessage(consoleMessage);
+			}
+			
+			public void onProgressChanged(WebView view, int progress){
+				loading();
+				
+				if(progress == 100)
+					destroyDialog();
+			}
+			
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				destroyDialog();
 			}
 		};
 		webview.setWebChromeClient(wcc);

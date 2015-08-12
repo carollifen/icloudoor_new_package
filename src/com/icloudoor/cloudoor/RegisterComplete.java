@@ -139,6 +139,7 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 			public void onClick(View v) {
 				
 				if(networkStatus){
+					loading();
 					try {
 						registerURL = new URL(HOST + "/user/manage/createUser.do"
 								+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
@@ -171,6 +172,7 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 											} catch (JSONException e) {
 												e.printStackTrace();
 											}
+											destroyDialog();
 											Toast.makeText(getApplicationContext(), R.string.regi_success, Toast.LENGTH_SHORT).show();
 											
 											SharedPreferences personalInfo = getSharedPreferences("PERSONSLINFO", MODE_PRIVATE);
@@ -181,10 +183,13 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 											setResult(RESULT_OK);
 											finish();
 										} else if (statusCode == -40) {
+											destroyDialog();
 											Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred, Toast.LENGTH_SHORT).show();
 										} else if (statusCode == -41) {
+											destroyDialog();
 											Toast.makeText(getApplicationContext(), R.string.weak_pwd, Toast.LENGTH_SHORT).show();
 										} else if(statusCode == -99) {
+											destroyDialog();
 											Toast.makeText(getApplicationContext(),
 													R.string.unknown_err, Toast.LENGTH_SHORT)
 													.show();
@@ -194,6 +199,7 @@ public class RegisterComplete extends BaseActivity implements TextWatcher {
 
 									@Override
 									public void onErrorResponse(VolleyError error) {
+										destroyDialog();
 										Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 									}
 								}) {

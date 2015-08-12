@@ -316,6 +316,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 			public void onClick(View v) {
 				
 				if(networkStatus){
+					loading();
 					try {
 						sid = loadSid();
 						verifyCertiCodeURL = new URL(HOST + "/user/manage/confirmVerifyCode4Reg.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
@@ -343,17 +344,21 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 										} catch (JSONException e) {
 											e.printStackTrace();
 										}
+										destroyDialog();
 										Intent intent = new Intent();
 										intent.setClass(getApplicationContext(), RegisterComplete.class);
 										startActivityForResult(intent, 0);
 									} else if (ConfirmCertiStatusCode == -30) {
+										destroyDialog();
 										Toast.makeText(getApplicationContext(),
 												R.string.input_wrong_certi_code, Toast.LENGTH_SHORT)
 												.show();
 									} else if (ConfirmCertiStatusCode == -31) {
+										destroyDialog();
 										Toast.makeText(getApplicationContext(), R.string.certi_code_overdue,
 												Toast.LENGTH_SHORT).show();
 									} else if(ConfirmCertiStatusCode == -40) {
+										destroyDialog();
 										Toast.makeText(getApplicationContext(), R.string.phone_num_have_been_registerred,
 												Toast.LENGTH_LONG).show();
 										SharedPreferences RegiPhone = getSharedPreferences("REGIPHONE", 0);
@@ -362,6 +367,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 							          	editor.commit();
 										finish();
 									} else if(ConfirmCertiStatusCode == -99){
+										destroyDialog();
 										Toast.makeText(getApplicationContext(), R.string.error_in_send_sms,
 												Toast.LENGTH_SHORT).show();
 									}
@@ -370,6 +376,7 @@ public class RegisterActivity extends BaseActivity implements TextWatcher {
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
+									destroyDialog();
 									Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 								}
 							}) {

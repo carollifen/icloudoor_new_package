@@ -275,8 +275,8 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 						txtMessage.setReceipt(message.getFrom());
 						emConversation.addMessage(txtMessage);
 						try {
-							EMChatManager.getInstance().sendMessage(txtMessage);
-						} catch (EaseMobException e) {
+								EMChatManager.getInstance().sendMessage(txtMessage);
+							} catch (EaseMobException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
@@ -284,9 +284,8 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 					} else if (action.equals("refreshData")) {
 						try {
 							
-							String data = message.getJSONArrayAttribute(
+							String data = message.getStringAttribute(
 									"data").toString();
-							
 							CMDData cmdData = GsonUtli.jsonToObject(data, CMDData.class);
 							List<String> setChat = cmdData.getSet();
 							if(setChat!=null){

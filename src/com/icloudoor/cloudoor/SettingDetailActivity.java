@@ -26,6 +26,9 @@ import android.widget.Toast;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMMessage;
 
 public class SettingDetailActivity extends BaseActivity {
 	private LinearLayout TVBtnResetPwd;
@@ -179,7 +182,7 @@ public class SettingDetailActivity extends BaseActivity {
                                     		saveSid("SID", null);
                                     		
                                     		isLogin = 0;
-                                            SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
+                                            final SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", 0);
                                             Editor editor1 = loginStatus.edit();
                                             editor1.putInt("LOGIN", isLogin);
                                             editor1.commit();
@@ -190,13 +193,34 @@ public class SettingDetailActivity extends BaseActivity {
                                             SharedPreferences savedUrl = getSharedPreferences("PreviousURL", 0);
                             				Editor editor = savedUrl.edit();
                             				editor.putString("Url", " ").commit();
+                            				
+                            				
+                            				 EMChatManager.getInstance().logout(new EMCallBack() {
+												
+												@Override
+												public void onSuccess() {
+													// TODO Auto-generated method stub
+													Intent intent3 = new Intent();
+		                                            Bundle bundle = new Bundle();
+		                                            bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
+		                                            intent3.putExtras(bundle);
+		                                            intent3.setClass(SettingDetailActivity.this, Login.class);
+		                                            startActivity(intent3);
+												}
+												
+												@Override
+												public void onProgress(int arg0, String arg1) {
+													// TODO Auto-generated method stub
+													
+												}
+												
+												@Override
+												public void onError(int arg0, String arg1) {
+													// TODO Auto-generated method stub
+													
+												}
+											});
                                             
-                                            Intent intent3 = new Intent();
-                                            Bundle bundle = new Bundle();
-                                            bundle.putString("phone", loginStatus.getString("PHONENUM", ""));
-                                            intent3.putExtras(bundle);
-                                            intent3.setClass(SettingDetailActivity.this, Login.class);
-                                            startActivity(intent3);
                                             
                                             CloudDoorMainActivity.instance.finish();
 

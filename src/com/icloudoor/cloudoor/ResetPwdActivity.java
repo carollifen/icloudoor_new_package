@@ -93,6 +93,7 @@ public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 
 			@Override
 			public void onClick(View v) {
+				
 				try {
 					resetPwdURL = new URL(HOST + "/user/manage/changePassword.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 				} catch (MalformedURLException e) {
@@ -103,6 +104,7 @@ public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 				newPwd = ETInputNewPwd.getText().toString();
 				confirmPwd = ETConfirmNewPwd.getText().toString();
 				if (newPwd.equals(confirmPwd)) {
+					loading();
 					MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(
 							Method.POST, resetPwdURL.toString(), null,
 							new Response.Listener<JSONObject>() {
@@ -124,12 +126,15 @@ public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 										} catch (JSONException e) {
 											e.printStackTrace();
 										}
+										destroyDialog();
 										Toast.makeText(getApplicationContext(), R.string.forget_success, Toast.LENGTH_SHORT).show();
 										
 										finish();
 									}else if (statusCode == -41) {
+										destroyDialog();
 										Toast.makeText(getApplicationContext(), R.string.weak_pwd, Toast.LENGTH_SHORT).show();
 									}else if (statusCode == -51) {
+										destroyDialog();
 										Toast.makeText(getApplicationContext(), R.string.wrong_old_pwd, Toast.LENGTH_SHORT).show();
 									}
 								}
@@ -137,6 +142,7 @@ public class ResetPwdActivity extends BaseActivity implements TextWatcher {
 
 								@Override
 								public void onErrorResponse(VolleyError error) {
+									destroyDialog();
 									Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 								}
 							}) {

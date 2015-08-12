@@ -138,6 +138,19 @@ public class NoticeActivity extends BaseActivity {
 				}
 				return super.onConsoleMessage(consoleMessage);
 			}
+			
+			public void onProgressChanged(WebView view, int progress){
+				loading();
+				
+				if(progress == 100)
+					destroyDialog();
+			}
+			
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				destroyDialog();
+			}
+			
 		};
 		anouncePageWebView.setWebChromeClient(wcc);
 	}

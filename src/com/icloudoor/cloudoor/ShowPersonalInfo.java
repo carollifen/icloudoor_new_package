@@ -112,10 +112,10 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 	private String TAG = this.getClass().getSimpleName();
 
-	final Calendar c = Calendar.getInstance();
-	int mYear = c.get(Calendar.YEAR);
-	int mMonth = c.get(Calendar.MONTH);
-	int mDay = c.get(Calendar.DAY_OF_MONTH);
+	Calendar c;
+	int mYear;
+	int mMonth;
+	int mDay;
 
 	private MyAreaDBHelper mAreaDBHelper;
 	private SQLiteDatabase mAreaDB;
@@ -286,12 +286,13 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 						Map<String, String> map = new HashMap<String, String>();
 						map.put("birthday", BirthDayDate);
 						updateProfile(map);
+						loading();
 					}
 
 
 				};
 
-				new DatePickerDialog(ShowPersonalInfo.this,AlertDialog.THEME_HOLO_LIGHT, onDateSetListener, mYear, mMonth, mDay).show();
+				new DatePickerDialog(ShowPersonalInfo.this, AlertDialog.THEME_HOLO_LIGHT, onDateSetListener, mYear, mMonth, mDay).show();
 			}
 
 		});	
@@ -652,7 +653,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
-						
+						destroyDialog();
 						try {
 							if(response.getInt("code") == 1) {
 
@@ -676,6 +677,21 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 									Editor editor1 = savedUrl.edit();
 									editor1.putString("Url", profileMap.get("portraitUrl")).commit();
 								}
+								
+								int infoCount = 0;
+								if(loginStatus.getString("NICKNAME", null).length() > 0)
+									infoCount++;
+								if(loginStatus.getInt("SEX", 0) != 0)
+									infoCount++;
+								if(loginStatus.getString("BIRTH", null).length() > 0)
+									infoCount++;
+								if(loginStatus.getString("URL", null).length() > 0)
+									infoCount++;
+								if(loginStatus.getInt("PROVINCE", 0) != 0)
+									infoCount++;
+								
+								mTextPercent.setText(getString(R.string.profile_complete) + String.valueOf((int) infoCount * 100 / 5) + "%");
+								InfoPercent.setProgress((int) infoCount * 100 / 5);
 
 							} else if (statusCode == -1) {
 								Toast.makeText(getApplicationContext(), R.string.not_enough_params, Toast.LENGTH_SHORT).show();
@@ -699,6 +715,7 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						destroyDialog();
 						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {
@@ -780,7 +797,20 @@ public class ShowPersonalInfo extends BaseActivity implements OnClickListener{
 			if (tempString != null){
 				if (tempString.length() > 0){
 					TVDate.setText(tempString.substring(5,7) + getString(R.string.month) + tempString.substring(8) + getString(R.string.day));
+					mYear = Integer.parseInt(tempString.substring(0, 4));
+					mMonth = Integer.parseInt(tempString.substring(5,7)) - 1;
+					mDay = Integer.parseInt(tempString.substring(8));
+				} else {
+					c = Calendar.getInstance();
+					mYear = c.get(Calendar.YEAR);
+					mMonth = c.get(Calendar.MONTH);
+					mDay = c.get(Calendar.DAY_OF_MONTH);
 				}
+			} else {
+				c = Calendar.getInstance();
+				mYear = c.get(Calendar.YEAR);
+				mMonth = c.get(Calendar.MONTH);
+				mDay = c.get(Calendar.DAY_OF_MONTH);
 			}
 			
 			int infoCount = 0;

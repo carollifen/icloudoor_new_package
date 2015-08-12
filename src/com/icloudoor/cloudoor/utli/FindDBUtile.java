@@ -82,6 +82,9 @@ public class FindDBUtile {
 			}while(mCursorD.moveToNext());		
 		}
 		mCursorD.close();
+		if(districtName==null){
+			return "";
+		}
 		return districtName;
 	}
 

@@ -319,12 +319,34 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 								// editor.putInt("LOGIN", 0);
 								// editor.commit();
 								logoutToDo.logoutDoing();
+								
+								EMChatManager.getInstance().logout(new EMCallBack() {
+									
+									@Override
+									public void onSuccess() {
+										// TODO Auto-generated method stub
+										Intent intent = new Intent();
+										intent.setClass(getApplicationContext(),
+												Login.class);
+										startActivity(intent);
+										finish();
+									}
+									
+									@Override
+									public void onProgress(int arg0, String arg1) {
+										// TODO Auto-generated method stub
+										
+									}
+									
+									@Override
+									public void onError(int arg0, String arg1) {
+										// TODO Auto-generated method stub
+										
+									}
+								});
+								
 
-								final Intent intent = new Intent();
-								intent.setClass(getApplicationContext(),
-										Login.class);
-								startActivity(intent);
-								finish();
+								
 							}
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

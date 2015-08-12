@@ -88,7 +88,6 @@ public class KeyHelper {
 				+ "?sid=" + loadSid() + "&ver=" + version.getVersionName()
 				+ "&imei=" + version.getDeviceId();
 
-		System.out.println("¸ü¸ÄÔ¿³×.....");
 		MyJsonObjectRequest mJsonRequest = new MyJsonObjectRequest(Method.POST,
 				downLoadKeyURL.toString(), null,
 				new Response.Listener<JSONObject>() {
@@ -120,12 +119,12 @@ public class KeyHelper {
 				return map;
 			}
 		};
+		mQueue.add(mJsonRequest);
 	}
 	
 	
 	public void parseKeyData(JSONObject response) throws JSONException {
 		MyDebugLog.e("test for new interface", "parseKeyData func");
-		
 		// for new key download interface
 		JSONObject data = response.getJSONObject("data");
 		JSONArray doorAuths = data.getJSONArray("doorAuths");
@@ -422,7 +421,6 @@ public class KeyHelper {
 
 			try {
 				parseKeyData(response);
-
 			}catch (JSONException e){
 				Log.e("error", "There is a error");
 			}
@@ -440,7 +438,6 @@ public class KeyHelper {
 	}
 	
 	public void checkForUserStatus() {
-		System.out.println("×´Ì¬checkForUserStatus");
 		URL getUserStatusURL = null;
 		try {
 			getUserStatusURL = new URL(UrlUtils.HOST + "/user/manage/getProfile.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());

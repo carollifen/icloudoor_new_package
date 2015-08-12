@@ -519,7 +519,7 @@ public class MessageAdapter extends BaseAdapter {
 					if (holder.tv_delivered != null) {
 						holder.tv_delivered.setVisibility(View.INVISIBLE);
 					}
-					holder.tv_ack.setVisibility(View.VISIBLE);
+					holder.tv_ack.setVisibility(View.INVISIBLE);
 				} else {
 					holder.tv_ack.setVisibility(View.INVISIBLE);
 

@@ -21,11 +21,11 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -48,6 +48,7 @@ import com.icloudoor.cloudoor.chat.activity.MipcaActivityCapture;
 import com.icloudoor.cloudoor.chat.activity.VerificationFrientsActivity;
 import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.utli.VFDaoImpl;
+import com.icloudoor.cloudoor.widget.DeleteChatDialog;
 import com.umeng.analytics.MobclickAgent;
 
 public class MsgFragment extends Fragment implements OnItemClickListener,
@@ -124,18 +125,35 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 		});
 		
 		
-		
-		msg_list.setOnLongClickListener(new OnLongClickListener() {
-			
+		msg_list.setOnItemLongClickListener(new OnItemLongClickListener() {
+
 			@Override
-			public boolean onLongClick(View v) {
-				// TODO Auto-generated method stub
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					final int position, long id) {
 				
 				
+				final DeleteChatDialog chatDialog = new DeleteChatDialog(getActivity());
+				chatDialog.show();
+				chatDialog.setOKOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						EMConversation conversation = (EMConversation) adapter.getItem(position);
+						EMChatManager.getInstance().clearConversation(conversation.getUserName());
+						refresh();
+						chatDialog.dismiss();
+					}
+				});
 				
 				return true;
 			}
+			
+			
+			
 		});
+		
+		
 		
 		group_layout.setOnClickListener(this);
 		add_friends.setOnClickListener(this);

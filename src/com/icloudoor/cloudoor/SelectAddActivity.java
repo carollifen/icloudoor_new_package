@@ -24,6 +24,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,12 +58,25 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
 	private int maxPlength;
 	private int maxClength;
 	private int maxDlength;
+	
+	private int provinceId, cityId, districtId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_select_add);
+		
+		provinceId = 0;
+		cityId = 0;
+		districtId = 0;
+		
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS", MODE_PRIVATE);
+		if(loginStatus.getInt("PROVINCE", 0) != 0) {
+			provinceId = loginStatus.getInt("PROVINCE", 0);
+			cityId = loginStatus.getInt("CITY", 0);
+			districtId = loginStatus.getInt("DIS", 0);
+		}
 		
 		
 		mAreaDBHelper = new MyAreaDBHelper(SelectAddActivity.this, DATABASE_NAME, null, 1);
@@ -223,8 +237,7 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
 				map.put("cityId", String.valueOf(getCityID(citySet[mViewProvince.getCurrentItem()][mViewCity.getCurrentItem()])));
 				map.put("districtId", String.valueOf(getDistrictID(districtSet[mViewProvince.getCurrentItem()][mViewCity.getCurrentItem()][mViewDistrict.getCurrentItem()])));
 				updateProfile(map);
-				
-				finish();
+				loading();
 			}
 			
 		});
@@ -238,7 +251,16 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
 	
 	private void setUpData() {
 		mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(SelectAddActivity.this, provinceSet));
-		mViewProvince.setCurrentItem(provinceSet.length/2);
+		if(provinceId == 0) {
+			mViewProvince.setCurrentItem(provinceSet.length/2);
+		} else {
+			for(int index = 0; index < provinceSet.length; index++) {
+				if(provinceSet[index].equals(getProvinceName(provinceId))) {
+					mViewProvince.setCurrentItem(index);
+					break;
+				}
+			}
+		}
 
 		mViewProvince.setVisibleItems(7);
 		mViewCity.setVisibleItems(7);
@@ -255,12 +277,13 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
 		} else if (wheel == mViewCity) {
 			updatecDistrict(mViewDistrict, districtSet, mViewProvince.getCurrentItem(), newValue); 
 		} else if (wheel == mViewDistrict) {
-
+			
 		}
 	}
-
+	
+	int changeCount = 0;
 	private void updatecDistrict(WheelView city, String ccities[][][], int index,int index2) {
-    	
+
     	int len = 0;
     	for(int i = 0; i < ccities[index][index2].length; i++){
     		if(ccities[index][index2][i] != null) len++;
@@ -273,11 +296,27 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
     	
         ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this, newDistrict);
         city.setViewAdapter(adapter);
-        city.setCurrentItem(newDistrict.length / 2);     
+        if(districtId == 0) {
+        	city.setCurrentItem(newDistrict.length / 2);
+        } else {
+        	for(int index1 = 0; index1 < newDistrict.length; index1++) {
+        		if(newDistrict[index1].equals(getDistrictName(districtId))) {
+        			city.setCurrentItem(index1);
+        			break;
+        		}
+        	}
+        }    
+        
+        changeCount++;
+        if(changeCount == 2){
+        	provinceId = 0;
+    		cityId = 0;
+    		districtId = 0;
+        }
     }
 
 	private void updateCity(WheelView city, String cities[][], int index) {
-    	
+
     	int len = 0;
     	for(int i = 0; i < cities[index].length; i++){
     		if(cities[index][i] != null ) len++;
@@ -290,7 +329,16 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
     	
         ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this, newCity);
         city.setViewAdapter(adapter);
-        city.setCurrentItem(newCity.length / 2);    
+        if(cityId == 0) {
+        	city.setCurrentItem(newCity.length / 2);
+        } else {
+        	for(int index1 = 0; index1 < newCity.length; index1++) {
+        		if(newCity[index1].equals(getCityName(cityId))) {
+        			city.setCurrentItem(index1);
+        			break;
+        		}
+        	}
+        }
     }
 	
 	private void updateProfile (final Map<String, String> profileMap) {
@@ -307,7 +355,7 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
 				new Response.Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject response) {
-						
+						destroyDialog();
 						try {
 							if(response.getInt("code") == 1) {
 
@@ -322,15 +370,20 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
 									editor.putInt("DIS", Integer.parseInt(profileMap.get("districtId")));
 									editor.commit();
 								} 
+								finish();
 
 							} else if (response.getInt("code") == -1) {
 								Toast.makeText(getApplicationContext(), R.string.not_enough_params, Toast.LENGTH_SHORT).show();
+								finish();
 							} else if (response.getInt("code") == -2) {
 								Toast.makeText(getApplicationContext(), R.string.not_login, Toast.LENGTH_SHORT).show();
+								finish();
 							} else if (response.getInt("code") == -99) {
 								Toast.makeText(getApplicationContext(), R.string.unknown_err, Toast.LENGTH_SHORT).show();
+								finish();
 							} else if (response.getInt("code") == -42) {
 								Toast.makeText(getApplicationContext(), R.string.nick_name_already, Toast.LENGTH_SHORT).show();
+								finish();
 							}
 						} catch (NotFoundException e) {
 							// TODO Auto-generated catch block
@@ -345,6 +398,7 @@ public class SelectAddActivity extends BaseActivity implements OnWheelChangedLis
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						destroyDialog();
 						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}) {

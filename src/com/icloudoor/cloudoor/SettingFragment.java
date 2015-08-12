@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -152,6 +153,7 @@ public class SettingFragment extends Fragment {
 	
 	private int[] sexRole = {R.drawable.default_icon_female, R.drawable.default_icon_male, R.drawable.default_icon_female};
 
+	private SharePopupWindow shareWindow;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -374,13 +376,36 @@ public class SettingFragment extends Fragment {
 				startActivity(intent5);
 				break;
 			case R.id.btn_share:
-				mController.openShare(getActivity(), false);
+				
+				shareWindow = new SharePopupWindow(getActivity(), itemsOnClick);
+				shareWindow.showAtLocation(getActivity().findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+				
+//				mController.openShare(getActivity(), false);
 				break;
 
 			}
 		}
 
 	}
+	
+	private OnClickListener itemsOnClick = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			shareWindow.dismiss();
+			switch (v.getId()) {
+			case R.id.weixin_layout:
+				shareWindow.dismiss();
+				mController.postShare(getActivity(), SHARE_MEDIA.WEIXIN, mSnsPostListener);
+				break;
+			case R.id.weixin_circle_layout:
+				shareWindow.dismiss();
+				mController.postShare(getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE, mSnsPostListener);
+				break;
+			}
+		}
+		
+	};
 
 	public void saveSid(String key, String value) {
 		if (getActivity() != null) {
@@ -479,8 +504,7 @@ public class SettingFragment extends Fragment {
 		weiXinleMedia.setTargetUrl(share_link);
 		mController.setShareMedia(weiXinleMedia);
 
-		mController.getConfig().removePlatform(SHARE_MEDIA.SINA,
-				SHARE_MEDIA.TENCENT);
+//		mController.getConfig().removePlatform(SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);
 
 	}
 

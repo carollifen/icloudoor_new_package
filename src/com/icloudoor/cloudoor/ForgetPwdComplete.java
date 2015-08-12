@@ -142,6 +142,7 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 			@Override
 			public void onClick(View v) {
 				if(networkStatus){
+					loading();
 					try {
 						registerURL = new URL(HOST
 								+ "/user/manage/changePassword2.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
@@ -176,7 +177,7 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 											Toast.makeText(getApplicationContext(),
 													R.string.forget_success,
 													Toast.LENGTH_SHORT).show();
-
+											destroyDialog();
 											SharedPreferences RegiPhone = getSharedPreferences(
 													"REGIPHONE", 0);
 											Editor editor = RegiPhone.edit();
@@ -186,14 +187,17 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 											setResult(RESULT_OK);
 											finish();
 										} else if (statusCode == -41) {
+											destroyDialog();
 											Toast.makeText(getApplicationContext(),
 													R.string.weak_pwd,
 													Toast.LENGTH_SHORT).show();
 										} else if (statusCode == -99) {
+											destroyDialog();
 											Toast.makeText(getApplicationContext(),
 													R.string.unknown_err,
 													Toast.LENGTH_SHORT).show();
 										} else if (statusCode == -72) {
+											destroyDialog();
 											Toast.makeText(getApplicationContext(),
 													R.string.user_not_exist,
 													Toast.LENGTH_SHORT).show();
@@ -203,6 +207,7 @@ public class ForgetPwdComplete extends BaseActivity implements TextWatcher {
 
 									@Override
 									public void onErrorResponse(VolleyError error) {
+										destroyDialog();
 										Toast.makeText(ForgetPwdComplete.this,
 												R.string.network_error,
 												Toast.LENGTH_SHORT).show();

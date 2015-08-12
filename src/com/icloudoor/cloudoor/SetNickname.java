@@ -66,6 +66,7 @@ public class SetNickname extends BaseActivity {
 					Toast.makeText(getApplicationContext(), R.string.input_cannot_empty, Toast.LENGTH_SHORT).show();
 				} else {
 					UpdateNickname();
+					loading();
 				}
 				
 			}
@@ -106,7 +107,7 @@ public class SetNickname extends BaseActivity {
 
 					@Override 
 					public void onResponse(JSONObject response) {
-
+						destroyDialog();
 						try {	
 							if(response.getInt("code") == 1) {
 								if (response.getString("sid") != null) {
@@ -130,6 +131,7 @@ public class SetNickname extends BaseActivity {
 
 					@Override
 					public void onErrorResponse(VolleyError error) {
+						destroyDialog();
 						Toast.makeText(getApplicationContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
 					}
 				}){

@@ -79,6 +79,8 @@ public class WuyeFragment extends Fragment {
 		
 	boolean isHasPropServ = false;
 	
+	private RelativeLayout fixLayout, goodLayout, badLayout, payLayout, billLayout, lianxiLayout;
+	
 	public WuyeFragment() {
 
 	}
@@ -96,6 +98,13 @@ public class WuyeFragment extends Fragment {
 		ImageView BtnPay;
 
 		View view = inflater.inflate(R.layout.wuye_page, container, false);
+		
+		fixLayout = (RelativeLayout) view.findViewById(R.id.fix_layout);
+		goodLayout = (RelativeLayout) view.findViewById(R.id.good_layout);
+		badLayout = (RelativeLayout) view.findViewById(R.id.bad_layout);
+		payLayout = (RelativeLayout) view.findViewById(R.id.pay_layout);
+		billLayout = (RelativeLayout) view.findViewById(R.id.bill_layout);
+		lianxiLayout = (RelativeLayout) view.findViewById(R.id.lianxi_layout);
 
 		logoutToDo = new Logout(getActivity());
 
@@ -345,7 +354,17 @@ public class WuyeFragment extends Fragment {
 		
 		// start auto scroll when onResume
 		viewPager.startAutoScroll();
-
+		
+		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
+		if(loginStatus.getInt("role", 0) == 2) {
+			fixLayout.setVisibility(View.INVISIBLE);
+			goodLayout.setVisibility(View.INVISIBLE);
+			badLayout.setVisibility(View.INVISIBLE);
+			payLayout.setVisibility(View.INVISIBLE);
+			billLayout.setVisibility(View.INVISIBLE);
+			lianxiLayout.setVisibility(View.INVISIBLE);
+		}
+		
 		try {
 			unReadURL = new URL(HOST + "/user/prop/zone/getGridCount.do" + "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
