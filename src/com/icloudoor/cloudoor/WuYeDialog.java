@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -17,7 +19,7 @@ public class WuYeDialog extends Dialog implements android.view.View.OnClickListe
 	 private String name;
      private WuYeDialogCallBack wuYeDialogCallBack;
  
-     private TextView boundTV;
+     private Button boundTV;
    private  Context context;
      public WuYeDialog (Context context,int theme,String name,WuYeDialogCallBack wuYeDialogCallBack) {
              super(context,theme);
@@ -31,7 +33,7 @@ public class WuYeDialog extends Dialog implements android.view.View.OnClickListe
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wuyedialog_layout);
-		boundTV=(TextView) findViewById(R.id.id_queding);
+		boundTV=(Button) findViewById(R.id.id_queding);
 		boundTV.setOnClickListener(this);
 		
 		

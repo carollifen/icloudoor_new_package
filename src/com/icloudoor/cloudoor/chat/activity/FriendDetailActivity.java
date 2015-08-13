@@ -37,9 +37,9 @@ import com.icloudoor.cloudoor.utli.UserDBHelper;
 import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class FriendDetailActivity extends BaseActivity implements OnClickListener , NetworkInterface{
-	
-	
+public class FriendDetailActivity extends BaseActivity implements
+		OnClickListener, NetworkInterface {
+
 	private ImageView right_img;
 	private ImageView btn_back;
 	private ImageView sex_img;
@@ -48,7 +48,6 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	private TextView address_tx;
 	private Button add_contact_bnt;
 
-	
 	String Nickname;
 	String PortraitUrl;
 	String UserId;
@@ -57,13 +56,12 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	int ProvinceId;
 	int Sex;
 	int returnChat;
-	
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
-		
-		
+
 		setContentView(R.layout.activity_frienddetail);
 		right_img = (ImageView) findViewById(R.id.right_img);
 		btn_back = (ImageView) findViewById(R.id.btn_back);
@@ -75,18 +73,18 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		right_img.setOnClickListener(this);
 		btn_back.setOnClickListener(this);
 		add_contact_bnt.setOnClickListener(this);
-		
-		returnChat = getIntent().getIntExtra("returnChat",0);
-		
-		CityId = getIntent().getIntExtra("CityId",0);
-		DistrictId = getIntent().getIntExtra("DistrictId",0);
-		ProvinceId = getIntent().getIntExtra("ProvinceId",0);
-		Sex = getIntent().getIntExtra("Sex",0);
+
+		returnChat = getIntent().getIntExtra("returnChat", 0);
+
+		CityId = getIntent().getIntExtra("CityId", 0);
+		DistrictId = getIntent().getIntExtra("DistrictId", 0);
+		ProvinceId = getIntent().getIntExtra("ProvinceId", 0);
+		Sex = getIntent().getIntExtra("Sex", 0);
 		Nickname = getIntent().getStringExtra("Nickname");
 		PortraitUrl = getIntent().getStringExtra("PortraitUrl");
 		UserId = getIntent().getStringExtra("UserId");
 		registerBoradcastReceiver();
-		if(returnChat==1){
+		if (returnChat == 1) {
 			add_contact_bnt.setText(R.string.returnChat);
 		}
 		setdata();
@@ -114,26 +112,27 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		}
 
 	}
-	
-	public void setdata(){
-		ImageLoader.getInstance().displayImage(PortraitUrl, user_head, DisplayImageOptionsUtli.options);
+
+	public void setdata() {
+		ImageLoader.getInstance().displayImage(PortraitUrl, user_head,
+				DisplayImageOptionsUtli.options);
 		user_name.setText(Nickname);
-		
-		if(TextUtils.isEmpty(FindDBUtile.getProvinceName(this, ProvinceId))){
+
+		if (TextUtils.isEmpty(FindDBUtile.getProvinceName(this, ProvinceId))) {
 			address_tx.setText(R.string.default_address);
-		}else{
-			address_tx.setText(FindDBUtile.getProvinceName(this, ProvinceId)+""+FindDBUtile.getCityName(this, CityId)+
-					"   "+FindDBUtile.getDistrictName(this, DistrictId));
+		} else {
+			address_tx.setText(FindDBUtile.getProvinceName(this, ProvinceId)
+					+ "" + FindDBUtile.getCityName(this, CityId) + "   "
+					+ FindDBUtile.getDistrictName(this, DistrictId));
 		}
-		
-		if(Sex==1){
+
+		if (Sex == 1) {
 			sex_img.setBackgroundResource(R.drawable.boy_ioc);
-		}else{
+		} else {
 			sex_img.setBackgroundResource(R.drawable.girl_ioc);
 		}
 	}
-	
-	
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -154,19 +153,20 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 				e.printStackTrace();
 			}
 			loading();
-			getNetworkData(this, "/user/im/removeFriend.do", jsonObject.toString(),false);
+			getNetworkData(this, "/user/im/removeFriend.do",
+					jsonObject.toString(), false);
 			break;
 		case R.id.report_layout:
 			pw.dismiss();
-			Intent reportIntent = new Intent(this,ReportActivity.class);
+			Intent reportIntent = new Intent(this, ReportActivity.class);
 			reportIntent.putExtra("trgUserId", UserId);
 			startActivity(reportIntent);
 			break;
 		case R.id.add_contact_bnt:
-			if(returnChat==1){
+			if (returnChat == 1) {
 				finish();
-			}else{
-				Intent intent = new Intent(this,ChatActivity.class);
+			} else {
+				Intent intent = new Intent(this, ChatActivity.class);
 				intent.putExtra("userId", UserId);
 				startActivity(intent);
 				break;
@@ -182,9 +182,9 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 		// TODO Auto-generated method stub
 		try {
 			int code = response.getInt("code");
-			if(code==1){
+			if (code == 1) {
 				getFriends();
-			}else{
+			} else {
 				showToast(R.string.removeFriendFail);
 			}
 		} catch (JSONException e) {
@@ -196,62 +196,64 @@ public class FriendDetailActivity extends BaseActivity implements OnClickListene
 	@Override
 	public void onFailure(VolleyError error) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
 	public void getFriends() {
-//    	RequestQueue mRequestQueue = Volley.newRequestQueue(this);
-		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid=" + loadSid() + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId();
-		MyRequestBody requestBody = new MyRequestBody( url, "{}",new Response.Listener<JSONObject>() {
-			@Override
-			public void onResponse(JSONObject response) {
-				// TODO Auto-generated method stub
-				MyFriendInfo friendInfo = GsonUtli.jsonToObject(
-						response.toString(), MyFriendInfo.class);
-				showToast(R.string.removeFriendSuccess);
-				if(returnChat==1){
-					UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(FriendDetailActivity.this);
-					daoImpl.getDbHelper().getWritableDatabase().delete("userinfo", "userId=?", new String[]{UserId});
-					setResult(RESULT_OK);
-					finish();
-				}else{
-					finish();
-				}
-				destroyDialog();
-				if (friendInfo != null) {
-					List<MyFriendsEn> data = friendInfo.getData();
-					UserDBHelper.getInstance(FriendDetailActivity.this).initTable(friendInfo.getData());
-					finish();
-				} 
-			}
-			
-		},new Response.ErrorListener() {
-			
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				// TODO Auto-generated method stub
-				destroyDialog();
-				showToast(R.string.network_error);
-			}
-		});
-		
+		// RequestQueue mRequestQueue = Volley.newRequestQueue(this);
+		String url = UrlUtils.HOST + "/user/im/getFriends.do" + "?sid="
+				+ loadSid() + "&ver=" + version.getVersionName() + "&imei="
+				+ version.getDeviceId();
+		MyRequestBody requestBody = new MyRequestBody(url, "{}",
+				new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						// TODO Auto-generated method stub
+						MyFriendInfo friendInfo = GsonUtli.jsonToObject(
+								response.toString(), MyFriendInfo.class);
+						showToast(R.string.removeFriendSuccess);
+						UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(
+								FriendDetailActivity.this);
+						daoImpl.getDbHelper()
+								.getWritableDatabase()
+								.delete("userinfo", "userId=?",
+										new String[] { UserId });
+						setResult(RESULT_OK);
+						finish();
+						destroyDialog();
+						if (friendInfo != null) {
+							List<MyFriendsEn> data = friendInfo.getData();
+							UserDBHelper.getInstance(FriendDetailActivity.this)
+									.initTable(friendInfo.getData());
+							finish();
+						}
+					}
+
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// TODO Auto-generated method stub
+						destroyDialog();
+						showToast(R.string.network_error);
+					}
+				});
+
 		mQueue.add(requestBody);
 	}
-	
-	public void registerBoradcastReceiver(){  
-        IntentFilter myIntentFilter = new IntentFilter();  
-        myIntentFilter.addAction("removeFriend");
-        //注册广播        
-        registerReceiver(mBroadcastReceiver, myIntentFilter);  
-    }
-	
-	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver(){
+
+	public void registerBoradcastReceiver() {
+		IntentFilter myIntentFilter = new IntentFilter();
+		myIntentFilter.addAction("removeFriend");
+		// 注册广播
+		registerReceiver(mBroadcastReceiver, myIntentFilter);
+	}
+
+	BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			finish();
 		}
-		
+
 	};
 }

@@ -134,7 +134,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:text="昵称"
-                        android:textColor="#666666"
+                        android:textColor="#333333"
                         android:textSize="15sp" />
 
                     <TextView
@@ -145,7 +145,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="35dp"
                         android:text=""
-                        android:textColor="#666666"
+                        android:textColor="#999999"
                         android:textSize="15sp" />
 
                     <ImageView
@@ -174,7 +174,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:text="性别"
-                        android:textColor="#666666"
+                        android:textColor="#333333"
                         android:textSize="15sp" />
 
                     <TextView
@@ -185,7 +185,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="35dp"
                         android:text=""
-                        android:textColor="#666666"
+                        android:textColor="#999999"
                         android:textSize="15sp" />
 
                     <ImageView
@@ -214,7 +214,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:text="生日"
-                        android:textColor="#666666"
+                        android:textColor="#333333"
                         android:textSize="15sp" />
 
                     <RelativeLayout
@@ -236,7 +236,7 @@
                                 android:layout_height="match_parent"
                                 android:gravity="center_vertical|center"
                                 android:text=""
-                                android:textColor="#666666"
+                                android:textColor="#999999"
                                 android:textSize="15sp" />
                         </LinearLayout>
                     </RelativeLayout>
@@ -267,7 +267,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
                         android:text="地区"
-                        android:textColor="#666666"
+                        android:textColor="#333333"
                         android:textSize="15sp" />
 
                     <TextView
@@ -278,7 +278,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="35dp"
                         android:text=""
-                        android:textColor="#666666"
+                        android:textColor="#999999"
                         android:textSize="15sp" />
 
                     <ImageView
@@ -308,7 +308,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:text="二维码"
-                    android:textColor="#666666"
+                    android:textColor="#333333"
                     android:textSize="15sp" />
 
                 <ImageView

@@ -1171,7 +1171,7 @@ public class KeyFragment extends Fragment {
 		
 		sid2 = loadSid();
 		try {
-			updateCarPosStatusURL = new URL(HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2 + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
+			updateCarPosStatusURL = new URL(UrlUtils.HOST + "/user/api/updateCarPosStatus.do" + "?sid=" + sid2 + "&ver=" + version.getVersionName() + "&imei=" + version.getDeviceId());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

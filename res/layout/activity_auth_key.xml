@@ -163,7 +163,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/transparent"
-            android:hint="手机号码"
             android:textColor="#333333"
             android:textSize="16sp" />
 

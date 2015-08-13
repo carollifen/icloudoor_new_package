@@ -424,10 +424,11 @@ public class WuyeFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
+			SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
 			Intent intent = new Intent();
 			switch (v.getId()) {
 			case R.id.btn_lianxiwuye:
-				if (isHasPropServ) {
+				if (loginStatus.getInt("role", 0) != 0) {
 					intent.setClass(getActivity(), ContactWuyeActivity.class);
 					startActivity(intent);
 				} else {
@@ -443,7 +444,7 @@ public class WuyeFragment extends Fragment {
 				
 				break;
 			case R.id.btn_notice:
-				if (isHasPropServ) {
+				if (loginStatus.getInt("role", 0) != 0) {
 					unreadNoticeLayout.setVisibility(View.INVISIBLE);
 					unreadNoticeCount.setText("");
 					unreadNotice = 0;
@@ -463,7 +464,7 @@ public class WuyeFragment extends Fragment {
 				
 				break;
 			case R.id.btn_fix:
-				if (isHasPropServ) {
+				if (loginStatus.getInt("role", 0) != 0) {
 					intent.setClass(getActivity(), ReportToRepairActivity.class);
 					intent.putExtra("webUrl", "/user/prop/zone/rr/add.do");
 					startActivity(intent);
@@ -480,7 +481,7 @@ public class WuyeFragment extends Fragment {
 				
 				break;
 			case R.id.btn_bad:
-				if (isHasPropServ) {
+				if (loginStatus.getInt("role", 0) != 0) {
 					intent.setClass(getActivity(), ComplainActivity.class);
 					startActivity(intent);
 				} else {
@@ -496,7 +497,7 @@ public class WuyeFragment extends Fragment {
 				
 				break;
 			case R.id.btn_good:
-				if (isHasPropServ) {
+				if (loginStatus.getInt("role", 0) != 0) {
 					intent.setClass(getActivity(), CommendActivity.class);
 					startActivity(intent);
 				} else {
@@ -512,7 +513,7 @@ public class WuyeFragment extends Fragment {
 				
 				break;
 			case R.id.btn_query:
-				if (isHasPropServ) {
+				if (loginStatus.getInt("role", 0) != 0) {
 					unreadQueryLayout.setVisibility(View.INVISIBLE);
 					unreadQueryCount.setText("");
 					unreadQuery = 0;
@@ -532,7 +533,7 @@ public class WuyeFragment extends Fragment {
 				
 				break;
 			case R.id.btn_bill:
-				if (isHasPropServ) {
+				if (loginStatus.getInt("role", 0) != 0) {
 					intent.setClass(getActivity(), BillActivity.class);
 					startActivity(intent);
 				} else {
@@ -548,7 +549,7 @@ public class WuyeFragment extends Fragment {
 				
 				break;
 			case R.id.btn_pay:
-				if (isHasPropServ) {
+				if (loginStatus.getInt("role", 0) != 0) {
 					intent.setClass(getActivity(), PayActivity.class);
 					startActivity(intent);
 				} else {

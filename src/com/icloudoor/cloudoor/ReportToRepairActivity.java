@@ -205,6 +205,22 @@ public class ReportToRepairActivity extends BaseActivity {
 
 	}
 
+	
+	@Override
+	  protected void onSaveInstanceState(Bundle outState) {
+	    super.onSaveInstanceState(outState);
+	    // Save the state of the WebView
+	    fixwebview.saveState(outState);
+	  }
+	   
+	  @Override
+	  protected void onRestoreInstanceState(Bundle savedInstanceState){
+	    super.onRestoreInstanceState(savedInstanceState); 
+	    // Restore the state of the WebView
+	    fixwebview.restoreState(savedInstanceState);
+	  }
+
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

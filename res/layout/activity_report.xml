@@ -39,7 +39,7 @@
             android:text="@string/submit"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:textColor="#05b803"
+            android:textColor="#ffffff"
             android:textSize="18sp" />
     </RelativeLayout>
     

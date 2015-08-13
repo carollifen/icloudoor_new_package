@@ -41,9 +41,9 @@ public class MyDialog extends Dialog {
                  bound=(TextView) findViewById(R.id.bound);
                  bound.setOnClickListener(clickListener);
                  cancle.setOnClickListener(clickListener);
-                 bound.setTextColor(0x7FFFFFFF);
+//                 bound.setTextColor(0x7FFFFFFF);
                  bound.setEnabled(false);
-                 cancle.setTextColor(0xff000000);
+//                 cancle.setTextColor(0xff000000);
                  pswEditText.addTextChangedListener(new TextWatcher() {
 					
 					@Override
@@ -62,10 +62,8 @@ public class MyDialog extends Dialog {
 					@Override
 					public void afterTextChanged(Editable s) {
 						if(pswEditText.getText().toString().length() > 5){
-							bound.setTextColor(0xFFFFFFFF);
 							bound.setEnabled(true);
 						} else {
-							bound.setTextColor(0x7fffffff);
 							bound.setEnabled(false);
 						}
 					}

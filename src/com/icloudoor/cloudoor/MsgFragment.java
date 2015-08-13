@@ -158,6 +158,7 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 		group_layout.setOnClickListener(this);
 		add_friends.setOnClickListener(this);
 		registerBoradcastReceiver();
+		registerRemoveFriendBoradcastReceiver();
 		EMChatManager.getInstance().addConnectionListener(
 				new MyConnectionListener());
 		return view;
@@ -567,6 +568,23 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 			}else{
 				push_current.setVisibility(View.GONE);
 			}
+		}
+		
+	};
+	
+	
+	public void registerRemoveFriendBoradcastReceiver(){  
+        IntentFilter myIntentFilter = new IntentFilter();  
+        myIntentFilter.addAction("removeFriend");
+        //×¢²á¹ã²¥        
+        getActivity().registerReceiver(removeFriend, myIntentFilter);  
+    }
+	
+	BroadcastReceiver removeFriend = new BroadcastReceiver(){
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			refresh();
 		}
 		
 	};
