@@ -860,7 +860,6 @@ public class MessageAdapter extends BaseAdapter {
 				JSONObject keyAuth = message.getJSONObjectAttribute("data");
 				holder.zone_name.setText(keyAuth.getString("address"));
 				holder.keyauth_sousse.setText(keyAuth.getString("authSuccMsg"));
-				;
 			} else if(type == 6){
 				holder.chat_content_layout.setVisibility(View.VISIBLE);
 				holder.layout_card.setVisibility(View.GONE);

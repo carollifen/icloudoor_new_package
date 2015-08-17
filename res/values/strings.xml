@@ -268,7 +268,6 @@
     <string name="submit">提交</string>
     <string name="reportsuccess">投诉成功</string>
     <string name="reportfail">投诉失败,请从新提交</string>
-    
     <string name="only_one_day">(当天有效)</string>
     <string name="latest_version_now">当前已是最新版本</string>
     <string name="get_update_timeout">获取信息失败，请登录 http://fir.im/yunmen下载最新版本</string>
@@ -333,5 +332,7 @@
     <string name="hongkong">香港</string>
     <string name="macao">澳门</string>
     <string name="profile_complete">资料完整度</string>
+    <string name="today">今天</string>
+    <string name="title_activity_ad_web_view">AdWebViewActivity</string>
 
 </resources>

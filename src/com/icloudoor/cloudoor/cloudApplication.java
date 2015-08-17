@@ -47,9 +47,14 @@ public class cloudApplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
+		
+		CrashHandler crashHandler = CrashHandler.getInstance();
+		crashHandler.init(getApplicationContext());
+		
 		instance = this;
 		applicationContext = this;
 		hxSDKHelper.onInit(applicationContext);
+		MobclickAgent.setDebugMode(true);
 		MobclickAgent.openActivityDurationTrack(false);
 		MobclickAgent.updateOnlineConfig(this);
 		mPushAgent = PushAgent.getInstance(getApplicationContext());
@@ -110,8 +115,6 @@ public class cloudApplication extends Application {
 		};
 		mPushAgent.setUnregisterCallback(mUnregisterCallback);
 
-		CrashHandler crashHandler = CrashHandler.getInstance();
-		crashHandler.init(getApplicationContext());
 		initImageLoaderConfiguration();
 	}
 

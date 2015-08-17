@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
+import com.icloudoor.cloudoor.widget.UserStatusDialog;
 import com.umeng.analytics.MobclickAgent;
 
 public class WuyeFragment extends Fragment {
@@ -81,6 +83,10 @@ public class WuyeFragment extends Fragment {
 	
 	private RelativeLayout fixLayout, goodLayout, badLayout, payLayout, billLayout, lianxiLayout;
 	
+	UserStatusDialog statusDialog;
+	
+	private RelativeLayout widgeLayout;
+	
 	public WuyeFragment() {
 
 	}
@@ -99,6 +105,8 @@ public class WuyeFragment extends Fragment {
 
 		View view = inflater.inflate(R.layout.wuye_page, container, false);
 		
+		statusDialog = new UserStatusDialog(getActivity());
+		
 		fixLayout = (RelativeLayout) view.findViewById(R.id.fix_layout);
 		goodLayout = (RelativeLayout) view.findViewById(R.id.good_layout);
 		badLayout = (RelativeLayout) view.findViewById(R.id.bad_layout);
@@ -106,6 +114,16 @@ public class WuyeFragment extends Fragment {
 		billLayout = (RelativeLayout) view.findViewById(R.id.bill_layout);
 		lianxiLayout = (RelativeLayout) view.findViewById(R.id.lianxi_layout);
 
+		widgeLayout = (RelativeLayout) view.findViewById(R.id.wuye_widge);
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenWidth = dm.widthPixels;
+		
+		RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) widgeLayout.getLayoutParams();
+		param.width = screenWidth;
+		param.height = (int) screenWidth * 2 / 5;
+		widgeLayout.setLayoutParams(param);
+		
 		logoutToDo = new Logout(getActivity());
 
 		mQueue = Volley.newRequestQueue(getActivity());
@@ -354,7 +372,7 @@ public class WuyeFragment extends Fragment {
 		
 		// start auto scroll when onResume
 		viewPager.startAutoScroll();
-		
+
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
 		if(loginStatus.getInt("role", 0) == 2) {
 			fixLayout.setVisibility(View.INVISIBLE);
@@ -432,14 +450,19 @@ public class WuyeFragment extends Fragment {
 					intent.setClass(getActivity(), ContactWuyeActivity.class);
 					startActivity(intent);
 				} else {
-					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
-							new WuYeDialogCallBack() {
-								@Override
-								public void back() {
-									// TODO Auto-generated method stub
-
-								}
-							}).show();
+					if (!statusDialog.isShowing()) {
+						statusDialog.show();
+						statusDialog.setOKOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(getActivity(), ReportToRepairActivity.class);
+							intent.putExtra("webUrl", "/user/auth/request.do");
+							startActivity(intent);
+							statusDialog.dismiss();
+							}
+						});
+					}	
 				}
 				
 				break;
@@ -452,14 +475,19 @@ public class WuyeFragment extends Fragment {
 					intent.setClass(getActivity(), NoticeActivity.class);
 					startActivity(intent);
 				} else {
-					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
-							new WuYeDialogCallBack() {
-								@Override
-								public void back() {
-									// TODO Auto-generated method stub
-
-								}
-							}).show();
+					if (!statusDialog.isShowing()) {
+						statusDialog.show();
+						statusDialog.setOKOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(getActivity(), ReportToRepairActivity.class);
+							intent.putExtra("webUrl", "/user/auth/request.do");
+							startActivity(intent);
+							statusDialog.dismiss();
+							}
+						});
+					}
 				}
 				
 				break;
@@ -469,14 +497,19 @@ public class WuyeFragment extends Fragment {
 					intent.putExtra("webUrl", "/user/prop/zone/rr/add.do");
 					startActivity(intent);
 				} else {
-					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
-							new WuYeDialogCallBack() {
-								@Override
-								public void back() {
-									// TODO Auto-generated method stub
-
-								}
-							}).show();
+					if (!statusDialog.isShowing()) {
+						statusDialog.show();
+						statusDialog.setOKOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(getActivity(), ReportToRepairActivity.class);
+							intent.putExtra("webUrl", "/user/auth/request.do");
+							startActivity(intent);
+							statusDialog.dismiss();
+							}
+						});
+					}
 				}
 				
 				break;
@@ -485,14 +518,19 @@ public class WuyeFragment extends Fragment {
 					intent.setClass(getActivity(), ComplainActivity.class);
 					startActivity(intent);
 				} else {
-					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
-							new WuYeDialogCallBack() {
-								@Override
-								public void back() {
-									// TODO Auto-generated method stub
-
-								}
-							}).show();
+					if (!statusDialog.isShowing()) {
+						statusDialog.show();
+						statusDialog.setOKOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(getActivity(), ReportToRepairActivity.class);
+							intent.putExtra("webUrl", "/user/auth/request.do");
+							startActivity(intent);
+							statusDialog.dismiss();
+							}
+						});
+					}
 				}
 				
 				break;
@@ -501,14 +539,19 @@ public class WuyeFragment extends Fragment {
 					intent.setClass(getActivity(), CommendActivity.class);
 					startActivity(intent);
 				} else {
-					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
-							new WuYeDialogCallBack() {
-								@Override
-								public void back() {
-									// TODO Auto-generated method stub
-
-								}
-							}).show();
+					if (!statusDialog.isShowing()) {
+						statusDialog.show();
+						statusDialog.setOKOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(getActivity(), ReportToRepairActivity.class);
+							intent.putExtra("webUrl", "/user/auth/request.do");
+							startActivity(intent);
+							statusDialog.dismiss();
+							}
+						});
+					}
 				}
 				
 				break;
@@ -521,14 +564,19 @@ public class WuyeFragment extends Fragment {
 					intent.setClass(getActivity(), QueryActivity.class);
 					startActivity(intent);
 				} else {
-					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
-							new WuYeDialogCallBack() {
-								@Override
-								public void back() {
-									// TODO Auto-generated method stub
-
-								}
-							}).show();
+					if (!statusDialog.isShowing()) {
+						statusDialog.show();
+						statusDialog.setOKOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(getActivity(), ReportToRepairActivity.class);
+							intent.putExtra("webUrl", "/user/auth/request.do");
+							startActivity(intent);
+							statusDialog.dismiss();
+							}
+						});
+					}
 				}
 				
 				break;
@@ -537,14 +585,19 @@ public class WuyeFragment extends Fragment {
 					intent.setClass(getActivity(), BillActivity.class);
 					startActivity(intent);
 				} else {
-					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
-							new WuYeDialogCallBack() {
-								@Override
-								public void back() {
-									// TODO Auto-generated method stub
-
-								}
-							}).show();
+					if (!statusDialog.isShowing()) {
+						statusDialog.show();
+						statusDialog.setOKOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(getActivity(), ReportToRepairActivity.class);
+							intent.putExtra("webUrl", "/user/auth/request.do");
+							startActivity(intent);
+							statusDialog.dismiss();
+							}
+						});
+					}
 				}
 				
 				break;
@@ -553,14 +606,19 @@ public class WuyeFragment extends Fragment {
 					intent.setClass(getActivity(), PayActivity.class);
 					startActivity(intent);
 				} else {
-					new WuYeDialog(getActivity(), R.style.add_dialog, "hh",
-							new WuYeDialogCallBack() {
-								@Override
-								public void back() {
-									// TODO Auto-generated method stub
-
-								}
-							}).show();
+					if (!statusDialog.isShowing()) {
+						statusDialog.show();
+						statusDialog.setOKOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(getActivity(), ReportToRepairActivity.class);
+							intent.putExtra("webUrl", "/user/auth/request.do");
+							startActivity(intent);
+							statusDialog.dismiss();
+							}
+						});
+					}
 				}
 				
 				break;

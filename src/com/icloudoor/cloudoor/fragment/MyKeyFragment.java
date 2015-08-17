@@ -308,7 +308,12 @@ public class MyKeyFragment extends BaseFragment implements OnClickListener {
 					state_tx.setVisibility(View.GONE);
 					auth_key_img.setVisibility(View.VISIBLE);
 				}
+			}else if(doorType.trim().equals("3")){
+				state_tx.setVisibility(View.GONE);
+				auth_key_img.setVisibility(View.GONE);
 			}
+			
+			
 			key_name.setText(keys.getName());
 
 			auth_key_img.setOnClickListener(new OnClickListener() {

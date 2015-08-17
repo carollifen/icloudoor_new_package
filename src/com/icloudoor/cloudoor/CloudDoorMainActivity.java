@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 import net.tsz.afinal.FinalHttp;
@@ -59,7 +60,6 @@ import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
-import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.cache.UserCacheWrapper;
 import com.icloudoor.cloudoor.chat.CommonUtils;
@@ -67,6 +67,7 @@ import com.icloudoor.cloudoor.chat.entity.AuthKeyEn;
 import com.icloudoor.cloudoor.chat.entity.MyFriendInfo;
 import com.icloudoor.cloudoor.http.MyRequestBody;
 import com.icloudoor.cloudoor.utli.GsonUtli;
+import com.icloudoor.cloudoor.utli.KeyHelper;
 import com.icloudoor.cloudoor.utli.UserDBHelper;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.message.PushAgent;
@@ -402,7 +403,9 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 		EMChat.getInstance().setAppInited();
 		registerReceiver(mHomeKeyEventReceiver, new IntentFilter(
 				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-
+		IntentFilter filter = new IntentFilter("refreshData");
+		filter.addAction("refreshData");
+		registerReceiver(refreshData, filter);
 		if (currentVersion >= 18
 				&& getPackageManager().hasSystemFeature(
 						PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -989,7 +992,6 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 			// TODO Auto-generated method stub
 			CloudDoorMainActivity.this.finish();
 		}
-
 	}
 
 	@Override
@@ -1008,6 +1010,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 		unregisterReceiver(mHomeKeyEventReceiver);
 		unregisterReceiver(mConnectionStatusReceiver);
 		unregisterReceiver(mFinishActivityBroadcast);
+		unregisterReceiver(refreshData);
 
 	}
 
@@ -1326,4 +1329,97 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 				});
 		mRequestQueue.add(mBannerRequest);
 	}
+	
+	
+	public BroadcastReceiver refreshData = new BroadcastReceiver() {
+	
+		public void onReceive(Context context, Intent intent) {
+			
+			List<String> setChat =(List<String>) intent.getSerializableExtra("setChat"); 
+			for (int i = 0; i < setChat.size(); i++) {
+				if(setChat.get(i).equals("getProfile")){
+					KeyHelper.getInstance(context)
+					.checkForUserStatus();
+				}
+				if (setChat.get(i).contains("download")) {
+					KeyHelper.getInstance(context)
+							.downLoadKey2();
+				}
+				if(setChat.get(i).contains("getTags")){
+					System.out.println("getTags");
+					JsonObjectRequest mJsonObjectRequest = new JsonObjectRequest(url
+							+ "?sid=" + sid + "&ver=" + version.getVersionName() + "&imei="
+							+ version.getDeviceId(), null,
+							new Response.Listener<JSONObject>() {
+								@Override
+								public void onResponse(JSONObject response) {
+									MyDebugLog.e("response", response.toString());
+									try {
+
+										if (response.getString("sid") != null)
+											saveSid("SID", sid);
+
+										if (response.getInt("code") == 1) {
+											JSONArray tagJson = response
+													.getJSONArray("data");
+											for (int i = 0; i < tagJson.length(); i++) {
+												tag = (String) tagJson.get(i);
+												MyDebugLog.e("response", tag);
+												new AddTagTask(tag).execute();
+											}
+										} else if (response.getInt("code") == -2) {
+											Toast.makeText(getApplicationContext(),
+													R.string.not_login, Toast.LENGTH_SHORT)
+													.show();
+											logoutToDo.logoutDoing();
+											
+											EMChatManager.getInstance().logout(new EMCallBack() {
+												
+												@Override
+												public void onSuccess() {
+													// TODO Auto-generated method stub
+													Intent intent = new Intent();
+													intent.setClass(getApplicationContext(),
+															Login.class);
+													startActivity(intent);
+													finish();
+												}
+												
+												@Override
+												public void onProgress(int arg0, String arg1) {
+													// TODO Auto-generated method stub
+													
+												}
+												
+												@Override
+												public void onError(int arg0, String arg1) {
+													// TODO Auto-generated method stub
+													
+												}
+											});
+											
+
+											
+										}
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+										Toast.makeText(CloudDoorMainActivity.this,
+												R.string.network_error, Toast.LENGTH_SHORT)
+												.show();
+									}
+								}
+							}, new Response.ErrorListener() {
+								@Override
+								public void onErrorResponse(VolleyError error) {
+									// TODO Auto-generated method stub
+								}
+							});
+					
+					mRequestQueue.add(mJsonObjectRequest);
+					
+				}
+			}
+		};
+	};
 }

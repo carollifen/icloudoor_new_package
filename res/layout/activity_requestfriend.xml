@@ -35,7 +35,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:text="@string/send"
-            android:textColor="#05b803"
+            android:textColor="#ffffff"
             android:textSize="18sp" />
     </RelativeLayout>
 

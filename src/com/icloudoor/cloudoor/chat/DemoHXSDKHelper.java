@@ -13,6 +13,7 @@
  */
 package com.icloudoor.cloudoor.chat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -289,16 +290,22 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 							CMDData cmdData = GsonUtli.jsonToObject(data, CMDData.class);
 							List<String> setChat = cmdData.getSet();
 							if(setChat!=null){
-								for (int i = 0; i < setChat.size(); i++) {
-									if(setChat.get(i).equals("getProfile")){
-										KeyHelper.getInstance(appContext)
-										.checkForUserStatus();
-									}
-									if (setChat.get(i).contains("download")) {
-										KeyHelper.getInstance(appContext)
-												.downLoadKey2();
-									}
-								}
+								Intent mIntent = new Intent("refreshData");
+								mIntent.putExtra("setChat", (Serializable)setChat);
+								// 发送广播
+								appContext.sendBroadcast(mIntent);
+//								for (int i = 0; i < setChat.size(); i++) {
+//									if(setChat.get(i).equals("getProfile")){
+//										KeyHelper.getInstance(appContext)
+//										.checkForUserStatus();
+//									}
+//									if (setChat.get(i).contains("download")) {
+//										KeyHelper.getInstance(appContext)
+//												.downLoadKey2();
+//									}
+//									if(setChat.get(i).contains("download")){
+//									}
+//								}
 							}
 							
 							JSONObject userInfo = message

@@ -27,7 +27,7 @@ public class ReportActivity extends BaseActivity implements OnClickListener,
 	private ImageView btn_back;
 	private TextView submit;
 	private RadioGroup radioGroup1;
-	private int type;
+	private int type = 1;
 	private String trgUserId;
 	@Override
 	protected void onCreate(Bundle arg0) {

@@ -988,6 +988,7 @@ public class KeyFragment extends Fragment {
 						valueTemp.put("doorName", doorData.getString("doorName"));
 						valueTemp.put("authFrom", doorData.getString("authFrom"));
 						valueTemp.put("authTo", doorData.getString("authTo"));
+						valueTemp.put("doorType", doorData.getString("doorType"));
 						
 						mKeyDB.update("KeyInfoTable", valueTemp, "deviceId = ?", new String[] {doorData.getString("deviceId")});
 				}

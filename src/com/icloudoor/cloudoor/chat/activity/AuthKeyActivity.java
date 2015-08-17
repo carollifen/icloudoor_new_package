@@ -403,7 +403,9 @@ public class AuthKeyActivity extends BaseActivity implements OnClickListener,
 		if (familyAddr != null) {
 			if (familyAddr.getCode() == 1) {
 				addrAata = familyAddr.getData();
-				myadapter.notifyDataSetChanged();
+				if(myadapter!=null){
+					myadapter.notifyDataSetChanged();
+				}
 			} else {
 				showToast(R.string.network_error);
 			}

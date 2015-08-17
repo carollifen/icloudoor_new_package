@@ -1,6 +1,5 @@
 package com.icloudoor.cloudoor;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,19 +26,15 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.Entities.Signs;
 import com.icloudoor.cloudoor.Entities.SignsEn;
 import com.icloudoor.cloudoor.Entities.SignsInfo;
 import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.utli.GsonUtli;
-import com.umeng.common.message.Log;
+import com.icloudoor.cloudoor.widget.MonPickerDialog;
 
 public class CheckRecord extends BaseActivity implements NetworkInterface,
 		OnClickListener {
@@ -67,7 +62,7 @@ public class CheckRecord extends BaseActivity implements NetworkInterface,
 		work_date_pick.setOnClickListener(this);
 		work_time = (ListView) findViewById(R.id.work_time);
 		time_day = (TextView) findViewById(R.id.time_day);
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
 		time_day.setText(format.format(getFirstDayOfMonth(new Date(System
 					.currentTimeMillis()))));
 		adapter = new MyAdapter();
@@ -85,12 +80,10 @@ public class CheckRecord extends BaseActivity implements NetworkInterface,
 
 	private void getcheckdata(String time) {
 
-		
 		 SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd" );
-
 		 JSONObject josn = new JSONObject();
 		 try {
-			Date date = format.parse(time);
+			Date date = format.parse(time+"-01");
 			josn.put("from", format.format(getFirstDayOfMonth(date)));
 			josn.put("to", format.format(getLastDayOfMonth(date)));
 		} catch (ParseException e1) {
@@ -281,16 +274,16 @@ public class CheckRecord extends BaseActivity implements NetworkInterface,
 			}
 			for (int i = 0; i < earlies.size(); i++) {
 				if(signInfo.getDate().equals(earlies.get(i))){
-					hodler.to_work_tx.setTextColor(Color.parseColor("#ff608d"));
+					hodler.off_work_tk.setTextColor(Color.parseColor("#ff608d"));
 				}else{
-					hodler.to_work_tx.setTextColor(Color.parseColor("#33acf5"));
+					hodler.off_work_tk.setTextColor(Color.parseColor("#33acf5"));
 				}
 			}
 			for (int i = 0; i < lates.size(); i++) {
 				if(signInfo.getDate().equals(lates.get(i))){
-					hodler.off_work_tk.setTextColor(Color.parseColor("#ff608d"));
+					hodler.to_work_tx.setTextColor(Color.parseColor("#ff608d"));
 				}else{
-					hodler.off_work_tk.setTextColor(Color.parseColor("#33acf5"));
+					hodler.to_work_tx.setTextColor(Color.parseColor("#33acf5"));
 				}
 			}
 
@@ -335,21 +328,25 @@ public class CheckRecord extends BaseActivity implements NetworkInterface,
 			String[] dates = time.split("-");
 			mYear = Integer.parseInt(dates[0]);
 			mMonth = Integer.parseInt(dates[1]);
-			mDay = Integer.parseInt(dates[2]);
 			DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
 
 				@Override
 				public void onDateSet(DatePicker view, int year,
 						int monthOfYear, int dayOfMonth) {
-					String s = year + "-" + (monthOfYear + 1) + "-"
-							+ 01;
+					String s;
+					if(monthOfYear<9){
+						s = year + "-0" + (monthOfYear + 1);
+					}else{
+						
+						s = year + "-" + (monthOfYear + 1);
+					}
 					time_day.setText(s);
 					getcheckdata(s);
 				}
 
 			};
-			new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT,
-					onDateSetListener, mYear, mMonth-1, mDay).show();
+			new MonPickerDialog(this,
+					onDateSetListener, mYear, mMonth-1, 1).show();
 			break;
 
 		default:

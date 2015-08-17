@@ -586,7 +586,13 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 			// TODO Auto-generated method stub
 			refresh();
 		}
-		
 	};
+	
+	
+	
+//	public void onDestroy() {
+//		getActivity().unregisterReceiver(removeFriend);
+//		getActivity().unregisterReceiver(mBroadcastReceiver);
+//	}
 
 }

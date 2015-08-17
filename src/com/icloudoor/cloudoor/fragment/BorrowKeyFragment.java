@@ -206,6 +206,10 @@ public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 			isFlage = true;
 			data.get(index).getKeys().remove(data.get(index).getKeys().remove(childIndex));
 			isChekble.get(index).remove(isChekble.get(index).get(childIndex));
+			if(data.get(index).getKeys().size()==0){
+				data.remove(data.get(index));
+				isChekble.remove(isChekble.get(index));
+			}
 			if(data.size()==0){
 				content_layout.setVisibility(View.GONE);
 				not_content_layout.setVisibility(View.VISIBLE);
