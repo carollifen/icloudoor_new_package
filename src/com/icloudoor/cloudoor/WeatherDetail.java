@@ -102,7 +102,7 @@ public class WeatherDetail extends BaseActivity {
 		cityName.setText(savedWeather.getString("City", "N/A"));
 		day1Temp.setText(savedWeather.getString("Day1Temp", "N/A") + String.valueOf(centigrade));
 		day1Weather.setText(savedWeather.getString("Day1Weather", "N/A"));
-		day1Week.setText(getString(R.string.week) + getWeek(c.get(Calendar.DAY_OF_WEEK)) + "    ½ñÌì");		
+		day1Week.setText(getString(R.string.week) + getWeek(c.get(Calendar.DAY_OF_WEEK)) + "    " + getString(R.string.today));		
 		if(savedWeather.getString("Day1IconIndex", "99").equals("99")){
 			day1Icon.setBackgroundResource(weatherIcons[39]);
 		} else {

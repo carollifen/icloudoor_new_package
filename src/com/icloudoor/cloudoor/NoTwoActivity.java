@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +39,8 @@ public class NoTwoActivity extends BaseActivity {
 	UMSocialService mController;
 	
 	boolean isDebug = DEBUG.isDebug;
+	
+	private SharePopupWindow shareWindow;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +79,10 @@ public class NoTwoActivity extends BaseActivity {
 			
 		};
 		
-		// Ìí¼ÓÎ¢ÐÅÆ½Ì¨
+
 		wxHandler = new UMWXHandler(NoTwoActivity.this, appID, appSecret);
 		wxHandler.addToSocialSDK();
-		// Ìí¼ÓÎ¢ÐÅÅóÓÑÈ¦
+
 		wxCircleHandler = new UMWXHandler(NoTwoActivity.this, appID, appSecret);
 		wxCircleHandler.setToCircle(true);
 		wxCircleHandler.addToSocialSDK();
@@ -89,24 +92,43 @@ public class NoTwoActivity extends BaseActivity {
 		mController.registerListener(mSnsPostListener);
 		
 		mController.setShareMedia(new UMImage(NoTwoActivity.this, BitmapFactory.decodeStream(getResources().openRawResource(R.raw.no2_share_pic))));
-		mController.getConfig().removePlatform(SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);
+//		mController.getConfig().removePlatform(SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);
 		
 		shareLayout.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				mController.openShare(NoTwoActivity.this, false);
+				shareWindow = new SharePopupWindow(NoTwoActivity.this, itemsOnClick);
+				shareWindow.showAtLocation(NoTwoActivity.this.findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+//				mController.openShare(NoTwoActivity.this, false);
 			}
 			
 		});
 	}
 	
+	private OnClickListener itemsOnClick = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			shareWindow.dismiss();
+			switch (v.getId()) {
+			case R.id.weixin_layout:
+				shareWindow.dismiss();
+				mController.postShare(NoTwoActivity.this, SHARE_MEDIA.WEIXIN, mSnsPostListener);
+				break;
+			case R.id.weixin_circle_layout:
+				shareWindow.dismiss();
+				mController.postShare(NoTwoActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE, mSnsPostListener);
+				break;
+			}
+		}
+		
+	};
+	
 	@Override 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
-	    /**Ê¹ÓÃSSOÊÚÈ¨±ØÐëÌí¼ÓÈçÏÂ´úÂë */
+	    /**Ê¹ï¿½ï¿½SSOï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½ */
 	    UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode) ;
 	    if(ssoHandler != null){
 	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);

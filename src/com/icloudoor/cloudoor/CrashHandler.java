@@ -80,7 +80,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			@Override
 			public void run() {
 				Looper.prepare();
-				Toast.makeText(mContext, "�ܱ�Ǹ,��������쳣,�����˳�.", Toast.LENGTH_LONG).show();
+				Toast.makeText(mContext, "ºÜ±§Ç¸,³ÌÐò³öÏÖÒì³£,¼´½«ÍË³ö.", Toast.LENGTH_LONG).show();
 				Looper.loop();
 			}
 		}.start();

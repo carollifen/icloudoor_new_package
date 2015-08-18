@@ -3,7 +3,6 @@ package com.icloudoor.cloudoor;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,10 +11,9 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -24,7 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.RelativeLayout;	
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +32,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.icloudoor.cloudoor.WuYeDialog.WuYeDialogCallBack;
 import com.icloudoor.cloudoor.widget.UserStatusDialog;
 import com.umeng.analytics.MobclickAgent;
 
@@ -60,8 +57,6 @@ public class WuyeFragment extends Fragment {
 
 	public MyClickListener myClick;
 
-	private AutoScrollViewPager viewPager;
-	public FragmentManager mFragmentManager;
 	public MyPageChangeListener myPageChangeListener;
 
 	private URL unReadURL;
@@ -69,9 +64,6 @@ public class WuyeFragment extends Fragment {
 	private String HOST = UrlUtils.HOST;
 	private String sid;
     private Logout logoutToDo;
-
-	// for test
-//	private URL bannerURL;
 
 	boolean isDebug = DEBUG.isDebug;
 	
@@ -86,6 +78,9 @@ public class WuyeFragment extends Fragment {
 	UserStatusDialog statusDialog;
 	
 	private RelativeLayout widgeLayout;
+	
+	private LoopViewPager mViewPager;
+	private FragmentPagerAdapter mAdapter;
 	
 	public WuyeFragment() {
 
@@ -199,99 +194,60 @@ public class WuyeFragment extends Fragment {
 		BtnBill.setOnClickListener(myClick);
 		BtnPay.setOnClickListener(myClick);
 
-		mFragmentManager = getChildFragmentManager();
-		viewPager = (AutoScrollViewPager) view
-				.findViewById(R.id.wuye_widge_pager);
 		myPageChangeListener = new MyPageChangeListener();
 
 		InitFragmentViews();
-//		InitViewPager();
 
+		mViewPager = (LoopViewPager) view.findViewById(R.id.wuye_widge_pager);
+		
+		mAdapter = new FragmentPagerAdapter(getChildFragmentManager()) {
+
+			@Override
+			public int getCount() {
+				return bannerCount;
+			}
+
+			@Override
+			public WuyeWidgeBaseFragment getItem(int position) {
+				WuyeWidgeBaseFragment fragment = new WuyeWidgeBaseFragment();
+				Bundle args = new Bundle();
+				position = LoopViewPager.toRealPosition(position, getCount());
+				args.putInt("widgeId", position);
+				fragment.setArguments(args);
+				return fragment;
+			}
+		};
+		mViewPager.setAdapter(mAdapter);
+		mViewPager.setOnPageChangeListener(myPageChangeListener);
+		mViewPager.setCurrentItem(0);
+		
 		return view;
 	}
 
 	public void InitFragmentViews() {
-		ArrayList<Fragment> mWuyePageFragmentList;
-		WuyePageAdapter mWuyePageAdapter;
-		WuyeWidgeFragment mWuyeWidgeFragment;
-		WuyeWidgeFragment2 mWuyeWidgeFragment2;
-		WuyeWidgeFragment3 mWuyeWidgeFragment3;
-		WuyeWidgeFragment4 mWuyeWidgeFragment4;
-		
-		mWuyePageFragmentList = new ArrayList<Fragment>();
-		
+
 		if(bannerCount == 1){
 			WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
-			mWuyeWidgeFragment = new WuyeWidgeFragment();
-			
-			mWuyePageFragmentList.add(mWuyeWidgeFragment);
+
 		} else if(bannerCount == 2){
 			WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
 			WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
-			
-			mWuyeWidgeFragment = new WuyeWidgeFragment();
-			mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
-			
-			mWuyePageFragmentList.add(mWuyeWidgeFragment);
-			mWuyePageFragmentList.add(mWuyeWidgeFragment2);
+
 		}else if(bannerCount == 3){
 			WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
 			WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
 			WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
 
-			mWuyeWidgeFragment = new WuyeWidgeFragment();
-			mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
-			mWuyeWidgeFragment3 = new WuyeWidgeFragment3();
-
-			mWuyePageFragmentList.add(mWuyeWidgeFragment);
-			mWuyePageFragmentList.add(mWuyeWidgeFragment2);
-			mWuyePageFragmentList.add(mWuyeWidgeFragment3);
 		}else if(bannerCount == 4){
 			WuyeWidgePush1.setImageResource(R.drawable.wuye_push_current);
 			WuyeWidgePush2.setImageResource(R.drawable.wuye_push_next);
 			WuyeWidgePush3.setImageResource(R.drawable.wuye_push_next);
 			WuyeWidgePush4.setImageResource(R.drawable.wuye_push_next);
 
-			mWuyeWidgeFragment = new WuyeWidgeFragment();
-			mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
-			mWuyeWidgeFragment3 = new WuyeWidgeFragment3();
-			mWuyeWidgeFragment4 = new WuyeWidgeFragment4();
-
-			mWuyePageFragmentList.add(mWuyeWidgeFragment);
-			mWuyePageFragmentList.add(mWuyeWidgeFragment2);
-			mWuyePageFragmentList.add(mWuyeWidgeFragment3);
-			mWuyePageFragmentList.add(mWuyeWidgeFragment4);
 		}
 
-		mWuyePageAdapter = new WuyePageAdapter(mFragmentManager, mWuyePageFragmentList);
-		viewPager.setAdapter(mWuyePageAdapter);
-		viewPager.setOnPageChangeListener(myPageChangeListener);
-		viewPager.setInterval(4000);
-		viewPager.startAutoScroll();
-		viewPager.setCurrentItem(0);
 	}
 
-//	public void InitViewPager() {
-//		
-//		mWuyePageFragmentList = new ArrayList<Fragment>();
-//
-//		mWuyeWidgeFragment = new WuyeWidgeFragment();
-//		mWuyeWidgeFragment2 = new WuyeWidgeFragment2();
-//		mWuyeWidgeFragment3 = new WuyeWidgeFragment3();
-//
-//		mWuyePageFragmentList.add(mWuyeWidgeFragment);
-//		mWuyePageFragmentList.add(mWuyeWidgeFragment2);
-//		mWuyePageFragmentList.add(mWuyeWidgeFragment3);
-//
-//		mWuyePageAdapter = new WuyePageAdapter(mFragmentManager,
-//				mWuyePageFragmentList);
-//		viewPager.setAdapter(mWuyePageAdapter);
-//		viewPager.setOnPageChangeListener(myPageChangeListener);
-//		viewPager.setInterval(4000);
-//		viewPager.startAutoScroll();
-//		viewPager.setCurrentItem(0);
-//	}
-	
 	public class MyPageChangeListener implements OnPageChangeListener {
 
 		@Override
@@ -359,8 +315,7 @@ public class WuyeFragment extends Fragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-		// stop auto scroll when onPause
-		viewPager.stopAutoScroll();
+
 		MobclickAgent.onPageEnd(mPageName);
 	}
 
@@ -369,9 +324,6 @@ public class WuyeFragment extends Fragment {
 		super.onResume();
 		MobclickAgent.onPageStart(mPageName);
 		MyDebugLog.e(TAG, "test");
-		
-		// start auto scroll when onResume
-		viewPager.startAutoScroll();
 
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
 		if(loginStatus.getInt("role", 0) == 2) {

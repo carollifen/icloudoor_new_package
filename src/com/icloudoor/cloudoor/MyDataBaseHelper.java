@@ -16,6 +16,16 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 	public static final String ZONE_TABLE_NAME = "ZoneTable";
 	public static final String CAR_TABLE_NAME = "CarKeyTable";
 
+	private static MyDataBaseHelper instance;
+
+    public static synchronized MyDataBaseHelper getInstance(Context context, String name)
+    {
+        if (instance == null)
+            instance = new MyDataBaseHelper(context, name);
+
+        return instance;
+    }
+	
 	public MyDataBaseHelper(Context context, String name,
 			CursorFactory factory, int version) {
 		super(context, name, factory, version);

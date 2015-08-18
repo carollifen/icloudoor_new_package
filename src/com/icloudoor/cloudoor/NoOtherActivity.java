@@ -23,6 +23,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +57,8 @@ public class NoOtherActivity extends BaseActivity {
 	UMSocialService mController;
 	
 	boolean isDebug = DEBUG.isDebug;
+	
+	private SharePopupWindow shareWindow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +109,10 @@ public class NoOtherActivity extends BaseActivity {
 			
 		};
 
-		// 添加微信平台
+
 		wxHandler = new UMWXHandler(NoOtherActivity.this, appID, appSecret);
 		wxHandler.addToSocialSDK();
-		// 添加微信朋友圈
+
 		wxCircleHandler = new UMWXHandler(NoOtherActivity.this, appID, appSecret);
 		wxCircleHandler.setToCircle(true);
 		wxCircleHandler.addToSocialSDK();
@@ -122,24 +125,43 @@ public class NoOtherActivity extends BaseActivity {
 		mController.registerListener(mSnsPostListener);
 		
 		mController.setShareMedia(new UMImage(NoOtherActivity.this, shareBitmap2));
-		mController.getConfig().removePlatform(SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);		
+//		mController.getConfig().removePlatform(SHARE_MEDIA.SINA, SHARE_MEDIA.TENCENT);		
 		
 		shareLayout.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				mController.openShare(NoOtherActivity.this, false);
+				shareWindow = new SharePopupWindow(NoOtherActivity.this, itemsOnClick);
+				shareWindow.showAtLocation(NoOtherActivity.this.findViewById(R.id.main), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+//				mController.openShare(NoOtherActivity.this, false);
 			}
 			
 		});
 	}
 	
+	private OnClickListener itemsOnClick = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			shareWindow.dismiss();
+			switch (v.getId()) {
+			case R.id.weixin_layout:
+				shareWindow.dismiss();
+				mController.postShare(NoOtherActivity.this, SHARE_MEDIA.WEIXIN, mSnsPostListener);
+				break;
+			case R.id.weixin_circle_layout:
+				shareWindow.dismiss();
+				mController.postShare(NoOtherActivity.this, SHARE_MEDIA.WEIXIN_CIRCLE, mSnsPostListener);
+				break;
+			}
+		}
+		
+	};
+	
 	@Override 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
-	    /**使用SSO授权必须添加如下代码 */
+
 	    UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode) ;
 	    if(ssoHandler != null){
 	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
