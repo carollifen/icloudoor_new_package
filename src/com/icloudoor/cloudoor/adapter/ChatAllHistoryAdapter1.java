@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.icloudoor.cloudoor.chat.Constant;
 import com.icloudoor.cloudoor.chat.emoji.EmojiManager;
 import com.icloudoor.cloudoor.chat.entity.MyFriendsEn;
 import com.icloudoor.cloudoor.chat.entity.UserInfoTable;
+import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.utli.DisplayImageOptionsUtli;
 import com.icloudoor.cloudoor.utli.Uitls;
 import com.icloudoor.cloudoor.utli.UserinfoDaoImpl;
@@ -186,11 +188,11 @@ public class ChatAllHistoryAdapter1 extends BaseAdapter {
 	public void setData(List<EMConversation> objects){
 		
 		System.out.println("消息个数："+objects.size());
-		
+		SharedPreferences loginStatus = context.getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
 		daoImpl = new UserinfoDaoImpl(context);
 		List<EMConversation> haveFriendData = new ArrayList<EMConversation>();
 		for (int i = 0; i < objects.size(); i++) {
-			List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{objects.get(i).getUserName()}, null, null, null, null);
+			List<UserInfoTable> list = daoImpl.find(null, "userId = ? and myUserId = ?", new String[]{objects.get(i).getUserName(),loginStatus.getString("USERID", "")}, null, null, null, null);
 			if(list!=null && list.size()>0){
 				haveFriendData.add(objects.get(i));
 			}

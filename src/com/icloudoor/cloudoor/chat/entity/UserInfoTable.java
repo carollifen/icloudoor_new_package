@@ -25,6 +25,18 @@ public class UserInfoTable {
 	private int sex;
 	@Column(name = "type", type = "INTEGER")
 	private int type;
+	@Column(name = "myUserId")
+	private String myUserId;
+	
+	
+
+	public String getMyUserId() {
+		return myUserId;
+	}
+
+	public void setMyUserId(String myUserId) {
+		this.myUserId = myUserId;
+	}
 
 	public int getId() {
 		return id;

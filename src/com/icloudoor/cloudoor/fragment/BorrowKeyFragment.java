@@ -17,7 +17,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,9 +34,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.icloudoor.cloudoor.BaseFragment;
-import com.icloudoor.cloudoor.MsgFragment;
 import com.icloudoor.cloudoor.MyDataBaseHelper;
-import com.icloudoor.cloudoor.MyDebugLog;
 import com.icloudoor.cloudoor.MyJsonObjectRequest;
 import com.icloudoor.cloudoor.R;
 import com.icloudoor.cloudoor.UrlUtils;
@@ -46,11 +43,8 @@ import com.icloudoor.cloudoor.Interface.NetworkInterface;
 import com.icloudoor.cloudoor.chat.entity.AuthKeyEn;
 import com.icloudoor.cloudoor.chat.entity.Key;
 import com.icloudoor.cloudoor.chat.entity.KeyInfo;
-import com.icloudoor.cloudoor.chat.entity.VerificationFrientsList;
 import com.icloudoor.cloudoor.utli.GsonUtli;
 import com.icloudoor.cloudoor.utli.KeyHelper;
-import com.icloudoor.cloudoor.utli.VFDaoImpl;
-import com.umeng.analytics.MobclickAgent;
 
 public class BorrowKeyFragment extends BaseFragment implements OnClickListener {
 

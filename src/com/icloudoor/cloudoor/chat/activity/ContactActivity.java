@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -127,9 +128,11 @@ public class ContactActivity extends BaseActivity implements OnClickListener,
 		super.onResume();
 		daoImpl = new UserinfoDaoImpl(this);
 		friendDaoImpl = new FriendDaoImpl(this);
-		List<UserInfoTable> data  = daoImpl.find();
-		List<MyFriendsEn> friendData = friendDaoImpl.find();
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
+		List<UserInfoTable> data  = daoImpl.find(null, "myUserId = ?", new String[]{loginStatus.getString("USERID", "")}, null, null, null, null);
+		List<MyFriendsEn> friendData = friendDaoImpl.find(null, "myUserId = ?", new String[]{loginStatus.getString("USERID", "")}, null, null, null, null);
 		List<UserInfoTable> userInfoData = new LinkedList<UserInfoTable>();
+		
 		for (int i = 0; i < friendData.size(); i++) {
 			for (int j = 0; j < data.size(); j++) {
 				if(friendData.get(i).getUserId().equals(data.get(j).getUserId())){

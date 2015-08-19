@@ -16,6 +16,8 @@ package com.icloudoor.cloudoor.chat.activity;
 import java.util.List;
 import java.util.UUID;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.media.SoundPool;
@@ -123,8 +125,9 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
 
 		// 设置通话�?
 		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
-		List<UserInfoTable> list = daoImpl.find(null, "userId = ?",
-				new String[] { username }, null, null, null, null);
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
+		
+		List<UserInfoTable> list = daoImpl.find(null, "userId = ? and myUserId = ?",new String[] { username, loginStatus.getString("USERID", "")}, null, null, null, null);
 		if (list != null && list.size() > 0) {
 			UserInfoTable friendsEn = list.get(0);
 			nickName = friendsEn.getNickname();

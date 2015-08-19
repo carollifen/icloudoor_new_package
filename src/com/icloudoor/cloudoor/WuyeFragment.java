@@ -12,12 +12,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -82,6 +84,8 @@ public class WuyeFragment extends Fragment {
 	private LoopViewPager mViewPager;
 	private FragmentPagerAdapter mAdapter;
 	
+	private static final int SCROLL_TIME = 5000;
+	
 	public WuyeFragment() {
 
 	}
@@ -118,7 +122,7 @@ public class WuyeFragment extends Fragment {
 		param.width = screenWidth;
 		param.height = (int) screenWidth * 2 / 5;
 		widgeLayout.setLayoutParams(param);
-		
+
 		logoutToDo = new Logout(getActivity());
 
 		mQueue = Volley.newRequestQueue(getActivity());
@@ -223,6 +227,22 @@ public class WuyeFragment extends Fragment {
 		
 		return view;
 	}
+	
+	private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch(msg.what) {
+            case 1:
+                int totalcount = mAdapter.getCount();
+                int currentItem = mViewPager.getCurrentItem();
+                 
+                int toItem = currentItem + 1 == totalcount ? 0 : currentItem + 1;
+                 
+                mViewPager.setCurrentItem(toItem);
+                 
+                this.sendEmptyMessageDelayed(1, SCROLL_TIME);
+            }
+        }
+    };
 
 	public void InitFragmentViews() {
 
@@ -317,6 +337,8 @@ public class WuyeFragment extends Fragment {
 		super.onPause();
 
 		MobclickAgent.onPageEnd(mPageName);
+		
+		mHandler.removeMessages(1);
 	}
 
 	@Override
@@ -325,6 +347,8 @@ public class WuyeFragment extends Fragment {
 		MobclickAgent.onPageStart(mPageName);
 		MyDebugLog.e(TAG, "test");
 
+		mHandler.sendEmptyMessageDelayed(1, SCROLL_TIME);
+		
 		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS", 0);
 		if(loginStatus.getInt("role", 0) == 2) {
 			fixLayout.setVisibility(View.INVISIBLE);

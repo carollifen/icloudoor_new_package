@@ -865,7 +865,7 @@ public class CloudDoorMainActivity extends BaseFragmentActivity implements
 			// mViewPager.setCurrentItem(2);
 			break;
 		}
-		mFragmenetTransaction.commit();
+		mFragmenetTransaction.commitAllowingStateLoss();
 	}
 
 	private BroadcastReceiver mHomeKeyEventReceiver = new BroadcastReceiver() {

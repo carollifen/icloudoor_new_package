@@ -404,6 +404,8 @@ public class KeyFragment extends Fragment {
 		circle.setLayoutParams(param);
 		radar.setLayoutParams(param);
 		
+		radar.setVisibility(View.GONE);
+		
 		animation1 = AnimationUtils.loadAnimation(getActivity(), R.anim.run);
 		LinearInterpolator lin1 = new LinearInterpolator();
 		animation1.setInterpolator(lin1);

@@ -379,9 +379,9 @@ public class ChatActivity extends FragmentActivity implements OnClickListener, E
 			toChatUsername = getIntent().getStringExtra("userId");
 			
 		} 
-		
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
 		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
-		List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{toChatUsername}, null, null, null, null);
+		List<UserInfoTable> list = daoImpl.find(null, "userId = ? and myUserId = ?", new String[]{toChatUsername,loginStatus.getString("USERID", "")}, null, null, null, null);
 		if(list!=null && list.size()>0){
 			friendsEn = list.get(0);
 			nickName = friendsEn.getNickname();

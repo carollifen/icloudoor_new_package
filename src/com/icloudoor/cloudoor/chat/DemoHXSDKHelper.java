@@ -247,6 +247,8 @@ public class DemoHXSDKHelper extends HXSDKHelper {
 								vf.setInvitationId(vfoj
 										.getString("invitationId"));
 								vf.setStatus("0");
+								SharedPreferences loginStatus = appContext.getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
+								vf.setMyuserId(loginStatus.getString("USERID", ""));
 								daoImpl.insert(vf);
 							}
 

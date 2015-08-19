@@ -238,8 +238,11 @@ public class MsgFragment extends Fragment implements OnItemClickListener,
 		super.onResume();
 		flag = false;
 		MobclickAgent.onPageStart(mPageName);
+		
+		
 		VFDaoImpl daoImpl = new VFDaoImpl(getActivity());
-		List<VerificationFrientsList> data = daoImpl.find();
+		SharedPreferences loginStatus = getActivity().getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
+		List<VerificationFrientsList> data  = daoImpl.find(null,"myUserId = ?",new String[] { loginStatus.getString("USERID", "") },null, null, null, null);
 		for (int i = 0; i < data.size(); i++) {
 			VerificationFrientsList frientsList = data.get(i);
 			if(frientsList.getStatus().equals("0")){

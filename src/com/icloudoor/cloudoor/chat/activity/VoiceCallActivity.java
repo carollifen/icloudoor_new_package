@@ -17,6 +17,8 @@ package com.icloudoor.cloudoor.chat.activity;
 import java.util.List;
 import java.util.UUID;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.media.SoundPool;
@@ -112,10 +114,10 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 		// 语音电话是否为接收的
 		isInComingCall = getIntent().getBooleanExtra("isComingCall", false);
 
-		
 		// 设置通话�?
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
 		UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(this);
-		List<UserInfoTable> list = daoImpl.find(null, "userId = ?", new String[]{username}, null, null, null, null);
+		List<UserInfoTable> list = daoImpl.find(null, "userId = ? and myUserId = ?",new String[] { username, loginStatus.getString("USERID", "")}, null, null, null, null);
 		if(list!=null && list.size()>0){
 			UserInfoTable friendsEn = list.get(0);
 			nickName = friendsEn.getNickname();

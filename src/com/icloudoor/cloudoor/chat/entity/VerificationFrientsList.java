@@ -22,8 +22,18 @@ public class VerificationFrientsList {
     private String invitationId;
     @Column(name = "comment")  
     private String comment;
+    
+    @Column(name = "myUserId")  
+    private String myuserId;
+    
 	
 	
+	public String getMyuserId() {
+		return myuserId;
+	}
+	public void setMyuserId(String myuserId) {
+		this.myuserId = myuserId;
+	}
 	public String getNickname() {
 		return nickname;
 	}

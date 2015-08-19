@@ -769,9 +769,9 @@ public class MessageAdapter extends BaseAdapter {
 						}
 
 						UserinfoDaoImpl daoImpl = new UserinfoDaoImpl(context);
-
+						SharedPreferences loginStatus = context.getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
 						List<UserInfoTable> list = daoImpl.find(null,
-								"userId = ?", new String[] { UserId }, null,
+								"userId = ? and myUserId = ?", new String[] { UserId ,loginStatus.getString("USERID", "")}, null,
 								null, null, null);
 						Boolean isFirend;
 						if (list == null || list.size() <= 0) {
@@ -779,9 +779,6 @@ public class MessageAdapter extends BaseAdapter {
 						} else {
 							isFirend = true;
 						}
-						SharedPreferences loginStatus = context
-								.getSharedPreferences("LOGINSTATUS",
-										Context.MODE_PRIVATE);
 						String myUserid = loginStatus.getString("USERID", "");
 
 						try {

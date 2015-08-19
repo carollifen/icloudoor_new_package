@@ -194,7 +194,6 @@ public class SettingDetailActivity extends BaseActivity {
                             				Editor editor = savedUrl.edit();
                             				editor.putString("Url", " ").commit();
                             				
-                            				
                             				 EMChatManager.getInstance().logout(new EMCallBack() {
 												
 												@Override

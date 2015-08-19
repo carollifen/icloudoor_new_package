@@ -23,6 +23,18 @@ public class MyFriendsEn {
 	private int cityId;
 	@Column(name = "sex" , type = "INTEGER")
 	private int sex;
+	
+	@Column(name = "myUserId")
+	private String myUserId;
+	
+	
+	public String getMyUserId() {
+		return myUserId;
+	}
+
+	public void setMyUserId(String myUserId) {
+		this.myUserId = myUserId;
+	}
 
 	public String getUserId() {
 		return userId;

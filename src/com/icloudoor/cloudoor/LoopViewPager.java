@@ -1,12 +1,9 @@
 package com.icloudoor.cloudoor;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 /**
  * A ViewPager subclass enabling infinte scrolling of the viewPager elements
@@ -34,9 +31,7 @@ public class LoopViewPager extends ViewPager {
     OnPageChangeListener mOuterPageChangeListener;
     private LoopPagerAdapterWrapper mAdapter;
     private boolean mBoundaryCaching = DEFAULT_BOUNDARY_CASHING;
-    
-    private static final int SCROLL_TIME = 5000;
-    
+      
     
     /**
      * helper function which may be used when implementing FragmentPagerAdapter
@@ -114,7 +109,6 @@ public class LoopViewPager extends ViewPager {
     }
 
     private void init() {
-    	mHandler.sendEmptyMessageDelayed(1, 2000);
         super.setOnPageChangeListener(onPageChangeListener);
     }
 
@@ -176,37 +170,6 @@ public class LoopViewPager extends ViewPager {
             }
             if (mOuterPageChangeListener != null) {
                 mOuterPageChangeListener.onPageScrollStateChanged(state);
-            }
-        }
-    };
-    
-    @Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		int action = MotionEventCompat.getActionMasked(ev);
-
-		if ((action == MotionEvent.ACTION_DOWN) || (action == MotionEvent.ACTION_MOVE)) {
-			mHandler.removeMessages(1);
-		} else if (ev.getAction() == MotionEvent.ACTION_UP) {
-			mHandler.sendEmptyMessageDelayed(1, SCROLL_TIME);	
-		}
-		
-		getParent().requestDisallowInterceptTouchEvent(true);
-
-		return super.dispatchTouchEvent(ev);
-	}
-    
-    private Handler mHandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            switch(msg.what) {
-            case 1:
-                int totalcount = getAdapter().getCount();
-                int currentItem = getCurrentItem();
-                 
-                int toItem = currentItem + 1 == totalcount ? 0 : currentItem + 1;
-                 
-                setCurrentItem(toItem);
-                 
-                this.sendEmptyMessageDelayed(1, SCROLL_TIME);
             }
         }
     };

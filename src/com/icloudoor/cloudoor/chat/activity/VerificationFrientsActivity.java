@@ -12,6 +12,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,7 +69,8 @@ public class VerificationFrientsActivity extends BaseActivity implements
 		btn_back.setOnClickListener(this);
 
 		VFDaoImpl daoImpl = new VFDaoImpl(this);
-		List<VerificationFrientsList> data = daoImpl.find();
+		SharedPreferences loginStatus = getSharedPreferences("LOGINSTATUS",Context.MODE_PRIVATE);
+		List<VerificationFrientsList> data = daoImpl.find(null, "myUserId = ?", new String[]{loginStatus.getString("USERID", "")}, null, null, null, null);
 		adapter.setData(data);
 		// getNetworkData(this, "/user/im/getInvitations.do", null);
 		registerBoradcastReceiver();
